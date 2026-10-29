@@ -986,8 +986,10 @@ class CoveragePlanner(Node):
             return
         pose = self._robot_pose()
         if pose is None:
+            self.cmd_pub.publish(Twist())
             return
         if not self._advance_to_target():
+            self.cmd_pub.publish(Twist())
             return
         target = self.cached_poses[self.wp_index]
         tx, ty = target.pose.position.x, target.pose.position.y
@@ -996,10 +998,14 @@ class CoveragePlanner(Node):
         dist = (dx * dx + dy * dy) ** 0.5
         # long inter-cell hop: route via Nav2 (avoid plowing through furniture)
         if dist > self.min_transit_len:
+            # End the row command before Nav2 takes over, or while its
+            # server is unavailable. Do not keep the last cruise Twist.
+            self.cmd_pub.publish(Twist())
             if self.nav_client.server_is_ready():
                 self._send_goal_to(target)
             return
         if dist <= self.reach_tol:              # reached this pass waypoint
+            self.cmd_pub.publish(Twist())
             self.wp_index += 1
             self.wp_retries = 0
             self.consecutive_skips = 0
@@ -1014,6 +1020,7 @@ class CoveragePlanner(Node):
                 and self._elapsed(self._drive_progress_t) >= self.no_progress_sec:
             self.get_logger().warn(
                 f'waypoint {self.wp_index} stuck (reactive); skipping')
+            self.cmd_pub.publish(Twist())
             self.wp_index += 1
             self.consecutive_skips += 1
             self._drive_best_dist = None

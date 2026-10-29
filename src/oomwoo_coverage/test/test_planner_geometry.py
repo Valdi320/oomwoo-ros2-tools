@@ -11,11 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Unit tests for the boustrophedon planner's grid helpers."""
+"""Unit tests for planner geometry and reactive command transitions."""
+
+from types import SimpleNamespace
 
 import numpy as np
+import pytest
 
 from oomwoo_coverage.coverage_planner_node import (
+    CoveragePlanner,
     _contiguous_runs,
     _decompose_cells,
     _dilate,
@@ -23,6 +27,64 @@ from oomwoo_coverage.coverage_planner_node import (
     _nearest_true,
     _pt_in_zones,
 )
+
+
+def reactive_driver():
+    """Exercise the actual row tick with a recording publisher and pose source."""
+    sent, dispatched = [], []
+    target = SimpleNamespace(pose=SimpleNamespace(
+        position=SimpleNamespace(x=0.5, y=0.0)))
+    node = SimpleNamespace(
+        awaiting=False, goal_deadline=None,
+        _maybe_wedge_escape=lambda: False,
+        _robot_pose=lambda: (0.0, 0.0, 0.0),
+        _advance_to_target=lambda: True,
+        cached_poses=[target], wp_index=0, wp_retries=0,
+        consecutive_skips=0, min_transit_len=0.7, reach_tol=0.12,
+        _drive_best_dist=None, _drive_progress_t=None, no_progress_sec=6.0,
+        get_clock=lambda: SimpleNamespace(now=lambda: 1.0),
+        _elapsed=lambda stamp: 0.0,
+        get_logger=lambda: SimpleNamespace(warn=lambda message: None),
+        rotate_speed=1.0, k_heading=1.6, align_tol=0.35, v_cruise=0.35,
+        cmd_pub=SimpleNamespace(publish=lambda tw: sent.append(
+            (tw.linear.x, tw.angular.z))),
+        nav_client=SimpleNamespace(server_is_ready=lambda: True),
+        _send_goal_to=lambda pose: dispatched.append(sent[-1]),
+    )
+    return node, sent, dispatched
+
+
+@pytest.mark.parametrize('transition', [
+    'pose_unavailable', 'no_target', 'reached', 'stalled',
+    'transit_ready', 'transit_unready',
+])
+def test_reactive_exit_publishes_zero_after_prior_motion(transition):
+    node, sent, dispatched = reactive_driver()
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.35, 0.0)  # establish a real preceding row command
+    if transition == 'pose_unavailable':
+        node._robot_pose = lambda: None
+    elif transition == 'no_target':
+        node._advance_to_target = lambda: False
+    elif transition == 'reached':
+        node._robot_pose = lambda: (0.5, 0.0, 0.0)
+    elif transition == 'stalled':
+        node._elapsed = lambda stamp: 7.0
+    else:
+        node.cached_poses[0].pose.position.x = 2.0
+        node.nav_client.server_is_ready = lambda: transition == 'transit_ready'
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.0, 0.0)
+    assert len(sent) == 2
+    assert dispatched == ([(0.0, 0.0)] if transition == 'transit_ready' else [])
+
+
+def test_reactive_active_transit_does_not_publish_competing_row_stop():
+    node, sent, dispatched = reactive_driver()
+    node.awaiting = True
+    CoveragePlanner._tick_reactive(node)
+    assert sent == []
+    assert dispatched == []
 
 
 def test_pt_in_zones_inside_and_outside():

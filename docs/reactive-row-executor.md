@@ -1,6 +1,8 @@
 # Reactive row executor — design note
 
-*Status: design / scoping. No code yet — this is the shape to decide on.*
+*Status: experimental mode implemented in `coverage_planner_node.py` behind
+`executor:=reactive`; `executor:=nav2` remains the default baseline. This
+note retains the design rationale and outstanding acceptance work.*
 
 ## Why
 
@@ -160,3 +162,38 @@ Headless regression, `executor:=reactive` vs `executor:=nav2` on living_room
   coverage work and the dynamic-obstacle yielding.
 - `health-monitor` — stack-liveness / MCU watchdog is orthogonal but shares the
   "reactive, contact-tolerant vacuum" worldview.
+
+## Explicit row-command stop follow-up (2026-10-29)
+
+The row tick now publishes a zero Twist when its pose helper reports no
+pose, no target remains, the target is reached or skipped for no progress,
+and before requesting a long Nav2 transit (including server-not-ready).
+Those returns previously left the last reactive cruise command in place.
+The already-active Nav2 branch remains silent so it does not inject a
+competing stop into the transit command stream.
+
+Baseline: six transition cases failed after a preceding 0.35 m/s row
+command; the active-transit silence case passed. After the fix, all 19
+tests in `test_planner_geometry.py` pass in the cached Jazzy image, using
+the real imported `_tick_reactive` method and Twist type with a recording
+publisher and synthetic pose/clock/target sources. This is focused unit
+evidence, not a running ROS2 graph, Gazebo movement or physical braking.
+The unchanged upstream source blob was verified as
+`747aae3be08a9c91b0a2d3b10df5ac7451700100` before the correction.
+
+Reproduce inside the existing isolated Jazzy image with this source mounted
+read-only at `/work` and `/opt/ros/jazzy/setup.bash` sourced:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONPATH=/work/src/oomwoo_coverage:$PYTHONPATH \
+  python3 -m pytest -p no:cacheprovider \
+  /work/src/oomwoo_coverage/test/test_planner_geometry.py -v
+```
+
+Full command/results: `reactive-row-stop-evidence-20261029.json` beside this
+note. No new node, watchdog, timer or tool was introduced. A missing-pose
+stop only applies when `_robot_pose()` returns None; freshness of its TF or
+cached-AMCL fallback is a separate unresolved contract. Exclusive command
+ownership, Keepout during direct drive, actuator timeout and stopping
+distance still require integrated simulation and hardware validation.
