@@ -23,9 +23,9 @@ are lifecycle managed. Omit keepout_mask to retain stock behavior.
 At this contribution's exact commit, from the repository root:
 
 ```bash
-PYTHONPATH=src/oomwoo_sim_support python3 -m unittest discover \\
+PYTHONPATH=src/oomwoo_sim_support python3 -m unittest discover \
   -s src/oomwoo_sim_support/test -p 'test_keepout*.py' -v
-PYTHONPATH=src/oomwoo_sim_support python3 -O -m unittest discover \\
+PYTHONPATH=src/oomwoo_sim_support python3 -O -m unittest discover \
   -s src/oomwoo_sim_support/test -p 'test_keepout*.py' -v
 ```
 
