@@ -266,7 +266,7 @@
       }
     }
   ],
-  "conclusion": "The full post-change test_room passed98.51% coverage and91.33% efficiency at target with21 terminal UUIDs and all18 owned processes exiting0. The scoped shutdown milestone is ready for delivery checks; short/failed observations remain retained. It does not complete docking, combined active Keepout, reliability or physical validation.",
+  "conclusion": "The full post-change test_room passed98.51% coverage and91.33% efficiency at target with21 terminal UUIDs and all18 owned processes exiting0. Source fingerprints and the output/terminal/handoff evidence match. The scoped shutdown milestone is consolidated; short/failed observations remain retained. Docking, combined active Keepout, reliability and physical validation remain incomplete.",
   "limits": [
     "The original shared-memory corrupting write is not identified or repaired upstream. UDPv4 avoids that transport path in this managed lab.",
     "All short scenes intentionally ended wall_timeout with bank_code1; collection rc0 does not mean coverage acceptance.",
@@ -563,7 +563,6 @@
       "malloc_error": false,
       "KeyboardInterrupt": false
     },
-    "delivery_checks_pending": "Machine guard OCUPADA; this document records the collected run, not a new test or final source/patch compatibility check.",
     "limits": [
       "One full post-UDP/native-exit success, not reliability statistics or a controlled A/B.",
       "Geometry-based coverage, not real dirt removal. Final efficiency70.32%; unchanged acceptance uses91.33% at first90% crossing.",
@@ -1137,6 +1136,16 @@
         }
       ],
       "full_status_samples_reference": "Complete original motion_audit.samples.status is preserved in raw (above) with its SHA256. Final per-UUID terminal table is in observations. Repeated status lists are omitted here."
+    },
+    "delivery_verification": {
+      "date_utc": "2026-10-29T22:57:46.943148+00:00",
+      "lock": "LIBRE: carga 4.19, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14856 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+      "source_sha256_match": true,
+      "bank_metrics_preserved": true,
+      "UUID_journal_handoffs_match": true,
+      "single_final_output_graph_match": true,
+      "all18_clean_exits_observed": true,
+      "new_simulation_or_unit_test": false
     }
   }
 }

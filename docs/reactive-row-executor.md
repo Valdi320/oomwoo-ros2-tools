@@ -568,8 +568,9 @@ it does not prove an upstream memory fix, reliability, or controlled A/B gains.
 The two sub-inscribed inflation errors and four inner FollowPath halt-result
 errors remain recorded. A successful close is not a clean-log claim.
 
-The scoped shutdown result is ready for delivery checks. Repeating the green
-scene or further transport polishing has low demonstrated return without new
+This consolidates the scoped shutdown milestone. Runtime source fingerprints
+and the terminal/output/handoff evidence match. Repeating the green scene or
+further transport polishing has low demonstrated return without new
 evidence. The next required integration is active Keepout at the existing
 final output: Nav2's mask topic is /oomwoo/keepout_mask, the planner currently
 subscribes to keepout_filter_mask, and the relay does not yet consume the
