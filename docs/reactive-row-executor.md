@@ -457,3 +457,68 @@ All work remains local; the owner has no hardware.
 
 The existing basic three-way DDS scenario also passes its 14 checks again
 on this relay source; its generated motion/health/status inputs remain synthetic.
+
+
+## Held contact during NAV — follow-up in progress
+
+The first whole-room attempt on ec34c0e/c53a6d0 stopped at 75.31% coverage
+(bank exit1, motion_fault, 561.21s including setup/teardown). Nine Nav2 goals
+succeeded and ten releases completed before controller_server reported Failed
+to make progress; the eleventh goal ended ABORTED. The managed adapter correctly
+latched the existing fault. This is failed whole-room acceptance, not PASS.
+
+Source inspection found that managed NAV returned before the existing held
+bumper reflex could run. The follow-up asks cancellation once on held contact,
+publishes TRANSIT_CANCEL to mute the existing relay NAV output, waits for the
+actual result/journal and ordinary terminal/quiet/permission handoff, and only
+then schedules the already existing contact reflex as SWEEP owner. It preserves
+the observed direction/target through asynchronous acceptance and handoff.
+An actual ABORTED result still faults; it never becomes a docking or recovery
+permission. No output timer, implementation node, tool or worker is added.
+
+CancelGoal must acknowledge exactly the current UUID with ERROR_NONE. Its
+ERROR_GOAL_TERMINATED race grants nothing and only waits, at zero, for the actual
+result. Rejected, foreign/duplicate UUID, transport and three-second unresolved
+cancellation paths latch fault. Fault cancellation is bounded to the first fault
+rather than repeated every tick; STOP transport errors cannot create a request
+loop. Primary contract: [CancelGoal.srv](https://github.com/ros2/rcl_interfaces/blob/jazzy/action_msgs/srv/CancelGoal.srv),
+blob 86afbdbf4eacb2c55c1faf8da3a17946c5f0fa9b.
+
+Current focal evidence: 59 planner cases and33 real-method/metadata cases PASS,
+including no escape before terminal plus SWEEP acknowledgement, cancel before
+acceptance, cancellation/result race, bounded failures, continued ABORTED fault,
+and actual relay output muting while retaining NAV ownership. The health phase
+is accepted only in managed mode. Actual Gazebo confirmation of this follow-up
+and whole-room acceptance remain pending at this note's entry.
+
+
+### Complete test_room follow-up: scored PASS
+
+The complete follow-up run finished sweep_complete with **98.66% coverage**,
+**91.06% efficiency at the first90% crossing**, and70.49% final efficiency.
+The existing90%/80% acceptance criteria were unchanged. The scorer reports605s
+to target and total collection time857.12s including setup/teardown. Geometry
+measurement remained valid with no pose jumps or simulator instability.
+
+Actual status history contains21 distinct terminal UUIDs:17 SUCCEEDED and4
+CANCELED. All21 NAV releases and22 SWEEP claims/releases were acknowledged;
+the final producer phase was IDLE, with its final release before scoring ended.
+Two actual held-contact episodes during NAV caused cancellation, exact terminal
+release, quiet handoff and the existing reactive escape under SWEEP ownership.
+No synthetic contact publisher or substitute controller was used in this run.
+The final command graph still has one source per input and one final relay
+publisher consumed by ros_gz_bridge,with no /cmd_vel publishers. No relay fault
+was logged during the measured scene.
+
+The first75.31% failed attempt remains preserved. This is one successful
+follow-up,not a controlled A/B or a reliability estimate. See [full scoped
+result,contact sequences,source hashes and retained errors](evidence/reactive_contact_full_room_codex_20261029.json).
+
+**Shutdown limit:** the scored scene passed,but process shutdown was not clean.
+After the final summary,the relay logged KeyboardInterrupt,the Gazebo bridge
+exitedSIGABRT(-6),and Gazebo required the existing launchSIGTERM escalation.
+The bridge abort cause remains open;the owned --rm container is terminal.
+The existing sub-inscribed-inflation warnings and inner FollowPath halt-result
+errors are also retained. Do not turn a scored PASS into a clean-log or physical
+safety claim. Actual docking,combined active Keepout,managed fault injection,
+shutdown diagnosis and broader-scene validation remain open.

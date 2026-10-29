@@ -140,6 +140,7 @@ def test_escape_entry_zeroes_previous_row_in_its_scheduling_tick(cause):
     node.wedge_avoid_radius = 0.45
     node.consecutive_skips = 0 if cause == 'held_bumper' else 2
     node._maybe_wedge_escape = MethodType(CoveragePlanner._maybe_wedge_escape, node)
+    node._begin_bumper_escape = MethodType(CoveragePlanner._begin_bumper_escape, node)
     node._tick_reactive = MethodType(CoveragePlanner._tick_reactive, node)
     CoveragePlanner._tick(node)
     assert sent == [(0.35, 0.0), (0.0, 0.0)]
@@ -595,3 +596,161 @@ def test_relay_boot_deadline_also_bounds_a_nav_server_that_never_starts(monkeypa
     assert node._relay_stage == 'fault'
     assert node._relay_fault.startswith('handoff timed out in boot')
     assert sent == [(0.0, 0.0)]
+
+
+def contact_relay_planner(tmp_path, *, accepted=True):
+    """Use the actual journal, dispatcher, reflex and asynchronous cancel methods."""
+    node, sent, _ = private_relay_planner(tmp_path)
+    node.cached_poses = [row_target(2.0)]
+    CoveragePlanner._send_goal_to(node, node.cached_poses[0])
+    relay_reply(node, 'release_motion')
+    relay_reply(node, 'claim_nav', owner='navigation')
+    canceled, phases, operations = [], [], []
+    reply = {'ready': False, 'response': None}
+    future = SimpleNamespace(done=lambda: reply['ready'], result=lambda: reply['response'])
+    handle = SimpleNamespace(
+        accepted=True,
+        get_result_async=lambda: SimpleNamespace(add_done_callback=lambda callback: None),
+        cancel_goal_async=lambda: canceled.append(node._relay_uuid) or future)
+    node._on_result = MethodType(CoveragePlanner._on_result, node)
+    node.goal_handle = None
+    if accepted:
+        CoveragePlanner._on_goal_response(node, SimpleNamespace(result=lambda: handle))
+    node._relay_bumper_escape = node._relay_contact_cancel = node._relay_contact_wall = None
+    node._relay_nav_contact = MethodType(CoveragePlanner._relay_nav_contact, node)
+    node._relay_phase = MethodType(CoveragePlanner._relay_phase, node)
+    node._relay_phase_pub = SimpleNamespace(publish=lambda message: phases.append(message.data))
+    node._begin_bumper_escape = MethodType(CoveragePlanner._begin_bumper_escape, node)
+    node._relay_request = operations.append
+    node._relay_last_stage = None
+    node._relay_stage_wall = 0.0
+    node._relay_snapshot = {}
+    node._relay_retry_at = 0.0
+    node._relay_stop_future = None
+    node._relay_control = SimpleNamespace(service_is_ready=lambda: False)
+    node._relay_fail = MethodType(CoveragePlanner._relay_fail, node)
+    node.plan_started = True
+    node.goal_timeout = 30.0
+    node.escape_until = None
+    node.escapes_done = 0
+    node.max_escapes = 25
+    node.escape_sec = 2.5
+    node._bumper_held_long = lambda: True
+    node._bumper_fresh = MethodType(CoveragePlanner._bumper_fresh, node)
+    node._escape_angular = lambda: -0.6
+    node.wedge_zones = []
+    node.wedge_avoid_radius = 0.45
+    node.get_logger = lambda: SimpleNamespace(
+        info=lambda message: None, warn=lambda message: None, error=lambda message: None)
+    return node, sent, canceled, phases, operations, reply, future, handle
+
+
+def test_relay_contact_waits_for_terminal_release_and_sweep_ack_before_escape(tmp_path):
+    node, sent, canceled, phases, operations, reply, _, _ = contact_relay_planner(tmp_path)
+    assert CoveragePlanner._relay_tick(node) is True
+    assert canceled == [node._relay_uuid] and phases[-1] == 'TRANSIT_CANCEL'
+    assert node.escape_until is None and sent[-1] == (0.0, 0.0)
+    assert CoveragePlanner._relay_tick(node) is True
+    assert len(canceled) == 1  # no repeated cancel while the future is pending
+    goal = SimpleNamespace(goal_id=SimpleNamespace(uuid=list(bytes.fromhex(node._relay_uuid))))
+    reply.update(ready=True, response=SimpleNamespace(return_code=0, goals_canceling=[goal]))
+    assert CoveragePlanner._relay_tick(node) is True
+    assert node._relay_stage == 'nav' and node.escape_until is None
+    node._bumper_held_long = lambda: False
+    node._escape_angular = lambda: 0.6  # retain the direction actually observed at contact
+    CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=5)))
+    assert node._relay_journal.read()['outcome'] == 'canceled'
+    node._relay_snapshot = {'last_output': [0.0, 0.0],
+                            'motion_inputs': {'navigation': {'zero': True}}}
+    assert CoveragePlanner._relay_tick(node) is True
+    assert operations == ['release_nav'] and node.escape_until is None
+    relay_reply(node, 'release_nav')
+    assert node._relay_stage == 'claim_sweep' and node.escape_until is None
+    relay_reply(node, 'claim_sweep', owner='reactive_sweep')
+    assert CoveragePlanner._relay_tick(node) is True
+    assert node.escape_until is not None and node._escape_az == -0.6
+    assert node.wedge_zones == [(2.0, 0.0, 0.45)] and node.escapes_done == 1
+    assert node._relay_bumper_escape is None and sent[-1] == (0.0, 0.0)
+
+
+@pytest.mark.parametrize('failure', [
+    'wrong_uuid', 'duplicate_uuid', 'rejected', 'timeout', 'transport',
+])
+def test_relay_contact_uncertain_cancel_latches_fault(tmp_path, monkeypatch, failure):
+    node, sent, _, _, _, reply, _, _ = contact_relay_planner(tmp_path)
+    wall = [1.0]
+    monkeypatch.setattr('oomwoo_coverage.coverage_planner_node.time.monotonic', lambda: wall[0])
+    assert node._relay_nav_contact() is True
+    if failure == 'timeout':
+        wall[0] = 4.01
+    elif failure == 'rejected':
+        reply.update(ready=True, response=SimpleNamespace(return_code=1, goals_canceling=[]))
+    elif failure in ('wrong_uuid', 'duplicate_uuid'):
+        uid = [255] * 16 if failure == 'wrong_uuid' else list(bytes.fromhex(node._relay_uuid))
+        goal = SimpleNamespace(goal_id=SimpleNamespace(uuid=uid))
+        reply.update(ready=True, response=SimpleNamespace(
+            return_code=0, goals_canceling=[goal] * (2 if failure == 'duplicate_uuid' else 1)))
+    else:
+        def broken():
+            raise RuntimeError('disconnected cancellation service')
+        node._relay_contact_cancel = SimpleNamespace(done=lambda: True, result=broken)
+    assert node._relay_nav_contact() is True
+    assert node._relay_stage == 'fault' and node.escape_until is None
+    assert sent[-1] == (0.0, 0.0)
+
+
+def test_contact_cancel_send_failure_stays_faulted_without_a_request_loop(tmp_path):
+    node, sent, _, _, _, _, _, handle = contact_relay_planner(tmp_path)
+    attempts, stop_attempts = [], []
+
+    def broken():
+        attempts.append(True)
+        raise RuntimeError('disconnected cancel request')
+
+    handle.cancel_goal_async = broken
+
+    def broken_stop(request):
+        stop_attempts.append(request.operation)
+        raise RuntimeError('disconnected STOP request')
+
+    node._relay_control_type = SimpleNamespace(Request=SimpleNamespace)
+    node._relay_control = SimpleNamespace(service_is_ready=lambda: True, call_async=broken_stop)
+    assert node._relay_nav_contact() is True
+    assert node._relay_stage == 'fault' and node.escape_until is None
+    epoch = node._relay_epoch
+    count = len(attempts)
+    node._relay_fail('later transport report')
+    assert len(attempts) == count and node._relay_epoch == epoch
+    assert stop_attempts == ['stop'] and node._relay_stop_future is False
+    assert node._relay_fault.startswith('contact cancellation send failed')
+    assert sent[-1] == (0.0, 0.0)
+
+
+def test_relay_contact_before_acceptance_cancels_the_accepted_exact_goal(tmp_path):
+    node, _, canceled, _, _, _, future, handle = contact_relay_planner(tmp_path, accepted=False)
+    assert node._relay_nav_contact() is True
+    assert canceled == [] and node.cancel_on_accept
+    CoveragePlanner._on_goal_response(node, SimpleNamespace(result=lambda: handle))
+    assert canceled == [node._relay_uuid] and node._relay_contact_cancel is future
+    assert node.escape_until is None
+
+
+def test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission(tmp_path):
+    node, sent, _, _, _, _, _, _ = contact_relay_planner(tmp_path)
+    node._relay_nav_contact()
+    CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=6)))
+    assert node._relay_journal.read()['outcome'] == 'aborted'
+    assert node._relay_stage == 'fault' and node.escape_until is None
+    assert sent[-1] == (0.0, 0.0)
+
+
+def test_cancel_already_terminal_response_waits_for_the_actual_result(tmp_path):
+    node, sent, _, _, _, reply, _, _ = contact_relay_planner(tmp_path)
+    assert node._relay_nav_contact() is True
+    reply.update(ready=True, response=SimpleNamespace(return_code=3, goals_canceling=[]))
+    assert node._relay_nav_contact() is True
+    assert node._relay_stage == 'nav' and node.escape_until is None
+    assert node._relay_journal.read()['state'] == 'accepted'
+    CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=4)))
+    assert node._relay_stage == 'release_nav' and node.escape_until is None
+    assert sent[-1] == (0.0, 0.0)

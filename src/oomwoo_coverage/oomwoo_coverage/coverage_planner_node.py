@@ -760,7 +760,13 @@ class CoveragePlanner(Node):
             handle.get_result_async().add_done_callback(self._on_result)
             if getattr(self, 'cancel_on_accept', False):
                 self.cancel_on_accept = False
-                handle.cancel_goal_async()
+                try:
+                    cancel = handle.cancel_goal_async()
+                except Exception as exc:
+                    self._relay_fail('cancel-on-accept transport failed: ' + str(exc))
+                    return
+                if getattr(self, '_relay_bumper_escape', None) is not None:
+                    self._relay_contact_cancel = cancel
             return
         if not handle.accepted:
             self.awaiting = False       # Nav2 busy/not-ready -> retry same wp
@@ -776,7 +782,8 @@ class CoveragePlanner(Node):
         handle.get_result_async().add_done_callback(self._on_result)
 
     def _on_result(self, fut) -> None:
-        status = fut.result().status    # 4=SUCCEEDED, 5=CANCELED, 6=ABORTED
+        result = fut.result()
+        status = result.status    # 4=SUCCEEDED, 5=CANCELED, 6=ABORTED
         if getattr(self, '_relay_enabled', False):
             outcome = {4: 'succeeded', 5: 'canceled', 6: 'aborted'}.get(status)
             if outcome is None:
@@ -787,7 +794,12 @@ class CoveragePlanner(Node):
                 uuid_hex=self._relay_uuid, outcome=outcome)
             self._relay_stage = 'release_nav'
             if status == 6:
-                self._relay_fail('actual Nav2 goal aborted; lab reconciliation required')
+                detail = getattr(result, 'result', None)
+                contacts = tuple(self._bumper_fresh(getattr(self, name, None))
+                                 for name in ('_bump_left_t', '_bump_right_t'))
+                self._relay_fail(
+                    'actual Nav2 goal aborted; lab reconciliation required; '
+                    f'code={getattr(detail, "error_code", None)} bumper_fresh={contacts}')
         self.goal_handle = None
         self.awaiting = False
         self.goal_deadline = None
@@ -925,25 +937,9 @@ class CoveragePlanner(Node):
             if self.awaiting and self.goal_handle is not None:
                 self.goal_handle.cancel_goal_async()
             self.awaiting = False
-            self.consecutive_skips = 0
             target = self.cached_poses[self.wp_index] \
                 if self.wp_index < len(self.cached_poses) else None
-            if target is not None:
-                tx = target.pose.position.x
-                ty = target.pose.position.y
-                if not _pt_in_zones(tx, ty, self.wedge_zones):
-                    self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))
-            self.escapes_done += 1
-            self._escape_az = self._escape_angular()
-            self._bump_left_held_since = None
-            self._bump_right_held_since = None
-            self.get_logger().warn(
-                f'bumper held near waypoint {self.wp_index}: peel off '
-                f'(turn {self._escape_az:+.1f}) {self.escape_sec}s '
-                f'(escape {self.escapes_done}/{self.max_escapes})')
-            self.escape_until = self.get_clock().now() \
-                + rclpy.duration.Duration(seconds=self.escape_sec)
-            self.cmd_pub.publish(Twist())
+            self._begin_bumper_escape(self.wp_index, target, self._escape_angular())
             return
 
         # Reactive executor drives sweep passes on /cmd_vel and routes only long
@@ -996,6 +992,24 @@ class CoveragePlanner(Node):
                 self.goal_handle.cancel_goal_async()  # -> _on_result -> skip
             else:
                 self.awaiting = False
+
+    def _begin_bumper_escape(self, index, target, angular):
+        """Schedule the existing contact reflex only after its caller owns motion."""
+        self.consecutive_skips = 0
+        if target is not None:
+            tx, ty = target.pose.position.x, target.pose.position.y
+            if not _pt_in_zones(tx, ty, self.wedge_zones):
+                self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))
+        self.escapes_done += 1
+        self._escape_az = angular
+        self._bump_left_held_since = self._bump_right_held_since = None
+        self.get_logger().warn(
+            f'bumper held near waypoint {index}: peel off '
+            f'(turn {angular:+.1f}) {self.escape_sec}s '
+            f'(escape {self.escapes_done}/{self.max_escapes})')
+        self.escape_until = self.get_clock().now() \
+            + rclpy.duration.Duration(seconds=self.escape_sec)
+        self.cmd_pub.publish(Twist())
 
     def _maybe_wedge_escape(self) -> bool:
         """
@@ -1081,27 +1095,38 @@ class CoveragePlanner(Node):
         self._relay_token = None
         self._relay_retry_at = 0.0
         self._relay_stop_future = None
+        self._relay_bumper_escape = None
+        self._relay_contact_cancel = None
+        self._relay_contact_wall = None
         self._relay_last_stage = None
         self._relay_stage_wall = time.monotonic()
 
     def _relay_fail(self, reason):
         """Latch fault, request STOP once and keep commands zero until reconciliation."""
-        if self._relay_fault is None:
+        first = self._relay_fault is None
+        if first:
             self.get_logger().error('motion relay fault: ' + reason)
-        self._relay_fault = reason
+            self._relay_fault = reason
+            self._relay_epoch += 1
         self._relay_stage = 'fault'
-        self._relay_epoch += 1
         self.cmd_pub.publish(Twist())
-        if self.goal_handle is not None:
-            self.goal_handle.cancel_goal_async()
-        elif self.awaiting:
+        if first and self.goal_handle is not None:
+            try:
+                self.goal_handle.cancel_goal_async()
+            except Exception as exc:
+                self.get_logger().warn('fault cancellation unavailable: ' + str(exc))
+        elif first and self.awaiting:
             self.cancel_on_accept = True
         if self._relay_stop_future is None and self._relay_control.service_is_ready():
             request = self._relay_control_type.Request()
             request.request_id = 'coverage-emergency-' + uuid.uuid4().hex
             request.operation = 'stop'
             request.isolated_disposable_sim = True
-            self._relay_stop_future = self._relay_control.call_async(request)
+            try:
+                self._relay_stop_future = self._relay_control.call_async(request)
+            except Exception as exc:
+                self._relay_stop_future = False
+                self.get_logger().warn('fault STOP transport unavailable: ' + str(exc))
 
     def _relay_phase(self):
         """Report actual dispatcher phase, independently of a velocity command."""
@@ -1112,6 +1137,8 @@ class CoveragePlanner(Node):
         if self._relay_stage in ('release_sweep', 'claim_nav'):
             return 'PREPARE_NAV'
         if self._relay_stage in ('nav', 'release_nav'):
+            if getattr(self, '_relay_bumper_escape', None) is not None:
+                return 'TRANSIT_CANCEL'
             return 'TRANSIT'
         if self._relay_stage == 'sweep' and not self.finished:
             return 'ESCAPE' if self.escape_until is not None else 'SWEEP'
@@ -1200,6 +1227,51 @@ class CoveragePlanner(Node):
             self._relay_status_future = self._relay_status_client.call_async(
                 self._relay_status_type.Request())
 
+    def _relay_nav_contact(self):
+        """Cancel once on held contact; retain the reflex until SWEEP is granted."""
+        pending = getattr(self, '_relay_bumper_escape', None)
+        if pending is None and self.escape_until is None and self.escapes_done < self.max_escapes \
+                and self._bumper_held_long():
+            target = self.cached_poses[self.wp_index] \
+                if self.wp_index < len(self.cached_poses) else None
+            self._relay_bumper_escape = (self.wp_index, target, self._escape_angular())
+            self._relay_contact_wall = time.monotonic()
+            if self.goal_handle is not None:
+                try:
+                    self._relay_contact_cancel = self.goal_handle.cancel_goal_async()
+                except Exception as exc:
+                    self._relay_fail('contact cancellation send failed: ' + str(exc))
+                    return True
+            elif self.awaiting:
+                self.cancel_on_accept = True
+            else:
+                self._relay_fail('held contact without a known cancellable goal')
+                return True
+            self.cmd_pub.publish(Twist())
+            self._relay_phase_pub.publish(String(data='TRANSIT_CANCEL'))
+            self.get_logger().warn('held contact: awaiting exact Nav2 cancellation before escape')
+        if getattr(self, '_relay_bumper_escape', None) is None:
+            return False
+        if time.monotonic() - self._relay_contact_wall > 3.0:
+            self._relay_fail('contact cancellation did not yield a terminal result')
+        elif self._relay_contact_cancel is not None and self._relay_contact_cancel.done():
+            try:
+                response = self._relay_contact_cancel.result()
+                # ERROR_GOAL_TERMINATED is a normal result/cancel race. It
+                # grants no permission: keep zero and await the real result.
+                if response is not None and response.return_code == 3 \
+                        and not response.goals_canceling:
+                    return True
+                matched = response is not None and response.return_code == 0 \
+                    and len(response.goals_canceling) == 1 \
+                    and bytes(response.goals_canceling[0].goal_id.uuid).hex() == self._relay_uuid
+            except Exception as exc:
+                self._relay_fail('contact cancellation transport failed: ' + str(exc))
+                return True
+            if not matched:
+                self._relay_fail('contact cancellation did not name the current UUID')
+        return True
+
     def _relay_tick(self):
         """Coordinate asynchronous ownership in the planner's existing 5Hz tick."""
         self._relay_poll()
@@ -1230,10 +1302,16 @@ class CoveragePlanner(Node):
                 self._relay_fail('ownership lost: ' + str(self._relay_snapshot.get('reason')))
                 return True
         if self._relay_stage == 'nav':
-            if self.awaiting and self.goal_deadline is not None:
+            if not self._relay_nav_contact() and self.awaiting and self.goal_deadline is not None:
                 self._goal_watchdog()
             return True
         if self._relay_stage == 'sweep':
+            pending = getattr(self, '_relay_bumper_escape', None)
+            if pending is not None:
+                self._relay_bumper_escape = None
+                self._relay_contact_cancel = None
+                self._begin_bumper_escape(*pending)
+                return True
             return False
         self.cmd_pub.publish(Twist())
         if self._relay_rpc is not None or time.monotonic() < self._relay_retry_at:

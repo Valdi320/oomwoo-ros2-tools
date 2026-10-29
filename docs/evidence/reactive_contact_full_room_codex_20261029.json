@@ -1,0 +1,3059 @@
+{
+  "date_utc": "2026-10-29T21:59:33.010291+00:00",
+  "scope": "One complete test_room Gazebo run with actual Nav2, actual CoveragePlanner, actual contact-triggered reflex and the existing single final output. No hardware.",
+  "image": "docker.io/makerspet/oomwoo:jazzy-dev",
+  "image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+  "parents": [
+    "ec34c0ecd21b3c93ab011dfa65d5ef0937b319ea",
+    "c53a6d0046a2034d50af22146e6186775594d401"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "82d1b97c4ac7f0bce2a7569ea6472d244a4c3609c2c551cce766c624eef7338e",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "767f5852bb95250b1631f4992eb2daaeae738e1ac9f903e4119047230a12c2ff",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "74e0f89709a2fc5eb8839604e157607dda84c12589f547e8e251a372a642df8b",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "c4e17c9b45db91a99782fbe6291b8cf71822eccfa66f08f5181400bdcdd72629"
+  },
+  "raw": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_contact_full_room_20261029.json",
+    "sha256": "8bab96a61a221102bbce79d5622bffa3aad7f29af45394d8e2ec804eb13b45b0",
+    "rc": 0,
+    "seconds": 857.12
+  },
+  "bank_code": 0,
+  "report": {
+    "coverage": 0.9866,
+    "coverage_target": 0.9,
+    "target_crossed": true,
+    "efficiency_at_target": 0.9106,
+    "efficiency_final": 0.7049,
+    "revisit_ratio": 0.2488,
+    "efficiency_target": 0.8,
+    "time_to_target_s": 605.0,
+    "end_reason": "sweep_complete",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": true,
+    "motion_audit": {
+      "graph": {
+        "/cmd_vel": [],
+        "/cmd_vel_nav": [],
+        "/navigate_to_pose/_action/status": [
+          [
+            "bt_navigator",
+            "/",
+            "action_msgs/msg/GoalStatusArray",
+            "010f7f01b903f9cc0000000000003c03"
+          ]
+        ],
+        "/valdi/nav2_cmd_vel": [
+          [
+            "controller_server",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01b7030af10000000000006c03"
+          ]
+        ],
+        "/valdi/sweep_cmd_vel": [
+          [
+            "coverage_planner",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c902794c0000000000001d03"
+          ]
+        ],
+        "/valdi/dock_drive_cmd_vel": [
+          [
+            "dock_drive",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c102eef60000000000001403"
+          ]
+        ],
+        "/valdi/lab_safe_cmd_vel_output": [
+          [
+            "valdi_experimental_cmdvel_relay",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c00208c00000000000001603"
+          ]
+        ],
+        "safe_output_subscribers": [
+          [
+            "ros_gz_bridge",
+            "/",
+            "geometry_msgs/msg/Twist"
+          ]
+        ]
+      },
+      "samples": {
+        "status": [
+          {
+            "wall": 327432.529416604,
+            "sim": 10.600000000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327442.579502441,
+            "sim": 20.650000000000002,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327445.128191731,
+            "sim": 23.200000000000003,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327458.378599842,
+            "sim": 36.45,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327483.528418931,
+            "sim": 61.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327493.358767049,
+            "sim": 71.43,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327498.329178074,
+            "sim": 76.4,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327528.360173219,
+            "sim": 106.4,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                3
+              ]
+            ]
+          },
+          {
+            "wall": 327528.389683969,
+            "sim": 106.43,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ]
+            ]
+          },
+          {
+            "wall": 327698.78067283,
+            "sim": 276.8,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327715.63101547,
+            "sim": 293.65000000000003,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327722.180481549,
+            "sim": 300.20000000000005,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327727.030786115,
+            "sim": 305.05,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327748.781171959,
+            "sim": 326.8,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327767.421384762,
+            "sim": 345.42,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327770.003705228,
+            "sim": 348.0,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327777.044147019,
+            "sim": 355.04,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327797.801142649,
+            "sim": 375.8,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327807.241375019,
+            "sim": 385.24,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327810.801153865,
+            "sim": 388.8,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327822.041783564,
+            "sim": 400.01500000000004,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 327938.429752328,
+            "sim": 516.4,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327944.429411536,
+            "sim": 522.4,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                3
+              ]
+            ]
+          },
+          {
+            "wall": 327944.450345644,
+            "sim": 522.4200000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ]
+            ]
+          },
+          {
+            "wall": 327947.029356512,
+            "sim": 525.0,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 327955.279719128,
+            "sim": 533.24,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328048.445140515,
+            "sim": 626.4000000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328059.085400145,
+            "sim": 637.0400000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328064.066108105,
+            "sim": 642.0,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328064.264459357,
+            "sim": 642.2,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                3
+              ]
+            ]
+          },
+          {
+            "wall": 328064.286675221,
+            "sim": 642.22,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ]
+            ]
+          },
+          {
+            "wall": 328069.664468834,
+            "sim": 647.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328095.114704549,
+            "sim": 673.0350000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328102.678386824,
+            "sim": 680.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328108.318797601,
+            "sim": 686.24,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328136.678766587,
+            "sim": 714.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328151.519854861,
+            "sim": 729.4250000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328162.095137329,
+            "sim": 740.0,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328165.694821077,
+            "sim": 743.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                3
+              ]
+            ]
+          },
+          {
+            "wall": 328165.715862495,
+            "sim": 743.62,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ]
+            ]
+          },
+          {
+            "wall": 328171.09504837,
+            "sim": 749.0,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ],
+              [
+                "de808aaccdc145f9a769c7d1afec0346",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328198.945630069,
+            "sim": 776.85,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ],
+              [
+                "de808aaccdc145f9a769c7d1afec0346",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328203.695585674,
+            "sim": 781.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ],
+              [
+                "de808aaccdc145f9a769c7d1afec0346",
+                4
+              ],
+              [
+                "50606a4784de4b68aabe8bbaffdfb041",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328211.33558255,
+            "sim": 789.24,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ],
+              [
+                "de808aaccdc145f9a769c7d1afec0346",
+                4
+              ],
+              [
+                "50606a4784de4b68aabe8bbaffdfb041",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 328218.69536156,
+            "sim": 796.6,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ],
+              [
+                "de808aaccdc145f9a769c7d1afec0346",
+                4
+              ],
+              [
+                "50606a4784de4b68aabe8bbaffdfb041",
+                4
+              ],
+              [
+                "79267691e5f0455a9e50ee6dca33591a",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 328248.545656347,
+            "sim": 826.4250000000001,
+            "states": [
+              [
+                "62ea25e4f315464bb6659fb6382e2229",
+                4
+              ],
+              [
+                "256b9d31a5584daeaa1172a00d5f989a",
+                4
+              ],
+              [
+                "413cf663ae874c3bb82e106c8f4b750b",
+                4
+              ],
+              [
+                "eaaa0d3cf71141e18742cf072a44926f",
+                5
+              ],
+              [
+                "4e22c1dffdef4e20bf8141824f58a4df",
+                4
+              ],
+              [
+                "5ab129f1afb5406583ee9cf9a1fbf9a9",
+                4
+              ],
+              [
+                "456c86b73ef84b588763b7e7b6f41c31",
+                4
+              ],
+              [
+                "0df6266909d34d4f98ab57eacc7e2f2f",
+                4
+              ],
+              [
+                "f27ae9543ed941f19aff0c0cde96547e",
+                4
+              ],
+              [
+                "9dee93845eb04c499b4bea986e81f766",
+                4
+              ],
+              [
+                "7f9c6145003445b98385a768450966d6",
+                5
+              ],
+              [
+                "02102991847845bea6ac0f2b1ea2eec6",
+                4
+              ],
+              [
+                "36df4bfa0f004d88aaf909a8a5d65747",
+                4
+              ],
+              [
+                "2552b830100d4a6aac97253e2fc38703",
+                5
+              ],
+              [
+                "1110d2714845447bbba89e3de2a1af58",
+                4
+              ],
+              [
+                "5791521006e44b8aa6cf46255fb1c493",
+                4
+              ],
+              [
+                "3cd5ff9839d64ebe8a50f248bb00c727",
+                4
+              ],
+              [
+                "8c866a893b394b2caafdc906acff5dd1",
+                5
+              ],
+              [
+                "de808aaccdc145f9a769c7d1afec0346",
+                4
+              ],
+              [
+                "50606a4784de4b68aabe8bbaffdfb041",
+                4
+              ],
+              [
+                "79267691e5f0455a9e50ee6dca33591a",
+                4
+              ]
+            ]
+          }
+        ],
+        "feedback": [
+          {
+            "first_wall": 327432.530751549,
+            "last_wall": 328248.525388926,
+            "count": 27102,
+            "max_gap_wall": 170.42169424699387
+          }
+        ],
+        "phase": [
+          {
+            "phase": "IDLE",
+            "wall": 327422.397925156,
+            "sim": 0.8
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327431.32783175,
+            "sim": 9.4
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327431.527444188,
+            "sim": 9.600000000000001
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327432.528797326,
+            "sim": 10.600000000000001
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327443.131177416,
+            "sim": 21.200000000000003
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327443.929069679,
+            "sim": 22.0
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327444.12784907,
+            "sim": 22.200000000000003
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327445.128069402,
+            "sim": 23.200000000000003
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327458.927852025,
+            "sim": 37.0
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327459.727981681,
+            "sim": 37.800000000000004
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327482.327487255,
+            "sim": 60.400000000000006
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327483.528234771,
+            "sim": 61.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327493.929841617,
+            "sim": 72.0
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327494.72787042,
+            "sim": 72.80000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327497.327563566,
+            "sim": 75.4
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327498.328657145,
+            "sim": 76.4
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327528.959577171,
+            "sim": 107.0
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327529.759561977,
+            "sim": 107.80000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327697.77983527,
+            "sim": 275.8
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327698.78091544,
+            "sim": 276.8
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327716.180382502,
+            "sim": 294.20000000000005
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327716.980615638,
+            "sim": 295.0
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327721.179769648,
+            "sim": 299.20000000000005
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327722.180827437,
+            "sim": 300.20000000000005
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327727.580351806,
+            "sim": 305.6
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327728.380297583,
+            "sim": 306.40000000000003
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327747.779810641,
+            "sim": 325.8
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327748.781543728,
+            "sim": 326.8
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327767.800971205,
+            "sim": 345.8
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327768.800889638,
+            "sim": 346.8
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327769.001465693,
+            "sim": 347.0
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327770.003933247,
+            "sim": 348.0
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327777.600884037,
+            "sim": 355.6
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327778.400761113,
+            "sim": 356.40000000000003
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327796.800400038,
+            "sim": 374.8
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327797.800909749,
+            "sim": 375.8
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327807.800684078,
+            "sim": 385.8
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327808.600684744,
+            "sim": 386.6
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327809.800562124,
+            "sim": 387.8
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327810.801499114,
+            "sim": 388.8
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327822.623186057,
+            "sim": 400.6
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327823.422949994,
+            "sim": 401.40000000000003
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327937.429745805,
+            "sim": 515.4
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327938.430035367,
+            "sim": 516.4
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327945.029156847,
+            "sim": 523.0
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327945.829036633,
+            "sim": 523.8000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 327946.029940407,
+            "sim": 524.0
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 327947.029106632,
+            "sim": 525.0
+          },
+          {
+            "phase": "IDLE",
+            "wall": 327955.837821251,
+            "sim": 533.8000000000001
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 327956.637872767,
+            "sim": 534.6
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328047.444356034,
+            "sim": 625.4000000000001
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328048.444883906,
+            "sim": 626.4000000000001
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328059.644830893,
+            "sim": 637.6
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328060.444921329,
+            "sim": 638.4000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328063.064379718,
+            "sim": 641.0
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328064.065747606,
+            "sim": 642.0
+          },
+          {
+            "phase": "TRANSIT_CANCEL",
+            "wall": 328064.264196918,
+            "sim": 642.2
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328064.864493427,
+            "sim": 642.8000000000001
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328065.664290073,
+            "sim": 643.6
+          },
+          {
+            "phase": "ESCAPE",
+            "wall": 328065.863951931,
+            "sim": 643.8000000000001
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328068.463754087,
+            "sim": 646.4000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328068.663926393,
+            "sim": 646.6
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328069.664765313,
+            "sim": 647.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328095.677984273,
+            "sim": 673.6
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328096.478089102,
+            "sim": 674.4000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328101.478161326,
+            "sim": 679.4000000000001
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328102.678047715,
+            "sim": 680.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328108.878106779,
+            "sim": 686.8000000000001
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328109.678009298,
+            "sim": 687.6
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328135.677601262,
+            "sim": 713.6
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328136.679124656,
+            "sim": 714.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328152.096423699,
+            "sim": 730.0
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328152.894528385,
+            "sim": 730.8000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328161.094273144,
+            "sim": 739.0
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328162.095401179,
+            "sim": 740.0
+          },
+          {
+            "phase": "TRANSIT_CANCEL",
+            "wall": 328165.694511928,
+            "sim": 743.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328166.294709047,
+            "sim": 744.2
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328167.094800995,
+            "sim": 745.0
+          },
+          {
+            "phase": "ESCAPE",
+            "wall": 328167.294194957,
+            "sim": 745.2
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328169.894197325,
+            "sim": 747.8000000000001
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328170.094659323,
+            "sim": 748.0
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328171.095377369,
+            "sim": 749.0
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328199.494661102,
+            "sim": 777.4000000000001
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328200.294539292,
+            "sim": 778.2
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328202.4942061,
+            "sim": 780.4000000000001
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328203.695007786,
+            "sim": 781.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328211.894560009,
+            "sim": 789.8000000000001
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328212.694657298,
+            "sim": 790.6
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 328217.494203575,
+            "sim": 795.4000000000001
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 328218.695698848,
+            "sim": 796.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328249.117605672,
+            "sim": 827.0
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 328249.917561112,
+            "sim": 827.8000000000001
+          },
+          {
+            "phase": "IDLE",
+            "wall": 328251.517212521,
+            "sim": 829.4000000000001
+          }
+        ]
+      },
+      "status_packets_total": 46
+    }
+  },
+  "last_journal": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "succeeded",
+    "revision": 63,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 11790,
+    "token": "fc7c3106cfc948c8a48132b35ad19650-1",
+    "uuid": "79267691e5f0455a9e50ee6dca33591a"
+  },
+  "cgroup": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "292\n",
+    "/sys/fs/cgroup/memory.peak": "1507618816\n"
+  },
+  "observations": {
+    "terminal_status_by_uuid": {
+      "62ea25e4f315464bb6659fb6382e2229": 4,
+      "256b9d31a5584daeaa1172a00d5f989a": 4,
+      "413cf663ae874c3bb82e106c8f4b750b": 4,
+      "eaaa0d3cf71141e18742cf072a44926f": 5,
+      "4e22c1dffdef4e20bf8141824f58a4df": 4,
+      "5ab129f1afb5406583ee9cf9a1fbf9a9": 4,
+      "456c86b73ef84b588763b7e7b6f41c31": 4,
+      "0df6266909d34d4f98ab57eacc7e2f2f": 4,
+      "f27ae9543ed941f19aff0c0cde96547e": 4,
+      "9dee93845eb04c499b4bea986e81f766": 4,
+      "7f9c6145003445b98385a768450966d6": 5,
+      "02102991847845bea6ac0f2b1ea2eec6": 4,
+      "36df4bfa0f004d88aaf909a8a5d65747": 4,
+      "2552b830100d4a6aac97253e2fc38703": 5,
+      "1110d2714845447bbba89e3de2a1af58": 4,
+      "5791521006e44b8aa6cf46255fb1c493": 4,
+      "3cd5ff9839d64ebe8a50f248bb00c727": 4,
+      "8c866a893b394b2caafdc906acff5dd1": 5,
+      "de808aaccdc145f9a769c7d1afec0346": 4,
+      "50606a4784de4b68aabe8bbaffdfb041": 4,
+      "79267691e5f0455a9e50ee6dca33591a": 4
+    },
+    "terminal_counts": {
+      "4": 17,
+      "5": 4
+    },
+    "acknowledged_operations": {
+      "claim_sweep": 22,
+      "release_motion": 22,
+      "claim_nav": 21,
+      "release_nav": 21
+    },
+    "contact_sequences": [
+      {
+        "lines": [
+          "[coverage_planner-9] [INFO] [1793310658.507605867] [coverage_planner]: motion relay accepted claim_nav",
+          "[bt_navigator-17] [INFO] [1793310658.507985436] [bt_navigator]: Begin navigating from current location (3.48, 3.54) to (-0.72, 0.93)",
+          "[controller_server-15] [INFO] [1793310658.528560876] [controller_server]: Received a goal, begin computing control effort.",
+          "[coverage_planner-9] [WARN] [1793310658.706894696] [coverage_planner]: held contact: awaiting exact Nav2 cancellation before escape",
+          "[bt_navigator-17] [ERROR] [1793310658.728379473] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+          "[bt_navigator-17] [INFO] [1793310658.728457133] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793310658.728563302] [bt_navigator]: Goal canceled",
+          "[controller_server-15] [INFO] [1793310658.728690272] [controller_server]: Cancellation was successful. Stopping the robot.",
+          "[controller_server-15] [INFO] [1793310658.728719262] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[coverage_planner-9] [WARN] [1793310658.729907448] [coverage_planner]: waypoint 274 unreachable after 1 tries; skipping",
+          "[coverage_planner-9] [INFO] [1793310659.306432068] [coverage_planner]: motion relay accepted release_nav",
+          "[coverage_planner-9] [INFO] [1793310660.106231244] [coverage_planner]: motion relay accepted claim_sweep",
+          "[coverage_planner-9] [WARN] [1793310660.106992162] [coverage_planner]: bumper held near waypoint 274: peel off (turn +0.6) 2.5s (escape 1/25)"
+        ]
+      },
+      {
+        "lines": [
+          "[coverage_planner-9] [WARN] [1793310760.137011617] [coverage_planner]: held contact: awaiting exact Nav2 cancellation before escape",
+          "[bt_navigator-17] [ERROR] [1793310760.157554897] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+          "[bt_navigator-17] [INFO] [1793310760.157617237] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793310760.157686957] [bt_navigator]: Goal canceled",
+          "[controller_server-15] [INFO] [1793310760.157752517] [controller_server]: Cancellation was successful. Stopping the robot.",
+          "[controller_server-15] [INFO] [1793310760.157774967] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[coverage_planner-9] [WARN] [1793310760.158784733] [coverage_planner]: waypoint 0 unreachable after 1 tries; skipping",
+          "[coverage_planner-9] [INFO] [1793310760.736631328] [coverage_planner]: motion relay accepted release_nav",
+          "[coverage_planner-9] [INFO] [1793310761.536672777] [coverage_planner]: motion relay accepted claim_sweep",
+          "[coverage_planner-9] [WARN] [1793310761.537422394] [coverage_planner]: bumper held near waypoint 0: peel off (turn +0.6) 2.5s (escape 2/25)"
+        ]
+      }
+    ],
+    "phase_counts": {
+      "IDLE": 23,
+      "SWEEP": 24,
+      "PREPARE_NAV": 21,
+      "TRANSIT": 21,
+      "TRANSIT_CANCEL": 2,
+      "ESCAPE": 2
+    },
+    "final_phase": "IDLE",
+    "relay_fault_lines": [],
+    "error_lines_before_summary": [
+      "[controller_server-15] [ERROR] [1793310019.115950088] [local_costmap.local_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions",
+      "[planner_server-16] [ERROR] [1793310019.209994167] [global_costmap.global_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions",
+      "[bt_navigator-17] [ERROR] [1793310122.831562890] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+      "[bt_navigator-17] [ERROR] [1793310538.892202116] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+      "[bt_navigator-17] [ERROR] [1793310658.728379473] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+      "[bt_navigator-17] [ERROR] [1793310760.157554897] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!"
+    ],
+    "error_lines_after_summary": [
+      "[ERROR] [python3-1]: process has died [pid 704, exit code -2, cmd '/usr/bin/python3 -m oomwoo_cleaning_jobs.ros_dock_velocity_relay --ros-args -p simulation_lab:=true -p three_way:=true -p managed_nav2:=true -p use_sim_time:=true -p goal_journal_path:=/tmp/oomwoo-owned-motion.json'].",
+      "[ERROR] [parameter_bridge-6]: process has died [pid 710, exit code -6, cmd '/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge --ros-args --params-file /tmp/launch_params_tppax3ak -r cmd_vel:=/valdi/lab_safe_cmd_vel_output'].",
+      "[ERROR] [gazebo-3]: process[gazebo-3] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'",
+      "[ERROR] [gazebo-3]: process has died [pid 706, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --force-version 8']."
+    ],
+    "scored_motion_pass": true,
+    "all_processes_clean_shutdown": false
+  },
+  "focal_evidence": {
+    "planner_module59": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/nav_contact_cancel_contract_20261029.json",
+      "sha256": "40594cc896c5a0aa42f40e48d5acfd6890caaf5556bf9608a989691848b7ab44",
+      "rc": 0,
+      "seconds": 2.14
+    },
+    "relay_module33": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/nav_contact_relay_verified_20261029.json",
+      "sha256": "789e3f0d13a8ce0f2fef10ae5689cb9bf42e647580be7cb62ad28060a8a27126",
+      "rc": 0,
+      "seconds": 0.57
+    },
+    "strengthened_stop_transport_case1": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/nav_contact_stop_transport_case_delivery_20261029.json",
+      "sha256": "1f9a5a5845a4d5173ec4e390f97e1bfcdc816b7d0123570fffd3dc941c804583",
+      "rc": 0,
+      "seconds": 2.01
+    },
+    "flake8_two_files": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/nav_contact_flake8_delivery_20261029.json",
+      "sha256": "f0f6e00ae47ccd935cd9f11d58a2428355e7fe05227b54bca8fa0b6e537dad52",
+      "rc": 0,
+      "seconds": 1.58
+    },
+    "pep257_two_files": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/nav_contact_pep257_contract_final_20261029.json",
+      "sha256": "b906f688331967f1e0d6cc262747037fa359febe7be83cbbc6f9d38b4c06a41d",
+      "rc": 0,
+      "seconds": 1.17
+    },
+    "basic_three_way_DDS14": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/nav_contact_basic_three_way_dds_delivery_20261029.json",
+      "sha256": "eaeab5666b30833babb557cd9fa211a0e9bcb84ace8f6390dcff93415de71e51",
+      "rc": 0,
+      "seconds": 31.72
+    }
+  },
+  "first_failed_whole_room": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_full_room_baseline_audit_20261029.json",
+    "sha256": "423123806996133bdc829bf22ec9674e96671975759be0402a50b3d3a963f1f9",
+    "rc": null,
+    "seconds": null
+  },
+  "maintainer_read": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/mantenedor_reconsulta_habitacion_completa_20261029.json",
+    "sha256": "e147d6d9ab3e6aa659b1c7b92dfec41a38c62eff901a7e386c4048ca5bdd139a",
+    "rc": null,
+    "seconds": null
+  },
+  "primary_cancel_contract": {
+    "url": "https://github.com/ros2/rcl_interfaces/blob/jazzy/action_msgs/srv/CancelGoal.srv",
+    "blob": "86afbdbf4eacb2c55c1faf8da3a17946c5f0fa9b"
+  },
+  "limitations": [
+    "Single successful scene,not reliability statistics or a controlled A/B against the earlier failed run.",
+    "Coverage/efficiency are simulated geometric cleaning-disk measurements;edge-band exclusions remain as configured,not actual dirt removal.",
+    "Final efficiency70.49%;the unchanged acceptance criterion uses91.06%efficiency at first90%coverage crossing.",
+    "No actual docking trajectory,Keepout-active combined run,ARM benchmark,energy or physical validation.",
+    "Stock no-recovery Nav2 tree remains in managed mode;contact escape is the existing reactive reflex after verified release,not full Nav2 recovery equivalence.",
+    "ABORTED still faults;no safety gate was relaxed to make the coverage test pass.",
+    "Existing sub-inscribed inflation configuration logs warnings;cannot infer conventional contact-averse navigation.",
+    "Four inner FollowPath halt-result errors appeared during cancellations;all four outer NavigateToPose goals were observed CANCELED and released.",
+    "After the scorer PASS,relay logged KeyboardInterrupt(-2),ros_gz_bridge exitedSIGABRT(-6),and Gazebo required the existing launchSIGTERM escalation.Clean shutdown and bridge abort cause remain unverified.All belonged to the removed owned container.",
+    "No remote writes,push,PR,merge or changes applied to original colleague repos."
+  ]
+}
