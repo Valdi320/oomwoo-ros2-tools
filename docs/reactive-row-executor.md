@@ -360,5 +360,19 @@ This fixes row-pose admission only. The separate open-loop escape branches,
 active Nav2 ownership, full health attestation, direct-drive Keepout, stopped
 process/clock handling and physical stopping remain separate unresolved
 integration work. The owner confirms there is no hardware available: all
-results are design/software/simulation. A nominal full test_room regression
-of this correction is the next verification, not yet claimed here.
+results are design/software/simulation.
+
+A subsequent nominal full test_room run of corrected source `a68b048` passes:
+**98.80% final coverage**, **90.51% efficiency at the first 90% crossing**,
+69.65% final efficiency, and `sweep_complete`. The scorer records 441.0 s to
+target; wall time including startup/teardown is 610.15 s. There are 19 successful
+Nav2 transit goals, no reactive-stuck warnings, and no reported pose jumps or
+simulation instability. The final meter reports 122.90 m and 13,696 reachable
+cells; the existing deferred edge band remains outside that denominator.
+This confirms nominal completion without the AMCL motion fallback. It does
+not inject localization loss into Gazebo or prove the three-way ownership
+policy. Current 98.80% is not replaced with the earlier source's 99.09%; a single
+unseeded comparison cannot attribute coverage or timing differences to this fix.
+The unchanged contract evaluates efficiency at the target crossing; final
+finishing efficiency is reported separately. Exact inputs and results are in
+the evidence JSON above. No further production change was made for this run.

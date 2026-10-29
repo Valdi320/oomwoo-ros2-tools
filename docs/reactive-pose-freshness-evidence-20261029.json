@@ -366,5 +366,115 @@
     "A paused process/ROS clock cannot execute this check; no wall-clock or MCU watchdog was added.",
     "Three-way arbitration, source isolation, map/resource/safety health inputs, Keepout while direct driving and physical durability remain unfinished."
   ],
-  "next": "Run one existing test_room regression of the pinned corrected source to check nominal motion without AMCL fallback. No suite, new bank/tool/node/timer, build or hardware."
+  "next": "Integrate actual source health and ownership evidence into the existing lab relay/coordinator; keep runtime single-writer work separate from this focused row-pose correction.",
+  "gazebo_follow_up": {
+    "date_utc": "2026-10-29T19:15:32.699657+00:00",
+    "source_commit": "a68b048d69bda86d28007b5ab9794a5bfddb7380",
+    "report": {
+      "coverage": 0.988,
+      "coverage_target": 0.9,
+      "target_crossed": true,
+      "efficiency_at_target": 0.9051,
+      "efficiency_final": 0.6965,
+      "revisit_ratio": 0.2089,
+      "efficiency_target": 0.8,
+      "time_to_target_s": 441.0,
+      "end_reason": "sweep_complete",
+      "sim_unstable": false,
+      "measurement_valid": true,
+      "pass": true
+    },
+    "bank_exit": 0,
+    "container_wrapper_exit": 0,
+    "wall_seconds_total": 610.15,
+    "nav2_goals_succeeded": 19,
+    "reactive_stuck_warnings": [],
+    "gapfill_events": [
+      "[coverage_planner-7] [INFO] [1793301208.898818149] [coverage_planner]: gap-fill pass 1: 7 uncovered spots, coverage 98.3%",
+      "[coverage_planner-7] [INFO] [1793301253.298617974] [coverage_planner]: coverage complete: 98.8% covered"
+    ],
+    "last_meter_sample": "[coverage_meter-6] [INFO] [1793301256.099171974] [coverage_meter]: COVERAGE_REPORT coverage=0.9880 efficiency=0.6965 revisit_ratio=0.2089 path_m=122.90 ideal_m=85.60 reachable_cells=13696 sim_t=592.2 target_hit=True t_target=436.185 pose_jumps=0 sim_unstable=False",
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "281\n",
+      "/sys/fs/cgroup/memory.peak": "945811456\n"
+    },
+    "image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "provenance": {
+      "planner": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+      "scorer": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+      "files": {
+        "launch/coverage_regression.launch.py": {
+          "match": true,
+          "sha256": "f38c978dbbef4819eefa3e69db706580f7a435c4c7a09d835532a296b01d03c1"
+        },
+        "launch/sim_bringup.launch.py": {
+          "match": true,
+          "sha256": "c903224243d7fe3643afc5bb57871ca2afdff402dd2629bea41ba3a4a35393ea"
+        },
+        "worlds/test_room.world": {
+          "match": true,
+          "sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+        },
+        "config/nav2_params.yaml": {
+          "match": true,
+          "sha256": "5478b8f007f1ae301091efb3fc38b6cda63eadd8790f000e8dec871b6dcaf0c8"
+        },
+        "maps/test_room.yaml": {
+          "match": true,
+          "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+        },
+        "maps/test_room.pgm": {
+          "match": true,
+          "sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+        }
+      }
+    },
+    "command_args": [
+      "podman",
+      "run",
+      "--rm",
+      "--pull=never",
+      "--network=none",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges",
+      "--security-opt=label=disable",
+      "--read-only",
+      "--tmpfs",
+      "/tmp:rw,exec,size=1024m,mode=1777",
+      "--memory=3g",
+      "--cpus=2",
+      "--pids-limit=512",
+      "-e",
+      "HOME=/tmp",
+      "-e",
+      "ROS_LOG_DIR=/tmp/roslogs",
+      "-e",
+      "ROS_DOMAIN_ID=88",
+      "-e",
+      "ROS_LOCALHOST_ONLY=1",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools:/work:ro",
+      "--name",
+      "oomwoo-codex-pose-freshness-20261029",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro",
+      "--entrypoint",
+      "/bin/bash",
+      "docker.io/makerspet/oomwoo:jazzy-dev",
+      "-lc",
+      "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2\nexport MAX_WALL_TIME_S=1800 CLOCK_DEAD_WALL_S=45 RUNS=1\npython3 - <<'PROVENANCE'\nfrom pathlib import Path\nfrom ament_index_python.packages import get_package_share_directory\nimport hashlib,json\nfrom oomwoo_coverage import coverage_planner_node as planner\nfrom oomwoo_sim_support import coverage_regression_runner as scorer\nshare=Path(get_package_share_directory('oomwoo_sim_support'));r={'planner':planner.__file__,'scorer':scorer.__file__,'files':{}}\nfor name in ['launch/coverage_regression.launch.py','launch/sim_bringup.launch.py','worlds/test_room.world','config/nav2_params.yaml','maps/test_room.yaml','maps/test_room.pgm']:\n a=(share/name).read_bytes();b=(Path('/work/src/oomwoo_sim_support')/name).read_bytes();r['files'][name]={'match':a==b,'sha256':hashlib.sha256(a).hexdigest()}\n assert a==b,name\nassert planner.__file__.startswith('/work/') and scorer.__file__.startswith('/work/')\nprint('OOMWOO_SOURCE_PROVENANCE '+json.dumps(r),flush=True)\nPROVENANCE\nif [ $? -ne 0 ]; then exit 3; fi\nbash -n /work/deploy/run_coverage_regression.sh || exit 3\nbash /work/deploy/run_coverage_regression.sh executor:=reactive\nbank_code=$?\nexport OOMWOO_BANK_CODE=$bank_code\npython3 - <<'INNER'\nimport json,glob,os\nfrom pathlib import Path\nr={'bank_code':int(os.environ['OOMWOO_BANK_CODE']),'reports':{},'logs':{}}\nfor p in glob.glob('/tmp/coverage_runs.*/run*.json'):\n r['reports'][p]=json.loads(Path(p).read_text())\nfor p in glob.glob('/tmp/coverage_regression.log.*'):\n r['logs'][p]=Path(p).read_text(errors='replace')\nr['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/pids.events'),Path('/sys/fs/cgroup/pids.peak'),Path('/sys/fs/cgroup/memory.peak')] if p.exists()}\nprint('OOMWOO_GAZEBO_BANK '+json.dumps(r))\nINNER"
+    ],
+    "lock": "LIBRE: carga 0.47, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (15052 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "raw_report": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/coverage_gazebo_pose_freshness_20261029.json",
+    "raw_sha256": "239574b35d1e152db968d7fc16a78f6a2ebd5789acf7b3ff5807ed5359f7cec8",
+    "container_terminal": "outer process exit0, then podman inspect125/no such object after --rm; not restarted",
+    "limits": [
+      "One unseeded nominal test_room run, not fault injection or statistical/A-B evidence.",
+      "98.80% final is the current run; prior 99.09% belongs to older source 9283378 and is not substituted.",
+      "No active Keepout mask, three-way ownership, DDS localization dropout, independent MCU watchdog, physical robot, ARM or dirt-removal validation.",
+      "Active Nav2 and open-loop wedge-escape contracts are unchanged by the row-pose fix.",
+      "Approximately0.95 GB peak is this container on x86, not a minimum robot computer specification."
+    ]
+  }
 }
