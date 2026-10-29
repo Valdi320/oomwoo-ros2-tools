@@ -103,6 +103,7 @@ def timed_reactive_driver():
         warn=lambda message: None, info=lambda message: None)
     node._on_goal_response = MethodType(CoveragePlanner._on_goal_response, node)
     node._send_goal_to = MethodType(CoveragePlanner._send_goal_to, node)
+    node._dispatch_goal = MethodType(CoveragePlanner._dispatch_goal, node)
     node.nav_client.send_goal_async = lambda goal: SimpleNamespace(
         add_done_callback=lambda callback: None)
     return node, sent, now
@@ -113,6 +114,35 @@ def row_target(x):
     pose.pose.position.x = x
     pose.pose.orientation.w = 1.0
     return pose
+
+
+@pytest.mark.parametrize('cause', ['held_bumper', 'consecutive_skips', 'spent_budget'])
+def test_escape_entry_zeroes_previous_row_in_its_scheduling_tick(cause):
+    node, sent, _ = timed_reactive_driver()
+    CoveragePlanner._tick_reactive(node)
+    assert sent == [(0.35, 0.0)]
+    node.map_msg = object()
+    node.total_free_cells = 1
+    node.ext_ratio = 0.0
+    node._warn_if_no_feedback = lambda: None
+    node.stop_at_target = False
+    node.exec_mode = 'reactive'
+    node.plan_started = True
+    node.escape_until = None
+    node.escapes_done = 25 if cause == 'spent_budget' else 0
+    node.max_escapes = 25
+    node._bumper_held_long = lambda: cause == 'held_bumper'
+    node.goal_handle = None
+    node.escape_after = 2
+    node.escape_sec = 2.5
+    node._escape_angular = lambda: -0.6
+    node.wedge_zones = []
+    node.wedge_avoid_radius = 0.45
+    node.consecutive_skips = 0 if cause == 'held_bumper' else 2
+    node._maybe_wedge_escape = MethodType(CoveragePlanner._maybe_wedge_escape, node)
+    node._tick_reactive = MethodType(CoveragePlanner._tick_reactive, node)
+    CoveragePlanner._tick(node)
+    assert sent == [(0.35, 0.0), (0.0, 0.0)]
 
 
 @pytest.mark.parametrize('result', [4, 6, 'rejected'])
@@ -448,3 +478,120 @@ def test_reactive_accepts_current_common_tf_with_future_amcl_edge():
     node.tf_buffer.set_transform(transform, 'focused_localization_test')
     CoveragePlanner._tick_reactive(node)
     assert sent[-1] == (0.35, 0.0)
+
+
+def private_relay_planner(tmp_path):
+    """Bind actual planner methods with asynchronous RPC/action recording peers."""
+    journal_module = pytest.importorskip('oomwoo_cleaning_jobs.goal_journal')
+    node, sent, now = timed_reactive_driver()
+    node._relay_enabled = True
+    node._relay_journal = journal_module.GoalJournal(tmp_path / 'goal.json')
+    node._relay_goal_pose = None
+    node._relay_stage = 'sweep'
+    node._relay_fault = None
+    node._relay_epoch = 0
+    node._relay_owner = 'reactive_sweep'
+    node._relay_rpc = None
+    node._relay_status_future = None
+    node._relay_status_client = SimpleNamespace(service_is_ready=lambda: False)
+    node._relay_status_epoch = 0
+    node._relay_status_last = None
+    node._relay_poll = MethodType(CoveragePlanner._relay_poll, node)
+    node._relay_fail = lambda reason: pytest.fail(reason)
+    node.map_msg = OccupancyGrid()
+    node.map_msg.header.frame_id = 'map'
+    node.map_msg.info.width = node.map_msg.info.height = 20
+    node.map_msg.info.resolution = 0.25
+    node.map_msg.info.origin.orientation.w = 1.0
+    node.map_msg.data = [0] * 400
+    sends = []
+
+    def actual_send(goal, **options):
+        sends.append((node._relay_journal.read(), bytes(options['goal_uuid'].uuid).hex()))
+        return SimpleNamespace(add_done_callback=lambda callback: None)
+
+    node.nav_client.send_goal_async = actual_send
+    return node, sent, sends
+
+
+def relay_reply(node, operation, *, ok=True, owner='stopped'):
+    node._relay_rpc_operation = operation
+    node._relay_rpc = SimpleNamespace(done=lambda: True, result=lambda: SimpleNamespace(
+        ok=ok, state=owner, error='quiet interval not complete' if not ok else ''))
+    CoveragePlanner._relay_poll(node)
+
+
+def test_relay_journals_uuid_before_successful_nav_permission_and_send(tmp_path):
+    node, sent, sends = private_relay_planner(tmp_path)
+    CoveragePlanner._send_goal_to(node, row_target(2.0))
+    assert node._relay_stage == 'release_sweep'
+    assert sent[-1] == (0.0, 0.0) and sends == []
+    relay_reply(node, 'release_motion')
+    record = node._relay_journal.read()
+    assert record['state'] == 'submitting'
+    assert node._relay_stage == 'claim_nav' and sends == []
+    relay_reply(node, 'claim_nav', ok=False)
+    assert node._relay_journal.read() == record and sends == []
+    relay_reply(node, 'claim_nav', owner='navigation')
+    assert sends == [(record, record['uuid'])]
+    assert node.awaiting and node._relay_stage == 'nav'
+
+
+def test_preclaim_status_reply_cannot_overwrite_new_navigation_owner(tmp_path):
+    node, _, sends = private_relay_planner(tmp_path)
+    CoveragePlanner._send_goal_to(node, row_target(2.0))
+    relay_reply(node, 'release_motion')
+    old_epoch = node._relay_epoch
+    node._relay_status_epoch = old_epoch
+    node._relay_status_future = SimpleNamespace(done=lambda: True, result=lambda: SimpleNamespace(
+        ok=True, status_json='{"owner":"stopped"}'))
+    relay_reply(node, 'claim_nav', owner='navigation')
+    assert node._relay_epoch > old_epoch
+    assert node._relay_owner == 'navigation' and len(sends) == 1
+
+
+def test_finished_owned_sweep_requests_release_before_legacy_finished_return():
+    node, sent, _ = reactive_driver()
+    operations, phases = [], []
+    node._relay_poll = lambda: None
+    node.finished = node.plan_started = True
+    node._relay_stage = 'sweep'
+    node._relay_fault = None
+    node._relay_owner = 'reactive_sweep'
+    node._relay_status_last = None
+    node._relay_rpc = None
+    node._relay_retry_at = 0.0
+    node._relay_last_stage = None
+    node._relay_stage_wall = 0.0
+    node._relay_phase = MethodType(CoveragePlanner._relay_phase, node)
+    node._relay_phase_pub = SimpleNamespace(publish=lambda msg: phases.append(msg.data))
+    node._relay_snapshot = {'last_output': [0.0, 0.0],
+                            'motion_inputs': {'reactive_sweep': {'zero': True}}}
+    node._relay_request = operations.append
+    assert CoveragePlanner._relay_tick(node) is True
+    assert operations == ['release_motion'] and phases == ['IDLE']
+    assert sent[-1] == (0.0, 0.0)
+
+
+def test_relay_boot_deadline_also_bounds_a_nav_server_that_never_starts(monkeypatch):
+    node, sent, _ = reactive_driver()
+    node._relay_poll = lambda: None
+    node.finished = node.plan_started = False
+    node._relay_stage = node._relay_last_stage = 'boot'
+    node._relay_fault = None
+    node._relay_stage_wall = 0.0
+    node.goal_timeout = 30.0
+    node._relay_snapshot = {}
+    node._relay_epoch = 0
+    node.goal_handle = None
+    node._relay_stop_future = None
+    node._relay_control = SimpleNamespace(service_is_ready=lambda: False)
+    node.get_logger = lambda: SimpleNamespace(error=lambda message: None)
+    node._relay_phase = MethodType(CoveragePlanner._relay_phase, node)
+    node._relay_fail = MethodType(CoveragePlanner._relay_fail, node)
+    node._relay_phase_pub = SimpleNamespace(publish=lambda message: None)
+    monkeypatch.setattr('oomwoo_coverage.coverage_planner_node.time.monotonic', lambda: 31.0)
+    assert CoveragePlanner._relay_tick(node) is True
+    assert node._relay_stage == 'fault'
+    assert node._relay_fault.startswith('handoff timed out in boot')
+    assert sent == [(0.0, 0.0)]

@@ -22,6 +22,8 @@ map-and-clean live here so they build, test and version together.
 - **`oomwoo_coverage`** — boustrophedon cell-decomposition coverage cleaning: drives a
   full-room sweep through Nav2 (or the reactive executor, `executor:=reactive`), with
   gap-fill and wedge recovery.
+  The private contributor-only motion-relay experiment and its validation
+  limits are recorded in [the executor note](docs/reactive-row-executor.md#private-single-output-integration--29-october-2026-local-wip).
 - **`oomwoo_nav_localize`** — kidnapped-robot relocalization (global correlative
   scan-match + AMCL) so the robot can recover its pose from any start position on a
   known map.

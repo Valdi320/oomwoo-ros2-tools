@@ -40,7 +40,11 @@ planner under test consumes the same grid the grader scores with, so the
 sim pass certifies the sweep + the harness loop, not a standalone estimator.
 """
 
+import hashlib
+import json
+import time
 from typing import List, Optional
+import uuid
 
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Twist
 
@@ -63,7 +67,7 @@ from rclpy.qos import (
 
 from ros_gz_interfaces.msg import Contacts
 
-from std_msgs.msg import Bool, Float32
+from std_msgs.msg import Bool, Float32, String
 
 from tf2_ros import Buffer, TransformException, TransformListener
 
@@ -266,6 +270,11 @@ class CoveragePlanner(Node):
         self.nav_client = ActionClient(
             self, NavigateToPose, 'navigate_to_pose')
 
+        self.declare_parameter('motion_relay_journal', '')
+        relay_path = self.get_parameter('motion_relay_journal').value
+        self._relay_enabled = bool(relay_path)
+        if self._relay_enabled:
+            self._init_motion_relay(relay_path)
         # 5 Hz coverage accounting; planning kicks off once the map arrives
         self.create_timer(0.2, self._tick)
         self.get_logger().info('coverage_planner up; waiting for /map')
@@ -652,7 +661,16 @@ class CoveragePlanner(Node):
         return False
 
     def _send_goal_to(self, p) -> None:
-        """Dispatch a NavigateToPose goal (Nav2) for pose p."""
+        """Dispatch a NavigateToPose goal, acquiring its lab lease first if enabled."""
+        if getattr(self, '_relay_enabled', False):
+            self._relay_goal_pose = p
+            self._relay_stage = 'release_sweep'
+            self.cmd_pub.publish(Twist())
+            return
+        self._dispatch_goal(p)
+
+    def _dispatch_goal(self, p, goal_uuid=None) -> None:
+        """Send one actual action request after any required durable lab preflight."""
         # Nav2 owns this interval; its travel time is not a stalled row.
         self._drive_best_dist = None
         self._drive_progress_t = None
@@ -663,7 +681,8 @@ class CoveragePlanner(Node):
         self.goal_deadline = self.get_clock().now()
         self._goal_best_dist = None     # reset no-progress tracking for this goal
         self._goal_progress_t = self.get_clock().now()
-        self.nav_client.send_goal_async(goal).add_done_callback(
+        options = {} if goal_uuid is None else {'goal_uuid': goal_uuid}
+        self.nav_client.send_goal_async(goal, **options).add_done_callback(
             self._on_goal_response)
 
     def _send_next(self) -> None:
@@ -729,6 +748,20 @@ class CoveragePlanner(Node):
 
     def _on_goal_response(self, fut) -> None:
         handle = fut.result()
+        if getattr(self, '_relay_enabled', False):
+            if not handle.accepted:
+                self._relay_journal.terminal(
+                    token=self._relay_token,
+                    uuid_hex=self._relay_uuid, outcome='rejected')
+                self._relay_fail('Nav2 rejected its preallocated lab goal')
+                return
+            self._relay_journal.accepted(token=self._relay_token, uuid_hex=self._relay_uuid)
+            self.goal_handle = handle
+            handle.get_result_async().add_done_callback(self._on_result)
+            if getattr(self, 'cancel_on_accept', False):
+                self.cancel_on_accept = False
+                handle.cancel_goal_async()
+            return
         if not handle.accepted:
             self.awaiting = False       # Nav2 busy/not-ready -> retry same wp
             self.next_send = self.get_clock().now()
@@ -744,6 +777,17 @@ class CoveragePlanner(Node):
 
     def _on_result(self, fut) -> None:
         status = fut.result().status    # 4=SUCCEEDED, 5=CANCELED, 6=ABORTED
+        if getattr(self, '_relay_enabled', False):
+            outcome = {4: 'succeeded', 5: 'canceled', 6: 'aborted'}.get(status)
+            if outcome is None:
+                self._relay_fail('unknown actual Nav2 terminal result')
+                return
+            self._relay_journal.terminal(
+                token=self._relay_token,
+                uuid_hex=self._relay_uuid, outcome=outcome)
+            self._relay_stage = 'release_nav'
+            if status == 6:
+                self._relay_fail('actual Nav2 goal aborted; lab reconciliation required')
         self.goal_handle = None
         self.awaiting = False
         self.goal_deadline = None
@@ -822,6 +866,8 @@ class CoveragePlanner(Node):
 
     # -------------------------------------------------------------- ticking
     def _tick(self) -> None:
+        if getattr(self, '_relay_enabled', False) and self._relay_tick():
+            return
         if self.map_msg is None or self.total_free_cells == 0:
             return
         ratio = self.ext_ratio
@@ -897,6 +943,7 @@ class CoveragePlanner(Node):
                 f'(escape {self.escapes_done}/{self.max_escapes})')
             self.escape_until = self.get_clock().now() \
                 + rclpy.duration.Duration(seconds=self.escape_sec)
+            self.cmd_pub.publish(Twist())
             return
 
         # Reactive executor drives sweep passes on /cmd_vel and routes only long
@@ -960,6 +1007,9 @@ class CoveragePlanner(Node):
         """
         if self.awaiting or self.consecutive_skips < self.escape_after:
             return False
+        # This tick schedules escape/pruning instead of driving. End the old
+        # command now; leaving a missing 5Hz command would expire the relay.
+        self.cmd_pub.publish(Twist())
         self.consecutive_skips = 0
         # Record a no-go POCKET so upcoming and gap-fill waypoints inside it are
         # pruned — stops the re-entry loop that used to freeze the run. Centre it
@@ -990,6 +1040,218 @@ class CoveragePlanner(Node):
                 'escape budget spent; pruning pockets and continuing '
                 '(no more reverses this run)')
             self.next_send = self.get_clock().now()
+        return True
+
+    def _init_motion_relay(self, path):
+        """Use the existing private relay API; no new node or timer."""
+        from oomwoo_cleaning_jobs.goal_journal import GoalJournal
+        from oomwoo_cleaning_jobs_lab_interfaces.srv import ControlCleaning, GetCleaningStatus
+
+        if self.exec_mode != 'reactive' or not 0 < self.v_cruise <= 0.25 \
+                or not 0 < self.rotate_speed <= 0.8:
+            raise ValueError('lab relay requires reactive speeds within 0.25 m/s and 0.8 rad/s')
+        if self.cmd_pub.topic_name != '/valdi/sweep_cmd_vel':
+            raise ValueError('lab sweep publisher must resolve to its isolated input')
+        self._relay_journal = GoalJournal(path)
+        if self._relay_journal.read() is not None:
+            raise ValueError('existing lab goal journal requires explicit reconciliation')
+        self._relay_control_type = ControlCleaning
+        self._relay_status_type = GetCleaningStatus
+        self._relay_control = self.create_client(ControlCleaning, '/valdi/relay/control')
+        self._relay_status_client = self.create_client(GetCleaningStatus, '/valdi/relay/status')
+        self._relay_phase_pub = self.create_publisher(String, '~/motion_state', 10)
+        if (self.resolve_service_name('/valdi/relay/control') != '/valdi/relay/control'
+                or self.resolve_service_name('/valdi/relay/status') != '/valdi/relay/status'
+                or self._relay_phase_pub.topic_name != '/coverage_planner/motion_state'):
+            raise ValueError('lab relay services or producer phase remapped')
+        self._relay_stage = 'boot'
+        self._relay_fault = None
+        self._relay_owner = 'stopped'
+        self._relay_snapshot = {}
+        self._relay_status_last = None
+        self._relay_status_future = None
+        self._relay_rpc = None
+        self._relay_rpc_operation = None
+        self._relay_rpc_started = None
+        self._relay_rpc_sequence = 0
+        self._relay_epoch = 0
+        self._relay_status_epoch = 0
+        self._relay_goal_pose = None
+        self._relay_uuid = None
+        self._relay_token = None
+        self._relay_retry_at = 0.0
+        self._relay_stop_future = None
+        self._relay_last_stage = None
+        self._relay_stage_wall = time.monotonic()
+
+    def _relay_fail(self, reason):
+        """Latch fault, request STOP once and keep commands zero until reconciliation."""
+        if self._relay_fault is None:
+            self.get_logger().error('motion relay fault: ' + reason)
+        self._relay_fault = reason
+        self._relay_stage = 'fault'
+        self._relay_epoch += 1
+        self.cmd_pub.publish(Twist())
+        if self.goal_handle is not None:
+            self.goal_handle.cancel_goal_async()
+        elif self.awaiting:
+            self.cancel_on_accept = True
+        if self._relay_stop_future is None and self._relay_control.service_is_ready():
+            request = self._relay_control_type.Request()
+            request.request_id = 'coverage-emergency-' + uuid.uuid4().hex
+            request.operation = 'stop'
+            request.isolated_disposable_sim = True
+            self._relay_stop_future = self._relay_control.call_async(request)
+
+    def _relay_phase(self):
+        """Report actual dispatcher phase, independently of a velocity command."""
+        if self._relay_fault is not None:
+            return 'FAULT'
+        if self.finished and self._relay_stage not in ('nav', 'release_nav'):
+            return 'IDLE'
+        if self._relay_stage in ('release_sweep', 'claim_nav'):
+            return 'PREPARE_NAV'
+        if self._relay_stage in ('nav', 'release_nav'):
+            return 'TRANSIT'
+        if self._relay_stage == 'sweep' and not self.finished:
+            return 'ESCAPE' if self.escape_until is not None else 'SWEEP'
+        return 'IDLE'
+
+    def _relay_request(self, operation):
+        if self._relay_rpc is not None or not self._relay_control.service_is_ready():
+            return
+        request = self._relay_control_type.Request()
+        self._relay_rpc_sequence += 1
+        request.request_id = 'coverage-' + str(self._relay_rpc_sequence) + '-' + uuid.uuid4().hex
+        request.operation = operation
+        request.isolated_disposable_sim = True
+        self._relay_rpc = self._relay_control.call_async(request)
+        self._relay_rpc_operation = operation
+        self._relay_rpc_started = time.monotonic()
+
+    def _relay_poll(self):
+        if self._relay_rpc is not None:
+            if not self._relay_rpc.done():
+                if time.monotonic() - self._relay_rpc_started > 3.0:
+                    self._relay_fail('control service did not answer')
+            else:
+                try:
+                    reply = self._relay_rpc.result()
+                except Exception as exc:
+                    self._relay_fail('control transport failed: ' + str(exc))
+                    reply = None
+                operation = self._relay_rpc_operation
+                self._relay_rpc = None
+                if self._relay_fault is None:
+                    if reply is None:
+                        self._relay_fail('empty control response')
+                    elif not reply.ok:
+                        if operation in ('claim_sweep', 'claim_nav') and reply.state == 'stopped':
+                            self._relay_retry_at = time.monotonic() + 0.25
+                        else:
+                            self._relay_fail(operation + ': ' + reply.error)
+                    else:
+                        self._relay_epoch += 1
+                        self._relay_owner = reply.state
+                        self.get_logger().info('motion relay accepted ' + operation)
+                        if operation == 'claim_sweep':
+                            self._relay_stage = 'sweep'
+                            self._relay_uuid = self._relay_token = None
+                        elif operation == 'release_motion':
+                            if self.finished:
+                                self._relay_stage = 'done'
+                            else:
+                                from oomwoo_cleaning_jobs.map_admission import Raster
+                                raster = Raster.from_ros(self.map_msg)
+                                data = json.dumps(
+                                    [raster.width, raster.height, raster.resolution,
+                                     raster.origin_x, raster.origin_y, raster.yaw, raster.data],
+                                    separators=(',', ':'))
+                                self._relay_uuid = uuid.uuid4().hex
+                                self._relay_token = uuid.uuid4().hex + '-1'
+                                p = self._relay_goal_pose.pose.position
+                                self._relay_journal.begin(
+                                    uuid_hex=self._relay_uuid,
+                                    token=self._relay_token, job_id='coverage_sweep',
+                                    map_digest=hashlib.sha256(data.encode()).hexdigest(),
+                                    target_cell=raster.cell_at(p.x, p.y))
+                                self._relay_stage = 'claim_nav'
+                        elif operation == 'claim_nav':
+                            from unique_identifier_msgs.msg import UUID
+                            self._relay_stage = 'nav'
+                            goal_uuid = UUID(uuid=list(bytes.fromhex(self._relay_uuid)))
+                            self._dispatch_goal(self._relay_goal_pose, goal_uuid)
+                        elif operation == 'release_nav':
+                            self._relay_stage = 'claim_sweep'
+        if self._relay_status_future is not None and self._relay_status_future.done():
+            try:
+                response = self._relay_status_future.result()
+            except Exception as exc:
+                self._relay_fail('status transport failed: ' + str(exc))
+                response = None
+            self._relay_status_future = None
+            if response is not None and response.ok \
+                    and self._relay_status_epoch == self._relay_epoch:
+                self._relay_snapshot = json.loads(response.status_json)
+                self._relay_owner = self._relay_snapshot['owner']
+                self._relay_status_last = time.monotonic()
+        if self._relay_status_future is None and self._relay_status_client.service_is_ready():
+            self._relay_status_epoch = self._relay_epoch
+            self._relay_status_future = self._relay_status_client.call_async(
+                self._relay_status_type.Request())
+
+    def _relay_tick(self):
+        """Coordinate asynchronous ownership in the planner's existing 5Hz tick."""
+        self._relay_poll()
+        if self.finished and self._relay_stage == 'sweep':
+            self._relay_stage = 'release_sweep'
+        self._relay_phase_pub.publish(String(data=self._relay_phase()))
+        if self._relay_fault is not None:
+            self.cmd_pub.publish(Twist())
+            return True
+        if self._relay_stage != self._relay_last_stage:
+            self._relay_last_stage = self._relay_stage
+            self._relay_stage_wall = time.monotonic()
+        elif self._relay_stage in (
+                'boot', 'claim_sweep', 'release_sweep', 'claim_nav', 'release_nav') \
+                and time.monotonic() - self._relay_stage_wall > self.goal_timeout:
+            self._relay_fail('handoff timed out in ' + self._relay_stage + ': '
+                             + str(self._relay_snapshot))
+            return True
+        if not self.plan_started:
+            self.cmd_pub.publish(Twist())
+            return False
+        if self._relay_stage in ('sweep', 'nav') and self._relay_status_last is not None:
+            if time.monotonic() - self._relay_status_last > 2.5:
+                self._relay_fail('relay status stopped arriving')
+                return True
+            expected = 'navigation' if self._relay_stage == 'nav' else 'reactive_sweep'
+            if self._relay_owner != expected:
+                self._relay_fail('ownership lost: ' + str(self._relay_snapshot.get('reason')))
+                return True
+        if self._relay_stage == 'nav':
+            if self.awaiting and self.goal_deadline is not None:
+                self._goal_watchdog()
+            return True
+        if self._relay_stage == 'sweep':
+            return False
+        self.cmd_pub.publish(Twist())
+        if self._relay_rpc is not None or time.monotonic() < self._relay_retry_at:
+            return True
+        health = self._relay_snapshot.get('motion_health') or {}
+        if self._relay_stage in ('boot', 'claim_sweep', 'claim_nav'):
+            common = all(health.get(key) is True for key in (
+                'pose_fresh', 'resources_ok', 'map_current', 'safety_loop_ok',
+                'isolated_sources', 'nav2_idle', 'dock_inactive'))
+            if self._relay_owner == 'stopped' and common:
+                self._relay_request(
+                    'claim_nav' if self._relay_stage == 'claim_nav' else 'claim_sweep')
+        elif self._relay_stage in ('release_sweep', 'release_nav'):
+            role = 'navigation' if self._relay_stage == 'release_nav' else 'reactive_sweep'
+            inputs = self._relay_snapshot.get('motion_inputs') or {}
+            if self._relay_owner == role and inputs.get(role, {}).get('zero') is True \
+                    and self._relay_snapshot.get('last_output') == [0.0, 0.0]:
+                self._relay_request('release_nav' if role == 'navigation' else 'release_motion')
         return True
 
     def _tick_reactive(self) -> None:

@@ -20,12 +20,14 @@ and logs COVERAGE_REPORT lines the regression test asserts on.
 """
 
 import os
+import sys
 
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (
-    DeclareLaunchArgument, IncludeLaunchDescription)
+    DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction,
+    SetLaunchConfiguration)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
@@ -75,6 +77,15 @@ def generate_launch_description() -> LaunchDescription:
         DeclareLaunchArgument('executor', default_value='nav2'),
         # reactive-executor tuning (only used when executor:=reactive)
         DeclareLaunchArgument('v_cruise', default_value='0.35'),
+        DeclareLaunchArgument('rotate_speed', default_value='1.0'),
+        DeclareLaunchArgument('motion_relay_journal', default_value=''),
+        DeclareLaunchArgument('sweep_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('nav_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('motor_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('nav_linear_speed', default_value='0.2'),
+        DeclareLaunchArgument('nav_angular_speed', default_value='1.0'),
+        DeclareLaunchArgument('nav_lookahead', default_value='0.25'),
+        DeclareLaunchArgument('nav_goal_pose_topic', default_value='goal_pose'),
         DeclareLaunchArgument('min_transit_len', default_value='0.7'),
     ]
     robot_radius = ParameterValue(
@@ -97,6 +108,13 @@ def generate_launch_description() -> LaunchDescription:
             'yaw': LaunchConfiguration('yaw'),
             'robot_model': LaunchConfiguration('robot_model'),
             'gui': LaunchConfiguration('gui'),
+            'nav_cmd_topic': LaunchConfiguration('nav_cmd_topic'),
+            'motor_cmd_topic': LaunchConfiguration('motor_cmd_topic'),
+            'nav_linear_speed': LaunchConfiguration('nav_linear_speed'),
+            'nav_angular_speed': LaunchConfiguration('nav_angular_speed'),
+            'nav_lookahead': LaunchConfiguration('nav_lookahead'),
+            'nav_goal_pose_topic': LaunchConfiguration('nav_goal_pose_topic'),
+            'managed_motion': LaunchConfiguration('managed_motion', default='false'),
         }.items())
 
     coverage_meter = Node(
@@ -126,19 +144,48 @@ def generate_launch_description() -> LaunchDescription:
                      'executor': LaunchConfiguration('executor'),
                      'v_cruise': ParameterValue(
                          LaunchConfiguration('v_cruise'), value_type=float),
+                     'rotate_speed': ParameterValue(
+                         LaunchConfiguration('rotate_speed'), value_type=float),
+                     'motion_relay_journal': ParameterValue(
+                         LaunchConfiguration('motion_relay_journal'), value_type=str),
                      'min_transit_len': ParameterValue(
                          LaunchConfiguration('min_transit_len'), value_type=float),
                      'use_sim_time': True}],
-        remappings=[('map', '/map'),
+        remappings=[('cmd_vel', LaunchConfiguration('sweep_cmd_topic')),
+                    ('map', '/map'),
                     ('coverage_ratio', '/coverage_meter/ratio'),
                     ('covered_grid', '/coverage_meter/covered_grid'),
                     ('navigate_to_pose', '/navigate_to_pose')])
+
+    def existing_motion_components(context):
+        path = context.perform_substitution(LaunchConfiguration('motion_relay_journal'))
+        if not path:
+            return []
+        if not os.path.isabs(path):
+            raise ValueError('motion_relay_journal must be an absolute disposable lab path')
+        # Reuse the contributor relay and OOMWOO DockDrive. Direct inclusion
+        # avoids dock.launch's parent Shutdown action on driver exit.
+        return [
+            SetLaunchConfiguration('nav_goal_pose_topic', '/valdi/disabled_nav2_goal_pose'),
+            SetLaunchConfiguration('managed_motion', 'true'),
+            ExecuteProcess(cmd=[
+                sys.executable, '-m',
+                'oomwoo_cleaning_jobs.ros_dock_velocity_relay', '--ros-args',
+                '-p', 'simulation_lab:=true', '-p', 'three_way:=true',
+                '-p', 'managed_nav2:=true', '-p', 'use_sim_time:=true',
+                '-p', 'goal_journal_path:=' + path], output='screen'),
+            Node(package='oomwoo_dock', executable='dock_drive', name='dock_drive',
+                 parameters=[{'use_sim_time': True, 'auto_start': False,
+                              'exit_when_done': False}],
+                 remappings=[('cmd_vel', '/valdi/dock_drive_cmd_vel')], output='screen'),
+        ]
 
     # No fixed timers: the meter self-gates on /map + /ground_truth, and the
     # planner self-gates on /amcl_pose + the Nav2 action server (retrying until
     # ready). cleaning_active is latched, so meter accounting can't miss the
     # planner's start regardless of launch order.
     return LaunchDescription(reg_args + [
+        OpaqueFunction(function=existing_motion_components),
         base,
         coverage_meter,
         coverage_planner,

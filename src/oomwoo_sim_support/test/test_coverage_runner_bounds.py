@@ -16,9 +16,8 @@
 import json
 from types import SimpleNamespace
 
-import pytest
-
 from oomwoo_sim_support import coverage_regression_runner as runner
+import pytest
 
 
 @pytest.fixture
@@ -132,3 +131,15 @@ def test_late_unstable_measurement_during_completion_grace_is_invalid(score):
     assert code == 2
     assert report['end_reason'] == 'sim_unstable'
     assert report['pass'] is False
+
+
+def test_motion_fault_cannot_pass_even_after_coverage_target(score):
+    def update(node, tick):
+        node.sweep_started = True
+        node.coverage = 0.99
+        node.efficiency = 0.90
+        node._motion_fault = True
+    code, report, elapsed = score(update=update)
+    assert code == 1
+    assert report['pass'] is False and report['end_reason'] == 'motion_fault'
+    assert report['measurement_valid'] is True and elapsed == 0.25

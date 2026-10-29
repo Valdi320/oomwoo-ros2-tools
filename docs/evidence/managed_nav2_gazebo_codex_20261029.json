@@ -1,0 +1,524 @@
+{
+  "date_utc": "2026-10-29T21:09:37.737423+00:00",
+  "scope": "Private opt-in actual-controller Gazebo integration; no hardware. Bounded diagnostic, not whole-room acceptance.",
+  "image": "docker.io/makerspet/oomwoo:jazzy-dev",
+  "image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+  "source_before_local_commits": {
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "27b16c45a8bf9f8912bee035223ceeeeeabb8fe13f14ca635866117e4133166a",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "767f5852bb95250b1631f4992eb2daaeae738e1ac9f903e4119047230a12c2ff",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "3a8cbc8b62dbf5fbbd26288ca3d5f1c1994c31551492926f599f8006c586acc3",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "c4e17c9b45db91a99782fbe6291b8cf71822eccfa66f08f5181400bdcdd72629"
+  },
+  "bank": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_bounded_integration_20261029.json",
+    "sha256": "7f165e92e1242967ae02a68a52fc81b0e9d032e8491570c2a2064e46c23a7720",
+    "rc": 0,
+    "seconds": 201.98
+  },
+  "bank_code": 1,
+  "report": {
+    "coverage": 0.2255,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 1.0,
+    "revisit_ratio": 0.1938,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "wall_timeout",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false,
+    "motion_audit": {
+      "graph": {
+        "/cmd_vel": [],
+        "/cmd_vel_nav": [],
+        "/navigate_to_pose/_action/status": [
+          [
+            "bt_navigator",
+            "/",
+            "action_msgs/msg/GoalStatusArray",
+            "010f7f01b9035a7c0000000000003c03"
+          ]
+        ],
+        "/valdi/nav2_cmd_vel": [
+          [
+            "controller_server",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01b7034a740000000000006c03"
+          ]
+        ],
+        "/valdi/sweep_cmd_vel": [
+          [
+            "coverage_planner",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c902e20b0000000000001d03"
+          ]
+        ],
+        "/valdi/dock_drive_cmd_vel": [
+          [
+            "dock_drive",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c10285d00000000000001403"
+          ]
+        ],
+        "/valdi/lab_safe_cmd_vel_output": [
+          [
+            "valdi_experimental_cmdvel_relay",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c00285ec0000000000001603"
+          ]
+        ],
+        "safe_output_subscribers": [
+          [
+            "ros_gz_bridge",
+            "/",
+            "geometry_msgs/msg/Twist"
+          ]
+        ]
+      },
+      "samples": {
+        "status": [
+          {
+            "wall": 325281.307532416,
+            "sim": 9.600000000000001,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 325291.357987004,
+            "sim": 19.645,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 325293.91354535,
+            "sim": 22.200000000000003,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 325306.954107779,
+            "sim": 35.24,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 325331.313620021,
+            "sim": 59.6,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                4
+              ],
+              [
+                "164956f96bab41a0a6eb051cc40e60dd",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 325361.313841658,
+            "sim": 89.60000000000001,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                4
+              ],
+              [
+                "164956f96bab41a0a6eb051cc40e60dd",
+                3
+              ]
+            ]
+          },
+          {
+            "wall": 325361.334502527,
+            "sim": 89.62,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                4
+              ],
+              [
+                "164956f96bab41a0a6eb051cc40e60dd",
+                5
+              ]
+            ]
+          },
+          {
+            "wall": 325363.913636491,
+            "sim": 92.2,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                4
+              ],
+              [
+                "164956f96bab41a0a6eb051cc40e60dd",
+                5
+              ],
+              [
+                "c060777594e04dd0a3e5e12d91664b52",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 325378.564049836,
+            "sim": 106.85000000000001,
+            "states": [
+              [
+                "2a20fdca73f04d38b8263c3bffbb2f13",
+                4
+              ],
+              [
+                "e91cfbb81d5d4a0483bd2af6d325c1d0",
+                4
+              ],
+              [
+                "164956f96bab41a0a6eb051cc40e60dd",
+                5
+              ],
+              [
+                "c060777594e04dd0a3e5e12d91664b52",
+                4
+              ]
+            ]
+          }
+        ],
+        "feedback": [
+          {
+            "first_wall": 325281.308499092,
+            "last_wall": 325378.544200774,
+            "count": 6772,
+            "max_gap_wall": 24.38009895104915
+          }
+        ],
+        "phase": [
+          {
+            "phase": "IDLE",
+            "wall": 325272.254631355,
+            "sim": 0.91
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 325280.106894115,
+            "sim": 8.4
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 325280.306337653,
+            "sim": 8.600000000000001
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 325281.307230357,
+            "sim": 9.600000000000001
+          },
+          {
+            "phase": "IDLE",
+            "wall": 325291.913632934,
+            "sim": 20.200000000000003
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 325292.713589796,
+            "sim": 21.0
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 325292.912956525,
+            "sim": 21.200000000000003
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 325293.913851739,
+            "sim": 22.200000000000003
+          },
+          {
+            "phase": "IDLE",
+            "wall": 325307.513407366,
+            "sim": 35.800000000000004
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 325308.313552507,
+            "sim": 36.6
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 325330.112890991,
+            "sim": 58.400000000000006
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 325331.313436732,
+            "sim": 59.6
+          },
+          {
+            "phase": "IDLE",
+            "wall": 325361.913438886,
+            "sim": 90.2
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 325362.713430518,
+            "sim": 91.0
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 325362.912990076,
+            "sim": 91.2
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 325363.914037659,
+            "sim": 92.2
+          },
+          {
+            "phase": "IDLE",
+            "wall": 325379.113356191,
+            "sim": 107.4
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 325379.913518283,
+            "sim": 108.2
+          }
+        ]
+      },
+      "status_packets_total": 9
+    }
+  },
+  "journal": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "succeeded",
+    "revision": 12,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 7150,
+    "token": "b8961adfed9a48a59d82c914c8fe1800-1",
+    "uuid": "c060777594e04dd0a3e5e12d91664b52"
+  },
+  "cgroup": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "290\n",
+    "/sys/fs/cgroup/memory.peak": "1164185600\n"
+  },
+  "observations": {
+    "nav_terminals": {
+      "2a20fdca73f04d38b8263c3bffbb2f13": 4,
+      "e91cfbb81d5d4a0483bd2af6d325c1d0": 4,
+      "164956f96bab41a0a6eb051cc40e60dd": 5,
+      "c060777594e04dd0a3e5e12d91664b52": 4
+    },
+    "terminal_counts": {
+      "4": 3,
+      "5": 1
+    },
+    "acknowledged_operations": {
+      "claim_sweep": 5,
+      "release_motion": 4,
+      "claim_nav": 4,
+      "release_nav": 4
+    },
+    "relay_fault_lines": [],
+    "actual_held_bumper_entries": 0,
+    "dock_controller_state": "actual DockDrive alive IDLE, no docking motion",
+    "coverage_acceptance_pass": false
+  },
+  "focused_tests": {
+    "planner49": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_planner_boot_bounded_final_20261029.json",
+      "sha256": "1e806a0bbf7188fa4b0a2662ddf79146df000ae71fded268761e5101e4d853e4",
+      "rc": 0,
+      "seconds": 2.08
+    },
+    "relay31": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_relay_boot_bounded_final_20261029.json",
+      "sha256": "440b0346259fa4fc89e073058b7f8f3689605c0e8b0dd488862ae02416dee5e1",
+      "rc": 0,
+      "seconds": 0.46
+    },
+    "input_guard13": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_input_guard_20261029.json",
+      "sha256": "1e6c107a40ffe486eaee9c8b4fa63bf8fef62f759476e2d7957f0f6fe2a76064",
+      "rc": 0,
+      "seconds": 0.09
+    },
+    "scorer8": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_scorer_fault_20261029.json",
+      "sha256": "4af429ca4d752b47225b51c6059cefe6fe7580e6f8a9ce19b4aa17dd93bf2f2b",
+      "rc": 0,
+      "seconds": 1.7
+    },
+    "native_remaps3": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_native_remap_resolved_20261029.json",
+      "sha256": "82f9a00aa23554d16f8dfd246d2c7160582e5cd2a67ff59a72122dab68e27626",
+      "rc": 0,
+      "seconds": 12.57
+    },
+    "flake8_six_files": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_flake8_delivery_20261029.json",
+      "sha256": "f6795d927f4fb8827bf7848fda57e24422c4f1a589d08c54bb0b31de36cf0cb7",
+      "rc": 0,
+      "seconds": 1.6
+    },
+    "pep257_six_files": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_pep257_delivery_20261029.json",
+      "sha256": "3fbe35189c788384d575d0ab4ed0c617377ad6836324f1769160748bdeb6658f",
+      "rc": 0,
+      "seconds": 1.19
+    },
+    "basic_three_way_dds14": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_three_way_dds_delivery_20261029.json",
+      "sha256": "180092058b3989595973c911ccd17fdc0a5e15ce0dce692f90e5a39e3a006930",
+      "rc": 0,
+      "seconds": 31.52,
+      "checks": 14,
+      "scope": "Basic three-way relay regression with synthetic sources over actual DDS;not managed Gazebo"
+    }
+  },
+  "negative_attempts": [
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_nav_runtime_audit_20261029.json",
+      "sha256": "5de63f6e05effd7bceca451a2efb0e79547142fb9deaa0a87d45fb38a8128da2",
+      "rc": 0,
+      "seconds": 99.49,
+      "meaning": "Passive audit only;status is event driven and original NAV input has six writers."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_first_20261029.json",
+      "sha256": "49c7b3bfdf98aafaf8d36f49dc2e64edb95ce61ff0500789a18661b664752810",
+      "rc": 0,
+      "seconds": 61.87,
+      "meaning": "Boot denied by client-inventory assumption."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_sendgoal_20261029.json",
+      "sha256": "a775d2a35394229a97738e149f9fff45b49726993afd332ca692b950072fcacc",
+      "rc": 0,
+      "seconds": 60.71,
+      "meaning": "Actual SendGoal inventory identified navigator self-client."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_quarantine_20261029.json",
+      "sha256": "4e0dadb84613bbbac5e705f2d5bcca6370ac657c880dec0d61ab4dd14a3d8d78",
+      "rc": 0,
+      "seconds": 61.0,
+      "meaning": "Alternative ingress isolated;unanswered startup GetState future blocked boot."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_bounded_query_20261029.json",
+      "sha256": "ca9de9acde0f2c57a44852e294b95874c8c508d04486547174b5f4cb0296e50d",
+      "rc": 0,
+      "seconds": 34.21,
+      "meaning": "Permissions and correct UUID dispatched;unsupported Fast DDS reception sequence rejected first command."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_one_nav_writer_20261029.json",
+      "sha256": "1cc5d0b0b8b4223e93cef3311126f0e1007598bd6dc9ffac4ba40ab597f35359",
+      "rc": 0,
+      "seconds": 74.62,
+      "meaning": "First transit succeeded but terminal/result-callback ordering lost handoff."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_terminal_order_20261029.json",
+      "sha256": "9a6f67ad477c29009fe97ddc6fba6975b28cced58e06efb25d0cc3b0531567a4",
+      "rc": 0,
+      "seconds": 74.75,
+      "meaning": "Two successful transits/releases and reactive motion;failed on missing command during held-bumper escape scheduling."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_motion_escape_zero_20261029.json",
+      "sha256": "c4a618986458a9df1f064ea40ffe875b6ba79318f89c5592be250b3753aa9aa5",
+      "rc": 0,
+      "seconds": 159.25,
+      "meaning": "Lifecycle activation response timed out before movement;explicit existing FAULT input ended owned stalled bank. Does not test escape fix."
+    },
+    {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/managed_nav_native_remap_20261029.json",
+      "sha256": "c0a83e15d2bd248a52520647ef44e1687969be166dbe09bb36b14e91ec5d8db9",
+      "rc": 1,
+      "seconds": 13.04,
+      "meaning": "2/3 remaps passed;nominal Client.srv_name failed to detect service remap;corrected using public resolver."
+    }
+  ],
+  "primary_contracts": {
+    "nav2_self_client": {
+      "url": "https://github.com/ros-navigation/navigation2/blob/jazzy/nav2_bt_navigator/src/navigators/navigate_to_pose.cpp",
+      "blob": "2f7ed68aa3d68e984e6473db09a64091aaeb7866"
+    },
+    "unsupported_reception_sequence": {
+      "url": "https://github.com/ros2/rmw_fastrtps/blob/jazzy/rmw_fastrtps_shared_cpp/src/rmw_take.cpp",
+      "blob": "19d96fd61ef22992d8fbd4430de354aababccfe7"
+    },
+    "actual_service_resolution": {
+      "url": "https://github.com/ros2/rclpy/blob/jazzy/rclpy/rclpy/node.py#L1495",
+      "blob": "1cace64a22670e3bb3cd9da7fc05e6d42faeff29"
+    }
+  },
+  "limitations": [
+    "No physical hardware, tests or measurements.",
+    "Bounded 180-second scorer stopped at wall_timeout;22.55% partial coverage, not PASS.",
+    "Three successful Nav2 goals;one timed-out goal canceled and released safely.",
+    "No actual escape entry occurred in final bounded scene;the three entry-zero cases are focal method tests.",
+    "No actual docking trajectory, station/charge, Keepout-active motion or fault-injected managed-controller scene.",
+    "Managed Nav2 removes behavior_server and NavigateThroughPoses and uses a stock no-recovery tree;not recovery-equivalent to the default.",
+    "No reliability, ARM CPU, battery energy, SBC minimum or cost-performance inference.",
+    "DDS graph/metadata checks are observations,not authentication or an atomic wiring guarantee.",
+    "No remote writes, publication or source-repo integration."
+  ],
+  "intentional_abort_note": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_escape_zero_startup_abort_20261029.json",
+    "sha256": "1654893374bf90d2f96f28a3f9059fd8b1a06685ab247958e314f7e19e7792fd",
+    "rc": null,
+    "seconds": null
+  }
+}

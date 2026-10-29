@@ -376,3 +376,84 @@ unseeded comparison cannot attribute coverage or timing differences to this fix.
 The unchanged contract evaluates efficiency at the target crossing; final
 finishing efficiency is reported separately. Exact inputs and results are in
 the evidence JSON above. No further production change was made for this run.
+
+
+## Private single-output integration — 29 October 2026, local WIP
+
+An empty motion_relay_journal keeps the existing regression behavior. A
+nonempty disposable absolute path enables coordination with the contributor's
+existing three-way relay. This private dependency is not part of upstream or
+installed by the default launch. The planner publishes its actual phase from
+the existing 5Hz tick. It stops the sweep source, releases its ownership,
+persists a preallocated exact UUID and map digest, requests NAV permission,
+and only then sends that UUID to the actual NavigateToPose server. The actual
+accepted/terminal callbacks update the journal. A successful or canceled
+terminal permits NAV release and a fresh quiet interval before SWEEP. Faults
+latch, request STOP and require reconciliation; aborted goals do not silently
+resume the sweep. A status reply requested before a permission transition
+cannot overwrite the new acknowledged owner.
+
+The controlled launch reuses the actual DockDrive with auto_start=false;
+it is alive and IDLE in this coverage scene. It is not an executed docking
+trajectory or charging proof. Nav2 and sweep publishers go to isolated inputs;
+only the existing relay output feeds ros_gz_bridge. Nav2's RViz goal_pose
+alternative ingress is quarantined in this mode. The managed scene removes
+behavior_server and the unused NavigateThroughPoses plugin, using Nav2's
+stock navigate_w_replanning_only_if_goal_is_updated.xml tree. This leaves one
+controller_server publisher and retains strict publication sequence checking:
+Fast DDS has no supported reception sequence to order different publishers.
+A failed transit requiring recovery remains a fault; no recovery equivalence
+with the normal Nav2 launch is claimed. Controller speed/lookahead arguments
+allow bounded NAV commands without increasing the relay limits.
+A constant explicitly selected simulated BatteryState supplies only the
+resource fixture; no physical battery is inferred.
+
+The scorer's opt-in motion audit records actual status events, feedback
+cadence, phase transitions and command-topic graph (including empty public
+inputs and the final bridge subscriber). Producer FAULT forces a failed
+result even after a coverage target crossing. Audit records are bounded and
+reuse the existing scorer loop. A measurement-valid partial result means
+only that the partial simulated coverage is measurable, not that the run
+passed. There is no hardware in this project; all results are digital.
+
+The initial focal planner module passed 45 cases; the scorer bounds module passes
+8 cases including fault-after-target. Actual-controller Gazebo acceptance
+and complete handoffs remain under investigation; the earlier 98.80% result
+is the unarbitrated reactive run and must not be reused for this mode.
+
+
+The terminal-ordering trial subsequently executed two successful actual Nav2
+transits, each released to SWEEP, and drove reactive rows. It stopped during
+held-bumper escape entry (5.91% partial coverage): that scheduling branch
+returned without a command for one tick, leaving a 0.4 s gap in a 5Hz producer
+against the unchanged 0.30 s command expiry. Escape scheduling now emits zero
+immediately, both for held contact and skip/budget entry. Three focal actual
+method cases cover these exits; the planner module now passes 48 cases.
+This partial run is failed acceptance evidence, not a whole-room result.
+
+
+### Bounded actual-controller observation
+
+The final 180-second diagnostic ended normally at the scorer wall-time bound,
+with 22.55% partial measured coverage, no recorded relay fault, four acknowledged
+NAV releases and five SWEEP claims. Actual status records contain three
+successful goals and one canceled goal after the existing waypoint timeout.
+The command graph has one controller_server NAV publisher, one coverage_planner
+SWEEP publisher, one IDLE DockDrive publisher and one final relay writer consumed
+by ros_gz_bridge; /cmd_vel and /cmd_vel_nav have no publishers. There were no
+pose jumps or instability. Total collection wall time including setup/teardown:
+201.98 s. This is **not a whole-room PASS** (bank exit 1, wall_timeout).
+No escape entry occurred in this final scene, so its zero-on-entry correction
+is supported by the three focal method cases, not by this trajectory.
+
+Four separate focused modules pass 49 +31 +13 +8 cases; three native managed
+constructor/remap cases pass. Flake8 and pep257 pass on the six changed ROS2
+files. No full suite was run. See [exact scoped evidence and retained failures](evidence/managed_nav2_gazebo_codex_20261029.json).
+The managed boot deadline now also covers the wait before plan_started, so a
+lost Nav2 activation response cannot leave this mode waiting indefinitely.
+Remaining acceptance: full-room performance, actual escape exercise, docking
+trajectory/phase coordination and injected faults with the actual controllers.
+All work remains local; the owner has no hardware.
+
+The existing basic three-way DDS scenario also passes its 14 checks again
+on this relay source; its generated motion/health/status inputs remain synthetic.

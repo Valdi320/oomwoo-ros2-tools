@@ -37,6 +37,7 @@ Intended to be launched alongside coverage_regression.launch.py.
 """
 
 import json
+import os
 import sys
 import time
 
@@ -69,6 +70,38 @@ class CoverageRunner(Node):
         self.declare_parameter('plateau_eps', 0.005)
         self.declare_parameter('report_path', '/root/coverage_report.json')
 
+        self.declare_parameter('motion_audit', os.environ.get('OOMWOO_MOTION_AUDIT') == '1')
+        self.motion_audit = self.get_parameter('motion_audit').value
+        self.motion_samples = {'status': [], 'feedback': []}
+        self.motion_graph = {}
+        self._motion_fault = False
+        self.motion_samples['phase'] = []
+        self._motion_graph_wall = 0.0
+        self._motion_status_count = 0
+        self.declare_parameter('sim_battery_fraction',
+                               float(os.environ.get('OOMWOO_SIM_BATTERY_FRACTION', '-1')))
+        fraction = self.get_parameter('sim_battery_fraction').value
+        self._sim_battery_pub = None
+        self._sim_battery_last = 0.0
+        if fraction != -1:
+            if not 0.0 <= fraction <= 1.0:
+                raise ValueError('simulation battery fixture requires fraction0..1 or -1 disabled')
+            from sensor_msgs.msg import BatteryState
+            self._sim_battery_message = BatteryState()
+            self._sim_battery_message.percentage = fraction
+            self._sim_battery_pub = self.create_publisher(BatteryState, '/battery_state', 10)
+        if self.motion_audit:
+            from action_msgs.msg import GoalStatusArray
+            from nav2_msgs.action import NavigateToPose
+            from std_msgs.msg import String
+            self.create_subscription(String, '/coverage_planner/motion_state',
+                                     self._audit_phase, 10)
+            self.create_subscription(
+                GoalStatusArray, '/navigate_to_pose/_action/status',
+                self._audit_status, 10)
+            self.create_subscription(
+                NavigateToPose.Impl.FeedbackMessage, '/navigate_to_pose/_action/feedback',
+                self._audit_feedback, 10)
         self.cov_target = self.get_parameter('coverage_target').value
         self.eff_target = self.get_parameter('efficiency_target').value
         self.max_t = self.get_parameter('max_sim_time_s').value
@@ -108,6 +141,53 @@ class CoverageRunner(Node):
         self.sweep_complete = False
         self.create_subscription(
             Bool, '/coverage_planner/cleaning_active', self._on_active, latched)
+
+    def _audit_phase(self, msg):
+        if msg.data == 'FAULT':
+            self._motion_fault = True
+        phases = self.motion_samples['phase']
+        if not phases or phases[-1]['phase'] != msg.data:
+            if len(phases) >= 128:
+                phases.pop(0)
+            phases.append({'phase': msg.data, 'wall': time.monotonic(), 'sim': self._sim_now()})
+
+    def _audit_status(self, msg):
+        self._motion_status_count += 1
+        if len(self.motion_samples['status']) >= 256:
+            self.motion_samples['status'].pop(0)
+        self.motion_samples['status'].append({
+            'wall': time.monotonic(), 'sim': self._sim_now(),
+            'states': [(bytes(s.goal_info.goal_id.uuid).hex(), s.status)
+                       for s in msg.status_list]})
+
+    def _audit_feedback(self, msg):
+        # Retain bounded aggregate cadence, not an unbounded pose trace.
+        samples = self.motion_samples['feedback']
+        now = time.monotonic()
+        if not samples:
+            samples.append({'first_wall': now, 'last_wall': now, 'count': 1,
+                            'max_gap_wall': 0.0})
+        else:
+            summary = samples[0]
+            summary['max_gap_wall'] = max(summary['max_gap_wall'], now - summary['last_wall'])
+            summary['last_wall'] = now
+            summary['count'] += 1
+
+    def _audit_graph(self):
+        now = time.monotonic()
+        if now - self._motion_graph_wall < 0.5:
+            return
+        self._motion_graph_wall = now
+        for topic in ('/cmd_vel', '/cmd_vel_nav', '/navigate_to_pose/_action/status',
+                      '/valdi/nav2_cmd_vel', '/valdi/sweep_cmd_vel',
+                      '/valdi/dock_drive_cmd_vel', '/valdi/lab_safe_cmd_vel_output'):
+            publishers = self.get_publishers_info_by_topic(topic)
+            snapshot = sorted((p.node_name, p.node_namespace, p.topic_type,
+                               bytes(p.endpoint_gid).hex()) for p in publishers)
+            self.motion_graph[topic] = snapshot
+        self.motion_graph['safe_output_subscribers'] = sorted(
+            (p.node_name, p.node_namespace, p.topic_type)
+            for p in self.get_subscriptions_info_by_topic('/valdi/lab_safe_cmd_vel_output'))
 
     def _on_active(self, msg):
         if msg.data:
@@ -149,6 +229,12 @@ class CoverageRunner(Node):
             # wall-clock backstops: a dead/frozen sim clock stops every
             # sim-time exit condition, so bound the run in real time too
             now_wall = time.monotonic()
+            if getattr(self, '_sim_battery_pub', None) is not None \
+                    and now_wall - self._sim_battery_last >= 0.5:
+                self._sim_battery_pub.publish(self._sim_battery_message)
+                self._sim_battery_last = now_wall
+            if getattr(self, 'motion_audit', False):
+                self._audit_graph()
             if self._sim_now() > last_sim:
                 last_sim = self._sim_now()
                 last_sim_advance_wall = now_wall
@@ -162,6 +248,9 @@ class CoverageRunner(Node):
                 # (nothing teleported) — this is a slow host / incomplete run,
                 # NOT sim instability. Report it as its own reason.
                 reason = 'wall_timeout'
+                break
+            if getattr(self, '_motion_fault', False):
+                reason = 'motion_fault'
                 break
             if self.sim_unstable:
                 # no point measuring further — the numbers are already invalid
@@ -238,10 +327,14 @@ class CoverageRunner(Node):
             'end_reason': reason,
             'sim_unstable': self.sim_unstable,
             'measurement_valid': not invalid,
-            'pass': bool(not invalid
+            'pass': bool(not invalid and reason != 'motion_fault'
                          and self.coverage >= self.cov_target
                          and gate_eff >= self.eff_target),
         }
+        if getattr(self, 'motion_audit', False):
+            result['motion_audit'] = {
+                'graph': self.motion_graph, 'samples': self.motion_samples,
+                'status_packets_total': self._motion_status_count}
         try:
             with open(self.report_path, 'w') as f:
                 json.dump(result, f, indent=2)

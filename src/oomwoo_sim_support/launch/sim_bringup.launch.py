@@ -36,12 +36,12 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (
-    SetLaunchConfiguration,
     DeclareLaunchArgument,
     IncludeLaunchDescription,
     OpaqueFunction,
     RegisterEventHandler,
     SetEnvironmentVariable,
+    SetLaunchConfiguration,
 )
 from launch.conditions import IfCondition, UnlessCondition
 from launch.event_handlers import OnProcessExit, OnShutdown
@@ -83,6 +83,13 @@ def generate_launch_description() -> LaunchDescription:
         # coverage needs the Nav2 nav servers; relocalization does not (it only
         # spins in place under AMCL), so it can bring up a much lighter stack.
         DeclareLaunchArgument('with_nav', default_value='true'),
+        DeclareLaunchArgument('nav_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('motor_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('nav_linear_speed', default_value='0.2'),
+        DeclareLaunchArgument('nav_angular_speed', default_value='1.0'),
+        DeclareLaunchArgument('nav_lookahead', default_value='0.25'),
+        DeclareLaunchArgument('nav_goal_pose_topic', default_value='goal_pose'),
+        DeclareLaunchArgument('managed_motion', default_value='false'),
         # gui:=true runs the IDENTICAL simulation with the Gazebo GUI attached
         # (needs a display); default stays fully headless for CI/regressions.
         DeclareLaunchArgument('gui', default_value='false'),
@@ -161,6 +168,7 @@ def generate_launch_description() -> LaunchDescription:
                                   'node_names': ['oomwoo_keepout_mask_server',
                                                  'oomwoo_keepout_info_server']}]),
             ])
+
             def cleanup_keepout(context):
                 shutil.rmtree(scratch, ignore_errors=True)
                 return []
@@ -179,7 +187,8 @@ def generate_launch_description() -> LaunchDescription:
         bridge = Node(
             package='ros_gz_bridge', executable='parameter_bridge',
             output='screen',
-            parameters=[{'config_file': bridge_sim, 'use_sim_time': True}])
+            parameters=[{'config_file': bridge_sim, 'use_sim_time': True}],
+            remappings=[('cmd_vel', LaunchConfiguration('motor_cmd_topic'))])
         # EVENT-BASED spawn (mirrors kaiaai's world.launch.py): create runs
         # immediately and WAITS on its own -timeout for Gazebo + the
         # robot_description topic to be ready, instead of firing on a fixed
@@ -306,7 +315,16 @@ def generate_launch_description() -> LaunchDescription:
     controller = Node(
         package='nav2_controller', executable='controller_server',
         name='controller_server', output='screen', condition=with_nav,
-        parameters=[nav2_params, nav_common])
+        parameters=[nav2_params, nav_common, {
+            'FollowPath.desired_linear_vel': ParameterValue(
+                LaunchConfiguration('nav_linear_speed'), value_type=float),
+            'FollowPath.min_approach_linear_velocity': ParameterValue(
+                LaunchConfiguration('nav_linear_speed'), value_type=float),
+            'FollowPath.rotate_to_heading_angular_vel': ParameterValue(
+                LaunchConfiguration('nav_angular_speed'), value_type=float),
+            'FollowPath.lookahead_dist': ParameterValue(
+                LaunchConfiguration('nav_lookahead'), value_type=float)}],
+        remappings=[('cmd_vel', LaunchConfiguration('nav_cmd_topic'))])
     planner = Node(
         package='nav2_planner', executable='planner_server',
         name='planner_server', output='screen', condition=with_nav,
@@ -314,29 +332,46 @@ def generate_launch_description() -> LaunchDescription:
     behavior = Node(
         package='nav2_behaviors', executable='behavior_server',
         name='behavior_server', output='screen', condition=with_nav,
-        parameters=[nav2_params, nav_common])
+        parameters=[nav2_params, nav_common, {
+            'max_rotational_vel': ParameterValue(
+                LaunchConfiguration('nav_angular_speed'), value_type=float)}],
+        remappings=[('cmd_vel', LaunchConfiguration('nav_cmd_topic'))])
     # the params yaml uses $(find-pkg-share ...) for the BT XML paths, which
     # only nav2_bringup's RewrittenYaml expands — passing the yaml raw leaves
     # the literal string and bt_navigator fails to activate. Override with
     # resolved absolute paths.
     bt_dir = os.path.join(
         get_package_share_directory('nav2_bt_navigator'), 'behavior_trees')
-    bt_nav = Node(
-        package='nav2_bt_navigator', executable='bt_navigator',
-        name='bt_navigator', output='screen', condition=with_nav,
-        parameters=[nav2_params, nav_common, {
+
+    def navigation_setup(context):
+        """Remove recovery writers in the optional single-source lab scene."""
+        managed = context.perform_substitution(LaunchConfiguration('managed_motion')) == 'true'
+        bt_params = {
             'default_nav_to_pose_bt_xml': os.path.join(
-                bt_dir, 'navigate_to_pose_w_replanning_and_recovery.xml'),
+                bt_dir,
+                'navigate_w_replanning_only_if_goal_is_updated.xml' if managed else
+                'navigate_to_pose_w_replanning_and_recovery.xml'),
             'default_nav_through_poses_bt_xml': os.path.join(
                 bt_dir,
-                'navigate_through_poses_w_replanning_and_recovery.xml')}])
-    lifecycle_nav = Node(
-        package='nav2_lifecycle_manager', executable='lifecycle_manager',
-        name='lifecycle_manager_navigation', output='screen', condition=with_nav,
-        parameters=[{'use_sim_time': True, 'autostart': True, 'bond_timeout': 0.0,
-                     'node_names': ['controller_server', 'planner_server',
-                                    'behavior_server', 'bt_navigator']}])
-    navigation = [controller, planner, behavior, bt_nav, lifecycle_nav]
+                'navigate_through_poses_w_replanning_and_recovery.xml')}
+        names = ['controller_server', 'planner_server', 'bt_navigator']
+        if managed:
+            bt_params['navigators'] = ['navigate_to_pose']
+        else:
+            names.insert(2, 'behavior_server')
+        bt_nav = Node(
+            package='nav2_bt_navigator', executable='bt_navigator',
+            name='bt_navigator', output='screen', condition=with_nav,
+            parameters=[nav2_params, nav_common, bt_params],
+            remappings=[('goal_pose', LaunchConfiguration('nav_goal_pose_topic'))])
+        lifecycle_nav = Node(
+            package='nav2_lifecycle_manager', executable='lifecycle_manager',
+            name='lifecycle_manager_navigation', output='screen', condition=with_nav,
+            parameters=[{'use_sim_time': True, 'autostart': True, 'bond_timeout': 0.0,
+                         'node_names': names}])
+        return [controller, planner] + ([] if managed else [behavior]) + [bt_nav, lifecycle_nav]
+
+    navigation = [OpaqueFunction(function=navigation_setup)]
 
     ground_truth = Node(
         package='oomwoo_sim_support', executable='ground_truth', output='screen',
