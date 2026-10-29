@@ -16,6 +16,7 @@
 from types import MethodType, SimpleNamespace
 
 from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import OccupancyGrid
 import numpy as np
 import pytest
 from rclpy.time import Time
@@ -188,6 +189,72 @@ def test_gapfill_plan_starts_a_fresh_reactive_progress_interval():
     CoveragePlanner._tick_reactive(node)
     assert node.wp_index == 0, 'new gap-fill target inherited the prior row stall'
     assert sent[-1] == (0.35, 0.0)
+
+
+def gapfill_with_small_unclean_hole(center_value=0):
+    """Real gap-fill selection on a mostly clean raster with one dirty cell."""
+    node, _, _ = timed_reactive_driver()
+    node.map_msg = OccupancyGrid()
+    node.map_msg.info.resolution = 0.05
+    node.map_msg.info.width = node.map_msg.info.height = 21
+    node.covered_grid = np.full((21, 21), 100, dtype=np.int8)
+    node.covered_grid[6, 6] = center_value
+    node.free_mask = np.ones((21, 21), dtype=bool)
+    node.robot_xy = (0.1, 0.1)
+    node.cleaning_radius = 0.2
+    node.global_frame = 'map'
+    node.wedge_zones = []
+    node.gapfill_passes, node.max_gapfill = 1, 3
+    node.stop_at_target, node.ext_ratio = False, 0.98
+    node._gapfill_waypoints = MethodType(CoveragePlanner._gapfill_waypoints, node)
+    node._covered_at = MethodType(CoveragePlanner._covered_at, node)
+    node._in_wedge_zone = MethodType(CoveragePlanner._in_wedge_zone, node)
+    node._skip_waypoint = MethodType(CoveragePlanner._skip_waypoint, node)
+    node._publish_plan = lambda: None
+    node.active_pub = SimpleNamespace(publish=lambda msg: None)
+    node.cached_poses = node._gapfill_waypoints()
+    assert len(node.cached_poses) == 1
+    return node
+
+
+@pytest.mark.parametrize('center_value', [0, 50, -1])
+def test_gapfill_does_not_discard_a_hole_inside_a_mostly_clean_disk(center_value):
+    node = gapfill_with_small_unclean_hole(center_value)
+    # The existing selection found a genuinely uncredited target cell. Nearby
+    # clean cells must not consume all three passes without visiting it.
+    assert CoveragePlanner._advance_to_target(node)
+    assert node.wp_index == 0
+    assert node.gapfill_passes == 1
+    assert not node.finished
+
+
+def test_main_sweep_keeps_its_mostly_clean_disk_shortcut():
+    node = gapfill_with_small_unclean_hole()
+    node.gapfill_passes = 0
+    assert node._skip_waypoint(0)
+
+
+def test_gapfill_can_skip_a_target_cleaned_since_the_plan_was_built():
+    node = gapfill_with_small_unclean_hole()
+    node.covered_grid[6, 6] = 100
+    assert node._skip_waypoint(0)
+    assert not CoveragePlanner._advance_to_target(node)
+    assert node.finished
+
+
+def test_gapfill_still_skips_a_known_wedge_pocket():
+    node = gapfill_with_small_unclean_hole()
+    p = node.cached_poses[0].pose.position
+    node.wedge_zones = [(p.x, p.y, 0.45)]
+    assert node._skip_waypoint(0)
+    assert not CoveragePlanner._advance_to_target(node)
+    assert node.finished
+
+
+def test_missing_coverage_does_not_credit_a_gapfill_target_as_clean():
+    node = gapfill_with_small_unclean_hole()
+    node.covered_grid = None
+    assert not node._skip_waypoint(0)
 
 
 def test_pt_in_zones_inside_and_outside():

@@ -341,15 +341,21 @@ class CoveragePlanner(Node):
         return False
 
     def _covered_at(self, pose) -> bool:
-        """Return True when the disk around this waypoint is already mostly clean."""
+        """Skip covered disks in the sweep, but only covered cells in gap-fill."""
         if self.covered_grid is None or self.map_msg is None:
             return False
         info = self.map_msg.info
         res = info.resolution
         cx = int((pose.pose.position.x - info.origin.position.x) / res)
         cy = int((pose.pose.position.y - info.origin.position.y) / res)
-        r = max(1, int(round(self.cleaning_radius / res)))
         h, w = self.covered_grid.shape
+        if self.gapfill_passes > 0:
+            # Gap-fill selected an uncovered centre cell. A mostly clean
+            # neighbourhood does not mean that this remaining hole is clean.
+            if not (0 <= cx < w and 0 <= cy < h):
+                return False
+            return bool(self.covered_grid[cy, cx] >= 100)
+        r = max(1, int(round(self.cleaning_radius / res)))
         y0, y1 = max(0, cy - r), min(h, cy + r + 1)
         x0, x1 = max(0, cx - r), min(w, cx + r + 1)
         if y0 >= y1 or x0 >= x1:

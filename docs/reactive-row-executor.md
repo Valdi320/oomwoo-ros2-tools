@@ -205,6 +205,22 @@ uncovered spots; that candidate/skipping policy remains a separate follow-up.
 Exact unit and Gazebo reports, inputs, provenance and limits:
 [`reactive-progress-context-evidence-20261029.json`](reactive-progress-context-evidence-20261029.json).
 
+## Gap-fill admission follow-up — 29 October 2026
+
+The next focused reproduction confirms why a tiny remaining hole could consume
+all gap-fill passes without a visit. Gap generation selected an uncovered
+centre cell, but the shared sweep shortcut then discarded it because its
+neighbourhood was mostly covered. The gap-fill phase now credits that target
+only when its selected centre cell is covered; the main sweep shortcut and
+known-wedge exclusion stay unchanged.
+
+Three hole cases fail before the correction, while four controls pass.
+Afterward the single planner test file passes **32/32**, including prior
+progress and zero-command cases. These are unit grids and synthetic boundaries,
+not physical cleaning proof; fresh Gazebo validation is pending. Exact source,
+commands, cases and limits:
+[`gapfill-uncovered-center-evidence-20261029.json`](gapfill-uncovered-center-evidence-20261029.json).
+
 ## Related
 
 - `recovery-safety` RFC — this *is* the reactive-control layer it anticipated;
