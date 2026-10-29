@@ -195,8 +195,14 @@ planner test file passes **25/25** afterward. Positive controls confirm a new
 row held without progress for seven seconds still stops and skips under the
 unchanged six-second budget. These are synthetic unit boundaries using actual
 planner methods and ROS message/time classes, not DDS or physical proof.
-The earlier Gazebo result above predates this change; fresh simulation is
-pending. Exact cases and limits:
+A subsequent full test_room run of corrected source `95e85c6` also passes:
+98.25% final coverage, 90.86% efficiency at the first 90% crossing, and 74.50%
+final efficiency. It completes in 563.23 s wall time including startup/teardown,
+with 14 successful Nav2 transit goals and no `stuck (reactive)` warnings (the
+prior run had two). This single comparison does not establish a statistical
+performance improvement. Three gap-fill passes still immediately skip three
+uncovered spots; that candidate/skipping policy remains a separate follow-up.
+Exact unit and Gazebo reports, inputs, provenance and limits:
 [`reactive-progress-context-evidence-20261029.json`](reactive-progress-context-evidence-20261029.json).
 
 ## Related
