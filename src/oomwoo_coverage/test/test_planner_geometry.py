@@ -15,21 +15,22 @@
 
 from types import MethodType, SimpleNamespace
 
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, TransformStamped
 from nav_msgs.msg import OccupancyGrid
 import numpy as np
-import pytest
-from rclpy.time import Time
-
 from oomwoo_coverage.coverage_planner_node import (
-    CoveragePlanner,
     _contiguous_runs,
     _decompose_cells,
     _dilate,
     _flood_fill,
     _nearest_true,
     _pt_in_zones,
+    CoveragePlanner,
 )
+import pytest
+from rclpy.clock import ClockType
+from rclpy.time import Time
+from tf2_ros import Buffer
 
 
 def reactive_driver():
@@ -357,3 +358,93 @@ def test_nearest_true_prefers_close_cells():
     mask[9, 9] = True
     assert _nearest_true(mask, cx=4, cy=4) == (3, 3)
     assert _nearest_true(np.zeros((4, 4), dtype=bool), 1, 1, max_r=3) is None
+
+
+@pytest.mark.parametrize('stamp_s, cached_amcl, expected_motion', [
+    (9.8, False, True),       # timely dynamic TF
+    (9.5, False, True),       # inclusive 500 ms budget
+    (9.499, False, False),    # just outside the budget
+    (9.0, True, False),       # cached AMCL must not mask stale TF
+    (10.1, True, False),      # future transform after a clock rewind
+    (0.0, True, False),       # no valid dynamic localization timestamp
+    (None, True, False),      # missing TF, with a historical AMCL seed
+    (None, False, False),
+])
+def test_reactive_motion_requires_timely_tf(stamp_s, cached_amcl, expected_motion):
+    """Drive only from timely TF; cached planning poses cannot revive motion."""
+    node, sent, _ = reactive_driver()
+    node.global_frame, node.base_frame = 'map', 'base_link'
+    node.tf_buffer = Buffer()
+    node.get_clock = lambda: SimpleNamespace(
+        now=lambda: Time(seconds=10, clock_type=ClockType.ROS_TIME))
+    node.robot_xy = (0.0, 0.0) if cached_amcl else None
+    node.robot_yaw = 0.0
+    node._robot_pose = MethodType(CoveragePlanner._robot_pose, node)
+    if stamp_s is not None:
+        transform = TransformStamped()
+        transform.header.frame_id = 'map'
+        transform.child_frame_id = 'base_link'
+        transform.header.stamp = Time(seconds=stamp_s).to_msg()
+        transform.transform.rotation.w = 1.0
+        node.tf_buffer.set_transform(transform, 'focused_localization_test')
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == ((0.35, 0.0) if expected_motion else (0.0, 0.0))
+
+
+def test_reactive_tf_dropout_stops_prior_motion_despite_cached_amcl():
+    """An aging TF cache must stop the next row tick after earlier movement."""
+    node, sent, _ = reactive_driver()
+    node.global_frame, node.base_frame = 'map', 'base_link'
+    node.tf_buffer = Buffer()
+    now = [10.0]
+    node.get_clock = lambda: SimpleNamespace(
+        now=lambda: Time(seconds=now[0], clock_type=ClockType.ROS_TIME))
+    node.robot_xy, node.robot_yaw = (0.0, 0.0), 0.0
+    node._elapsed = lambda stamp: now[0] - stamp.nanoseconds * 1e-9
+    node._robot_pose = MethodType(CoveragePlanner._robot_pose, node)
+    transform = TransformStamped()
+    transform.header.frame_id = 'map'
+    transform.child_frame_id = 'base_link'
+    transform.header.stamp = Time(seconds=10).to_msg()
+    transform.transform.rotation.w = 1.0
+    node.tf_buffer.set_transform(transform, 'focused_localization_test')
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.35, 0.0)
+    now[0] = 10.6
+    CoveragePlanner._tick_reactive(node)
+    assert sent == [(0.35, 0.0), (0.0, 0.0)]
+    # Time without localization must not exhaust the row's progress budget.
+    now[0] = 20.0
+    transform.header.stamp = Time(seconds=now[0]).to_msg()
+    node.tf_buffer.set_transform(transform, 'focused_localization_test')
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.35, 0.0)
+    assert node.wp_index == 0
+    now[0] = 27.0
+    transform.header.stamp = Time(seconds=now[0]).to_msg()
+    node.tf_buffer.set_transform(transform, 'focused_localization_test')
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.0, 0.0)  # a genuine fresh-pose stall still skips
+    assert node.wp_index == 1
+
+
+def test_reactive_accepts_current_common_tf_with_future_amcl_edge():
+    """Use common map-to-base time, allowing AMCL's future edge tolerance."""
+    node, sent, _ = reactive_driver()
+    node.global_frame, node.base_frame = 'map', 'base_link'
+    node.robot_xy = None
+    node.tf_buffer = Buffer()
+    node.get_clock = lambda: SimpleNamespace(
+        now=lambda: Time(seconds=10, clock_type=ClockType.ROS_TIME))
+    node._robot_pose = MethodType(CoveragePlanner._robot_pose, node)
+    transform = TransformStamped()
+    transform.header.frame_id, transform.child_frame_id = 'map', 'odom'
+    transform.transform.rotation.w = 1.0
+    for stamp in (9, 15):  # AMCL brackets now and leads it by its 5 s tolerance
+        transform.header.stamp = Time(seconds=stamp).to_msg()
+        node.tf_buffer.set_transform(transform, 'focused_localization_test')
+    transform.header.frame_id, transform.child_frame_id = 'odom', 'base_link'
+    transform.header.stamp = Time(seconds=9.8).to_msg()
+    node.tf_buffer.set_transform(transform, 'focused_localization_test')
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.35, 0.0)

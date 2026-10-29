@@ -326,3 +326,39 @@ PYTHONPATH=/work/src/oomwoo_dock:$PYTHONPATH \
   python3 -m pytest -p no:cacheprovider \
   /work/src/oomwoo_dock/test/test_dock.py -k ros_dock_state -v
 ```
+
+
+## Reactive row localization follow-up — 29 October 2026
+
+The latest TF lookup previously returned any cached map-to-base pose regardless
+of age, and missing TF fell back to a stored AMCL position indefinitely. The
+row controller could continue emitting 0.35 m/s after localization stopped.
+It now uses only a latest common TF timestamp with age between zero and
+500 ms, inclusive, and a positive timestamp. A missing, older, future or
+unstamped transform returns None through the existing zero-command row path.
+The latched AMCL position remains available for initial planning and existing
+Nav2 progress accounting; it no longer revives direct row steering. This is a
+software experiment budget in ROS time, not a certified physical limit.
+
+Loss of row pose also clears the existing row-progress context, so time spent
+waiting for localization cannot falsely exhaust the new row's stall budget.
+Timely TF resumes the same target; seven further seconds without real progress
+still trigger the unchanged stall/skip behavior. No timer, node, watchdog,
+tool or test bank was introduced.
+
+Before the correction, six of nine focal cases fail and three controls pass.
+The final single planner file passes **42/42** with ten added cases. Tests use
+the actual tf2 Buffer and ROS message/time classes with a synthetic clock and
+recording publisher. They cover stale/missing/future/zero-stamp TF, cached-AMCL
+fallback, the inclusive 500 ms boundary, dropout after actual prior nonzero
+output, long-interruption recovery, a genuine subsequent stall, and a timely
+composed transform despite AMCL's five-second future map-to-odom tolerance.
+Flake8 and pep257 pass for both changed Python files. Evidence and full commands:
+[`reactive-pose-freshness-evidence-20261029.json`](reactive-pose-freshness-evidence-20261029.json).
+
+This fixes row-pose admission only. The separate open-loop escape branches,
+active Nav2 ownership, full health attestation, direct-drive Keepout, stopped
+process/clock handling and physical stopping remain separate unresolved
+integration work. The owner confirms there is no hardware available: all
+results are design/software/simulation. A nominal full test_room regression
+of this correction is the next verification, not yet claimed here.

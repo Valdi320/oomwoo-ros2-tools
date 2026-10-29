@@ -230,9 +230,8 @@ class CoveragePlanner(Node):
         self.escapes_done = 0
 
         # --- ROS plumbing -------------------------------------------------
-        # Coverage % comes from the coverage_meter (ground-truth based), so this
-        # node needs no TF listener — which also avoids flooding the graph with
-        # TF_OLD_DATA warnings under a slow/jumpy sim clock.
+        # Coverage % comes from the ground-truth coverage_meter. The TF
+        # listener above supplies localized poses for direct reactive motion.
         self.create_subscription(
             OccupancyGrid, 'map', self._on_map, latched_qos())
         self.create_subscription(
@@ -259,7 +258,7 @@ class CoveragePlanner(Node):
         # RViz connects. Cheap (a few hundred poses every 2 s).
         self.plan_pub = self.create_publisher(Path, '~/plan', latched_qos())
         self.create_timer(2.0, self._publish_plan)
-        # only used by the wedge escape, while no Nav2 goal is active
+        # direct reactive rows and wedge escape, while no Nav2 goal is active
         self.cmd_pub = self.create_publisher(Twist, 'cmd_vel', 10)
         # which bumper is pressed decides which way to peel off (_escape_angular)
         self.create_subscription(Contacts, 'bumper_left/contact', self._bump_left_cb, 10)
@@ -368,16 +367,20 @@ class CoveragePlanner(Node):
         self.robot_yaw = _yaw_from_quat(msg.pose.pose.orientation)
 
     def _robot_pose(self):
-        """Return (x, y, yaw) in the map frame, TF-first (high rate) then AMCL."""
+        """Return a map-frame TF pose no more than 500 ms old, otherwise None."""
         try:
             t = self.tf_buffer.lookup_transform(
                 self.global_frame, self.base_frame, rclpy.time.Time())
-            tr = t.transform.translation
-            return (tr.x, tr.y, _yaw_from_quat(t.transform.rotation))
-        except TransformException:               # TF not ready yet -> fall back
-            if self.robot_xy is None:
-                return None
-            return (self.robot_xy[0], self.robot_xy[1], self.robot_yaw)
+        except TransformException:
+            return None
+        # Time(0) selects the latest *cached* transform, not necessarily a live
+        # one. Do not let latched AMCL planning data revive direct row motion.
+        stamp_ns = t.header.stamp.sec * 1_000_000_000 + t.header.stamp.nanosec
+        now_ns = self.get_clock().now().nanoseconds
+        if stamp_ns <= 0 or not 0 <= now_ns - stamp_ns <= 500_000_000:
+            return None
+        tr = t.transform.translation
+        return (tr.x, tr.y, _yaw_from_quat(t.transform.rotation))
 
     # ------------------------------------------------------------- planning
     def _plan_waypoints(self) -> List[PoseStamped]:
@@ -1000,6 +1003,9 @@ class CoveragePlanner(Node):
             return
         pose = self._robot_pose()
         if pose is None:
+            # Localization loss is not evidence that this target is blocked.
+            self._drive_best_dist = None
+            self._drive_progress_t = None
             self.cmd_pub.publish(Twist())
             return
         if not self._advance_to_target():
