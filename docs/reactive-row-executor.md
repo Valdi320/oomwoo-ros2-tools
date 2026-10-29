@@ -153,6 +153,32 @@ Headless regression, `executor:=reactive` vs `executor:=nav2` on living_room
 - **Regression gate** stays green with the Nav2 fallback so we never lose the
   known-good baseline.
 
+## Observed test_room result — 29 October 2026
+
+One headless run of `executor:=reactive` on local commit `75762a6` completed
+with **PASS**: **98.00% final coverage**, **90.34% efficiency at the first 90%
+coverage crossing**, and **74.43% final efficiency**. The existing acceptance
+condition uses efficiency at that first crossing; finishing the remaining
+floor adds travel. The scorer records 439.0 s to target; total wall time was
+562.71 s including startup and teardown. The meter recorded 115.01 m of travel
+and no pose jumps. These are a single test_room result, not an A/B speedup or a
+reliability estimate.
+
+The planner/scorer use local source. Both launch files, the world, map and Nav2
+configuration match local files by hash; a read-only input bind supplies the
+local sim launch to the cached Jazzy image. The run stayed offline with no
+hardware devices, a 3 GiB container inside the 4 GiB host scope, and a 512
+PID/thread cap. Observed peaks: 281 tasks and 890,155,008 bytes; these do not
+establish physical robot or ARM hardware requirements.
+
+The meter excludes its configured 0.15 m edge band for separate floor-care.
+No Keepout mask was enabled, and the three-way relay, single-writer ownership,
+fault/dropout handling, docking and motor watchdog remain unvalidated by this
+run. Two reactive no-progress skips shortly after successful Nav2 goals, plus
+three immediately skipped gap-fill passes, remain diagnostic follow-ups.
+Exact inputs, hashes, counters, report and limits are in
+[`reactive-test-room-evidence-20261029.json`](reactive-test-room-evidence-20261029.json).
+
 ## Related
 
 - `recovery-safety` RFC — this *is* the reactive-control layer it anticipated;
