@@ -82,3 +82,18 @@ the process-local PYTHONPATH. No dependency was installed. Machine lock
 and resource limits were applied; see `evidence/keepout_exclusive_output_codex_20261029.json`.
 These 13 tests do not repeat the earlier ROS2 launch-context checks and
 do not establish ROS2/DDS, Gazebo or physical integration.
+
+## Existing plugin namespace preservation (2026-10-29)
+
+The existing filter-conflict check also rejects parameter blocks already
+named `keepout_filter` or `keepout_inflation`, in either costmap. Otherwise
+the overlay could silently replace a custom ordinary layer with a different
+plugin while leaving its name in the original `plugins` list. Both the
+input parameters and output directory are preserved on rejection.
+
+The same focused config module now passes 15/15 host tests: four conflicting
+costmap/name combinations, preservation of an unrelated custom layer, and
+the previous cases. This extends the existing no-overwrite validation and
+adds no node, timer or runtime control. See
+`evidence/keepout_plugin_names_codex_20261029.json` for the reproduction and
+its host-only limits. ROS2, Gazebo and physical integration remain pending.

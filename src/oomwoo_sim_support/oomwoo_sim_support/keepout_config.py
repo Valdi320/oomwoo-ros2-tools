@@ -134,8 +134,10 @@ def build_keepout_overlay(
             raise ValueError(f"missing {costmap} robot radius") from ex
         if not math.isfinite(radius) or radius <= 0:
             raise ValueError("invalid robot radius")
-        if params.get("filters"):
-            raise ValueError(f"{costmap} already has filters")
+        if (params.get("filters")
+                or any(name in params for name in
+                       ("keepout_filter", "keepout_inflation"))):
+            raise ValueError(f"{costmap} already has filters or keepout plugin blocks")
         params["filters"] = ["keepout_filter", "keepout_inflation"]
         params["keepout_filter"] = {
             "plugin": "nav2_costmap_2d::KeepoutFilter",

@@ -119,6 +119,50 @@ class KeepoutConfigTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "refuse to overwrite"):
             self.build()
 
+    def test_existing_plugin_blocks_are_not_overridden(self):
+        original = self.nav.read_bytes()
+        for costmap in ("global_costmap", "local_costmap"):
+            for name in ("keepout_filter", "keepout_inflation"):
+                with self.subTest(costmap=costmap, plugin=name):
+                    nav = yaml.safe_load(original)
+                    params = nav[costmap][costmap]["ros__parameters"]
+                    # A valid ordinary layer can use either name already.
+                    params["plugins"].append(name)
+                    params[name] = {
+                        "plugin": "nav2_costmap_2d::StaticLayer",
+                        "map_topic": "/custom_map",
+                        "enabled": True,
+                    }
+                    self.nav.write_text(yaml.safe_dump(nav))
+                    before = self.nav.read_bytes()
+                    output = self.output / f"{costmap}_{name}"
+                    output.mkdir()
+                    with self.assertRaisesRegex(
+                            ValueError, "already has filters or keepout plugin blocks"):
+                        build_keepout_overlay(self.nav, self.map, self.mask,
+                                              output_dir=output)
+                    self.assertEqual(self.nav.read_bytes(), before)
+                    self.assertFalse((output / "nav2_params_with_keepout.yaml").exists())
+
+    def test_unrelated_plugin_blocks_are_preserved(self):
+        nav = yaml.safe_load(self.nav.read_bytes())
+        block = {"plugin": "nav2_costmap_2d::StaticLayer",
+                 "map_topic": "/custom_map", "enabled": True}
+        for costmap in ("global_costmap", "local_costmap"):
+            params = nav[costmap][costmap]["ros__parameters"]
+            params["plugins"].append("custom_static_layer")
+            params["custom_static_layer"] = block.copy()
+        self.nav.write_text(yaml.safe_dump(nav))
+        before = self.nav.read_bytes()
+        out, _ = self.build()
+        actual = yaml.safe_load(out.read_bytes())
+        for costmap in ("global_costmap", "local_costmap"):
+            params = actual[costmap][costmap]["ros__parameters"]
+            self.assertEqual(params["custom_static_layer"], block)
+            self.assertEqual(params["plugins"],
+                             nav[costmap][costmap]["ros__parameters"]["plugins"])
+        self.assertEqual(self.nav.read_bytes(), before)
+
     def test_missing_source_file_fails_closed(self):
         self.map.unlink()
         with self.assertRaisesRegex(ValueError, "missing map YAML"):
