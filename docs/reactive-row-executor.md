@@ -179,6 +179,26 @@ three immediately skipped gap-fill passes, remain diagnostic follow-ups.
 Exact inputs, hashes, counters, report and limits are in
 [`reactive-test-room-evidence-20261029.json`](reactive-test-room-evidence-20261029.json).
 
+## Row-progress context follow-up — 29 October 2026
+
+The completed test_room log showed two `stuck (reactive)` skips immediately
+after successful Nav2 goals. A focused reproduction confirms a defect that can
+explain that pattern: the row's closest-distance and last-progress timestamp
+survived a transit or target replacement. Time in a previous target/controller
+could therefore exhaust the new target's watchdog before it had a chance to
+move.
+
+The existing fields now reset at Nav2 dispatch, covered-waypoint advancement,
+and gap-fill plan replacement. No threshold, timer or controller was added.
+Six new transition cases fail before the correction; the complete single
+planner test file passes **25/25** afterward. Positive controls confirm a new
+row held without progress for seven seconds still stops and skips under the
+unchanged six-second budget. These are synthetic unit boundaries using actual
+planner methods and ROS message/time classes, not DDS or physical proof.
+The earlier Gazebo result above predates this change; fresh simulation is
+pending. Exact cases and limits:
+[`reactive-progress-context-evidence-20261029.json`](reactive-progress-context-evidence-20261029.json).
+
 ## Related
 
 - `recovery-safety` RFC — this *is* the reactive-control layer it anticipated;

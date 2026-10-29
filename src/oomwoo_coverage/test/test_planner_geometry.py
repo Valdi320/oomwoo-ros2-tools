@@ -13,10 +13,12 @@
 # limitations under the License.
 """Unit tests for planner geometry and reactive command transitions."""
 
-from types import SimpleNamespace
+from types import MethodType, SimpleNamespace
 
+from geometry_msgs.msg import PoseStamped
 import numpy as np
 import pytest
+from rclpy.time import Time
 
 from oomwoo_coverage.coverage_planner_node import (
     CoveragePlanner,
@@ -85,6 +87,107 @@ def test_reactive_active_transit_does_not_publish_competing_row_stop():
     CoveragePlanner._tick_reactive(node)
     assert sent == []
     assert dispatched == []
+
+
+def timed_reactive_driver():
+    """Use real dispatch/results and a controllable ROS clock, without a node."""
+    node, sent, _ = reactive_driver()
+    now = [1.0]
+    node.get_clock = lambda: SimpleNamespace(now=lambda: Time(seconds=now[0]))
+    node._elapsed = lambda stamp: now[0] - stamp.nanoseconds * 1e-9
+    node.finished = False
+    node.max_retries = 2
+    node.get_logger = lambda: SimpleNamespace(
+        warn=lambda message: None, info=lambda message: None)
+    node._on_goal_response = MethodType(CoveragePlanner._on_goal_response, node)
+    node._send_goal_to = MethodType(CoveragePlanner._send_goal_to, node)
+    node.nav_client.send_goal_async = lambda goal: SimpleNamespace(
+        add_done_callback=lambda callback: None)
+    return node, sent, now
+
+
+def row_target(x):
+    pose = PoseStamped()
+    pose.pose.position.x = x
+    pose.pose.orientation.w = 1.0
+    return pose
+
+
+@pytest.mark.parametrize('result', [4, 6, 'rejected'])
+def test_reactive_return_from_transit_gets_a_fresh_progress_interval(result):
+    node, sent, now = timed_reactive_driver()
+    node.cached_poses = [row_target(0.2)]
+    CoveragePlanner._tick_reactive(node)  # preceding row got close to its target
+    assert sent[-1] == (0.35, 0.0)
+
+    # A later long connector delegates to the actual Nav2 dispatch method.
+    node.cached_poses = [row_target(2.0), row_target(2.6)]
+    now[0] = 2.0
+    CoveragePlanner._tick_reactive(node)
+    assert node.awaiting
+    assert sent[-1] == (0.0, 0.0)
+
+    # Time in Nav2 exceeds the row watchdog; it is not time stuck in this row.
+    now[0] = 20.0
+    if result == 'rejected':
+        node._on_goal_response(SimpleNamespace(result=lambda: SimpleNamespace(
+            accepted=False)))
+    else:
+        CoveragePlanner._on_result(node, SimpleNamespace(
+            result=lambda: SimpleNamespace(status=result)))
+    target_index = 1 if result == 4 else 0
+    node._robot_pose = lambda: (
+        node.cached_poses[target_index].pose.position.x - 0.4, 0.0, 0.0)
+    CoveragePlanner._tick_reactive(node)
+    assert node.wp_index == target_index, 'fresh row was falsely skipped'
+    assert sent[-1] == (0.35, 0.0)
+
+    # A genuine new stall must still stop and skip after its own time budget.
+    now[0] = 27.0
+    CoveragePlanner._tick_reactive(node)
+    assert node.wp_index == target_index + 1
+    assert sent[-1] == (0.0, 0.0)
+
+
+@pytest.mark.parametrize('skipped_count', [1, 2])
+def test_covered_waypoint_skip_starts_progress_for_the_new_target(skipped_count):
+    node, sent, now = timed_reactive_driver()
+    node.cached_poses = [row_target(0.2), row_target(0.4), row_target(0.6)]
+    covered = set()
+    node._skip_waypoint = lambda index: index in covered
+    node._advance_to_target = MethodType(CoveragePlanner._advance_to_target, node)
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.35, 0.0)
+    now[0] = 10.0
+    covered.update(range(skipped_count))
+    CoveragePlanner._tick_reactive(node)
+    assert node.wp_index == skipped_count, 'new target inherited an old stall'
+    assert sent[-1] == (0.35, 0.0)
+    now[0] = 17.0
+    CoveragePlanner._tick_reactive(node)
+    assert node.wp_index == skipped_count + 1
+    assert sent[-1] == (0.0, 0.0)
+
+
+def test_gapfill_plan_starts_a_fresh_reactive_progress_interval():
+    node, sent, now = timed_reactive_driver()
+    node.cached_poses = [row_target(0.2)]
+    node._skip_waypoint = lambda index: False
+    node._advance_to_target = MethodType(CoveragePlanner._advance_to_target, node)
+    node.gapfill_passes, node.max_gapfill = 0, 1
+    node.stop_at_target, node.ext_ratio = False, 0.8
+    node._gapfill_waypoints = lambda: [row_target(0.4)]
+    node._publish_plan = lambda: None
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.35, 0.0)
+    now[0] = 10.0
+    node.wp_index = 1  # exhausted old plan; next tick installs a gap-fill plan
+    CoveragePlanner._tick_reactive(node)
+    assert sent[-1] == (0.0, 0.0)
+    assert node.gapfill_passes == 1
+    CoveragePlanner._tick_reactive(node)
+    assert node.wp_index == 0, 'new gap-fill target inherited the prior row stall'
+    assert sent[-1] == (0.35, 0.0)
 
 
 def test_pt_in_zones_inside_and_outside():

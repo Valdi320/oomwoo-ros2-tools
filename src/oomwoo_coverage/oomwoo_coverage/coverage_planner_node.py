@@ -611,6 +611,9 @@ class CoveragePlanner(Node):
                and self._skip_waypoint(self.wp_index)):
             self.wp_index += 1
             self.wp_retries = 0
+            # Distance/progress belong to the previous target, not this one.
+            self._drive_best_dist = None
+            self._drive_progress_t = None
         if self.wp_index < len(self.cached_poses):
             return True
         # the boustrophedon leaves furniture-shadow / pocket gaps a single sweep
@@ -625,6 +628,8 @@ class CoveragePlanner(Node):
                 self.gapfill_passes += 1
                 self.cached_poses = gaps
                 self.wp_index = 0
+                self._drive_best_dist = None
+                self._drive_progress_t = None
                 self._publish_plan()
                 self.get_logger().info(
                     f'gap-fill pass {self.gapfill_passes}: '
@@ -639,6 +644,9 @@ class CoveragePlanner(Node):
 
     def _send_goal_to(self, p) -> None:
         """Dispatch a NavigateToPose goal (Nav2) for pose p."""
+        # Nav2 owns this interval; its travel time is not a stalled row.
+        self._drive_best_dist = None
+        self._drive_progress_t = None
         p.header.stamp = self.get_clock().now().to_msg()
         goal = NavigateToPose.Goal()
         goal.pose = p

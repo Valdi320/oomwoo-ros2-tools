@@ -1,0 +1,41 @@
+{
+  "date_utc": "2026-10-29T18:10:36.669356+00:00",
+  "source_base_commit": "8e145582d83774979304adf5c9288ebee72dc57c",
+  "trigger": "Completed test_room log has reactive-stuck skips at waypoint263 and309 about0.16s after successful Nav2 goals. This suggests stale row progress state, but does not alone prove the cause.",
+  "confirmed_defect": "Reactive closest-distance and last-progress timestamp survive a Nav2 transit, covered-waypoint advance, or replacement gap-fill plan. A newly entered target farther than the old best distance can be skipped immediately using time spent on an earlier target/controller.",
+  "fix": "Clear existing reactive progress fields when handing to Nav2, advancing over already-skipped targets, and replacing the plan with gap-fill. Preserve the existing no-progress threshold and stop/skip behavior. No new timer, gate, controller, node or tool.",
+  "baseline": {
+    "rc": 1,
+    "failed_cases": 6,
+    "command": "source /opt/ros/jazzy/setup.bash && PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_coverage:${PYTHONPATH:-} python3 -m pytest -p no:cacheprovider /work/src/oomwoo_coverage/test/test_planner_geometry.py -k 'fresh_progress_interval or starts_progress_for_the_new_target or gapfill_plan_starts' -v",
+    "result": "6 failed, 19 deselected",
+    "artifact": "reactive_progress_context_before_20261029.json",
+    "sha256": "81c9a49dc0472119ec0a5fd481b2e537e3d5198b0dda9ad6972b40e20089a85f",
+    "lock": "LIBRE: carga 0.84, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (15052 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n"
+  },
+  "after": {
+    "rc": 0,
+    "passed_cases": 25,
+    "command": "source /opt/ros/jazzy/setup.bash && PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_coverage:${PYTHONPATH:-} python3 -m pytest -p no:cacheprovider /work/src/oomwoo_coverage/test/test_planner_geometry.py -v",
+    "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3\nrootdir: /work/src/oomwoo_coverage\nplugins: ament-copyright-0.17.5, ament-flake8-0.17.5, ament-lint-0.17.5, ament-pep257-0.17.5, ament-xmllint-0.17.5, launch-testing-3.4.12, launch-testing-ros-0.26.13, colcon-core-0.21.3, anyio-4.2.0, typeguard-4.1.5\ncollecting ... collected 25 items\n\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_exit_publishes_zero_after_prior_motion[pose_unavailable] PASSED [  4%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_exit_publishes_zero_after_prior_motion[no_target] PASSED [  8%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_exit_publishes_zero_after_prior_motion[reached] PASSED [ 12%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_exit_publishes_zero_after_prior_motion[stalled] PASSED [ 16%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_exit_publishes_zero_after_prior_motion[transit_ready] PASSED [ 20%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_exit_publishes_zero_after_prior_motion[transit_unready] PASSED [ 24%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_active_transit_does_not_publish_competing_row_stop PASSED [ 28%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_return_from_transit_gets_a_fresh_progress_interval[4] PASSED [ 32%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_return_from_transit_gets_a_fresh_progress_interval[6] PASSED [ 36%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_reactive_return_from_transit_gets_a_fresh_progress_interval[rejected] PASSED [ 40%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_covered_waypoint_skip_starts_progress_for_the_new_target[1] PASSED [ 44%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_covered_waypoint_skip_starts_progress_for_the_new_target[2] PASSED [ 48%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_gapfill_plan_starts_a_fresh_reactive_progress_interval PASSED [ 52%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_pt_in_zones_inside_and_outside PASSED [ 56%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_pt_in_zones_boundary_is_inclusive PASSED [ 60%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_contiguous_runs_splits_on_gaps PASSED [ 64%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_contiguous_runs_empty_and_single PASSED [ 68%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_dilate_zero_radius_returns_copy PASSED [ 72%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_dilate_radius_reaches_manhattan_ball PASSED [ 76%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_flood_fill_two_chambers_stay_separate PASSED [ 80%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_decompose_open_room_is_one_cell PASSED [ 84%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_decompose_sofa_splits_into_four_cells PASSED [ 88%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_decompose_two_obstacles_seven_cells PASSED [ 92%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_decompose_no_cell_straddles_the_obstacle PASSED [ 96%]\n../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_nearest_true_prefers_close_cells PASSED [100%]\n\n============================== 25 passed in 0.49s ==============================\n",
+    "artifact": "reactive_progress_context_after_20261029.json",
+    "sha256": "fdb3582f3a4005c9a1472f3ad3897df38c8c97ba8e47060029e9c1d5cbeb1122",
+    "lock": "LIBRE: carga 0.83, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (15052 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n"
+  },
+  "coverage": [
+    "Nav2 success, abort and rejection return to a moving short row without a false immediate skip.",
+    "One or two covered waypoints can be skipped without charging the new target for old progress.",
+    "A replacement gap-fill plan starts with a fresh interval.",
+    "Positive controls hold the new row still for7s and verify the existing6s detector still publishes zero and advances.",
+    "All19 prior planner geometry/zero-command transition cases continue to pass."
+  ],
+  "source_sha256": {
+    "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "75d3b022e4f62eb50390350871e57a64e9f5df6a9581cd92520a2c6d0108ad5b",
+    "src/oomwoo_coverage/test/test_planner_geometry.py": "1946bc7a2769d568a66627402b9e3352bc254d233908965ebe8d4d2408d96e04"
+  },
+  "limits": [
+    "Unit tests call the real imported planner tick, dispatch, result and advance methods, with real ROS message/time classes; publisher, action future/server, pose source and clock schedule are synthetic. No ROS2 Node constructor or DDS in this check.",
+    "The earlier98% full Gazebo PASS tested source75762a6 before this production change. A fresh scene run is required before attributing that result to this correction.",
+    "This does not change gap-fill candidate coverage/skipping policy, stale-TF/AMCL fallback, source arbitration, Keepout, docking, motor watchdog or physical safety."
+  ]
+}
