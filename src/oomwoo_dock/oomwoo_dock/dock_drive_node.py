@@ -55,7 +55,7 @@ which is why the estimate is kept in the body frame and moved by each command.
   subscribes  ~/beacon_visible std_msgs/Bool              (optional; stops the spin)
   subscribes  ~/enable         std_msgs/Bool
   publishes   cmd_vel          geometry_msgs/Twist
-  publishes   ~/state          std_msgs/String   GOTO/TURN/BACK/REGROUP/DONE/IDLE
+  publishes   ~/state          std_msgs/String   current state at pub_hz
   publishes   ~/docked         std_msgs/Bool     (latched)
 
 With exit_when_done (the default) the node exits once the attempt is over:
@@ -155,7 +155,7 @@ class DockDrive(Node):
         return self.get_parameter(name).value
 
     def _set_state(self, s) -> None:
-        if s == self.state:
+        if s == self.state and self._docked_val is not None:
             return
         self.state = s
         self.state_pub.publish(String(data=s))
@@ -197,6 +197,9 @@ class DockDrive(Node):
 
     def _tick(self) -> None:
         """Run the state machine and publish a command."""
+        # A late-joining relay needs a live state stream, including IDLE.
+        # Reuse the command timer: a stopped driver stops refreshing state.
+        self.state_pub.publish(String(data=self.state))
         if not self.enabled or self.state in ('IDLE', 'DONE'):
             self._send(0.0, 0.0)
             return

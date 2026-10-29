@@ -272,3 +272,57 @@ stop only applies when `_robot_pose()` returns None; freshness of its TF or
 cached-AMCL fallback is a separate unresolved contract. Exclusive command
 ownership, Keepout during direct drive, actuator timeout and stopping
 distance still require integrated simulation and hardware validation.
+
+
+## Velocity-source compatibility audit — 29 October 2026
+
+The three-way policy is still not connected to the runtime. Reading the actual
+launches and drivers establishes these distinct paths before any joint test:
+
+| Component | Current command path / lifecycle |
+| --- | --- |
+| Reactive CoveragePlanner | Publishes `cmd_vel`; hands long transits to Nav2. Defaults are 0.35 m/s and 1.0 rad/s. |
+| Minimal simulation Nav2 | Controller publishes `/cmd_vel` directly; no velocity smoother or collision monitor in this trimmed path. |
+| Composed navigation launch | Controller/behaviors feed `cmd_vel_nav`, followed by the velocity smoother/collision-monitor chain. It excludes Nav2's docking server. |
+| OOMWOO DockDrive | A separate LiDAR docking driver publishes `cmd_vel`; `auto_start=true` begins SEARCH. Its launch sends parent `Shutdown` when the driver exits. |
+| Experimental contributor relay | Two sources only, NAV/DOCK, resolved inputs under `/valdi`; output restricted to `/valdi/lab_safe_cmd_vel_output`. No SWEEP adapter. |
+
+Therefore adding the existing docking launch to the coverage launch would not
+establish exclusive motor ownership. A joint isolated test must first remap
+all real producers, reconcile phase/UUID handoffs and launch shutdown scope,
+and obtain fresh evidence for the existing policy's health inputs. Its
+0.25 m/s / 0.8 rad/s defaults also reject some unmodified coverage commands;
+raising limits simply to make the test pass is not a resolution.
+
+One concrete incompatibility is corrected here. The contributor relay requires
+DockDrive's IDLE state to be received within three seconds, but DockDrive only
+announced transitions. With `auto_start=false`, initial IDLE was not announced
+at all; with any stable phase, late subscribers missed it and freshness expired.
+DockDrive now announces initial IDLE (including latched `docked=false`) and
+refreshes its current state on the existing command tick. No timer, node, gate,
+watchdog or source-arbitration tool was added; transition logs remain event-only.
+A stopped command tick also stops state refresh. The message asserts current
+software phase, not sensor validity, exclusive output ownership or electrical
+charging/contact evidence. In particular the driver's DONE/docked signal is
+computed from estimated docking geometry, not an independent contact sensor.
+
+Two real ROS2/DDS cases reproduce the late-subscriber defect before the fix,
+both with no received state. Both pass afterward: IDLE and SEARCH persist as a
+fresh state stream beyond the relay's three-second budget; a real enable=false
+message yields IDLE and zero Twist. The initial false docked value is available
+to a late transient-local subscriber. The isolated graph has one lab velocity
+publisher and zero `/cmd_vel` publishers. This test uses the actual driver and
+ROS2 messages but no relay, Nav2 server, detector, Gazebo or physical robot;
+it is not a three-way handoff validation. Flake8 checks both changed Python
+files successfully. Exact commands, results and runtime bounds are in
+[`dock-state-freshness-evidence-20261029.json`](dock-state-freshness-evidence-20261029.json).
+
+Reproduce only this focused ROS2 case in the existing isolated Jazzy image,
+with the contributor source mounted read-only at `/work` and Jazzy sourced:
+
+```bash
+OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 \
+PYTHONPATH=/work/src/oomwoo_dock:$PYTHONPATH \
+  python3 -m pytest -p no:cacheprovider \
+  /work/src/oomwoo_dock/test/test_dock.py -k ros_dock_state -v
+```
