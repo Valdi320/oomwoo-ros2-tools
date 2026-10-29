@@ -550,9 +550,36 @@ changed ROS2 Python files pass. The existing14 DDS checks passed with UDP before
 the relay exception-only change. See [source versions, all intermediate results,
 exact exits and limitations](evidence/managed_shutdown_udp_codex_20261029.json).
 
-Full-room acceptance after these transport/exit edits is still pending. The
-recorded98.66% result above remains tied to its original hashes. A positive
-native ACK followed by a permanently hung Gazebo destructor has not been fault
+The full post-change test_room passes: **98.51% coverage**, **91.33%
+efficiency at the first 90% crossing**, 70.32% final efficiency, and 599.0 s to
+target by the scorer. Total collection time was 855.96 s. The existing 90%/80%
+criteria, geometry and motion limits were unchanged; no pose jumps or simulator
+instability occurred. Status history contains 21 terminal UUIDs: 15 SUCCEEDED and
+6 CANCELED. All 21 NAV releases and 22 SWEEP releases were acknowledged; final
+phase was IDLE. One actual held-contact episode caused verified cancellation,
+quiet handoff and the existing reactive escape. DockDrive remained IDLE.
+
+The native stop returned data:true and **all 18 owned processes exited 0**,
+including Gazebo, ros_gz_bridge and the relay. No SIGTERM escalation, bridge
+SIGABRT or relay KeyboardInterrupt appeared. The graph still shows one input
+publisher per role, one final relay output consumed by the bridge, and no
+/cmd_vel publishers. This is one full successful observation after the change;
+it does not prove an upstream memory fix, reliability, or controlled A/B gains.
+The two sub-inscribed inflation errors and four inner FollowPath halt-result
+errors remain recorded. A successful close is not a clean-log claim.
+
+The scoped shutdown result is ready for delivery checks. Repeating the green
+scene or further transport polishing has low demonstrated return without new
+evidence. The next required integration is active Keepout at the existing
+final output: Nav2's mask topic is /oomwoo/keepout_mask, the planner currently
+subscribes to keepout_filter_mask, and the relay does not yet consume the
+mask/costmaps. The synthetic envelope also assumes a sequenced mux and 0.3 s map
+freshness, while the current Nav2 costmaps publish at 2 Hz; it cannot simply be
+attached or refreshed with invented sample times. Fuse existing components
+and verify real masked movement before claiming that combination. Actual
+docking remains pending.
+
+The earlier 98.66% result stays tied to its original hashes. A positive native
+ACK followed by a permanently hung Gazebo destructor has not been fault
 injected; this uses the existing required-server exit without a new watchdog.
-Actual docking, combined active Keepout and the other stated limits remain open.
 All evidence concerns software and simulation; no physical prototype exists.

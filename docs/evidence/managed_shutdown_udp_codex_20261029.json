@@ -1,6 +1,6 @@
 {
   "date_utc": "2026-10-29T22:29:18.823975+00:00",
-  "scope": "Focused managed Gazebo shutdown correction, design and simulation only. Full-room coverage regression after these edits remains pending.",
+  "scope": "Managed Gazebo UDP/native-exit correction, short scenes and one full-room actual-controller success. Design and simulation only.",
   "parents": [
     "e261d32e252fdcfacec4908a2ef29b80a15e5dd4",
     "434f31cef1f5a983c9ab6bf21318422ffe0e911a"
@@ -266,12 +266,877 @@
       }
     }
   ],
-  "conclusion": "The final bounded30s scene retained valid partial measurement (coverage not accepted) and all 17 non-scorer processes exited cleanly. It is a scoped successful shutdown observation, not a full-room pass or reliability estimate.",
+  "conclusion": "The full post-change test_room passed98.51% coverage and91.33% efficiency at target with21 terminal UUIDs and all18 owned processes exiting0. The scoped shutdown milestone is ready for delivery checks; short/failed observations remain retained. It does not complete docking, combined active Keepout, reliability or physical validation.",
   "limits": [
     "The original shared-memory corrupting write is not identified or repaired upstream. UDPv4 avoids that transport path in this managed lab.",
     "All short scenes intentionally ended wall_timeout with bank_code1; collection rc0 does not mean coverage acceptance.",
     "A positive native stop ACK relies on the existing required-server exit; an ACK followed by a permanently hung server teardown has not been fault-injected. No new watchdog was added.",
     "GUI, remote DDS, actual docking trajectory, active combined Keepout, managed fault injection, other scenes and hardware remain unvalidated here.",
-    "The previous98.66% full-room result belongs to its recorded pre-UDP source hashes and is retained separately."
-  ]
+    "The previous98.66% pre-UDP run remains in reactive_contact_full_room_codex_20261029.json; the new98.51% result is tied to the full_room_regression source hashes. Neither is an overall robot progress percentage."
+  ],
+  "full_room_regression": {
+    "date_utc": "2026-10-29T22:52:01.375837+00:00",
+    "raw": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_udp_native_full_room_20261029.json",
+    "sha256": "c51f18a44ef24bd5688ee7ae67aa62fb3a39e4683c9fd0d3e60ab7a10150b45d",
+    "collector_rc": 0,
+    "bank_code": 0,
+    "seconds": 855.96,
+    "runtime_commits": [
+      "76cf403627396731385c53160c0ba0809f79dea3",
+      "fac85a962ff935cb68c690f4e4203b671f162001"
+    ],
+    "source_sha256": {
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "82d1b97c4ac7f0bce2a7569ea6472d244a4c3609c2c551cce766c624eef7338e",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "858431736826024486d3f68c9dfcaad1a566c18ced982da937925512882688fe",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "69f28e7dbea00644c4e6277e420980e899ff611d2e405caddf422758d19b5e92",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "32335a8d9afccc045bd42ee51dfd01e5b0054d0d5f1409bb2d7b58defd0c776f",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/deploy/run_coverage_regression.sh": "e344c63fc7ab45c6f6605b317191938d87f98419257d4c939632ffb093d95246"
+    },
+    "runtime_provenance": {
+      "requested_at_utc": "2026-10-29T22:30:04.327390+00:00",
+      "container": "oomwoo-codex-managed-udp-native-full-room-20261029",
+      "source_sha256": {
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "82d1b97c4ac7f0bce2a7569ea6472d244a4c3609c2c551cce766c624eef7338e",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "858431736826024486d3f68c9dfcaad1a566c18ced982da937925512882688fe",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "69f28e7dbea00644c4e6277e420980e899ff611d2e405caddf422758d19b5e92",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "32335a8d9afccc045bd42ee51dfd01e5b0054d0d5f1409bb2d7b58defd0c776f",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/deploy/run_coverage_regression.sh": "e344c63fc7ab45c6f6605b317191938d87f98419257d4c939632ffb093d95246"
+      },
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=1024m,mode=1777",
+        "--memory=3g",
+        "--cpus=2",
+        "--pids-limit=512",
+        "-e",
+        "HOME=/tmp",
+        "-e",
+        "ROS_LOG_DIR=/tmp/roslogs",
+        "-e",
+        "ROS_DOMAIN_ID=88",
+        "-e",
+        "ROS_LOCALHOST_ONLY=1",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools:/work:ro",
+        "--name",
+        "oomwoo-codex-managed-udp-native-full-room-20261029",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154:/contrib:ro",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/coverage_regression.launch.py:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "docker.io/makerspet/oomwoo:jazzy-dev",
+        "-lc",
+        "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OOMWOO_MOTION_AUDIT=1 OOMWOO_SIM_BATTERY_FRACTION=0.92\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/work/src/oomwoo_dock:/contrib/src:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2\nexport MAX_WALL_TIME_S=1800 CLOCK_DEAD_WALL_S=45 RUNS=1\nmkdir -p /tmp/valdi_ros_ws/src && cp -r /contrib/ros2_lab_interfaces /tmp/valdi_ros_ws/src/oomwoo_cleaning_jobs_lab_interfaces && cd /tmp/valdi_ros_ws && colcon build --packages-select oomwoo_cleaning_jobs_lab_interfaces --parallel-workers 2 --event-handlers console_direct+ > /tmp/rosidl_build.log 2>&1 && source /tmp/valdi_ros_ws/install/setup.bash || { tail -n 40 /tmp/rosidl_build.log; exit 3; }\npython3 - <<'PROVENANCE'\nfrom pathlib import Path\nfrom ament_index_python.packages import get_package_share_directory\nimport hashlib,json\nfrom oomwoo_coverage import coverage_planner_node as planner\nfrom oomwoo_sim_support import coverage_regression_runner as scorer\nshare=Path(get_package_share_directory('oomwoo_sim_support'));r={'planner':planner.__file__,'scorer':scorer.__file__,'files':{}}\nfor name in ['launch/coverage_regression.launch.py','launch/sim_bringup.launch.py','worlds/test_room.world','config/nav2_params.yaml','maps/test_room.yaml','maps/test_room.pgm']:\n a=(share/name).read_bytes();b=(Path('/work/src/oomwoo_sim_support')/name).read_bytes();r['files'][name]={'match':a==b,'sha256':hashlib.sha256(a).hexdigest()}\n assert a==b,name\nassert planner.__file__.startswith('/work/') and scorer.__file__.startswith('/work/')\nprint('OOMWOO_SOURCE_PROVENANCE '+json.dumps(r),flush=True)\nPROVENANCE\nif [ $? -ne 0 ]; then exit 3; fi\nbash -n /work/deploy/run_coverage_regression.sh || exit 3\nbash /work/deploy/run_coverage_regression.sh executor:=reactive v_cruise:=0.25 rotate_speed:=0.8 motion_relay_journal:=/tmp/oomwoo-owned-motion.json sweep_cmd_topic:=/valdi/sweep_cmd_vel nav_cmd_topic:=/valdi/nav2_cmd_vel motor_cmd_topic:=/valdi/lab_safe_cmd_vel_output nav_linear_speed:=0.14 nav_angular_speed:=0.7 nav_lookahead:=0.5\nbank_code=$?\nexport OOMWOO_BANK_CODE=$bank_code\npython3 - <<'INNER'\nimport json,glob,os\nfrom pathlib import Path\nr={'bank_code':int(os.environ['OOMWOO_BANK_CODE']),'reports':{},'logs':{}}\nfor p in glob.glob('/tmp/coverage_runs.*/run*.json'):\n r['reports'][p]=json.loads(Path(p).read_text())\nfor p in glob.glob('/tmp/coverage_regression.log.*'):\n r['logs'][p]=Path(p).read_text(errors='replace')\nr['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/pids.events'),Path('/sys/fs/cgroup/pids.peak'),Path('/sys/fs/cgroup/memory.peak')] if p.exists()}\np=Path('/tmp/oomwoo-owned-motion.json')\nr['motion_journal']=json.loads(p.read_text()) if p.exists() else None\nprint('OOMWOO_GAZEBO_BANK '+json.dumps(r))\nINNER"
+      ],
+      "scope": "single whole-room actual-controller post-UDP/native-close regression; unchanged90%/80% acceptance",
+      "ultima_observacion": {
+        "fecha_utc": "2026-10-29T22:32:47.815113+00:00",
+        "rc": 0,
+        "log_tail": [
+          "[coverage_meter-8] [INFO] [1793313164.443315436] [coverage_meter]: COVERAGE_REPORT coverage=0.1593 efficiency=4.5923 revisit_ratio=0.2161 path_m=18.64 ideal_m=85.60 reachable_cells=13696 sim_t=134.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313165.443266415] [coverage_meter]: COVERAGE_REPORT coverage=0.1593 efficiency=4.5912 revisit_ratio=0.2161 path_m=18.64 ideal_m=85.60 reachable_cells=13696 sim_t=135.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313166.443152285] [coverage_meter]: COVERAGE_REPORT coverage=0.1606 efficiency=4.5458 revisit_ratio=0.2139 path_m=18.83 ideal_m=85.60 reachable_cells=13696 sim_t=136.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313167.443180884] [coverage_meter]: COVERAGE_REPORT coverage=0.1614 efficiency=4.5160 revisit_ratio=0.2125 path_m=18.95 ideal_m=85.60 reachable_cells=13696 sim_t=137.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False"
+        ]
+      },
+      "actual_container_image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+      "runtime_environment": [
+        {
+          "pid": 706,
+          "command": "/bin/sh -c ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --f",
+          "GZ_PARTITION": "oomwoo-coverage-00e42d3b6a074921a05fb48816d3b533",
+          "FASTDDS_BUILTIN_TRANSPORTS": "UDPv4"
+        },
+        {
+          "pid": 709,
+          "command": "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge --ros-args --params-file /tmp/launch_params_t01cr2xq -r cmd_vel:=/valdi/lab_safe_cmd_vel_output ",
+          "GZ_PARTITION": "oomwoo-coverage-00e42d3b6a074921a05fb48816d3b533",
+          "FASTDDS_BUILTIN_TRANSPORTS": "UDPv4"
+        },
+        {
+          "pid": 710,
+          "command": "gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world                                                           ",
+          "GZ_PARTITION": "oomwoo-coverage-00e42d3b6a074921a05fb48816d3b533",
+          "FASTDDS_BUILTIN_TRANSPORTS": "UDPv4"
+        },
+        {
+          "pid": 714,
+          "command": "/usr/bin/python3 /ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_y7ix_41j ",
+          "GZ_PARTITION": "oomwoo-coverage-00e42d3b6a074921a05fb48816d3b533",
+          "FASTDDS_BUILTIN_TRANSPORTS": "UDPv4"
+        }
+      ],
+      "runtime_environment_at_utc": "2026-10-29T22:40:13.654055+00:00"
+    },
+    "report": {
+      "coverage": 0.9851,
+      "coverage_target": 0.9,
+      "target_crossed": true,
+      "efficiency_at_target": 0.9133,
+      "efficiency_final": 0.7032,
+      "revisit_ratio": 0.2629,
+      "efficiency_target": 0.8,
+      "time_to_target_s": 599.0,
+      "end_reason": "sweep_complete",
+      "sim_unstable": false,
+      "measurement_valid": true,
+      "pass": true
+    },
+    "last_journal": {
+      "job_id": "coverage_sweep",
+      "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+      "outcome": "canceled",
+      "revision": 63,
+      "schema": 1,
+      "state": "terminal",
+      "target_cell": 6834,
+      "token": "87e989dd3be442a1bf7aa53d41f58408-1",
+      "uuid": "ccb0a35260ea42cfa5563e126a3e8c5c"
+    },
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "291\n",
+      "/sys/fs/cgroup/memory.peak": "1042460672\n"
+    },
+    "observations": {
+      "terminal_status_by_uuid": {
+        "b9ea877a23cb4096941c12a7b6be9be8": 4,
+        "261f014b53e04a9987506e28c1781742": 4,
+        "4f02c66edd4e4f92aa5bd45e69b20346": 4,
+        "1815be9363f74bf2b5f4981d6c7758b6": 5,
+        "d94243d2740a4e9788724cb878d411ab": 4,
+        "fd3159e4f7cd44208dd86953167b5c05": 5,
+        "549a009eb87b460d81cb3c6ab4d4d224": 4,
+        "d72644c6fcb94cbcbe806eeb25b0700b": 4,
+        "8ad4436a3a8a41339766edc60a752566": 4,
+        "5026e1ed5a6e4f869db3e8328ad8e79f": 4,
+        "483f9877c0f446ab97c151299cd1e3d4": 4,
+        "4c0dd33034cb4f5599dd82e614fa7bf1": 4,
+        "54d2c1942c8845e19f142df2a2b180ef": 5,
+        "3389f6d7b8c747c7b2858d71db190a2a": 4,
+        "3b99217d36694fd3ae164ee923a7e5ea": 4,
+        "f29e7bb30b4742c99f027f9de4459d11": 4,
+        "fca07d63ec0d41a78cded052f54d356e": 4,
+        "5e5f2747628949eaad2e4b0b362c4c20": 5,
+        "6f41bad44584419e8609667f640b1ac1": 4,
+        "334b5e7fcd454b6faa815f828629f33d": 5,
+        "ccb0a35260ea42cfa5563e126a3e8c5c": 5
+      },
+      "terminal_counts": {
+        "4": 15,
+        "5": 6
+      },
+      "acknowledged_operations": {
+        "claim_sweep": 22,
+        "release_motion": 22,
+        "claim_nav": 21,
+        "release_nav": 21
+      },
+      "contact_sequences": [
+        [
+          "[coverage_meter-8] [INFO] [1793313351.443020567] [coverage_meter]: COVERAGE_REPORT coverage=0.4718 efficiency=1.6811 revisit_ratio=0.1286 path_m=50.92 ideal_m=85.60 reachable_cells=13696 sim_t=321.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313352.443243476] [coverage_meter]: COVERAGE_REPORT coverage=0.4718 efficiency=1.6799 revisit_ratio=0.1285 path_m=50.95 ideal_m=85.60 reachable_cells=13696 sim_t=322.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313353.443243485] [coverage_meter]: COVERAGE_REPORT coverage=0.4718 efficiency=1.6754 revisit_ratio=0.1282 path_m=51.09 ideal_m=85.60 reachable_cells=13696 sim_t=323.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [WARN] [1793313354.443045595] [coverage_planner]: held contact: awaiting exact Nav2 cancellation before escape",
+          "[coverage_meter-8] [INFO] [1793313354.443221495] [coverage_meter]: COVERAGE_REPORT coverage=0.4718 efficiency=1.6709 revisit_ratio=0.1327 path_m=51.23 ideal_m=85.60 reachable_cells=13696 sim_t=324.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[controller_server-15] [INFO] [1793313354.453795039] [controller_server]: Cancellation was successful. Stopping the robot.",
+          "[controller_server-15] [INFO] [1793313354.453820159] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793313354.453930229] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793313354.454010398] [bt_navigator]: Goal canceled",
+          "[coverage_planner-9] [WARN] [1793313354.455144065] [coverage_planner]: waypoint 132 unreachable after 1 tries; skipping",
+          "[coverage_planner-9] [INFO] [1793313355.042610022] [coverage_planner]: motion relay accepted release_nav",
+          "[coverage_meter-8] [INFO] [1793313355.443530053] [coverage_meter]: COVERAGE_REPORT coverage=0.4718 efficiency=1.6706 revisit_ratio=0.1327 path_m=51.24 ideal_m=85.60 reachable_cells=13696 sim_t=325.4 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [INFO] [1793313355.842500170] [coverage_planner]: motion relay accepted claim_sweep",
+          "[coverage_planner-9] [WARN] [1793313355.843204218] [coverage_planner]: bumper held near waypoint 132: peel off (turn +0.6) 2.5s (escape 1/25)"
+        ],
+        [
+          "[coverage_meter-8] [INFO] [1793313792.387293677] [coverage_meter]: COVERAGE_REPORT coverage=0.9823 efficiency=0.7410 revisit_ratio=0.2247 path_m=115.51 ideal_m=85.60 reachable_cells=13696 sim_t=760.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313793.393807112] [coverage_meter]: COVERAGE_REPORT coverage=0.9828 efficiency=0.7403 revisit_ratio=0.2245 path_m=115.63 ideal_m=85.60 reachable_cells=13696 sim_t=761.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313794.394159007] [coverage_meter]: COVERAGE_REPORT coverage=0.9828 efficiency=0.7395 revisit_ratio=0.2243 path_m=115.75 ideal_m=85.60 reachable_cells=13696 sim_t=762.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [WARN] [1793313794.992711643] [coverage_planner]: held contact: awaiting exact Nav2 cancellation before escape",
+          "[controller_server-15] [INFO] [1793313795.007979113] [controller_server]: Cancellation was successful. Stopping the robot.",
+          "[controller_server-15] [INFO] [1793313795.008009363] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793313795.008165612] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793313795.008291812] [bt_navigator]: Goal canceled",
+          "[coverage_planner-9] [WARN] [1793313795.009767067] [coverage_planner]: waypoint 0 unreachable after 1 tries; skipping",
+          "[coverage_meter-8] [INFO] [1793313795.392830317] [coverage_meter]: COVERAGE_REPORT coverage=0.9829 efficiency=0.7389 revisit_ratio=0.2241 path_m=115.84 ideal_m=85.60 reachable_cells=13696 sim_t=763.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [INFO] [1793313795.592048817] [coverage_planner]: motion relay accepted release_nav",
+          "[coverage_planner-9] [INFO] [1793313796.391915627] [coverage_planner]: motion relay accepted claim_sweep",
+          "[coverage_planner-9] [WARN] [1793313796.392796254] [coverage_planner]: bumper held near waypoint 0: peel off (turn +0.6) 2.5s (escape 2/25)"
+        ],
+        [
+          "[coverage_meter-8] [INFO] [1793313835.689560543] [coverage_meter]: COVERAGE_REPORT coverage=0.9849 efficiency=0.7103 revisit_ratio=0.2551 path_m=120.51 ideal_m=85.60 reachable_cells=13696 sim_t=803.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313836.690085268] [coverage_meter]: COVERAGE_REPORT coverage=0.9849 efficiency=0.7095 revisit_ratio=0.2548 path_m=120.65 ideal_m=85.60 reachable_cells=13696 sim_t=804.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313837.713146248] [coverage_meter]: COVERAGE_REPORT coverage=0.9849 efficiency=0.7089 revisit_ratio=0.2567 path_m=120.75 ideal_m=85.60 reachable_cells=13696 sim_t=805.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [WARN] [1793313838.527647609] [coverage_planner]: held contact: awaiting exact Nav2 cancellation before escape",
+          "[bt_navigator-17] [ERROR] [1793313838.555595196] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+          "[bt_navigator-17] [INFO] [1793313838.555669586] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793313838.555751606] [bt_navigator]: Goal canceled",
+          "[coverage_planner-9] [WARN] [1793313838.557287531] [coverage_planner]: waypoint 5 unreachable after 1 tries; skipping",
+          "[controller_server-15] [INFO] [1793313838.684961307] [controller_server]: Cancellation was successful. Stopping the robot.",
+          "[controller_server-15] [INFO] [1793313838.685005027] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[coverage_meter-8] [INFO] [1793313838.728384683] [coverage_meter]: COVERAGE_REPORT coverage=0.9849 efficiency=0.7085 revisit_ratio=0.2566 path_m=120.81 ideal_m=85.60 reachable_cells=13696 sim_t=806.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [INFO] [1793313839.127577381] [coverage_planner]: motion relay accepted release_nav",
+          "[coverage_meter-8] [INFO] [1793313839.728650089] [coverage_meter]: COVERAGE_REPORT coverage=0.9849 efficiency=0.7085 revisit_ratio=0.2566 path_m=120.81 ideal_m=85.60 reachable_cells=13696 sim_t=807.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [INFO] [1793313839.927159571] [coverage_planner]: motion relay accepted claim_sweep",
+          "[coverage_planner-9] [WARN] [1793313839.927698709] [coverage_planner]: bumper held near waypoint 5: peel off (turn +0.6) 2.5s (escape 3/25)"
+        ],
+        [
+          "[coverage_meter-8] [INFO] [1793313847.760007325] [coverage_meter]: COVERAGE_REPORT coverage=0.9849 efficiency=0.7068 revisit_ratio=0.2580 path_m=121.11 ideal_m=85.60 reachable_cells=13696 sim_t=815.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313848.759828411] [coverage_meter]: COVERAGE_REPORT coverage=0.9851 efficiency=0.7061 revisit_ratio=0.2598 path_m=121.23 ideal_m=85.60 reachable_cells=13696 sim_t=816.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_meter-8] [INFO] [1793313849.782858661] [coverage_meter]: COVERAGE_REPORT coverage=0.9851 efficiency=0.7054 revisit_ratio=0.2596 path_m=121.35 ideal_m=85.60 reachable_cells=13696 sim_t=817.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [WARN] [1793313850.582327912] [coverage_planner]: held contact: awaiting exact Nav2 cancellation before escape",
+          "[bt_navigator-17] [ERROR] [1793313850.611974084] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+          "[bt_navigator-17] [INFO] [1793313850.612054434] [bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[bt_navigator-17] [INFO] [1793313850.612146073] [bt_navigator]: Goal canceled",
+          "[coverage_planner-9] [WARN] [1793313850.613464299] [coverage_planner]: waypoint 6 unreachable after 1 tries; skipping",
+          "[controller_server-15] [INFO] [1793313850.744622825] [controller_server]: Cancellation was successful. Stopping the robot.",
+          "[controller_server-15] [INFO] [1793313850.744655674] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.",
+          "[coverage_meter-8] [INFO] [1793313850.782316440] [coverage_meter]: COVERAGE_REPORT coverage=0.9851 efficiency=0.7048 revisit_ratio=0.2594 path_m=121.45 ideal_m=85.60 reachable_cells=13696 sim_t=818.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [INFO] [1793313851.181524597] [coverage_planner]: motion relay accepted release_nav",
+          "[coverage_meter-8] [INFO] [1793313851.784171420] [coverage_meter]: COVERAGE_REPORT coverage=0.9851 efficiency=0.7048 revisit_ratio=0.2594 path_m=121.45 ideal_m=85.60 reachable_cells=13696 sim_t=819.4 target_hit=True t_target=594.4000000000001 pose_jumps=0 sim_unstable=False",
+          "[coverage_planner-9] [INFO] [1793313851.982412383] [coverage_planner]: motion relay accepted claim_sweep",
+          "[coverage_planner-9] [WARN] [1793313851.983158460] [coverage_planner]: bumper held near waypoint 6: peel off (turn -0.6) 2.5s (escape 4/25)"
+        ]
+      ],
+      "phase_counts": {
+        "IDLE": 23,
+        "SWEEP": 26,
+        "PREPARE_NAV": 21,
+        "TRANSIT": 21,
+        "TRANSIT_CANCEL": 4,
+        "ESCAPE": 4
+      },
+      "final_phase": {
+        "phase": "IDLE",
+        "wall": 331260.545878242,
+        "sim": 829.2
+      },
+      "native_stop_lines": [
+        "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix."
+      ],
+      "clean_exit_lines": [
+        "[INFO] [create-7]: process has finished cleanly [pid 711]",
+        "[INFO] [initialpose_pub-14]: process has finished cleanly [pid 834]",
+        "[INFO] [coverage_regression_runner-10]: process has finished cleanly [pid 714]",
+        "[INFO] [gazebo-3]: process has finished cleanly [pid 706]",
+        "[INFO] [lifecycle_manager-18]: process has finished cleanly [pid 954]",
+        "[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 833]",
+        "[INFO] [robot_state_publisher-5]: process has finished cleanly [pid 708]",
+        "[INFO] [map_server-11]: process has finished cleanly [pid 831]",
+        "[INFO] [parameter_bridge-6]: process has finished cleanly [pid 709]",
+        "[INFO] [amcl-12]: process has finished cleanly [pid 832]",
+        "[INFO] [controller_server-15]: process has finished cleanly [pid 951]",
+        "[INFO] [bt_navigator-17]: process has finished cleanly [pid 953]",
+        "[INFO] [planner_server-16]: process has finished cleanly [pid 952]",
+        "[INFO] [coverage_planner-9]: process has finished cleanly [pid 713]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 705]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 707]",
+        "[INFO] [coverage_meter-8]: process has finished cleanly [pid 712]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 704]"
+      ],
+      "process_death_lines": [],
+      "retained_error_lines": [
+        "[controller_server-15] [ERROR] [1793313025.172951598] [local_costmap.local_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions",
+        "[planner_server-16] [ERROR] [1793313025.263472874] [global_costmap.global_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions",
+        "[bt_navigator-17] [ERROR] [1793313129.063598679] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+        "[bt_navigator-17] [ERROR] [1793313695.734685031] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+        "[bt_navigator-17] [ERROR] [1793313838.555595196] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!",
+        "[bt_navigator-17] [ERROR] [1793313850.611974084] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!"
+      ],
+      "relay_fault_lines": [],
+      "malloc_error": false,
+      "KeyboardInterrupt": false
+    },
+    "delivery_checks_pending": "Machine guard OCUPADA; this document records the collected run, not a new test or final source/patch compatibility check.",
+    "limits": [
+      "One full post-UDP/native-exit success, not reliability statistics or a controlled A/B.",
+      "Geometry-based coverage, not real dirt removal. Final efficiency70.32%; unchanged acceptance uses91.33% at first90% crossing.",
+      "One held-contact reflex in this run;15 NavigateToPose SUCCEEDED and6 CANCELED, none ABORTED. Cancellation count is not contact count.",
+      "Two sub-inscribed inflation errors and four inner FollowPath halt-result errors remain in the log. Outer actions terminated and all processes exited0; not a clean-log claim.",
+      "DockDrive remains IDLE: no actual docking trajectory, active combined Keepout, managed fault injection, ARM/energy measurement or physical validation.",
+      "The corrupting write behind the earlier shared-memory abort remains unidentified; UDP is a scoped workaround. An ACK followed by hung server teardown is not fault-injected."
+    ],
+    "motion_audit": {
+      "dds_builtin_transports": "UDPv4",
+      "graph": {
+        "/cmd_vel": [],
+        "/cmd_vel_nav": [],
+        "/navigate_to_pose/_action/status": [
+          [
+            "bt_navigator",
+            "/",
+            "action_msgs/msg/GoalStatusArray",
+            "010f7f01b9035cb60000000000003c03"
+          ]
+        ],
+        "/valdi/nav2_cmd_vel": [
+          [
+            "controller_server",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01b703c7ab0000000000006c03"
+          ]
+        ],
+        "/valdi/sweep_cmd_vel": [
+          [
+            "coverage_planner",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c902153a0000000000001d03"
+          ]
+        ],
+        "/valdi/dock_drive_cmd_vel": [
+          [
+            "dock_drive",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c102717f0000000000001403"
+          ]
+        ],
+        "/valdi/lab_safe_cmd_vel_output": [
+          [
+            "valdi_experimental_cmdvel_relay",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c00282150000000000001603"
+          ]
+        ],
+        "safe_output_subscribers": [
+          [
+            "ros_gz_bridge",
+            "/",
+            "geometry_msgs/msg/Twist"
+          ]
+        ]
+      },
+      "status_packets_total": 48,
+      "sample_counts": {
+        "status": 48,
+        "feedback": 1,
+        "phase": 99
+      },
+      "phase_history": [
+        {
+          "phase": "IDLE",
+          "wall": 330429.949402917,
+          "sim": 1.6
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330437.540166022,
+          "sim": 9.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330437.739654573,
+          "sim": 9.200000000000001
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330438.740803935,
+          "sim": 10.200000000000001
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330449.342540197,
+          "sim": 20.8
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330450.140311071,
+          "sim": 21.6
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330450.339813313,
+          "sim": 21.8
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330451.340242694,
+          "sim": 22.8
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330464.740098321,
+          "sim": 36.2
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330465.54024916,
+          "sim": 37.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330488.339477194,
+          "sim": 59.800000000000004
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330489.342217854,
+          "sim": 60.800000000000004
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330499.960565141,
+          "sim": 71.4
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330500.96062111,
+          "sim": 72.4
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330502.960169371,
+          "sim": 74.4
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330504.161130788,
+          "sim": 75.60000000000001
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330535.201520251,
+          "sim": 106.2
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330536.00109664,
+          "sim": 107.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330705.001541492,
+          "sim": 276.0
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330706.000962803,
+          "sim": 277.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330723.200719653,
+          "sim": 294.20000000000005
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330724.000677081,
+          "sim": 295.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330754.800136969,
+          "sim": 325.8
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330755.801185175,
+          "sim": 326.8
+        },
+        {
+          "phase": "TRANSIT_CANCEL",
+          "wall": 330760.000644716,
+          "sim": 331.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330760.600678691,
+          "sim": 331.6
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330761.400581079,
+          "sim": 332.40000000000003
+        },
+        {
+          "phase": "ESCAPE",
+          "wall": 330761.600422111,
+          "sim": 332.6
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330764.200205836,
+          "sim": 335.20000000000005
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330764.400236138,
+          "sim": 335.40000000000003
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330765.401316033,
+          "sim": 336.40000000000003
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330786.200723249,
+          "sim": 357.20000000000005
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330787.001879392,
+          "sim": 358.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330791.001458891,
+          "sim": 362.0
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330792.001068802,
+          "sim": 363.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330796.400770743,
+          "sim": 367.40000000000003
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330797.200776941,
+          "sim": 368.20000000000005
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330806.400184098,
+          "sim": 377.40000000000003
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330807.401460743,
+          "sim": 378.40000000000003
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330817.00210377,
+          "sim": 388.0
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330817.800643782,
+          "sim": 388.8
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330819.200218137,
+          "sim": 390.20000000000005
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330820.201291593,
+          "sim": 391.20000000000005
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330831.6008101,
+          "sim": 402.6
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330832.400585198,
+          "sim": 403.40000000000003
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 330946.681384818,
+          "sim": 517.0
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 330947.741936186,
+          "sim": 518.01
+        },
+        {
+          "phase": "IDLE",
+          "wall": 330961.605621581,
+          "sim": 531.2
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 330962.407661751,
+          "sim": 532.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331054.12321036,
+          "sim": 623.4000000000001
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331055.325151725,
+          "sim": 624.6
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331066.565697903,
+          "sim": 635.8000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331067.565148495,
+          "sim": 636.8000000000001
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331070.167297302,
+          "sim": 639.4000000000001
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331071.170912539,
+          "sim": 640.4000000000001
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331101.860830733,
+          "sim": 671.0
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331102.660617321,
+          "sim": 671.8000000000001
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331102.861608829,
+          "sim": 672.0
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331103.862523605,
+          "sim": 673.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331111.875571136,
+          "sim": 681.0
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331112.675547384,
+          "sim": 681.8000000000001
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331112.877440879,
+          "sim": 682.0
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331113.878291756,
+          "sim": 683.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331132.522421241,
+          "sim": 701.6
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331133.322151639,
+          "sim": 702.4000000000001
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331133.520928335,
+          "sim": 702.6
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331134.521719512,
+          "sim": 703.6
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331143.329153138,
+          "sim": 712.4000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331144.129034626,
+          "sim": 713.2
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331170.335691277,
+          "sim": 739.4000000000001
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331171.336341965,
+          "sim": 740.4000000000001
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331187.136161365,
+          "sim": 756.2
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331187.936170634,
+          "sim": 757.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331195.743838541,
+          "sim": 764.8000000000001
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331196.744365526,
+          "sim": 765.8000000000001
+        },
+        {
+          "phase": "TRANSIT_CANCEL",
+          "wall": 331200.549936235,
+          "sim": 769.6
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331201.150109346,
+          "sim": 770.2
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331201.951887269,
+          "sim": 771.0
+        },
+        {
+          "phase": "ESCAPE",
+          "wall": 331202.149624714,
+          "sim": 771.2
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331204.749619878,
+          "sim": 773.8000000000001
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331204.951957898,
+          "sim": 774.0
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331206.110583308,
+          "sim": 775.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331232.008709848,
+          "sim": 800.8000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331232.807478311,
+          "sim": 801.6
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331236.621317873,
+          "sim": 805.4000000000001
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331237.621775838,
+          "sim": 806.4000000000001
+        },
+        {
+          "phase": "TRANSIT_CANCEL",
+          "wall": 331244.085233719,
+          "sim": 812.8000000000001
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331244.685691609,
+          "sim": 813.4000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331245.48520515,
+          "sim": 814.2
+        },
+        {
+          "phase": "ESCAPE",
+          "wall": 331245.684956388,
+          "sim": 814.4000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331248.299373195,
+          "sim": 817.0
+        },
+        {
+          "phase": "PREPARE_NAV",
+          "wall": 331248.501176726,
+          "sim": 817.2
+        },
+        {
+          "phase": "TRANSIT",
+          "wall": 331249.499463158,
+          "sim": 818.2
+        },
+        {
+          "phase": "TRANSIT_CANCEL",
+          "wall": 331256.139866553,
+          "sim": 824.8000000000001
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331256.739647175,
+          "sim": 825.4000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331257.541598958,
+          "sim": 826.2
+        },
+        {
+          "phase": "ESCAPE",
+          "wall": 331257.740644128,
+          "sim": 826.4000000000001
+        },
+        {
+          "phase": "SWEEP",
+          "wall": 331260.345928795,
+          "sim": 829.0
+        },
+        {
+          "phase": "IDLE",
+          "wall": 331260.545878242,
+          "sim": 829.2
+        }
+      ],
+      "feedback_summary": [
+        {
+          "first_wall": 330438.742354797,
+          "last_wall": 331256.14073561,
+          "count": 27395,
+          "max_gap_wall": 171.40999360202113
+        }
+      ],
+      "full_status_samples_reference": "Complete original motion_audit.samples.status is preserved in raw (above) with its SHA256. Final per-UUID terminal table is in observations. Repeated status lists are omitted here."
+    }
+  }
 }
