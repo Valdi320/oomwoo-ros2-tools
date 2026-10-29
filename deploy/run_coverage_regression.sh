@@ -31,15 +31,58 @@ WORST=0
 
 for i in $(seq 1 "$RUNS"); do
   echo "[run] ($i/$RUNS) launching headless coverage stack -> $LOG.$i"
-  # shellcheck disable=SC2086
-  ros2 launch oomwoo_sim_support coverage_regression.launch.py $LAUNCH_ARGS \
-    > "$LOG.$i" 2>&1 &
-  LAUNCH_PID=$!
-  trap 'kill -INT $LAUNCH_PID 2>/dev/null || true' EXIT
-
+  # One launch owns both the stack and its existing scorer. Its process-exit
+  # event shuts down only this launch's children; never search for other gz
+  # processes (another simulation or CI job may be running on the host).
   set +e
-  ros2 run oomwoo_sim_support coverage_regression_runner --ros-args \
-    -p use_sim_time:=true -p report_path:="$REPORT_DIR/run$i.json"
+  python3 - "$REPORT_DIR/run$i.json" "$LAUNCH_ARGS" > "$LOG.$i" 2>&1 <<'PY'
+import os
+import shlex
+import sys
+
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription, LaunchService
+from launch.actions import EmitEvent, IncludeLaunchDescription, RegisterEventHandler
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+
+arguments = {}
+for argument in shlex.split(sys.argv[2]):
+    name, separator, value = argument.partition(':=')
+    if not separator or not name:
+        raise ValueError(f'expected name:=value launch argument: {argument!r}')
+    arguments[name] = value
+
+scorer = Node(
+    package='oomwoo_sim_support', executable='coverage_regression_runner',
+    output='screen', parameters=[{
+        'use_sim_time': True, 'report_path': sys.argv[1],
+        'max_wall_time_s': float(os.environ.get('MAX_WALL_TIME_S', '5400')),
+        'clock_dead_wall_s': float(os.environ.get('CLOCK_DEAD_WALL_S', '120')),
+    }])
+result = [2]  # interrupted/failed launch without a scorer result is invalid
+
+
+def scored(event, context):
+    result[0] = event.returncode if event.returncode in (0, 1, 2) else 2
+    return [EmitEvent(event=Shutdown(reason='coverage scorer finished'))]
+
+
+stack = IncludeLaunchDescription(
+    PythonLaunchDescriptionSource(os.path.join(
+        get_package_share_directory('oomwoo_sim_support'),
+        'launch', 'coverage_regression.launch.py')),
+    launch_arguments=arguments.items())
+service = LaunchService()
+service.include_launch_description(LaunchDescription([
+    RegisterEventHandler(OnProcessExit(target_action=scorer, on_exit=scored)),
+    stack, scorer,
+]))
+launch_code = service.run()
+sys.exit(result[0] if launch_code == 0 else 2)
+PY
   CODE=$?
   set -e
   [ "$CODE" -gt "$WORST" ] && WORST=$CODE
@@ -50,10 +93,6 @@ for i in $(seq 1 "$RUNS"); do
   echo
   echo "[run] ($i/$RUNS) exit code: $CODE"
 
-  kill -INT $LAUNCH_PID 2>/dev/null || true
-  wait $LAUNCH_PID 2>/dev/null || true
-  pkill -f "gz sim" 2>/dev/null || true
-  sleep 5
 done
 
 if [ "$RUNS" -gt 1 ]; then

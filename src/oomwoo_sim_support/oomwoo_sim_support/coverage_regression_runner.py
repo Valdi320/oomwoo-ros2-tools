@@ -134,23 +134,21 @@ class CoverageRunner(Node):
         self.get_logger().info(
             f'watching coverage; target={self.cov_target:.0%} '
             f'efficiency>={self.eff_target:.0%}')
-        # wait for the clock + first coverage message
-        t_wall = time.time()
-        while rclpy.ok() and self.coverage == 0.0 and time.time() - t_wall < 300:
-            rclpy.spin_once(self, timeout_sec=0.2)
+        # Bound startup too: a missing clock/first coverage sample must not
+        # add an unaccounted five minutes before either wall-clock backstop.
         start_sim = self._sim_now()
         self.last_gain_sim_t = start_sim
+        measuring = False
 
         reason = 'max_time'
-        wall_start = time.time()
+        wall_start = time.monotonic()
         last_sim = self._sim_now()
         last_sim_advance_wall = wall_start
         while rclpy.ok():
             rclpy.spin_once(self, timeout_sec=0.5)
-            sim_t = self._sim_now() - start_sim
             # wall-clock backstops: a dead/frozen sim clock stops every
             # sim-time exit condition, so bound the run in real time too
-            now_wall = time.time()
+            now_wall = time.monotonic()
             if self._sim_now() > last_sim:
                 last_sim = self._sim_now()
                 last_sim_advance_wall = now_wall
@@ -168,6 +166,15 @@ class CoverageRunner(Node):
             if self.sim_unstable:
                 # no point measuring further — the numbers are already invalid
                 break
+            if not measuring:
+                # Keep startup out of the simulated sweep/plateau duration,
+                # while both wall-clock safeguards above remain in force.
+                if self.coverage == 0.0 and not self.sweep_started:
+                    continue
+                start_sim = self._sim_now()
+                self.last_gain_sim_t = start_sim
+                measuring = True
+            sim_t = self._sim_now() - start_sim
             if self.coverage > self.best + self.plateau_eps:
                 self.best = self.coverage
                 self.last_gain_sim_t = self._sim_now()
@@ -189,8 +196,9 @@ class CoverageRunner(Node):
             if self.sweep_complete:
                 reason = 'sweep_complete'
                 # let the meter's last 1 Hz update land before scoring
-                t_grace = time.time()
-                while rclpy.ok() and time.time() - t_grace < 3.0:
+                grace_end = min(time.monotonic() + 3.0,
+                                wall_start + self.max_wall)
+                while rclpy.ok() and time.monotonic() < grace_end:
                     rclpy.spin_once(self, timeout_sec=0.2)
                 # a late coverage update during the grace can cross the target;
                 # re-evaluate so eff_at_target isn't left null on a passing run

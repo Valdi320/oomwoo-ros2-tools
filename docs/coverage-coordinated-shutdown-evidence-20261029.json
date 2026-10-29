@@ -1,0 +1,144 @@
+{
+  "date_utc": "2026-10-29T17:50:21.371233+00:00",
+  "parent_commit": "e2397dfe94cf6d490d24194edf0916dd5fcd6975",
+  "change": "Fuse the existing scorer and simulation in a single ROS2 Launch lifecycle; remove the global Gazebo pkill, PID signal trap, and fixed cleanup sleep. Apply existing wall/clock bounds from scorer startup using monotonic time, and cap completion grace by remaining wall budget. No additional runner, gate, node, timer or tool.",
+  "source_sha256": {
+    "deploy/run_coverage_regression.sh": "bf3eac478e3bfce62589a5fdce7ab3053ecdb1011b00dd378d0338670afa8ddd",
+    "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "6b11791d1802f44c18feeb9affb4a23f5fe4dd481363aea7330e3a690fa111a4",
+    "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "dd528b15b3b2ae6f22e02ad5dba9e2749356489871bdbfb90a64a6f9a8fcc0f9"
+  },
+  "unit": {
+    "scope": "Actual CoverageRunner.run with synthetic ROS callbacks and deterministic clocks; not a ROS2 Node constructor or DDS test.",
+    "rc": 0,
+    "cases": 7,
+    "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0 -- /usr/bin/python3\nrootdir: /work/src/oomwoo_sim_support\nplugins: ament-copyright-0.17.5, ament-flake8-0.17.5, ament-lint-0.17.5, ament-pep257-0.17.5, ament-xmllint-0.17.5, launch-testing-3.4.12, launch-testing-ros-0.26.13, colcon-core-0.21.3, anyio-4.2.0, typeguard-4.1.5\ncollecting ... collected 7 items\n\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_missing_clock_is_invalid_during_startup PASSED [ 14%]\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_no_coverage_cannot_extend_the_total_wall_budget PASSED [ 28%]\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_active_sweep_at_zero_coverage_can_plateau PASSED [ 42%]\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_unstable_startup_stops_without_waiting_for_coverage PASSED [ 57%]\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_completion_grace_respects_remaining_total_wall_budget PASSED [ 71%]\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_completion_keeps_efficiency_at_first_target_crossing PASSED [ 85%]\n../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_late_unstable_measurement_during_completion_grace_is_invalid PASSED [100%]\n\n============================== 7 passed in 0.23s ===============================\n",
+    "command": "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:${PYTHONPATH:-} python3 -m pytest -p no:cacheprovider /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py -v",
+    "lock": "LIBRE: carga 0.43, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (15053 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n"
+  },
+  "gazebo_runs": [
+    {
+      "artifact": "coverage_gazebo_reactive_short_20261029.json",
+      "sha256": "c68514db16c62ebd98c15ec92c6628c0ff3629a877886bcec1c380e98bd2d3aa",
+      "container_rc": 0,
+      "bank_code": 1,
+      "elapsed_seconds": 188.69,
+      "report": {
+        "coverage": 0.0036,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 0.0,
+        "revisit_ratio": 0.0,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "wall_timeout",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false
+      },
+      "cgroup": null,
+      "hypothesis": null,
+      "first_meter_sample": "[coverage_meter-6] [INFO] [1793295601.560569060] [coverage_meter]: COVERAGE_REPORT coverage=0.0036 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=0.2 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+      "last_meter_sample": "[coverage_meter-6] [INFO] [1793295777.678287143] [coverage_meter]: COVERAGE_REPORT coverage=0.0036 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=176.2 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+      "startup_thread_failure": true,
+      "nav2_goals_succeeded": 0,
+      "scorer_exit_observed": true,
+      "planner_closed_cleanly": true,
+      "gazebo_teardown": "ROS2 Launch scoped SIGINT, followed by its default SIGTERM after 5 seconds; no shell kill/pkill and no search for other processes."
+    },
+    {
+      "artifact": "coverage_gazebo_reactive_threads_bounded_20261029.json",
+      "sha256": "9c97d642ea26c7474ec5fe6466b104f0d6ab36ad3ed843d10bb6366c48c12dea",
+      "container_rc": 0,
+      "bank_code": 1,
+      "elapsed_seconds": 128.8,
+      "report": {
+        "coverage": 0.0036,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 0.0,
+        "revisit_ratio": 0.0,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "wall_timeout",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false
+      },
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 3\n",
+        "/sys/fs/cgroup/pids.peak": "256\n",
+        "/sys/fs/cgroup/memory.peak": "1141825536\n"
+      },
+      "hypothesis": "NumPy and software rendering may consume the 256-thread cgroup budget before Nav2 startup. Bound their existing thread pools; keep pids=256 and memory=3g unchanged.",
+      "first_meter_sample": "[coverage_meter-6] [INFO] [1793295856.842621951] [coverage_meter]: COVERAGE_REPORT coverage=0.0036 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=0.9 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+      "last_meter_sample": "[coverage_meter-6] [INFO] [1793295971.842359549] [coverage_meter]: COVERAGE_REPORT coverage=0.0036 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=115.9 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+      "startup_thread_failure": true,
+      "nav2_goals_succeeded": 0,
+      "scorer_exit_observed": true,
+      "planner_closed_cleanly": true,
+      "gazebo_teardown": "ROS2 Launch scoped SIGINT, followed by its default SIGTERM after 5 seconds; no shell kill/pkill and no search for other processes."
+    },
+    {
+      "artifact": "coverage_gazebo_reactive_pids512_20261029.json",
+      "sha256": "0b4dadeca295fdd8ee92b004df4b61d882a47c5985c2a6542a2fafe23560ddd7",
+      "container_rc": 0,
+      "bank_code": 1,
+      "elapsed_seconds": 128.67,
+      "report": {
+        "coverage": 0.1846,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 1.0,
+        "revisit_ratio": 0.0807,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "wall_timeout",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false
+      },
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "280\n",
+        "/sys/fs/cgroup/memory.peak": "890306560\n"
+      },
+      "hypothesis": "Previous pids.events max=3 and pids.peak=256 prove the cgroup PID cap was reached. Raise only that bounded cap to 512, keeping library pools bounded and memory=3g.",
+      "first_meter_sample": "[coverage_meter-6] [INFO] [1793296028.913183232] [coverage_meter]: COVERAGE_REPORT coverage=0.0036 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=1.0 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+      "last_meter_sample": "[coverage_meter-6] [INFO] [1793296145.264574250] [coverage_meter]: COVERAGE_REPORT coverage=0.1846 efficiency=3.9202 revisit_ratio=0.0807 path_m=21.84 ideal_m=85.60 reachable_cells=13696 sim_t=111.2 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+      "startup_thread_failure": false,
+      "nav2_goals_succeeded": 3,
+      "scorer_exit_observed": true,
+      "planner_closed_cleanly": true,
+      "gazebo_teardown": "ROS2 Launch scoped SIGINT, followed by its default SIGTERM after 5 seconds; no shell kill/pkill and no search for other processes."
+    }
+  ],
+  "environment": {
+    "image": "docker.io/makerspet/oomwoo:jazzy-dev (cached, pull=never)",
+    "network": "none, ROS_LOCALHOST_ONLY=1, ROS_DOMAIN_ID=88; no hardware devices",
+    "read_only_source": true,
+    "memory_container": "3g",
+    "memory_scope": "4G; swap512M",
+    "cpu_scope": "100%",
+    "run_count_each": 1,
+    "final_pids_cap": 512,
+    "final_thread_pool_env": {
+      "OPENBLAS_NUM_THREADS": 1,
+      "OMP_NUM_THREADS": 1,
+      "LP_NUM_THREADS": 2
+    },
+    "final_scoring_wall_seconds": 120,
+    "clock_dead_wall_seconds": 45
+  },
+  "provenance": "{\n  \"planner\": \"/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\",\n  \"runner\": \"/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\",\n  \"files\": {\n    \"launch/coverage_regression.launch.py\": {\n      \"same\": true,\n      \"installed_sha256\": \"f38c978dbbef4819eefa3e69db706580f7a435c4c7a09d835532a296b01d03c1\",\n      \"local_sha256\": \"f38c978dbbef4819eefa3e69db706580f7a435c4c7a09d835532a296b01d03c1\"\n    },\n    \"launch/sim_bringup.launch.py\": {\n      \"same\": false,\n      \"installed_sha256\": \"acda9aa1f59721cf269ed00d692b7ab60e5a28174ad81a86d589011e0daa4263\",\n      \"local_sha256\": \"c903224243d7fe3643afc5bb57871ca2afdff402dd2629bea41ba3a4a35393ea\"\n    },\n    \"worlds/test_room.world\": {\n      \"same\": true,\n      \"installed_sha256\": \"a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8\",\n      \"local_sha256\": \"a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8\"\n    }\n  }\n}\n",
+  "limits": [
+    "All three coverage reports are pass=false and bank exit=1; container wrapper rc=0 means evidence collection succeeded, not coverage success.",
+    "Last run establishes real Gazebo startup/movement and scoped shutdown under configured reactive mode, with actual Nav2 transit goals. It does not isolate every row-stop branch; those remain covered by the prior 19 unit cases.",
+    "18.46% is a partial run, not the 90% acceptance target or a comparable performance benchmark. Efficiency from this incomplete run is not an efficiency-at-target result.",
+    "The cached sim_bringup.launch.py differs from the local Keepout-enabled source. Coverage launch and test_room world match; planner and scorer imports point to /work local source. This does not validate local Keepout launch integration.",
+    "No full room completion, living_room comparison, three-way DDS adapter, docking/Gazebo relay integration, motor watchdog, physical hardware, braking distance or ARM timing validation.",
+    "Scoring duration excludes process imports/constructor and ROS2 Launch teardown; first/last runs total188.69s/128.67s for180s/120s scoring budgets."
+  ]
+}

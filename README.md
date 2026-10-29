@@ -167,6 +167,14 @@ bash /ros_ws/src/oomwoo-ros2-tools/deploy/run_coverage_regression.sh
 Sweeps the room, then a gap-fill pass. Prints `COVERAGE_REPORT` lines and a
 summary; exits 0 on pass.
 
+The stack and scorer share one ROS2 Launch lifecycle: when the scorer exits,
+Launch closes its own children. The harness does not terminate other Gazebo
+processes on the host. `MAX_WALL_TIME_S` (default 5400) bounds scoring including
+startup; `CLOCK_DEAD_WALL_S` (default 120) detects a stopped or missing sim clock
+from startup onward. Launch teardown takes additional time. Logs are in
+`$LOG.1` (default `/tmp/coverage_regression.log.1`); the JSON report and exit
+codes remain 0 (pass), 1 (target missed), or 2 (invalid measurement/launch).
+
 ### 4. Coverage on the stock living_room (~20 min)
 
 ```bash
