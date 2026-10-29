@@ -216,9 +216,16 @@ known-wedge exclusion stay unchanged.
 
 Three hole cases fail before the correction, while four controls pass.
 Afterward the single planner test file passes **32/32**, including prior
-progress and zero-command cases. These are unit grids and synthetic boundaries,
-not physical cleaning proof; fresh Gazebo validation is pending. Exact source,
-commands, cases and limits:
+progress and zero-command cases. A subsequent full Gazebo run of `9283378`
+passes at 99.09% coverage, with 90.84% efficiency at the first 90% crossing and
+70.14% final efficiency. The first gap-fill now starts a real Nav2 goal and runs
+for about 32 s rather than consuming its pass immediately. The last report
+before gap-fill is 98.76% at 115.76 m; final is 99.09% at 122.05 m. This exposes
+the extra-travel cost of finishing small holes and is not an A/B gain claim.
+The second pass's last candidate coincides with delayed coverage updates; the
+log does not prove a separate visit to every candidate. This remains one
+simulation, without active Keepout, arbitration, hardware or dirt-removal proof.
+Exact unit/Gazebo source, commands, provenance and limits:
 [`gapfill-uncovered-center-evidence-20261029.json`](gapfill-uncovered-center-evidence-20261029.json).
 
 ## Related

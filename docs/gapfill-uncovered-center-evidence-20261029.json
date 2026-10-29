@@ -34,7 +34,139 @@
   },
   "limits": [
     "Unit calls use actual planner selection, skip, coverage and advance methods with actual ROS pose/map types and synthetic grid/clock/publishers; no ROS2 Node constructor/DDS in these cases.",
-    "Prior98.25% Gazebo result predates this production change. Fresh integrated simulation remains pending.",
+    "Prior98.25% Gazebo evidence predates this production change. The follow-up above tests corrected source9283378 and keeps that distinction explicit.",
     "Does not guarantee100% coverage or actual dirt removal, change reachability/keepout/footprint geometry, certify source ownership, dropped callbacks, localization freshness, docking, motor watchdog, ARM or physical hardware."
-  ]
+  ],
+  "gazebo_follow_up": {
+    "date_utc": "2026-10-29T18:39:25.583950+00:00",
+    "source_commit": "92833784fae72bf7e1e8e0e1cd38a963a239eb42",
+    "report": {
+      "coverage": 0.9909,
+      "coverage_target": 0.9,
+      "target_crossed": true,
+      "efficiency_at_target": 0.9084,
+      "efficiency_final": 0.7014,
+      "revisit_ratio": 0.2475,
+      "efficiency_target": 0.8,
+      "time_to_target_s": 438.0,
+      "end_reason": "sweep_complete",
+      "sim_unstable": false,
+      "measurement_valid": true,
+      "pass": true
+    },
+    "bank_exit": 0,
+    "container_wrapper_exit": 0,
+    "wall_seconds_total": 600.09,
+    "first_gapfill_events": [
+      "[coverage_planner-7] [INFO] [1793298979.073085456] [coverage_planner]: gap-fill pass 1: 5 uncovered spots, coverage 98.8%",
+      "[coverage_planner-7] [INFO] [1793299011.472696734] [coverage_planner]: gap-fill pass 2: 1 uncovered spots, coverage 99.1%",
+      "[coverage_planner-7] [INFO] [1793299012.072532561] [coverage_planner]: coverage complete: 99.1% covered"
+    ],
+    "meter_before_first_gapfill": "[coverage_meter-6] [INFO] [1793298978.873172387] [coverage_meter]: COVERAGE_REPORT coverage=0.9876 efficiency=0.7394 revisit_ratio=0.2088 path_m=115.76 ideal_m=85.60 reachable_cells=13696 sim_t=546.2 target_hit=True t_target=433.185 pose_jumps=0 sim_unstable=False",
+    "last_meter_sample": "[coverage_meter-6] [INFO] [1793299014.873452479] [coverage_meter]: COVERAGE_REPORT coverage=0.9909 efficiency=0.7014 revisit_ratio=0.2475 path_m=122.05 ideal_m=85.60 reachable_cells=13696 sim_t=582.2 target_hit=True t_target=433.185 pose_jumps=0 sim_unstable=False",
+    "nav2_goals_succeeded_total": 19,
+    "nav2_goals_succeeded_after_first_gapfill": 2,
+    "reactive_stuck_warnings": [],
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "281\n",
+      "/sys/fs/cgroup/memory.peak": "957050880\n"
+    },
+    "image": {
+      "date_utc": "2026-10-29T18:27:38.628089+00:00",
+      "container_id": "a81f51952727528eacdddc26bf050648e9f2b25bf9ed57dd9ba4aaec4faf9dea",
+      "image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+      "state_when_observed": "running"
+    },
+    "provenance": {
+      "planner": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+      "scorer": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+      "files": {
+        "launch/coverage_regression.launch.py": {
+          "match": true,
+          "sha256": "f38c978dbbef4819eefa3e69db706580f7a435c4c7a09d835532a296b01d03c1"
+        },
+        "launch/sim_bringup.launch.py": {
+          "match": true,
+          "sha256": "c903224243d7fe3643afc5bb57871ca2afdff402dd2629bea41ba3a4a35393ea"
+        },
+        "worlds/test_room.world": {
+          "match": true,
+          "sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+        },
+        "config/nav2_params.yaml": {
+          "match": true,
+          "sha256": "5478b8f007f1ae301091efb3fc38b6cda63eadd8790f000e8dec871b6dcaf0c8"
+        },
+        "maps/test_room.yaml": {
+          "match": true,
+          "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+        },
+        "maps/test_room.pgm": {
+          "match": true,
+          "sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+        }
+      }
+    },
+    "command_args": [
+      "podman",
+      "run",
+      "--rm",
+      "--pull=never",
+      "--network=none",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges",
+      "--security-opt=label=disable",
+      "--read-only",
+      "--tmpfs",
+      "/tmp:rw,exec,size=1024m,mode=1777",
+      "--memory=3g",
+      "--cpus=2",
+      "--pids-limit=512",
+      "-e",
+      "HOME=/tmp",
+      "-e",
+      "ROS_LOG_DIR=/tmp/roslogs",
+      "-e",
+      "ROS_DOMAIN_ID=88",
+      "-e",
+      "ROS_LOCALHOST_ONLY=1",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools:/work:ro",
+      "--name",
+      "oomwoo-codex-gapfill-center-20261029",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro",
+      "--entrypoint",
+      "/bin/bash",
+      "docker.io/makerspet/oomwoo:jazzy-dev",
+      "-lc",
+      "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2\nexport MAX_WALL_TIME_S=1800 CLOCK_DEAD_WALL_S=45 RUNS=1\npython3 - <<'PROVENANCE'\nfrom pathlib import Path\nfrom ament_index_python.packages import get_package_share_directory\nimport hashlib,json\nfrom oomwoo_coverage import coverage_planner_node as planner\nfrom oomwoo_sim_support import coverage_regression_runner as scorer\nshare=Path(get_package_share_directory('oomwoo_sim_support'));r={'planner':planner.__file__,'scorer':scorer.__file__,'files':{}}\nfor name in ['launch/coverage_regression.launch.py','launch/sim_bringup.launch.py','worlds/test_room.world','config/nav2_params.yaml','maps/test_room.yaml','maps/test_room.pgm']:\n a=(share/name).read_bytes();b=(Path('/work/src/oomwoo_sim_support')/name).read_bytes();r['files'][name]={'match':a==b,'sha256':hashlib.sha256(a).hexdigest()}\n assert a==b,name\nassert planner.__file__.startswith('/work/') and scorer.__file__.startswith('/work/')\nprint('OOMWOO_SOURCE_PROVENANCE '+json.dumps(r),flush=True)\nPROVENANCE\nif [ $? -ne 0 ]; then exit 3; fi\nbash -n /work/deploy/run_coverage_regression.sh || exit 3\nbash /work/deploy/run_coverage_regression.sh executor:=reactive\nbank_code=$?\nexport OOMWOO_BANK_CODE=$bank_code\npython3 - <<'INNER'\nimport json,glob,os\nfrom pathlib import Path\nr={'bank_code':int(os.environ['OOMWOO_BANK_CODE']),'reports':{},'logs':{}}\nfor p in glob.glob('/tmp/coverage_runs.*/run*.json'):\n r['reports'][p]=json.loads(Path(p).read_text())\nfor p in glob.glob('/tmp/coverage_regression.log.*'):\n r['logs'][p]=Path(p).read_text(errors='replace')\nr['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/pids.events'),Path('/sys/fs/cgroup/pids.peak'),Path('/sys/fs/cgroup/memory.peak')] if p.exists()}\nprint('OOMWOO_GAZEBO_BANK '+json.dumps(r))\nINNER"
+    ],
+    "machine_lock": "LIBRE: carga 0.53, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (15052 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "host_scope": [
+      "MemoryMax=4G",
+      "MemorySwapMax=512M",
+      "CPUQuota=100%",
+      "CPUWeight=10"
+    ],
+    "raw_evidence": {
+      "file": "coverage_gazebo_gapfill_center_20261029.json",
+      "sha256": "191889881c6131e4747c67a5e211f4e2488c8ce9fdc4077e2c10e06ce84dd545",
+      "bytes": 239121
+    },
+    "interpretation": [
+      "One full test_room run passes99.09% coverage,90.84% efficiency at first90% crossing and70.14% final efficiency. Scorer target time438.0s; total wall600.09s includes bringup/teardown.",
+      "Unlike earlier immediate pass consumption, first gap-fill lists5 targets, starts a real Nav2 goal and runs for about32s before the second pass lists1 target. There are actual successful Nav2 goals during this phase; it is not a purely synthetic admission result.",
+      "Within this run, the last report before gap-fill is98.76%/115.76m and final report99.09%/122.05m: approximately0.33 percentage points added with6.29m extra travel. This is a within-run observation, not an A/B causal performance estimate.",
+      "The second pass ends quickly between coverage reports that still increase. Delayed feedback is compatible with this trace, but the log does not independently prove a visit to each individual candidate; do not claim all5 were separately visited.",
+      "CoverageMeter publishes0 for cells not credited, including outside its serviceable set, and100 for covered serviceable cells. The unit-1 case is hypothetical unknown coverage, not evidence that unknown occupancy is safe. Geometry remains limited by the existing reachable/free masks."
+    ],
+    "limits": [
+      "Single unseeded test_room scene, no statistical reliability/efficiency gain, A/B, living_room or physical dirt-removal claim. Existing0.15m edge band remains deferred to floor-care; final unscored/uncovered geometry is not repaired here.",
+      "No active Keepout mask, single-writer/source authority, three-way relay/docking, localization freshness, fault/dropout, MCU watchdog, ARM/power/minimum hardware or physical stopping proof.",
+      "Source/world/map/config hashes match local resources; same cached image and read-only source mount as prior scene. No install/build, source mutation during the run, external messages, push, PR or merge.",
+      "Terminal exec26729 completed exit0 and its ephemeral container auto-removed; no restart or global process signal."
+    ]
+  }
 }
