@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-29",
+  "repository": "oomwoo-ros2-tools",
+  "parent_commit": "5efe4099d9a15733bb4cf4b33a64551fdcb240f0",
+  "colleague_base": "d62551d1017ff667efdfb44266976d3b46894461",
+  "problem": "exists()/write_text() overwrites an output created during serialization, and follows a dangling output symlink to create its target despite the existing no-overwrite contract.",
+  "correction": "Serialize first, then open output with mode x; translate FileExistsError to the established ValueError. Exclusive name acquisition only; not atomic complete-file publication or write durability.",
+  "new_cases": [
+    "Competing file created during serialization remains byte-for-byte intact",
+    "Dangling output symlink remains intact and its target stays absent",
+    "Serialization error leaves no output and source parameters remain intact"
+  ],
+  "environment": {
+    "python": "3.14",
+    "pyyaml": "6.0.2",
+    "module": "/run/host/usr/lib64/python3.14/site-packages/yaml/__init__.py",
+    "dependency_installation": false,
+    "limits": {
+      "MemoryMax": "4G",
+      "MemorySwapMax": "512M",
+      "CPUQuota": "50%",
+      "CPUWeight": 10
+    }
+  },
+  "command": "systemd-run --user --scope -p MemoryMax=4G -p MemorySwapMax=512M -p CPUQuota=50% -p CPUWeight=10 env PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src/oomwoo_sim_support:src/oomwoo_sim_support/test:/run/host/usr/lib64/python3.14/site-packages python3 -m unittest test_keepout_config -v",
+  "machine_lock": "LIBRE required and checked before each test invocation",
+  "initial_environment_attempts": "System Python and bundled Python could not import yaml; no product cases executed. The second attempt was made despite the failed import preflight. Stopped this route under the two-red rule; saved draft patch and restored own test file. A read-only search then found existing host PyYAML. Successful import/version/safe_load preflight provided new evidence before resuming; no installation or global environment change.",
+  "preflight": {
+    "chunk_id": "86c941",
+    "wall_time_seconds": 0.00000778,
+    "exit_code": 0,
+    "original_token_count": 44,
+    "output": "Running as unit: run-p2280307-i2280308.scope; invocation ID: aca432cc8df54ba59febe683fc142851\n/run/host/usr/lib64/python3.14/site-packages/yaml/__init__.py\n6.0.2\n{'value': 1}\n"
+  },
+  "baseline": {
+    "chunk_id": "a90263",
+    "wall_time_seconds": 0.205599203,
+    "exit_code": 1,
+    "original_token_count": 282,
+    "output": "Running as unit: run-p2280325-i2280326.scope; invocation ID: e8030143bb3e4d3982f831b6b0c8b01c\ntest_concurrent_output_created_during_serialization_is_preserved (test_keepout_config.KeepoutConfigTests.test_concurrent_output_created_during_serialization_is_preserved) ... FAIL\n\n======================================================================\nFAIL: test_concurrent_output_created_during_serialization_is_preserved (test_keepout_config.KeepoutConfigTests.test_concurrent_output_created_during_serialization_is_preserved)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/test/test_keepout_config.py\", line 138, in test_concurrent_output_created_during_serialization_is_preserved\n    with self.assertRaisesRegex(ValueError, \"refuse to overwrite\"):\n         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ValueError not raised\n\n----------------------------------------------------------------------\nRan 1 test in 0.005s\n\nFAILED (failures=1)\n"
+  },
+  "after": {
+    "chunk_id": "84aeb5",
+    "wall_time_seconds": 0.264577101,
+    "exit_code": 0,
+    "original_token_count": 464,
+    "output": "Running as unit: run-p2280748-i2280749.scope; invocation ID: 58769ef620e748359990c4cdab846473\ntest_blank_and_total_mask_fail_closed (test_keepout_config.KeepoutConfigTests.test_blank_and_total_mask_fail_closed) ... ok\ntest_both_costmaps_and_unchanged_stock (test_keepout_config.KeepoutConfigTests.test_both_costmaps_and_unchanged_stock) ... ok\ntest_concurrent_output_created_during_serialization_is_preserved (test_keepout_config.KeepoutConfigTests.test_concurrent_output_created_during_serialization_is_preserved) ... ok\ntest_dangling_output_symlink_does_not_create_its_target (test_keepout_config.KeepoutConfigTests.test_dangling_output_symlink_does_not_create_its_target) ... ok\ntest_dimensions_differ_fail_closed (test_keepout_config.KeepoutConfigTests.test_dimensions_differ_fail_closed) ... ok\ntest_existing_filter_not_overridden (test_keepout_config.KeepoutConfigTests.test_existing_filter_not_overridden) ... ok\ntest_missing_source_file_fails_closed (test_keepout_config.KeepoutConfigTests.test_missing_source_file_fails_closed) ... ok\ntest_no_overwrite_derived_yaml (test_keepout_config.KeepoutConfigTests.test_no_overwrite_derived_yaml) ... ok\ntest_origin_differ_fail_closed (test_keepout_config.KeepoutConfigTests.test_origin_differ_fail_closed) ... ok\ntest_serialization_failure_leaves_no_output_file (test_keepout_config.KeepoutConfigTests.test_serialization_failure_leaves_no_output_file) ... ok\ntest_truncated_pgm_fail_closed (test_keepout_config.KeepoutConfigTests.test_truncated_pgm_fail_closed) ... ok\ntest_unknown_gray_mask_fail_closed (test_keepout_config.KeepoutConfigTests.test_unknown_gray_mask_fail_closed) ... ok\ntest_unsafe_image_path_fail_closed (test_keepout_config.KeepoutConfigTests.test_unsafe_image_path_fail_closed) ... ok\n\n----------------------------------------------------------------------\nRan 13 tests in 0.043s\n\nOK\n"
+  },
+  "limits": [
+    "Focused existing config module only; not full suite",
+    "No new ROS2 launch-context, DDS graph, Gazebo, motor or physical run",
+    "Previously denied Podman build route was not retried",
+    "No push, PR, merge or external message",
+    "Local contribution pending owner integration"
+  ]
+}

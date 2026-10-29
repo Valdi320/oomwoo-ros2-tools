@@ -154,7 +154,13 @@ def build_keepout_overlay(
     if not target.is_dir():
         raise ValueError("output directory must exist")
     outfile = target / "nav2_params_with_keepout.yaml"
-    if outfile.exists():
-        raise ValueError("refuse to overwrite existing overlay")
-    outfile.write_text(yaml.safe_dump(nav, sort_keys=False), encoding="utf-8")
+    # Serialize before creating an output, then acquire its name exclusively.
+    # An exists()/write_text() pair can overwrite a concurrent winner and
+    # follows dangling symlinks, which Path.exists() reports as absent.
+    payload = yaml.safe_dump(nav, sort_keys=False)
+    try:
+        with outfile.open("x", encoding="utf-8") as stream:
+            stream.write(payload)
+    except FileExistsError as ex:
+        raise ValueError("refuse to overwrite existing overlay") from ex
     return outfile, forbidden

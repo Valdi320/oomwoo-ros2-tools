@@ -16,6 +16,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import yaml
 from oomwoo_sim_support.keepout_config import build_keepout_overlay
@@ -122,6 +123,40 @@ class KeepoutConfigTests(unittest.TestCase):
         self.map.unlink()
         with self.assertRaisesRegex(ValueError, "missing map YAML"):
             self.build()
+
+    def test_concurrent_output_created_during_serialization_is_preserved(self):
+        outfile = self.output / "nav2_params_with_keepout.yaml"
+        winner = b"another launch already owns this output\n"
+        real_dump = yaml.safe_dump
+
+        def concurrent_writer(*args, **kwargs):
+            outfile.write_bytes(winner)
+            return real_dump(*args, **kwargs)
+
+        with patch("oomwoo_sim_support.keepout_config.yaml.safe_dump",
+                   side_effect=concurrent_writer):
+            with self.assertRaisesRegex(ValueError, "refuse to overwrite"):
+                self.build()
+        self.assertEqual(outfile.read_bytes(), winner)
+
+    def test_dangling_output_symlink_does_not_create_its_target(self):
+        outfile = self.output / "nav2_params_with_keepout.yaml"
+        victim = self.root / "unrelated-output.yaml"
+        outfile.symlink_to(victim)
+        with self.assertRaisesRegex(ValueError, "refuse to overwrite"):
+            self.build()
+        self.assertTrue(outfile.is_symlink())
+        self.assertFalse(victim.exists())
+
+    def test_serialization_failure_leaves_no_output_file(self):
+        outfile = self.output / "nav2_params_with_keepout.yaml"
+        original = self.nav.read_bytes()
+        with patch("oomwoo_sim_support.keepout_config.yaml.safe_dump",
+                   side_effect=ValueError("cannot serialize parameters")):
+            with self.assertRaisesRegex(ValueError, "cannot serialize"):
+                self.build()
+        self.assertFalse(outfile.exists())
+        self.assertEqual(self.nav.read_bytes(), original)
 
 
 if __name__ == "__main__":

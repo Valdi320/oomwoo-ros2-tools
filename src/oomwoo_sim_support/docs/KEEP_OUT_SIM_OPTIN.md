@@ -55,3 +55,30 @@ of a forbidden destination, so a separate goal-admission check is
 mandatory. Reactive room coverage via cmd_vel bypasses Nav2 filters:
 it needs its OWN no-go guard and exclusive, watchdog-protected motor
 command source. Never use on a physical robot before safety review.
+
+## Output preservation follow-up (2026-10-29)
+
+The generated overlay now acquires its filename exclusively, after YAML
+serialization. A file created by another writer during serialization is
+preserved; an existing dangling symlink is rejected without creating its
+target. A serialization error leaves no output file. This enforces the
+existing no-overwrite contract; it does not provide atomic publication
+of a fully written file or durability after an interrupted write.
+
+The focused `test_keepout_config` module passes 13/13 host Python tests,
+including three new cases for these behaviors. The concurrent-writer case
+failed on the original implementation before the correction. Reproduce
+from the repository root with an existing PyYAML installation:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONPATH=src/oomwoo_sim_support:src/oomwoo_sim_support/test \
+  python3 -m unittest test_keepout_config -v
+```
+
+This follow-up used Python 3.14 and the existing host PyYAML 6.0.2 exposed
+to Toolbx through `/run/host/usr/lib64/python3.14/site-packages`, added to
+the process-local PYTHONPATH. No dependency was installed. Machine lock
+and resource limits were applied; see `evidence/keepout_exclusive_output_codex_20261029.json`.
+These 13 tests do not repeat the earlier ROS2 launch-context checks and
+do not establish ROS2/DDS, Gazebo or physical integration.
