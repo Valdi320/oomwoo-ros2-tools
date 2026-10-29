@@ -334,7 +334,9 @@ class CoverageRunner(Node):
         if getattr(self, 'motion_audit', False):
             result['motion_audit'] = {
                 'graph': self.motion_graph, 'samples': self.motion_samples,
-                'status_packets_total': self._motion_status_count}
+                'status_packets_total': self._motion_status_count,
+                'dds_builtin_transports': os.environ.get(
+                    'FASTDDS_BUILTIN_TRANSPORTS', 'DEFAULT')}
         try:
             with open(self.report_path, 'w') as f:
                 json.dump(result, f, indent=2)

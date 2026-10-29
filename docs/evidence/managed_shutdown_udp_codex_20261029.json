@@ -1,0 +1,277 @@
+{
+  "date_utc": "2026-10-29T22:29:18.823975+00:00",
+  "scope": "Focused managed Gazebo shutdown correction, design and simulation only. Full-room coverage regression after these edits remains pending.",
+  "parents": [
+    "e261d32e252fdcfacec4908a2ef29b80a15e5dd4",
+    "434f31cef1f5a983c9ab6bf21318422ffe0e911a"
+  ],
+  "hardware": false,
+  "primary_evidence": {
+    "date_utc": "2026-10-29",
+    "installed": {
+      "ros_gz_bridge": "1.0.24",
+      "fastdds": "2.14.7",
+      "fastdds_build_id": "127b086a493ff42a27426534f12aebe74a1a859d",
+      "fastdds_sha256": "2b80489f57d87ce4832766371c5e9f4b0c6b035dc850b284b9f6afcad4962929"
+    },
+    "sources": [
+      {
+        "url": "https://github.com/eProsima/Fast-DDS/blob/v2.14.7/src/cpp/rtps/participant/RTPSParticipantImpl.cpp",
+        "git_blob_sha": "ded2e8b9ecb94509b00d60e71e0b3c242ff54fb2"
+      },
+      {
+        "url": "https://github.com/eProsima/Fast-DDS/blob/v2.14.7/src/cpp/rtps/transport/shared_mem/SharedMemTransport.cpp",
+        "git_blob_sha": "5037526a61262daffd71a6783eadf71419291c8a"
+      },
+      {
+        "url": "https://github.com/gazebosim/ros_gz/blob/1.0.24/ros_gz_bridge/src/parameter_bridge.cpp",
+        "git_blob_sha": "2acddf41a426aefeafac0a414579fb8bf28be165"
+      }
+    ],
+    "coredump": {
+      "raw": "outputs/bridge_core_metadata_20261029.json",
+      "matches_previous_full_room_bridge": true,
+      "signal": 6,
+      "detected_after_coverage_summary": true,
+      "diagnostic": "malloc_consolidate(): unaligned fastbin chunk detected",
+      "stack_functions": [
+        "SharedMemTransport::CloseInputChannel",
+        "ReceiverResource::disable",
+        "RTPSParticipantImpl::disable",
+        "RTPSDomainImpl::removeRTPSParticipant_nts",
+        "DomainParticipantImpl::~DomainParticipantImpl",
+        "DomainParticipantFactory::~DomainParticipantFactory"
+      ]
+    },
+    "interpretation": "Heap corruption was detected during Fast DDS shared-memory teardown. This stack does not identify the original corrupting write. UDPv4 is a scoped workaround, not a proven upstream repair.",
+    "runtime_env_observation": {
+      "scope": "bounded90s Gazebo owned container /proc/*/environ",
+      "parameter_bridge": "UDPv4",
+      "coverage_regression_runner": "UDPv4",
+      "ros_dock_velocity_relay": "UDPv4",
+      "bt_navigator": "UDPv4"
+    }
+  },
+  "changes": [
+    "Managed lab launch defaults Fast DDS builtin transports to UDPv4; explicit parent transport choice and legacy mode remain unchanged.",
+    "Optional motion audit records the requested DDS builtin transport.",
+    "Relay catches expected KeyboardInterrupt/ExternalShutdownException only; cleanup still runs and other failures propagate.",
+    "Existing regression launcher creates a private Gazebo transport partition and asks /server_control to stop after scorer exit. A positive native reply delegates shutdown to the existing required-Gazebo exit; missing/failed reply retains immediate Launch shutdown. No new worker, tool, node or timer."
+  ],
+  "focal_checks": {
+    "existing_14_DDS_checks": {
+      "raw": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/bridge_udp_existing_DDS14_20261029.json",
+      "rc": 0,
+      "limits": "real DDS and synthetic sources, not Gazebo; run before the cosmetic relay exception change"
+    },
+    "launch_context_and_lint": {
+      "raw": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/bridge_udp_launch_context_lint_20261029.json",
+      "cases": 4,
+      "files_linted": 2,
+      "rc": 0
+    }
+  },
+  "scenes": [
+    {
+      "label": "UDP and relay exception correction; original Gazebo shutdown",
+      "raw": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_udp_shutdown_short_20261029.json",
+      "sha256": "0078de651265f7ca5cfe654fed34c00ce3ef4976804f16c0a10c089ddce7f4ec",
+      "collector_rc": 0,
+      "seconds": 112.09,
+      "bank_code": 1,
+      "reports": [
+        {
+          "coverage": 0.0834,
+          "coverage_target": 0.9,
+          "target_crossed": false,
+          "efficiency_at_target": null,
+          "efficiency_final": 1.0,
+          "revisit_ratio": 0.2655,
+          "efficiency_target": 0.8,
+          "time_to_target_s": null,
+          "end_reason": "wall_timeout",
+          "sim_unstable": false,
+          "measurement_valid": true,
+          "pass": false,
+          "dds_builtin_transports": "UDPv4"
+        }
+      ],
+      "native_stop_lines": [],
+      "clean_exit_lines": [
+        "[INFO] [create-7]: process has finished cleanly [pid 711]",
+        "[INFO] [initialpose_pub-14]: process has finished cleanly [pid 856]",
+        "[INFO] [lifecycle_manager-18]: process has finished cleanly [pid 954]",
+        "[INFO] [parameter_bridge-6]: process has finished cleanly [pid 710]",
+        "[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 855]",
+        "[INFO] [robot_state_publisher-5]: process has finished cleanly [pid 708]",
+        "[INFO] [amcl-12]: process has finished cleanly [pid 854]",
+        "[INFO] [map_server-11]: process has finished cleanly [pid 853]",
+        "[INFO] [bt_navigator-17]: process has finished cleanly [pid 953]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 707]",
+        "[INFO] [planner_server-16]: process has finished cleanly [pid 952]",
+        "[INFO] [controller_server-15]: process has finished cleanly [pid 951]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 705]",
+        "[INFO] [coverage_meter-8]: process has finished cleanly [pid 712]",
+        "[INFO] [coverage_planner-9]: process has finished cleanly [pid 713]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 704]"
+      ],
+      "other_exit_lines": [
+        "[ERROR] [coverage_regression_runner-10]: process has died [pid 714, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_62d4gq14'].",
+        "[ERROR] [gazebo-3]: process[gazebo-3] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'",
+        "[ERROR] [gazebo-3]: process has died [pid 706, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --force-version 8']."
+      ],
+      "malloc_error": false,
+      "KeyboardInterrupt": false,
+      "source_sha256": {
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "82d1b97c4ac7f0bce2a7569ea6472d244a4c3609c2c551cce766c624eef7338e",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "858431736826024486d3f68c9dfcaad1a566c18ced982da937925512882688fe",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "69f28e7dbea00644c4e6277e420980e899ff611d2e405caddf422758d19b5e92",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "32335a8d9afccc045bd42ee51dfd01e5b0054d0d5f1409bb2d7b58defd0c776f"
+      },
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "297\n",
+        "/sys/fs/cgroup/memory.peak": "1456435200\n"
+      }
+    },
+    {
+      "label": "native stop ACK followed by premature Launch shutdown",
+      "raw": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_udp_native_stop_short_20261029.json",
+      "sha256": "47e317c4f2920d3dc86c8324a5ddefa1302856203328339b9516b64117fb80c5",
+      "collector_rc": 0,
+      "seconds": 48.37,
+      "bank_code": 1,
+      "reports": [
+        {
+          "coverage": 0.0153,
+          "coverage_target": 0.9,
+          "target_crossed": false,
+          "efficiency_at_target": null,
+          "efficiency_final": 1.0,
+          "revisit_ratio": 0.0,
+          "efficiency_target": 0.8,
+          "time_to_target_s": null,
+          "end_reason": "wall_timeout",
+          "sim_unstable": false,
+          "measurement_valid": true,
+          "pass": false,
+          "dds_builtin_transports": "UDPv4"
+        }
+      ],
+      "native_stop_lines": [
+        "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix."
+      ],
+      "clean_exit_lines": [
+        "[INFO] [create-7]: process has finished cleanly [pid 711]",
+        "[INFO] [initialpose_pub-14]: process has finished cleanly [pid 834]",
+        "[INFO] [lifecycle_manager-18]: process has finished cleanly [pid 954]",
+        "[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 833]",
+        "[INFO] [parameter_bridge-6]: process has finished cleanly [pid 709]",
+        "[INFO] [robot_state_publisher-5]: process has finished cleanly [pid 708]",
+        "[INFO] [amcl-12]: process has finished cleanly [pid 832]",
+        "[INFO] [map_server-11]: process has finished cleanly [pid 831]",
+        "[INFO] [bt_navigator-17]: process has finished cleanly [pid 953]",
+        "[INFO] [controller_server-15]: process has finished cleanly [pid 951]",
+        "[INFO] [coverage_meter-8]: process has finished cleanly [pid 712]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 707]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 705]",
+        "[INFO] [coverage_planner-9]: process has finished cleanly [pid 713]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 704]",
+        "[INFO] [planner_server-16]: process has finished cleanly [pid 952]"
+      ],
+      "other_exit_lines": [
+        "[ERROR] [coverage_regression_runner-10]: process has died [pid 714, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_wq7jyyq4'].",
+        "[ERROR] [gazebo-3]: process has died [pid 706, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --force-version 8']."
+      ],
+      "malloc_error": false,
+      "KeyboardInterrupt": false,
+      "source_sha256": {
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "82d1b97c4ac7f0bce2a7569ea6472d244a4c3609c2c551cce766c624eef7338e",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "858431736826024486d3f68c9dfcaad1a566c18ced982da937925512882688fe",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "69f28e7dbea00644c4e6277e420980e899ff611d2e405caddf422758d19b5e92",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "32335a8d9afccc045bd42ee51dfd01e5b0054d0d5f1409bb2d7b58defd0c776f",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/deploy/run_coverage_regression.sh": "caa9c8633327c2314f0e6ae6b184f837afa9bcd36899233ece94b0d8743849cb"
+      },
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "290\n",
+        "/sys/fs/cgroup/memory.peak": "1024016384\n"
+      }
+    },
+    {
+      "label": "native stop ACK followed by required-Gazebo exit",
+      "raw": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_udp_native_exit_short_20261029.json",
+      "sha256": "45a0a31028f3603ce1d3c4a04b989ee76033f99cef81d01a5aec9b4081bdd9de",
+      "collector_rc": 0,
+      "seconds": 48.33,
+      "bank_code": 1,
+      "reports": [
+        {
+          "coverage": 0.0165,
+          "coverage_target": 0.9,
+          "target_crossed": false,
+          "efficiency_at_target": null,
+          "efficiency_final": 1.0,
+          "revisit_ratio": 0.0,
+          "efficiency_target": 0.8,
+          "time_to_target_s": null,
+          "end_reason": "wall_timeout",
+          "sim_unstable": false,
+          "measurement_valid": true,
+          "pass": false,
+          "dds_builtin_transports": "UDPv4"
+        }
+      ],
+      "native_stop_lines": [
+        "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix."
+      ],
+      "clean_exit_lines": [
+        "[INFO] [create-7]: process has finished cleanly [pid 710]",
+        "[INFO] [initialpose_pub-14]: process has finished cleanly [pid 856]",
+        "[INFO] [gazebo-3]: process has finished cleanly [pid 706]",
+        "[INFO] [lifecycle_manager-18]: process has finished cleanly [pid 954]",
+        "[INFO] [lifecycle_manager-13]: process has finished cleanly [pid 855]",
+        "[INFO] [robot_state_publisher-5]: process has finished cleanly [pid 708]",
+        "[INFO] [parameter_bridge-6]: process has finished cleanly [pid 709]",
+        "[INFO] [map_server-11]: process has finished cleanly [pid 853]",
+        "[INFO] [amcl-12]: process has finished cleanly [pid 854]",
+        "[INFO] [bt_navigator-17]: process has finished cleanly [pid 953]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 707]",
+        "[INFO] [coverage_meter-8]: process has finished cleanly [pid 712]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 705]",
+        "[INFO] [controller_server-15]: process has finished cleanly [pid 951]",
+        "[INFO] [coverage_planner-9]: process has finished cleanly [pid 713]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 704]",
+        "[INFO] [planner_server-16]: process has finished cleanly [pid 952]"
+      ],
+      "other_exit_lines": [
+        "[ERROR] [coverage_regression_runner-10]: process has died [pid 714, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_zwwlfvk4']."
+      ],
+      "malloc_error": false,
+      "KeyboardInterrupt": false,
+      "source_sha256": {
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "82d1b97c4ac7f0bce2a7569ea6472d244a4c3609c2c551cce766c624eef7338e",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "858431736826024486d3f68c9dfcaad1a566c18ced982da937925512882688fe",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "69f28e7dbea00644c4e6277e420980e899ff611d2e405caddf422758d19b5e92",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "32335a8d9afccc045bd42ee51dfd01e5b0054d0d5f1409bb2d7b58defd0c776f",
+        "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/deploy/run_coverage_regression.sh": "e344c63fc7ab45c6f6605b317191938d87f98419257d4c939632ffb093d95246"
+      },
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "290\n",
+        "/sys/fs/cgroup/memory.peak": "1182433280\n"
+      }
+    }
+  ],
+  "conclusion": "The final bounded30s scene retained valid partial measurement (coverage not accepted) and all 17 non-scorer processes exited cleanly. It is a scoped successful shutdown observation, not a full-room pass or reliability estimate.",
+  "limits": [
+    "The original shared-memory corrupting write is not identified or repaired upstream. UDPv4 avoids that transport path in this managed lab.",
+    "All short scenes intentionally ended wall_timeout with bank_code1; collection rc0 does not mean coverage acceptance.",
+    "A positive native stop ACK relies on the existing required-server exit; an ACK followed by a permanently hung server teardown has not been fault-injected. No new watchdog was added.",
+    "GUI, remote DDS, actual docking trajectory, active combined Keepout, managed fault injection, other scenes and hardware remain unvalidated here.",
+    "The previous98.66% full-room result belongs to its recorded pre-UDP source hashes and is retained separately."
+  ]
+}

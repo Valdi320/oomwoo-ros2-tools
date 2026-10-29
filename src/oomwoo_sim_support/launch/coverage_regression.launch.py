@@ -27,9 +27,9 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction,
-    SetLaunchConfiguration)
+    SetEnvironmentVariable, SetLaunchConfiguration)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration
 
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -166,6 +166,12 @@ def generate_launch_description() -> LaunchDescription:
         # Reuse the contributor relay and OOMWOO DockDrive. Direct inclusion
         # avoids dock.launch's parent Shutdown action on driver exit.
         return [
+            # Fast DDS 2.14.7 detected heap corruption in SharedMemTransport
+            # teardown after a successful managed run. Keep this workaround
+            # local to the disposable lab, retaining any explicit parent choice.
+            SetEnvironmentVariable(
+                'FASTDDS_BUILTIN_TRANSPORTS', EnvironmentVariable(
+                    'FASTDDS_BUILTIN_TRANSPORTS', default_value='UDPv4')),
             SetLaunchConfiguration('nav_goal_pose_topic', '/valdi/disabled_nav2_goal_pose'),
             SetLaunchConfiguration('managed_motion', 'true'),
             ExecuteProcess(cmd=[

@@ -38,7 +38,9 @@ for i in $(seq 1 "$RUNS"); do
   python3 - "$REPORT_DIR/run$i.json" "$LAUNCH_ARGS" > "$LOG.$i" 2>&1 <<'PY'
 import os
 import shlex
+import subprocess
 import sys
+import uuid
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription, LaunchService
@@ -55,6 +57,10 @@ for argument in shlex.split(sys.argv[2]):
         raise ValueError(f'expected name:=value launch argument: {argument!r}')
     arguments[name] = value
 
+# A private Gazebo transport partition makes the native server-stop RPC belong
+# to this launch, even when another simulation is running on the same host.
+os.environ['GZ_PARTITION'] = 'oomwoo-coverage-' + uuid.uuid4().hex
+
 scorer = Node(
     package='oomwoo_sim_support', executable='coverage_regression_runner',
     output='screen', parameters=[{
@@ -67,6 +73,24 @@ result = [2]  # interrupted/failed launch without a scorer result is invalid
 
 def scored(event, context):
     result[0] = event.returncode if event.returncode in (0, 1, 2) else 2
+    # Stop the owned server through Gazebo before Launch signals its children.
+    # The CLI bounds discovery/request time; this callback has a final bound too.
+    # Failure keeps the existing Launch shutdown path and the scored result.
+    try:
+        stopped = subprocess.run([
+            'gz', 'service', '-s', '/server_control',
+            '--reqtype', 'gz.msgs.ServerControl', '--reptype', 'gz.msgs.Boolean',
+            '--timeout', '2000', '--req', 'stop: true'],
+            capture_output=True, text=True, timeout=4)
+        print('GZ_NATIVE_STOP', stopped.returncode, stopped.stdout.strip(),
+              stopped.stderr.strip(), flush=True)
+        if (stopped.returncode == 0 and any(
+                line.strip() == 'data: true' for line in stopped.stdout.splitlines())):
+            # sim_bringup already requires Gazebo: its own exit shuts down the
+            # launch. Signalling it here would interrupt native teardown.
+            return []
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        print('GZ_NATIVE_STOP unavailable:', exc, flush=True)
     return [EmitEvent(event=Shutdown(reason='coverage scorer finished'))]
 
 

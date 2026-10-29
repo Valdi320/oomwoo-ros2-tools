@@ -522,3 +522,37 @@ The existing sub-inscribed-inflation warnings and inner FollowPath halt-result
 errors are also retained. Do not turn a scored PASS into a clean-log or physical
 safety claim. Actual docking,combined active Keepout,managed fault injection,
 shutdown diagnosis and broader-scene validation remain open.
+
+
+### Managed simulation shutdown: UDP workaround and native Gazebo exit
+
+The core dump from the98.66% run places heap-corruption detection in Fast DDS
+2.14.7 shared-memory teardown. It does not identify the original corrupting
+write. The managed launch now defaults to builtin UDPv4, retaining an explicit
+parent transport choice and leaving the legacy launch mode unchanged. The
+optional motion audit records that choice. This is a scoped workaround, not an
+upstream memory repair.
+
+The relay catches normal KeyboardInterrupt/ExternalShutdownException and still
+cleans up. The existing regression launch gives its Gazebo transport a private
+partition, then requests native /server_control stop when the scorer exits.
+After a positive reply, the existing required-Gazebo exit closes the launch.
+Sending Launch shutdown immediately after the reply interrupted native teardown;
+that failed intermediate observation is retained. Missing/failed replies retain
+the existing immediate shutdown. No new worker, node or timer was introduced.
+
+The final bounded30s scene returned a positive native reply and every non-scorer
+process exited cleanly, including Gazebo, the bridge and the relay. The scorer
+correctly returned1 for wall_timeout; this partial scene did not pass coverage.
+The previous bounded90s observation closed the bridge/relay cleanly but still
+needed Gazebo SIGTERM. Four actual LaunchContext cases and lint on the two
+changed ROS2 Python files pass. The existing14 DDS checks passed with UDP before
+the relay exception-only change. See [source versions, all intermediate results,
+exact exits and limitations](evidence/managed_shutdown_udp_codex_20261029.json).
+
+Full-room acceptance after these transport/exit edits is still pending. The
+recorded98.66% result above remains tied to its original hashes. A positive
+native ACK followed by a permanently hung Gazebo destructor has not been fault
+injected; this uses the existing required-server exit without a new watchdog.
+Actual docking, combined active Keepout and the other stated limits remain open.
+All evidence concerns software and simulation; no physical prototype exists.
