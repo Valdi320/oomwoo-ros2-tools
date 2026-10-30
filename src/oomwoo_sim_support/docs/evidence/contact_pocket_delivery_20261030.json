@@ -1,0 +1,51 @@
+{
+  "completed_utc": "2026-10-30T16:14:34.599423+00:00",
+  "native_trigger": "Bank671: contact at3.04384,.07799 caused target4.225,.025 to be pruned before any Nav2 goal, despite being1.182m away.",
+  "distance_to_unvisited_target_m": 1.1823518673492321,
+  "changed_methods": [
+    "_begin_bumper_escape"
+  ],
+  "all_other_planner_methods_ast_identical": true,
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "21e2d384f540d52ff31082f30e6574cc5a3c6c4335488ed668af888ec8e1bc19",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "ae5182de1f0c315d71fe0b76c37942f66e7db5d6bb3762ba6ce61c5415b8310d"
+  },
+  "change": "Use existing fresh map-frame robot pose for the held-contact recovery pocket; missing/nonfinite pose makes no pocket. Keep radius, command, escape budget, cancellation and lease protocol. Repeated failed-goal wedge path remains unchanged.",
+  "verification": {
+    "causal_original_rc": 1,
+    "causal_original_symptom": "Actual waypoint filter skips the unvisited distant target after contact",
+    "initial_fixture_limit": "First attempt lacked max_escapes used by existing diagnostic log; initialized25 before causal retry",
+    "focused_planner_cases": 91,
+    "after_rc": 0,
+    "changed_file_lint_count": 2,
+    "style_rc": 0,
+    "inputs_unchanged_during_checks": true,
+    "cases": [
+      "distant_unvisited_target_retained",
+      "near_contact_target_still_skipped",
+      "missing_pose_no_fabricated_pocket",
+      "nan_pose_no_fabricated_pocket",
+      "infinite_pose_no_fabricated_pocket",
+      "same_contact_location_deduplicated",
+      "existing_relay_cancel_release_claim_escape_order"
+    ]
+  },
+  "utility_demonstrated": "Actual contact/waypoint methods preserve an unattempted distant waypoint while retaining the local contact pocket and existing motion permissions.",
+  "remaining_to_useful_milestone": "Native cold-contact escape must now dispatch/finish its original target; original full-room abort105 and coherent90/80 still unresolved.",
+  "next_increment": "Prepare one short same-spawn native contrast with only this planner method changed relative671, reserve it behind already queued full-history673. No overlapping large simulations.",
+  "decision": "Consolidate bounded spatial correction; validate causal native flow without extending recovery behavior.",
+  "evidence_that_changes_decision": "Native still prunes distant target or altered local-pocket path causes unsafe/stalled recovery; full-history trace clarifies actual abort105.",
+  "cost_limits": {
+    "fresh_pose_lookup": "One existing _robot_pose lookup per held-contact reflex, bounded by existing escape budget25; same500ms age limit.",
+    "new_nodes": 0,
+    "new_timers": 0,
+    "new_clients": 0,
+    "new_subscriptions": 0,
+    "new_tools": 0
+  },
+  "limits": [
+    "91 actual-method/message fixture cases and changed-file lint; no native validation of this new pocket location yet.",
+    "Full-history673 uses frozen earlier ROS7896286 plus its observer fixture and therefore excludes this new spatial correction.",
+    "No physical robot, electrical charge or full90/80 performance claim."
+  ]
+}

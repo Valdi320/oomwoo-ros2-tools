@@ -1090,17 +1090,20 @@ class CoveragePlanner(Node):
                 self.awaiting = False
 
     def _begin_bumper_escape(self, index, target, angular):
-        """Schedule the existing contact reflex only after its caller owns motion."""
+        """Locate the observed contact and schedule the caller-owned escape."""
         self.consecutive_skips = 0
         if target is not None:
-            tx, ty = target.pose.position.x, target.pose.position.y
-            if not _pt_in_zones(tx, ty, self.wedge_zones):
-                self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))
+            # The target may be unvisited; record the robot's contact location.
+            pose = self._robot_pose()
+            if pose is not None and all(math.isfinite(v) for v in pose[:2]):
+                tx, ty = pose[:2]
+                if not _pt_in_zones(tx, ty, self.wedge_zones):
+                    self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))
         self.escapes_done += 1
         self._escape_az = angular
         self._bump_left_held_since = self._bump_right_held_since = None
         self.get_logger().warn(
-            f'bumper held near waypoint {index}: peel off '
+            f'bumper held while targeting waypoint {index}: peel off '
             f'(turn {angular:+.1f}) {self.escape_sec}s '
             f'(escape {self.escapes_done}/{self.max_escapes})')
         self.escape_until = self.get_clock().now() \

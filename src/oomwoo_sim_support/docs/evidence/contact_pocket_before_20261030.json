@@ -1,0 +1,43 @@
+{
+  "completed_utc": "2026-10-30T16:06:23.261837+00:00",
+  "rc": 1,
+  "host_timeout": false,
+  "seconds": 9.599,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________ test_bumper_contact_pocket_keeps_unvisited_distant_target[far] ________\n\nrobot_xy = (3.0438363696510855, 0.07799449561218721), skip_target = False\n\n    @pytest.mark.parametrize('robot_xy,skip_target', [\n        ((3.0438363696510855, 0.07799449561218721), False),\n        ((4.1, 0.025), True),\n    ], ids=['far', 'near'])\n    def test_bumper_contact_pocket_keeps_unvisited_distant_target(robot_xy, skip_target):\n        node, sent = contact_pocket_driver()\n        target = row_target(4.225)\n        target.pose.position.y = 0.025\n        node.cached_poses = [target]\n        node._robot_pose = lambda: (*robot_xy, 0.0)\n>       CoveragePlanner._begin_bumper_escape(node, 0, target, -0.6)\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:235: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = namespace(awaiting=False, goal_deadline=None, goal_timeout=30.0, nav_linear_speed=0.0, robot_xy=None, _maybe_wedge_esc...agePlanner._in_wedge_zone of namespace(...)>, _escape_az=-0.6, _bump_left_held_since=None, _bump_right_held_since=None)\nindex = 0\ntarget = geometry_msgs.msg.PoseStamped(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanosec=0), frame_id...eometry_msgs.msg.Point(x=4.225, y=0.025, z=0.0), orientation=geometry_msgs.msg.Quaternion(x=0.0, y=0.0, z=0.0, w=1.0)))\nangular = -0.6\n\n    def _begin_bumper_escape(self, index, target, angular):\n        \"\"\"Schedule the existing contact reflex only after its caller owns motion.\"\"\"\n        self.consecutive_skips = 0\n        if target is not None:\n            tx, ty = target.pose.position.x, target.pose.position.y\n            if not _pt_in_zones(tx, ty, self.wedge_zones):\n                self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))\n        self.escapes_done += 1\n        self._escape_az = angular\n        self._bump_left_held_since = self._bump_right_held_since = None\n        self.get_logger().warn(\n            f'bumper held near waypoint {index}: peel off '\n            f'(turn {angular:+.1f}) {self.escape_sec}s '\n>           f'(escape {self.escapes_done}/{self.max_escapes})')\nE       AttributeError: 'types.SimpleNamespace' object has no attribute 'max_escapes'\n\n/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py:1105: AttributeError\n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_bumper_contact_pocket_keeps_unvisited_distant_target[far]\n1 failed, 90 deselected in 2.69s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-contact-pocket-before-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py -k 'bumper_contact_pocket_keeps_unvisited_distant_target and far'\n"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "cf8c9939cf882d9441a992e71a1feb780a37a30d758bebf66f1f70f64eafc05c",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "327489e57690e9dd1f84616f9914ab9f191c14363807d387cea18e0025cdcc0e"
+  },
+  "inputs_unchanged": true,
+  "scope": "Actual contact recorder and waypoint filter with native671 start/target positions. Synthetic fresh pose, no ROS graph/Gazebo/hardware. Original production causal case.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU compatible test exception."
+}

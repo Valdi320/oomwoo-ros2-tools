@@ -1,0 +1,43 @@
+{
+  "completed_utc": "2026-10-30T16:08:55.890994+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 9.594,
+  "stdout": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 2.81s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-contact-pocket-after-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py\n"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "21e2d384f540d52ff31082f30e6574cc5a3c6c4335488ed668af888ec8e1bc19",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "ae5182de1f0c315d71fe0b76c37942f66e7db5d6bb3762ba6ce61c5415b8310d"
+  },
+  "inputs_unchanged": true,
+  "scope": "One existing planner file; measured-contact pocket preserves distant unvisited target, prunes nearby target, deduplicates contacts and does not invent pocket without finite fresh pose. Existing relay handoff/fault/budget controls.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU compatible test exception."
+}

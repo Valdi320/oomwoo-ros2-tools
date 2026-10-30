@@ -209,6 +209,58 @@ def row_target(x):
     return pose
 
 
+def contact_pocket_driver():
+    """Use the actual contact recorder and waypoint filter with a fresh pose peer."""
+    node, sent, _ = timed_reactive_driver()
+    node.wedge_zones = []
+    node.wedge_avoid_radius = 0.45
+    node.escapes_done = 0
+    node.max_escapes = 25
+    node.escape_sec = 2.5
+    node.covered_grid = node.map_msg = None
+    node._covered_at = MethodType(CoveragePlanner._covered_at, node)
+    node._in_wedge_zone = MethodType(CoveragePlanner._in_wedge_zone, node)
+    return node, sent
+
+
+@pytest.mark.parametrize('robot_xy,skip_target', [
+    ((3.0438363696510855, 0.07799449561218721), False),
+    ((4.1, 0.025), True),
+], ids=['far', 'near'])
+def test_bumper_contact_pocket_keeps_unvisited_distant_target(robot_xy, skip_target):
+    node, sent = contact_pocket_driver()
+    target = row_target(4.225)
+    target.pose.position.y = 0.025
+    node.cached_poses = [target]
+    node._robot_pose = lambda: (*robot_xy, 0.0)
+    CoveragePlanner._begin_bumper_escape(node, 0, target, -0.6)
+    assert CoveragePlanner._skip_waypoint(node, 0) is skip_target
+    assert _pt_in_zones(*robot_xy, node.wedge_zones)
+    assert node.escapes_done == 1 and node._escape_az == -0.6
+    assert sent == [(0.0, 0.0)]
+
+
+@pytest.mark.parametrize('pose', [None, (float('nan'), 0.0, 0.0),
+                                  (0.0, float('inf'), 0.0)])
+def test_contact_without_a_known_position_does_not_invent_a_blocked_target(pose):
+    node, sent = contact_pocket_driver()
+    target = row_target(2.0)
+    node.cached_poses = [target]
+    node._robot_pose = lambda: pose
+    CoveragePlanner._begin_bumper_escape(node, 0, target, -0.6)
+    assert node.wedge_zones == [] and not CoveragePlanner._skip_waypoint(node, 0)
+    assert node.escapes_done == 1 and sent == [(0.0, 0.0)]
+
+
+def test_repeated_contact_at_same_position_deduplicates_the_observed_pocket():
+    node, _ = contact_pocket_driver()
+    node._robot_pose = lambda: (0.0, 0.0, 0.0)
+    for x in (2.0, 4.0):
+        CoveragePlanner._begin_bumper_escape(node, 0, row_target(x), -0.6)
+    assert node.wedge_zones == [(0.0, 0.0, 0.45)]
+    assert node.escapes_done == 2
+
+
 @pytest.mark.parametrize('cause', ['held_bumper', 'consecutive_skips', 'spent_budget'])
 def test_escape_entry_zeroes_previous_row_in_its_scheduling_tick(cause):
     node, sent, _ = timed_reactive_driver()
@@ -763,7 +815,7 @@ def test_relay_contact_waits_for_terminal_release_and_sweep_ack_before_escape(tm
     relay_reply(node, 'claim_sweep', owner='reactive_sweep')
     assert CoveragePlanner._relay_tick(node) is True
     assert node.escape_until is not None and node._escape_az == -0.6
-    assert node.wedge_zones == [(2.0, 0.0, 0.45)] and node.escapes_done == 1
+    assert node.wedge_zones == [(0.0, 0.0, 0.45)] and node.escapes_done == 1
     assert node._relay_bumper_escape is None and sent[-1] == (0.0, 0.0)
 
 

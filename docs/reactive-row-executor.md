@@ -1001,3 +1001,27 @@ full-room gain. A clean close here does not resolve the separate Gazebo
 shutdown race. Consolidate the phase correction. Full-history673 now
 reuses the original room plan, current functional fixes and tested bounded
 observations to obtain the next integration evidence.
+
+
+The [contact-pocket correction](../src/oomwoo_sim_support/docs/evidence/contact_pocket_delivery_20261030.json)
+addresses a second behavior exposed by native671: a bumper contact near
+(3.04384, 0.07799) excluded the unvisited target (4.225, 0.025), 1.182 m
+away. Held-contact recovery now records its pocket at the existing fresh
+map-frame robot pose. Missing or nonfinite pose does not fabricate a
+pocket. The radius, reflex command, escape budget and ownership handshake
+are unchanged. The separate repeated-failed-goal wedge policy is unchanged.
+
+The original method fails an actual waypoint-filter causal case. All 91
+cases in the existing planner file now pass, including distant/near
+targets, missing/nonfinite positions, contact deduplication and the existing
+relay cancellation/release/claim ordering. Lint passes on the two changed
+Python files. The first causal harness attempt lacked the existing logger's
+max_escapes field; that fixture initialization was corrected before the
+causal retry. No new node, subscription, client or timer was added; the
+contact recorder reuses one existing fresh-pose lookup per bounded reflex.
+
+This establishes accurate contact/waypoint bookkeeping in focused cases,
+not native navigation or a full-room gain. Reserve a short same-spawn
+contrast behind full-history673, changing only this contact method from
+the previous case671. The existing full-history source is frozen and
+excludes this new correction, preserving its original diagnostic context.
