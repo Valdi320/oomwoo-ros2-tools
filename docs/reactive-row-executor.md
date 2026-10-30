@@ -860,3 +860,19 @@ Next inspect the existing controller-progress and relay command-projection
 paths, then make the smallest focused observation that distinguishes command
 source, filtered output and physical-simulation motion. Preserve ABORTED/STOP;
 changing success criteria or blindly rerunning the room would not diagnose it.
+
+
+A single-goal diagnostic now reuses already-consumed relay status, AMCL,
+truth and Nav2 feedback in private frozen copies. The production sources and
+ABORTED/STOP behavior are unchanged. The [three focused fixture cases](../src/oomwoo_sim_support/docs/evidence/nav_progress_focal_fixture_20261030.json)
+pass, covering selected goal, bounded samples, original source stamps and
+continued status updates after the trace limit. These are fixture checks,
+not a native navigation result or a coverage gain.
+
+The native case is queued as FIFO666, with .25 CPU while waiting and an
+automatic switch to 2 CPU only after verifying its own FIFO admission. It
+starts near the prior final truth position and attempts the failed target
+once. Fresh localization does not replay the prior trajectory. The unchanged
+90/80 grader is expected to miss its target in this intentionally short
+diagnostic; command/pose observations and actual action outcome must be
+assessed separately. No second full-room run is justified before that contrast.
