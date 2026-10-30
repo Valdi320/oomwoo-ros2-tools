@@ -1,0 +1,423 @@
+{
+  "completed_utc": "2026-10-30T15:11:30.880557+00:00",
+  "rc": 3,
+  "seconds": 31.067,
+  "host_timeout": false,
+  "container": "oomwoo-nav-approach-3dbdfd9ff9",
+  "fifo": {
+    "admitted_utc": "2026-10-30T15:10:59.814630+00:00",
+    "controller_pid": 3329920,
+    "podman_pid": 3329932,
+    "ticket": 668,
+    "fifo_pid": 3308332,
+    "container": "oomwoo-nav-approach-3dbdfd9ff9",
+    "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-668: Diagnostico Oomwoo aproximacion a objetivo Nav2\u00bb desde hace 0 min (pid 3308332). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14856 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/nav_progress_approach_prepared_20261030.json"
+  },
+  "input_sha256": {
+    "planner": "6b99e0170ea4ab944ad954cbf56103e9818c755aa22cafc76651fcf30347b4fd",
+    "scorer": "001f415152a86b14e382780c05dfed3ca4be17432cf578cffa48ced04755c268",
+    "meter": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "wrapper": "66e706c709a9b8d0a42eddebf49d5f8dba0e251e9396883fe77961b3da37322f",
+    "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+    "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+    "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+    "relay": "e3ed3189908cfcaf5c1d6032c014f24f1325d46eb6fc50a7b5a6aa6ee2bdd28d"
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true
+  },
+  "provenance": {
+    "planner": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+    "scorer": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+    "keepout_config": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py",
+    "files": {
+      "launch/coverage_regression.launch.py": {
+        "match": true,
+        "sha256": "9c24a2e1de7373662d33257b1fd9632e3b438076b4157bf44b2a783a23c7c675"
+      },
+      "launch/sim_bringup.launch.py": {
+        "match": true,
+        "sha256": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8"
+      },
+      "worlds/test_room.world": {
+        "match": true,
+        "sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+      },
+      "config/nav2_params.yaml": {
+        "match": true,
+        "sha256": "5478b8f007f1ae301091efb3fc38b6cda63eadd8790f000e8dec871b6dcaf0c8"
+      },
+      "maps/test_room.yaml": {
+        "match": true,
+        "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+      },
+      "maps/test_room.pgm": {
+        "match": true,
+        "sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+      }
+    },
+    "reviewed_inputs": {
+      "oomwoo_dock.dock_drive_node": {
+        "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+        "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+      },
+      "oomwoo_cleaning_jobs.goal_journal": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/goal_journal.py",
+        "sha256": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c"
+      },
+      "oomwoo_cleaning_jobs.nav_lease_witness": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/nav_lease_witness.py",
+        "sha256": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721"
+      },
+      "oomwoo_cleaning_jobs.ros_dock_velocity_relay": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+        "sha256": "e3ed3189908cfcaf5c1d6032c014f24f1325d46eb6fc50a7b5a6aa6ee2bdd28d"
+      }
+    },
+    "planner_sha256": "6b99e0170ea4ab944ad954cbf56103e9818c755aa22cafc76651fcf30347b4fd",
+    "scorer_sha256": "001f415152a86b14e382780c05dfed3ca4be17432cf578cffa48ced04755c268",
+    "meter_sha256": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "wrapper_sha256": "66e706c709a9b8d0a42eddebf49d5f8dba0e251e9396883fe77961b3da37322f"
+  },
+  "bank": {
+    "bank_code": 3,
+    "reports": {
+      "/tmp/coverage_runs.fCYn/run1.json": {
+        "coverage": 0.0023,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 0.0,
+        "revisit_ratio": 0.0,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "motion_fault",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false,
+        "motion_audit": {
+          "graph": {
+            "/cmd_vel": [],
+            "/cmd_vel_nav": [],
+            "/navigate_to_pose/_action/status": [
+              [
+                "bt_navigator",
+                "/",
+                "action_msgs/msg/GoalStatusArray",
+                "010f7f01dc0332e00000000000003c03"
+              ]
+            ],
+            "/valdi/nav2_cmd_vel": [
+              [
+                "controller_server",
+                "/",
+                "geometry_msgs/msg/Twist",
+                "010f7f01da036e790000000000006e03"
+              ]
+            ],
+            "/valdi/sweep_cmd_vel": [
+              [
+                "coverage_planner",
+                "/",
+                "geometry_msgs/msg/Twist",
+                "010f7f01cd02c7060000000000001d03"
+              ]
+            ],
+            "/valdi/dock_drive_cmd_vel": [
+              [
+                "dock_drive",
+                "/",
+                "geometry_msgs/msg/Twist",
+                "010f7f01c302963c0000000000001403"
+              ]
+            ],
+            "/valdi/lab_safe_cmd_vel_output": [
+              [
+                "valdi_experimental_cmdvel_relay",
+                "/",
+                "geometry_msgs/msg/Twist",
+                "010f7f01c202efd40000000000001603"
+              ]
+            ],
+            "/oomwoo/keepout_mask": [
+              [
+                "oomwoo_keepout_mask_server",
+                "/",
+                "nav_msgs/msg/OccupancyGrid",
+                "010f7f01c60275220000000000002203"
+              ]
+            ],
+            "/oomwoo/keepout_filter_info": [
+              [
+                "oomwoo_keepout_info_server",
+                "/",
+                "nav2_msgs/msg/CostmapFilterInfo",
+                "010f7f01c7027a300000000000002003"
+              ]
+            ],
+            "/global_costmap/costmap": [
+              [
+                "global_costmap",
+                "/global_costmap",
+                "nav_msgs/msg/OccupancyGrid",
+                "010f7f01db033d7f0000000000004d03"
+              ]
+            ],
+            "/ground_truth/pose": [
+              [
+                "ground_truth",
+                "/",
+                "geometry_msgs/msg/PoseStamped",
+                "010f7f01c502fdd80000000000001403"
+              ]
+            ],
+            "safe_output_subscribers": [
+              [
+                "ros_gz_bridge",
+                "/",
+                "geometry_msgs/msg/Twist"
+              ]
+            ]
+          },
+          "samples": {
+            "status": [],
+            "feedback": [],
+            "phase": [
+              {
+                "phase": "IDLE",
+                "wall": 390485.176752484,
+                "sim": 0.2
+              },
+              {
+                "phase": "SWEEP",
+                "wall": 390494.35146517,
+                "sim": 8.8,
+                "truth_position": {
+                  "frame": "map",
+                  "position": [
+                    3.043836408202791,
+                    0.07586046785029975
+                  ],
+                  "stamp_ns": 8800000000
+                }
+              },
+              {
+                "phase": "ESCAPE",
+                "wall": 390494.552859555,
+                "sim": 9.0,
+                "truth_position": {
+                  "frame": "map",
+                  "position": [
+                    3.043836408202791,
+                    0.07586046785029975
+                  ],
+                  "stamp_ns": 9000000000
+                }
+              },
+              {
+                "phase": "FAULT",
+                "wall": 390495.151649804,
+                "sim": 9.600000000000001,
+                "truth_position": {
+                  "frame": "map",
+                  "position": [
+                    3.043836408202791,
+                    0.07586046785029975
+                  ],
+                  "stamp_ns": 9600000000
+                }
+              }
+            ]
+          },
+          "status_packets_total": 0,
+          "keepout": {
+            "poses_before_mask": 0,
+            "poses": 462,
+            "segments": 461,
+            "footprint_crossings": 0,
+            "max_pose_gap_s": 0.02,
+            "errors": [],
+            "min_sampled_center_to_mask_bbox_m": 1.8938363286728923,
+            "motion_by_phase": {
+              "IDLE": {
+                "poses": 422,
+                "distance_m": 0.0021340277726791,
+                "nonclear_segments": 0,
+                "min_sampled_center_to_mask_bbox_m": 1.8938363286728923
+              },
+              "SWEEP": {
+                "poses": 10,
+                "distance_m": 0.0,
+                "nonclear_segments": 0,
+                "min_sampled_center_to_mask_bbox_m": 1.8938363672245977
+              },
+              "ESCAPE": {
+                "poses": 30,
+                "distance_m": 0.0,
+                "nonclear_segments": 0,
+                "min_sampled_center_to_mask_bbox_m": 1.8938363672245977
+              }
+            },
+            "footprint_radius_m": 0.18,
+            "source": "/ground_truth/pose",
+            "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+            "forbidden_cells": 220,
+            "forbidden_bbox_xyxy": [
+              0.6500000335276126,
+              -0.5499999627470968,
+              1.1500000409781932,
+              0.5500000536441805
+            ],
+            "mask_seen": true,
+            "valid": true
+          },
+          "dds_builtin_transports": "UDPv4"
+        }
+      }
+    },
+    "logs": {
+      "/tmp/coverage_regression.log.1": "[INFO] [launch]: All log files can be found below /tmp/roslogs/2026-10-30-15-11-14-618482-7b87b83c3d99-702\n[INFO] [launch]: Default logging verbosity is set to INFO\nKEEP_OUT_SIM_ONLY: 220 forbidden cells\n[INFO] [python3-1]: process started with pid [706]\n[INFO] [dock_drive-2]: process started with pid [707]\n[INFO] [gazebo-3]: process started with pid [708]\n[INFO] [ground_truth-4]: process started with pid [709]\n[INFO] [map_server-5]: process started with pid [710]\n[INFO] [costmap_filter_info_server-6]: process started with pid [711]\n[INFO] [lifecycle_manager-7]: process started with pid [713]\n[INFO] [robot_state_publisher-8]: process started with pid [714]\n[INFO] [parameter_bridge-9]: process started with pid [715]\n[INFO] [create-10]: process started with pid [716]\n[INFO] [coverage_planner-11]: process started with pid [717]\n[INFO] [coverage_regression_runner-12]: process started with pid [718]\n[robot_state_publisher-8] [WARN] [1793373075.402911694] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[robot_state_publisher-8] [WARN] [1793373075.402939464] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[lifecycle_manager-7] [WARN] [1793373075.510444837] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[lifecycle_manager-7] [WARN] [1793373075.510999646] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[create-10] [WARN] [1793373075.605094247] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[create-10] [WARN] [1793373075.605781065] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[parameter_bridge-9] [WARN] [1793373075.702961308] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[parameter_bridge-9] [WARN] [1793373075.702987448] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[create-10] [INFO] [1793373075.707509615] [ros_gz_sim]: Waiting messages on topic [robot_description].\n[lifecycle_manager-7] [INFO] [1793373075.707781964] [oomwoo_keepout_lifecycle_manager]: Creating\n[map_server-5] [WARN] [1793373075.717846385] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[map_server-5] [WARN] [1793373075.717869545] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[costmap_filter_info_server-6] [INFO] [1793373075.718084154] [costmap_filter_info_server]: This is costmap filter info publisher\n[costmap_filter_info_server-6] [WARN] [1793373075.718238484] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[costmap_filter_info_server-6] [WARN] [1793373075.718242524] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[lifecycle_manager-7] [INFO] [1793373075.758145230] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mCreating and initializing lifecycle service clients\u001b[0m\u001b[0m\n[parameter_bridge-9] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[parameter_bridge-9] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[parameter_bridge-9] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[parameter_bridge-9] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[robot_state_publisher-8] [INFO] [1793373075.806727641] [robot_state_publisher]: Robot initialized\n[create-10] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[create-10] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[create-10] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[create-10] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[costmap_filter_info_server-6] [INFO] [1793373075.816647163] [oomwoo_keepout_info_server]: \n[costmap_filter_info_server-6] \toomwoo_keepout_info_server lifecycle node launched. \n[costmap_filter_info_server-6] \tWaiting on external lifecycle transitions to activate\n[costmap_filter_info_server-6] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[map_server-5] [INFO] [1793373075.903974053] [oomwoo_keepout_mask_server]: \n[map_server-5] \toomwoo_keepout_mask_server lifecycle node launched. \n[map_server-5] \tWaiting on external lifecycle transitions to activate\n[map_server-5] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[map_server-5] [INFO] [1793373075.904069073] [oomwoo_keepout_mask_server]: Creating\n[lifecycle_manager-7] [INFO] [1793373075.961640039] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mStarting managed nodes bringup...\u001b[0m\u001b[0m\n[lifecycle_manager-7] [INFO] [1793373075.961685409] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mConfiguring oomwoo_keepout_mask_server\u001b[0m\u001b[0m\n[map_server-5] [INFO] [1793373076.002448562] [oomwoo_keepout_mask_server]: Configuring\n[map_server-5] [INFO] [1793373076.002507402] [map_io]: Loading yaml file: /tmp/keepout-fusion/keepout_test_room.yaml\n[map_server-5] [INFO] [1793373076.002693951] [map_io]: resolution: 0.05\n[map_server-5] [INFO] [1793373076.002703221] [map_io]: origin[0]: -1.6\n[map_server-5] [INFO] [1793373076.002710581] [map_io]: origin[1]: -3.05\n[map_server-5] [INFO] [1793373076.002715881] [map_io]: origin[2]: 0\n[map_server-5] [INFO] [1793373076.002721251] [map_io]: free_thresh: 0.25\n[map_server-5] [INFO] [1793373076.002726871] [map_io]: occupied_thresh: 0.65\n[map_server-5] [INFO] [1793373076.002733391] [map_io]: mode: trinary\n[map_server-5] [INFO] [1793373076.002738711] [map_io]: negate: 0\n[map_server-5] [INFO] [1793373076.003121380] [map_io]: Loading image_file: /tmp/keepout-fusion/keepout_test_room.pgm\n[map_server-5] [INFO] [1793373076.003531999] [map_io]: Read map /tmp/keepout-fusion/keepout_test_room.pgm: 140 X 140 map @ 0.05 m/cell\n[lifecycle_manager-7] [INFO] [1793373076.010286970] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mConfiguring oomwoo_keepout_info_server\u001b[0m\u001b[0m\n[costmap_filter_info_server-6] [INFO] [1793373076.010459979] [oomwoo_keepout_info_server]: Configuring\n[lifecycle_manager-7] [INFO] [1793373076.058543292] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mActivating oomwoo_keepout_mask_server\u001b[0m\u001b[0m\n[map_server-5] [INFO] [1793373076.058894451] [oomwoo_keepout_mask_server]: Activating\n[map_server-5] [INFO] [1793373076.059062350] [oomwoo_keepout_mask_server]: Creating bond (oomwoo_keepout_mask_server) to lifecycle manager.\n[lifecycle_manager-7] [INFO] [1793373076.102143128] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mActivating oomwoo_keepout_info_server\u001b[0m\u001b[0m\n[costmap_filter_info_server-6] [INFO] [1793373076.102357707] [oomwoo_keepout_info_server]: Activating\n[costmap_filter_info_server-6] [INFO] [1793373076.102466007] [oomwoo_keepout_info_server]: Creating bond (oomwoo_keepout_info_server) to lifecycle manager.\n[lifecycle_manager-7] [INFO] [1793373076.104252741] [oomwoo_keepout_lifecycle_manager]: \u001b[34m\u001b[1mManaged nodes are active\u001b[0m\u001b[0m\n[coverage_regression_runner-12] [WARN] [1793373076.412708600] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[coverage_regression_runner-12] [WARN] [1793373076.412718980] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[dock_drive-2] [WARN] [1793373076.421554835] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[dock_drive-2] [WARN] [1793373076.421566345] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[gazebo-3] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[gazebo-3] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[gazebo-3] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[gazebo-3] Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[ground_truth-4] [WARN] [1793373076.508914155] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[ground_truth-4] [WARN] [1793373076.508924525] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[dock_drive-2] [INFO] [1793373076.661544649] [dock_drive]: state -> IDLE\n[ground_truth-4] [INFO] [1793373076.708094106] [ground_truth]: ground_truth up (teleport-aware odom truth)\n[parameter_bridge-9] [INFO] [1793373076.806007896] [ros_gz_bridge]: Creating GZ->ROS Bridge: [clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.806879613] [ros_gz_bridge]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.809093567] [ros_gz_bridge]: Creating GZ->ROS Bridge: [imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.809714196] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.810990562] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_wheel (gz.msgs.Odometry) -> odom_wheel (nav_msgs/msg/Odometry)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.811422061] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_truth (gz.msgs.Odometry) -> odom_truth (nav_msgs/msg/Odometry)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.811823520] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.813184396] [ros_gz_bridge]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> cmd_vel (gz.msgs.Twist)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.813823024] [ros_gz_bridge]: Creating GZ->ROS Bridge: [scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.814298793] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact (gz.msgs.Contacts) -> bumper_left/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.817576144] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact (gz.msgs.Contacts) -> bumper_right/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.818010202] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_left (gz.msgs.LaserScan) -> range_left (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.818458131] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_right (gz.msgs.LaserScan) -> range_right (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.818895870] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tof_front/points (gz.msgs.PointCloudPacked) -> tof_front/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.819445438] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/image (gz.msgs.Image) -> camera/image (sensor_msgs/msg/Image)] (Lazy 0)\n[parameter_bridge-9] [INFO] [1793373076.819906887] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)\n[coverage_planner-11] [WARN] [1793373076.871592479] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[coverage_planner-11] [WARN] [1793373076.871603629] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[python3-1] [WARN] [1793373076.919239023] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[python3-1] [WARN] [1793373076.919251153] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[coverage_regression_runner-12] [INFO] [1793373076.926309783] [coverage_meter]: coverage_meter up; waiting for /map + truth\n[coverage_planner-11] [INFO] [1793373077.134625818] [coverage_planner]: coverage_planner up; waiting for /map\n[coverage_regression_runner-12] [INFO] [1793373077.225122240] [coverage_meter]: watching coverage; target=90% efficiency>=80%\n[create-10] [INFO] [1793373077.255181054] [ros_gz_sim]: Entity creation successful.\n[INFO] [create-10]: process has finished cleanly [pid 716]\n[INFO] [map_server-13]: process started with pid [888]\n[INFO] [amcl-14]: process started with pid [889]\n[INFO] [lifecycle_manager-15]: process started with pid [890]\n[INFO] [initialpose_pub-16]: process started with pid [891]\n[lifecycle_manager-15] [WARN] [1793373077.395567473] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[lifecycle_manager-15] [WARN] [1793373077.395578703] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[amcl-14] [WARN] [1793373077.402522503] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[amcl-14] [WARN] [1793373077.402532893] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[map_server-13] [WARN] [1793373077.407038391] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[map_server-13] [WARN] [1793373077.407049071] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[lifecycle_manager-15] [INFO] [1793373077.410833140] [lifecycle_manager_localization]: Creating\n[lifecycle_manager-15] [INFO] [1793373077.461624355] [lifecycle_manager_localization]: \u001b[34m\u001b[1mCreating and initializing lifecycle service clients\u001b[0m\u001b[0m\n[map_server-13] [INFO] [1793373077.467714258] [map_server]: \n[map_server-13] \tmap_server lifecycle node launched. \n[map_server-13] \tWaiting on external lifecycle transitions to activate\n[map_server-13] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[amcl-14] [INFO] [1793373077.467751597] [amcl]: \n[amcl-14] \tamcl lifecycle node launched. \n[amcl-14] \tWaiting on external lifecycle transitions to activate\n[amcl-14] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[map_server-13] [INFO] [1793373077.467773867] [map_server]: Creating\n[amcl-14] [INFO] [1793373077.469460203] [amcl]: Creating\n[initialpose_pub-16] [WARN] [1793373077.669405481] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[initialpose_pub-16] [WARN] [1793373077.669417411] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[lifecycle_manager-15] [INFO] [1793373077.850235566] [lifecycle_manager_localization]: \u001b[34m\u001b[1mStarting managed nodes bringup...\u001b[0m\u001b[0m\n[lifecycle_manager-15] [INFO] [1793373077.850276736] [lifecycle_manager_localization]: \u001b[34m\u001b[1mConfiguring map_server\u001b[0m\u001b[0m\n[map_server-13] [INFO] [1793373078.040212263] [map_server]: Configuring\n[map_server-13] [INFO] [1793373078.040291503] [map_io]: Loading yaml file: /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/test_room.yaml\n[map_server-13] [INFO] [1793373078.040529492] [map_io]: resolution: 0.05\n[map_server-13] [INFO] [1793373078.040537982] [map_io]: origin[0]: -1.6\n[map_server-13] [INFO] [1793373078.040543802] [map_io]: origin[1]: -3.05\n[map_server-13] [INFO] [1793373078.040547352] [map_io]: origin[2]: 0\n[map_server-13] [INFO] [1793373078.040550842] [map_io]: free_thresh: 0.25\n[map_server-13] [INFO] [1793373078.040554262] [map_io]: occupied_thresh: 0.65\n[map_server-13] [INFO] [1793373078.040558782] [map_io]: mode: trinary\n[map_server-13] [INFO] [1793373078.040562662] [map_io]: negate: 0\n[map_server-13] [INFO] [1793373078.040704521] [map_io]: Loading image_file: /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/test_room.pgm\n[map_server-13] [INFO] [1793373078.041189630] [map_io]: Read map /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/test_room.pgm: 140 X 140 map @ 0.05 m/cell\n[lifecycle_manager-15] [INFO] [1793373078.046137236] [lifecycle_manager_localization]: \u001b[34m\u001b[1mConfiguring amcl\u001b[0m\u001b[0m\n[amcl-14] [INFO] [1793373078.046297106] [amcl]: Configuring\n[amcl-14] [INFO] [1793373078.046358606] [amcl]: initTransforms\n[amcl-14] [INFO] [1793373078.050930102] [amcl]: initPubSub\n[amcl-14] [INFO] [1793373078.055809718] [amcl]: Subscribed to map topic.\n[lifecycle_manager-15] [INFO] [1793373078.058494001] [lifecycle_manager_localization]: \u001b[34m\u001b[1mActivating map_server\u001b[0m\u001b[0m\n[map_server-13] [INFO] [1793373078.058603800] [map_server]: Activating\n[map_server-13] [INFO] [1793373078.058707860] [map_server]: Creating bond (map_server) to lifecycle manager.\n[amcl-14] [INFO] [1793373078.058808310] [amcl]: Received a 140 X 140 map @ 0.050 m/pix\n[lifecycle_manager-15] [INFO] [1793373078.060015587] [lifecycle_manager_localization]: \u001b[34m\u001b[1mActivating amcl\u001b[0m\u001b[0m\n[coverage_planner-11] [INFO] [1793373078.060069666] [coverage_planner]: map 140x140 @ 0.050 m, 12360 reachable free cells\n[amcl-14] [INFO] [1793373078.060102976] [amcl]: Activating\n[amcl-14] [INFO] [1793373078.060115496] [amcl]: initialPoseReceived\n[amcl-14] [INFO] [1793373078.060154156] [amcl]: Setting pose (0.000000): 3.044 0.078 0.000\n[amcl-14] [INFO] [1793373078.060468295] [amcl]: Creating bond (amcl) to lifecycle manager.\n[lifecycle_manager-15] [INFO] [1793373078.061402293] [lifecycle_manager_localization]: \u001b[34m\u001b[1mManaged nodes are active\u001b[0m\u001b[0m\n[gazebo-3] \u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"oomwoo_one\"]/link[@name=\"base_footprint\"]/sensor[@name=\"range_left\"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n[gazebo-3] \u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"oomwoo_one\"]/link[@name=\"base_footprint\"]/sensor[@name=\"range_right\"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n[gazebo-3] \u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"oomwoo_one\"]/link[@name=\"base_footprint\"]/sensor[@name=\"imu\"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n[gazebo-3] \u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"oomwoo_one\"]/link[@name=\"base_footprint\"]/sensor[@name=\"laser_scan_sensor\"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n[gazebo-3] \u001b[1;33mWarning [Utils.cc:132]\u001b[0m [/sdf/model[@name=\"oomwoo_one\"]/link[@name=\"base_footprint\"]/sensor[@name=\"tof_front\"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].\n[coverage_planner-11] [INFO] [1793373079.619356333] [coverage_planner]: waiting for robot pose (amcl)...\n[amcl-14] [INFO] [1793373079.862926527] [amcl]: createLaserObject\n[coverage_regression_runner-12] [INFO] [1793373080.395695465] [coverage_meter]: map 140x140 @ 0.050m, 16182 free cells (reachable set computed at first truth pose)\n[coverage_regression_runner-12] [INFO] [1793373080.412251488] [coverage_meter]: serviceable cells from start (62, 92): 13696 (raw reachable 15634, edge_margin 0.15m deferred to floor-care)\n[coverage_regression_runner-12] [INFO] [1793373080.420548004] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=0.0 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[initialpose_pub-16] [INFO] [1793373080.434501345] [initialpose_pub]: AMCL localized after 0.4s (0 backstop seed(s)) \u2014 releasing navigation\n[INFO] [initialpose_pub-16]: process has finished cleanly [pid 891]\n[INFO] [controller_server-17]: process started with pid [986]\n[INFO] [planner_server-18]: process started with pid [987]\n[INFO] [bt_navigator-19]: process started with pid [988]\n[INFO] [lifecycle_manager-20]: process started with pid [989]\n[lifecycle_manager-20] [WARN] [1793373080.621751150] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[lifecycle_manager-20] [WARN] [1793373080.621763870] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[planner_server-18] [WARN] [1793373080.666660172] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[planner_server-18] [WARN] [1793373080.666674701] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[bt_navigator-19] [WARN] [1793373080.702813868] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[bt_navigator-19] [WARN] [1793373080.702840978] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[controller_server-17] [WARN] [1793373080.704839182] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[controller_server-17] [WARN] [1793373080.704854722] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[lifecycle_manager-20] [INFO] [1793373080.708202333] [lifecycle_manager_navigation]: Creating\n[lifecycle_manager-20] [INFO] [1793373080.712824640] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mCreating and initializing lifecycle service clients\u001b[0m\u001b[0m\n[planner_server-18] [INFO] [1793373080.805631605] [planner_server]: \n[planner_server-18] \tplanner_server lifecycle node launched. \n[planner_server-18] \tWaiting on external lifecycle transitions to activate\n[planner_server-18] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[controller_server-17] [INFO] [1793373080.809755143] [controller_server]: \n[controller_server-17] \tcontroller_server lifecycle node launched. \n[controller_server-17] \tWaiting on external lifecycle transitions to activate\n[controller_server-17] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[planner_server-18] [INFO] [1793373080.810803410] [planner_server]: Creating\n[parameter_bridge-9] [INFO] [1793373080.862741172] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)\n[controller_server-17] [INFO] [1793373080.867289858] [controller_server]: Creating controller server\n[bt_navigator-19] [INFO] [1793373081.166698283] [bt_navigator]: \n[bt_navigator-19] \tbt_navigator lifecycle node launched. \n[bt_navigator-19] \tWaiting on external lifecycle transitions to activate\n[bt_navigator-19] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[planner_server-18] [INFO] [1793373081.205123563] [global_costmap.global_costmap]: \n[planner_server-18] \tglobal_costmap lifecycle node launched. \n[planner_server-18] \tWaiting on external lifecycle transitions to activate\n[planner_server-18] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[bt_navigator-19] [INFO] [1793373081.205934481] [bt_navigator]: Creating\n[planner_server-18] [INFO] [1793373081.206675489] [global_costmap.global_costmap]: Creating Costmap\n[controller_server-17] [INFO] [1793373081.209928820] [local_costmap.local_costmap]: \n[controller_server-17] \tlocal_costmap lifecycle node launched. \n[controller_server-17] \tWaiting on external lifecycle transitions to activate\n[controller_server-17] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[controller_server-17] [INFO] [1793373081.210681948] [local_costmap.local_costmap]: Creating Costmap\n[coverage_regression_runner-12] [INFO] [1793373081.751144464] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=1.0 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[lifecycle_manager-20] [INFO] [1793373081.873072286] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mStarting managed nodes bringup...\u001b[0m\u001b[0m\n[lifecycle_manager-20] [INFO] [1793373081.873103426] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mConfiguring controller_server\u001b[0m\u001b[0m\n[controller_server-17] [INFO] [1793373081.873311925] [controller_server]: Configuring controller interface\n[controller_server-17] [INFO] [1793373081.873327845] [controller_server]: getting progress checker plugins..\n[controller_server-17] [INFO] [1793373081.873441315] [controller_server]: getting goal checker plugins..\n[controller_server-17] [INFO] [1793373081.873582774] [controller_server]: Controller frequency set to 5.0000Hz\n[controller_server-17] [INFO] [1793373081.873616764] [local_costmap.local_costmap]: Configuring\n[controller_server-17] [INFO] [1793373081.880425155] [local_costmap.local_costmap]: Using plugin \"obstacle_layer\"\n[controller_server-17] [INFO] [1793373081.888225903] [local_costmap.local_costmap]: Subscribed to Topics: scan\n[controller_server-17] [INFO] [1793373081.903525539] [local_costmap.local_costmap]: Initialized plugin \"obstacle_layer\"\n[controller_server-17] [INFO] [1793373081.903549589] [local_costmap.local_costmap]: Using plugin \"voxel_layer\"\n[controller_server-17] [INFO] [1793373081.904096317] [local_costmap.local_costmap]: Subscribed to Topics: scan\n[controller_server-17] [INFO] [1793373081.911780255] [local_costmap.local_costmap]: Initialized plugin \"voxel_layer\"\n[controller_server-17] [INFO] [1793373081.911800445] [local_costmap.local_costmap]: Using plugin \"inflation_layer\"\n[controller_server-17] [INFO] [1793373081.912199874] [local_costmap.local_costmap]: Initialized plugin \"inflation_layer\"\n[controller_server-17] [INFO] [1793373081.912216144] [local_costmap.local_costmap]: Using costmap filter \"keepout_filter\"\n[controller_server-17] [INFO] [1793373081.917555559] [local_costmap.local_costmap]: Initialized costmap filter \"keepout_filter\"\n[controller_server-17] [INFO] [1793373081.917571199] [local_costmap.local_costmap]: Using costmap filter \"keepout_inflation\"\n[controller_server-17] [INFO] [1793373081.917933588] [local_costmap.local_costmap]: Initialized costmap filter \"keepout_inflation\"\n[controller_server-17] [ERROR] [1793373081.966766928] [local_costmap.local_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions\n[controller_server-17] [INFO] [1793373081.971509435] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker\n[controller_server-17] [INFO] [1793373081.971737804] [controller_server]: Controller Server has progress_checker  progress checkers available.\n[controller_server-17] [INFO] [1793373081.972811001] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker\n[controller_server-17] [INFO] [1793373081.973123130] [controller_server]: Controller Server has goal_checker  goal checkers available.\n[controller_server-17] [INFO] [1793373082.003447283] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[controller_server-17] [INFO] [1793373082.008015581] [controller_server]: Controller Server has FollowPath  controllers available.\n[lifecycle_manager-20] [INFO] [1793373082.058789945] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mConfiguring planner_server\u001b[0m\u001b[0m\n[planner_server-18] [INFO] [1793373082.059237264] [planner_server]: Configuring\n[planner_server-18] [INFO] [1793373082.059284614] [global_costmap.global_costmap]: Configuring\n[planner_server-18] [INFO] [1793373082.066976102] [global_costmap.global_costmap]: Using plugin \"static_layer\"\n[planner_server-18] [INFO] [1793373082.070308232] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability\n[planner_server-18] [INFO] [1793373082.071985688] [global_costmap.global_costmap]: Initialized plugin \"static_layer\"\n[planner_server-18] [INFO] [1793373082.071999828] [global_costmap.global_costmap]: Using plugin \"obstacle_layer\"\n[planner_server-18] [INFO] [1793373082.072364437] [global_costmap.global_costmap]: Subscribed to Topics: scan\n[planner_server-18] [INFO] [1793373082.102969229] [global_costmap.global_costmap]: Initialized plugin \"obstacle_layer\"\n[planner_server-18] [INFO] [1793373082.103007649] [global_costmap.global_costmap]: Using plugin \"voxel_layer\"\n[planner_server-18] [INFO] [1793373082.103406278] [global_costmap.global_costmap]: Subscribed to Topics: scan\n[planner_server-18] [INFO] [1793373082.110195099] [global_costmap.global_costmap]: Initialized plugin \"voxel_layer\"\n[planner_server-18] [INFO] [1793373082.110211398] [global_costmap.global_costmap]: Using plugin \"inflation_layer\"\n[planner_server-18] [INFO] [1793373082.110603637] [global_costmap.global_costmap]: Initialized plugin \"inflation_layer\"\n[planner_server-18] [INFO] [1793373082.110617217] [global_costmap.global_costmap]: Using costmap filter \"keepout_filter\"\n[planner_server-18] [INFO] [1793373082.112961431] [global_costmap.global_costmap]: Initialized costmap filter \"keepout_filter\"\n[planner_server-18] [INFO] [1793373082.112979031] [global_costmap.global_costmap]: Using costmap filter \"keepout_inflation\"\n[planner_server-18] [INFO] [1793373082.113280470] [global_costmap.global_costmap]: Initialized costmap filter \"keepout_inflation\"\n[planner_server-18] [ERROR] [1793373082.121187457] [global_costmap.global_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions\n[planner_server-18] [INFO] [1793373082.162629829] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 140 X 140 at 0.050000 m/pix\n[planner_server-18] [INFO] [1793373082.164303634] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner\n[planner_server-18] [INFO] [1793373082.164325524] [planner_server]: Configuring plugin GridBased of type NavfnPlanner\n[planner_server-18] [INFO] [1793373082.164642713] [planner_server]: Planner Server has GridBased  planners available.\n[lifecycle_manager-20] [INFO] [1793373082.203410242] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mConfiguring bt_navigator\u001b[0m\u001b[0m\n[bt_navigator-19] [INFO] [1793373082.203720551] [bt_navigator]: Configuring\n[bt_navigator-19] [INFO] [1793373082.209551035] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator\n[bt_navigator-19] [WARN] [1793373082.216205716] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code\n[bt_navigator-19] Make sure these match your BT and there are not other sources of error codes youreported to your application\n[lifecycle_manager-20] [INFO] [1793373082.372403360] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mActivating controller_server\u001b[0m\u001b[0m\n[controller_server-17] [INFO] [1793373082.372595579] [controller_server]: Activating\n[controller_server-17] [INFO] [1793373082.372626789] [local_costmap.local_costmap]: Activating\n[controller_server-17] [INFO] [1793373082.372636469] [local_costmap.local_costmap]: Checking transform\n[controller_server-17] [INFO] [1793373082.372766499] [local_costmap.local_costmap]: start\n[controller_server-17] [INFO] [1793373082.373898765] [local_costmap.local_costmap]: KeepoutFilter: Subscribing to \"/oomwoo/keepout_filter_info\" topic for filter info...\n[controller_server-17] [INFO] [1793373082.384693175] [local_costmap.local_costmap]: KeepoutFilter: Received filter info from /oomwoo/keepout_filter_info topic.\n[controller_server-17] [INFO] [1793373082.384723244] [local_costmap.local_costmap]: KeepoutFilter: Subscribing to \"/oomwoo/keepout_mask\" topic for filter mask...\n[controller_server-17] [INFO] [1793373082.407604699] [local_costmap.local_costmap]: KeepoutFilter: Received filter mask from /oomwoo/keepout_mask topic.\n[controller_server-17] [INFO] [1793373082.574724652] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[controller_server-17] [INFO] [1793373082.574757322] [controller_server]: Creating bond (controller_server) to lifecycle manager.\n[lifecycle_manager-20] [INFO] [1793373082.577141965] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mActivating planner_server\u001b[0m\u001b[0m\n[planner_server-18] [INFO] [1793373082.577280354] [planner_server]: Activating\n[planner_server-18] [INFO] [1793373082.577311054] [global_costmap.global_costmap]: Activating\n[planner_server-18] [INFO] [1793373082.577320684] [global_costmap.global_costmap]: Checking transform\n[planner_server-18] [INFO] [1793373082.577377814] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation at time 2.580000, but only time 7.400000 is in the buffer, when looking up transform from frame [base_link] to frame [map]\n[coverage_regression_runner-12] [INFO] [1793373082.994262933] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=2.0 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[planner_server-18] [INFO] [1793373083.077558616] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 3.080000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[planner_server-18] [INFO] [1793373083.577428758] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 3.580000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[coverage_regression_runner-12] [INFO] [1793373083.994199617] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=3.0 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[planner_server-18] [INFO] [1793373084.077418060] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 4.080000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[planner_server-18] [INFO] [1793373084.577416412] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 4.580000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[coverage_regression_runner-12] [INFO] [1793373084.994655970] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=4.0 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[planner_server-18] [INFO] [1793373085.077420594] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 5.080000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[coverage_planner-11] [INFO] [1793373085.193984201] [coverage_planner]: coverage plan: 1 waypoints, executing sequentially\n[coverage_regression_runner-12] [INFO] [1793373085.194593339] [coverage_meter]: cleaning job active: path/time accounting reset\n[planner_server-18] [INFO] [1793373085.577428036] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 5.580000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[coverage_regression_runner-12] [INFO] [1793373085.994261675] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=0.8 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[planner_server-18] [INFO] [1793373086.078191505] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 6.080000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[planner_server-18] [INFO] [1793373086.577423050] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 6.580000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[coverage_regression_runner-12] [INFO] [1793373086.994496879] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=1.8 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[planner_server-18] [INFO] [1793373087.077424602] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 7.080000 but the earliest data is at time 7.400000, when looking up transform from frame [base_link] to frame [map]\n[planner_server-18] [INFO] [1793373087.577693653] [global_costmap.global_costmap]: start\n[planner_server-18] [INFO] [1793373087.580159296] [global_costmap.global_costmap]: KeepoutFilter: Subscribing to \"/oomwoo/keepout_filter_info\" topic for filter info...\n[planner_server-18] [INFO] [1793373087.591280464] [global_costmap.global_costmap]: KeepoutFilter: Received filter info from /oomwoo/keepout_filter_info topic.\n[planner_server-18] [INFO] [1793373087.591307964] [global_costmap.global_costmap]: KeepoutFilter: Subscribing to \"/oomwoo/keepout_mask\" topic for filter mask...\n[planner_server-18] [INFO] [1793373087.603996138] [global_costmap.global_costmap]: KeepoutFilter: Received filter mask from /oomwoo/keepout_mask topic.\n[coverage_regression_runner-12] [INFO] [1793373087.994274303] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=2.8 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[planner_server-18] [INFO] [1793373088.081300635] [planner_server]: Activating plugin GridBased of type NavfnPlanner\n[planner_server-18] [INFO] [1793373088.082355322] [planner_server]: Creating bond (planner_server) to lifecycle manager.\n[lifecycle_manager-20] [INFO] [1793373088.084861344] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mActivating bt_navigator\u001b[0m\u001b[0m\n[bt_navigator-19] [INFO] [1793373088.085000134] [bt_navigator]: Activating\n[bt_navigator-19] [INFO] [1793373088.093841139] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.\n[lifecycle_manager-20] [INFO] [1793373088.103107292] [lifecycle_manager_navigation]: \u001b[34m\u001b[1mManaged nodes are active\u001b[0m\u001b[0m\n[coverage_planner-11] [INFO] [1793373088.793388031] [coverage_planner]: motion relay accepted claim_sweep\n[coverage_planner-11] [WARN] [1793373088.793968409] [coverage_planner]: bumper held near waypoint 0: peel off (turn -0.6) 2.5s (escape 1/25)\n[coverage_regression_runner-12] [INFO] [1793373088.994416657] [coverage_meter]: COVERAGE_REPORT coverage=0.0023 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=85.60 reachable_cells=13696 sim_t=3.8 target_hit=False t_target=None pose_jumps=0 sim_unstable=False\n[python3-1] [WARN] [1793373089.033116456] [valdi_experimental_cmdvel_relay]: MOTION_LEASE_REVOKED {\"health\": {\"dock_inactive\": true, \"isolated_sources\": true, \"map_current\": true, \"nav2_active_goal\": null, \"nav2_idle\": false, \"pose_fresh\": true, \"resources_ok\": true, \"safety_loop_ok\": true, \"sweep_inactive\": false}, \"original_ages\": {\"pose_age_ns\": 15000000, \"pose_latest_age_ns\": 15000000, \"pose_latest_stamp_ns\": 9000000000, \"pose_stamp_ns\": 9000000000, \"postfilter_age_ns\": 930000000, \"postfilter_dds_age_ns\": 932632126, \"postfilter_stamp_ns\": 8085000000}, \"reason\": \"health contradicts active owner\"}\n[coverage_planner-11] [ERROR] [1793373089.393677606] [coverage_planner]: motion relay fault: ownership lost: source or lease token does not own cmd_vel\n[coverage_regression_runner-12] [INFO] [1793373089.595210440] [coverage_meter]: COVERAGE_SUMMARY coverage=0.0023 eff_at_target=n/a eff_final=0.0000 reason=motion_fault pass=False\n[ERROR] [coverage_regression_runner-12]: process has died [pid 718, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_2xmpslnz'].\nGZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\nCouldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\nCouldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\nCouldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.\n[gazebo-3] Stack trace (most recent call last) in thread 1073:\n[gazebo-3] #6    Object \"[0xffffffffffffffff]\", at 0xffffffffffffffff, in \n[gazebo-3] #5    Object \"/lib/x86_64-linux-gnu/libc.so.6\", at 0x7f4297e12ecb, in \n[gazebo-3] #4    Object \"/lib/x86_64-linux-gnu/libc.so.6\", at 0x7f4297d85b83, in \n[gazebo-3] #3    Object \"/lib/x86_64-linux-gnu/libstdc++.so.6\", at 0x7f429329ddb3, in \n[gazebo-3] #2    Object \"/opt/ros/jazzy/opt/gz_sim_vendor/lib/libgz-sim8.so.8\", at 0x7f429263b8f0, in \n[gazebo-3] #1    Object \"/opt/ros/jazzy/opt/gz_sim_vendor/lib/libgz-sim8.so.8\", at 0x7f4292645aa0, in \n[gazebo-3] #0    Object \"/lib/x86_64-linux-gnu/libstdc++.so.6\", at 0x7f4293285154, in std::_Rb_tree_increment(std::_Rb_tree_node_base*)\n[gazebo-3] Segmentation fault (Signal sent by the kernel [(nil)])\n[gazebo-3] Segmentation fault (core dumped)\n[ERROR] [gazebo-3]: process has died [pid 708, exit code 139, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --force-version 8'].\n[INFO] [launch]: process[gazebo-3] was required: shutting down launched system\nCOVERAGE_PROCESS_FAILURE gazebo-3 139\n[INFO] [lifecycle_manager-20]: sending signal 'SIGINT' to process[lifecycle_manager-20]\n[INFO] [bt_navigator-19]: sending signal 'SIGINT' to process[bt_navigator-19]\n[INFO] [planner_server-18]: sending signal 'SIGINT' to process[planner_server-18]\n[INFO] [controller_server-17]: sending signal 'SIGINT' to process[controller_server-17]\n[INFO] [lifecycle_manager-15]: sending signal 'SIGINT' to process[lifecycle_manager-15]\n[INFO] [amcl-14]: sending signal 'SIGINT' to process[amcl-14]\n[INFO] [map_server-13]: sending signal 'SIGINT' to process[map_server-13]\n[INFO] [coverage_planner-11]: sending signal 'SIGINT' to process[coverage_planner-11]\n[INFO] [parameter_bridge-9]: sending signal 'SIGINT' to process[parameter_bridge-9]\n[INFO] [robot_state_publisher-8]: sending signal 'SIGINT' to process[robot_state_publisher-8]\n[INFO] [lifecycle_manager-7]: sending signal 'SIGINT' to process[lifecycle_manager-7]\n[INFO] [costmap_filter_info_server-6]: sending signal 'SIGINT' to process[costmap_filter_info_server-6]\n[INFO] [map_server-5]: sending signal 'SIGINT' to process[map_server-5]\n[INFO] [ground_truth-4]: sending signal 'SIGINT' to process[ground_truth-4]\n[INFO] [dock_drive-2]: sending signal 'SIGINT' to process[dock_drive-2]\n[INFO] [python3-1]: sending signal 'SIGINT' to process[python3-1]\n[lifecycle_manager-20] [INFO] [1793373090.197910369] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[lifecycle_manager-20] [INFO] [1793373090.197974099] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)\n[bt_navigator-19] [INFO] [1793373090.199628014] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[bt_navigator-19] [INFO] [1793373090.199678634] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)\n[bt_navigator-19] [INFO] [1793373090.199722764] [bt_navigator]: Deactivating\n[bt_navigator-19] [INFO] [1793373090.199766464] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.\n[planner_server-18] [INFO] [1793373090.201343269] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[planner_server-18] [INFO] [1793373090.201401459] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)\n[planner_server-18] [INFO] [1793373090.201432249] [planner_server]: Deactivating\n[planner_server-18] [INFO] [1793373090.201450519] [global_costmap.global_costmap]: Deactivating\n[lifecycle_manager-20] [INFO] [1793373090.201534209] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation\n[controller_server-17] [INFO] [1793373090.203162474] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[controller_server-17] [INFO] [1793373090.203222144] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)\n[controller_server-17] [INFO] [1793373090.203257234] [controller_server]: Deactivating\n[controller_server-17] [INFO] [1793373090.203277754] [controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[controller_server-17] [INFO] [1793373090.203343554] [local_costmap.local_costmap]: Deactivating\n[lifecycle_manager-15] [INFO] [1793373090.205057899] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[lifecycle_manager-15] [INFO] [1793373090.205112379] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)\n[amcl-14] [INFO] [1793373090.206947384] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[amcl-14] [INFO] [1793373090.206999814] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)\n[amcl-14] [INFO] [1793373090.207034023] [amcl]: Deactivating\n[amcl-14] [INFO] [1793373090.207052673] [amcl]: Destroying bond (amcl) to lifecycle manager.\n[lifecycle_manager-15] [INFO] [1793373090.208264280] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization\n[map_server-13] [INFO] [1793373090.208605489] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[map_server-13] [INFO] [1793373090.208713558] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)\n[map_server-13] [INFO] [1793373090.208751858] [map_server]: Deactivating\n[map_server-13] [INFO] [1793373090.208769468] [map_server]: Destroying bond (map_server) to lifecycle manager.\n[bt_navigator-19] [INFO] [1793373090.209942735] [bt_navigator]: Cleaning up\n[parameter_bridge-9] [INFO] [1793373090.212336738] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[robot_state_publisher-8] [INFO] [1793373090.215300050] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[lifecycle_manager-7] [INFO] [1793373090.216760285] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[lifecycle_manager-7] [INFO] [1793373090.216815195] [oomwoo_keepout_lifecycle_manager]: Running Nav2 LifecycleManager rcl preshutdown (oomwoo_keepout_lifecycle_manager)\n[map_server-13] [INFO] [1793373090.218922919] [map_server]: Cleaning up\n[map_server-13] [INFO] [1793373090.219060899] [map_server]: Destroying bond (map_server) to lifecycle manager.\n[costmap_filter_info_server-6] [INFO] [1793373090.219297318] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[costmap_filter_info_server-6] [INFO] [1793373090.219376378] [oomwoo_keepout_info_server]: Running Nav2 LifecycleNode rcl preshutdown (oomwoo_keepout_info_server)\n[costmap_filter_info_server-6] [INFO] [1793373090.219418708] [oomwoo_keepout_info_server]: Deactivating\n[costmap_filter_info_server-6] [INFO] [1793373090.219433848] [oomwoo_keepout_info_server]: Destroying bond (oomwoo_keepout_info_server) to lifecycle manager.\n[amcl-14] [INFO] [1793373090.219308038] [amcl]: Cleaning up\n[amcl-14] [INFO] [1793373090.223768825] [amcl]: Destroying bond (amcl) to lifecycle manager.\n[costmap_filter_info_server-6] [INFO] [1793373090.258404996] [oomwoo_keepout_info_server]: Cleaning up\n[costmap_filter_info_server-6] [INFO] [1793373090.258448626] [oomwoo_keepout_info_server]: Destroying bond (oomwoo_keepout_info_server) to lifecycle manager.\n[map_server-13] [INFO] [1793373090.259391924] [map_server]: Destroying\n[lifecycle_manager-7] [INFO] [1793373090.259666503] [oomwoo_keepout_lifecycle_manager]: Destroying oomwoo_keepout_lifecycle_manager\n[map_server-5] [INFO] [1793373090.260570250] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[map_server-5] [INFO] [1793373090.260724580] [oomwoo_keepout_mask_server]: Running Nav2 LifecycleNode rcl preshutdown (oomwoo_keepout_mask_server)\n[map_server-5] [INFO] [1793373090.260766260] [oomwoo_keepout_mask_server]: Deactivating\n[map_server-5] [INFO] [1793373090.260782630] [oomwoo_keepout_mask_server]: Destroying bond (oomwoo_keepout_mask_server) to lifecycle manager.\n[map_server-5] [INFO] [1793373090.302099822] [oomwoo_keepout_mask_server]: Cleaning up\n[map_server-5] [INFO] [1793373090.302139402] [oomwoo_keepout_mask_server]: Destroying bond (oomwoo_keepout_mask_server) to lifecycle manager.\n[map_server-5] [INFO] [1793373090.308810503] [oomwoo_keepout_mask_server]: Destroying\n[costmap_filter_info_server-6] [INFO] [1793373090.309123252] [oomwoo_keepout_info_server]: Destroying\n[amcl-14] [INFO] [1793373090.309493241] [amcl]: Destroying\n[bt_navigator-19] [INFO] [1793373090.311667124] [bt_navigator]: Completed Cleaning up\n[bt_navigator-19] [INFO] [1793373090.311718824] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.\n[INFO] [lifecycle_manager-20]: process has finished cleanly [pid 989]\n[bt_navigator-19] [INFO] [1793373090.360544615] [bt_navigator]: Destroying\n[INFO] [lifecycle_manager-15]: process has finished cleanly [pid 890]\n[controller_server-17] [INFO] [1793373090.403350792] [controller_server]: Destroying bond (controller_server) to lifecycle manager.\n[INFO] [robot_state_publisher-8]: process has finished cleanly [pid 714]\n[INFO] [parameter_bridge-9]: process has finished cleanly [pid 715]\n[controller_server-17] [INFO] [1793373090.414017972] [controller_server]: Cleaning up\n[controller_server-17] [INFO] [1793373090.414055002] [controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[controller_server-17] [INFO] [1793373090.414105922] [local_costmap.local_costmap]: Cleaning up\n[INFO] [lifecycle_manager-7]: process has finished cleanly [pid 713]\n[controller_server-17] [INFO] [1793373090.422092719] [controller_server]: Destroying bond (controller_server) to lifecycle manager.\n[controller_server-17] [INFO] [1793373090.459192293] [local_costmap.local_costmap]: Destroying\n[controller_server-17] [INFO] [1793373090.461728066] [controller_server]: Destroying\n[INFO] [map_server-13]: process has finished cleanly [pid 888]\n[INFO] [amcl-14]: process has finished cleanly [pid 889]\n[INFO] [costmap_filter_info_server-6]: process has finished cleanly [pid 711]\n[INFO] [bt_navigator-19]: process has finished cleanly [pid 988]\n[INFO] [map_server-5]: process has finished cleanly [pid 710]\n[INFO] [ground_truth-4]: process has finished cleanly [pid 709]\n[INFO] [controller_server-17]: process has finished cleanly [pid 986]\n[planner_server-18] [INFO] [1793373090.577929284] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner\n[planner_server-18] [INFO] [1793373090.577963764] [planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[planner_server-18] [INFO] [1793373090.588120505] [planner_server]: Cleaning up\n[planner_server-18] [INFO] [1793373090.590452338] [global_costmap.global_costmap]: Cleaning up\n[planner_server-18] [INFO] [1793373090.591786234] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner\n[planner_server-18] [INFO] [1793373090.591930214] [planner_server]: Destroying plugin GridBased of type NavfnPlanner\n[planner_server-18] [INFO] [1793373090.595093105] [planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[planner_server-18] [INFO] [1793373090.596011732] [global_costmap.global_costmap]: Destroying\n[planner_server-18] [INFO] [1793373090.597675837] [planner_server]: Destroying\n[INFO] [dock_drive-2]: process has finished cleanly [pid 707]\n[INFO] [coverage_planner-11]: process has finished cleanly [pid 717]\n[INFO] [python3-1]: process has finished cleanly [pid 706]\n[INFO] [planner_server-18]: process has finished cleanly [pid 987]\n"
+    },
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "321\n",
+      "/sys/fs/cgroup/memory.peak": "1621921792\n"
+    },
+    "motion_journal": null,
+    "keepout_fixture": {
+      "generated_manifest": {
+        "count": 220,
+        "filter_info_topic": "/valdi/keepout_costmap_filter_info",
+        "filters_global": [
+          "keepout_filter",
+          "keepout_inflation"
+        ],
+        "filters_local": [
+          "keepout_filter",
+          "keepout_inflation"
+        ],
+        "mask_topic": "/valdi/keepout_filter_mask",
+        "mask_yaml": "/tmp/keepout-fusion/keepout_test_room.yaml",
+        "nav_params": "/tmp/keepout-fusion/nav2_keepout_params.yaml",
+        "origin": [
+          -1.6,
+          -3.05,
+          0.0
+        ],
+        "params_source": "/work/src/oomwoo_sim_support/config/nav2_params.yaml",
+        "pgm": "/tmp/keepout-fusion/keepout_test_room.pgm",
+        "rectangle_world": [
+          [
+            0.67,
+            -0.55
+          ],
+          [
+            1.14,
+            0.55
+          ]
+        ],
+        "resolution_m": 0.05,
+        "shape": "rectangular experimental no-go area",
+        "source_map_fingerprint": "29a8c8d57d560e6eb4612beaa4e8eae02e20f7c232400bae81f4e93f3522c789",
+        "source_map_yaml": "/work/src/oomwoo_sim_support/maps/test_room.yaml"
+      },
+      "legacy_overlay_and_topics_used": false,
+      "active_mask_topic": "/oomwoo/keepout_mask",
+      "active_info_topic": "/oomwoo/keepout_filter_info",
+      "active_overlay_builder": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py"
+    }
+  },
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/nav_progress_approach_20261030.log",
+  "raw_sha256": "1aaacf979eee39aefc8dcccd84eb5baafedc9830e51503e90602dfdb31838fb6",
+  "args": [
+    "podman",
+    "run",
+    "--memory-swap=3584m",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--tmpfs",
+    "/tmp:rw,exec,size=1024m,mode=1777",
+    "--memory=3g",
+    "--cpus=2",
+    "--pids-limit=512",
+    "-e",
+    "ROS_LOG_DIR=/tmp/roslogs",
+    "-e",
+    "ROS_DOMAIN_ID=88",
+    "-e",
+    "ROS_LOCALHOST_ONLY=1",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/ros:/work:ro",
+    "--name",
+    "oomwoo-nav-approach-3dbdfd9ff9",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/ros/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/jobs:/contrib:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/ros/src/oomwoo_sim_support/launch/coverage_regression.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/coverage_regression.launch.py:ro",
+    "--ulimit",
+    "core=0",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/driver.py:/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py:ro",
+    "--cpu-shares",
+    "2",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OOMWOO_MOTION_AUDIT=1 OOMWOO_SIM_BATTERY_FRACTION=0.92\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/work/src/oomwoo_dock:/contrib/src:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2\nexport MAX_WALL_TIME_S=75 CLOCK_DEAD_WALL_S=45 RUNS=1\nmkdir -p /tmp/valdi_ros_ws/src && cp -r /contrib/ros2_lab_interfaces /tmp/valdi_ros_ws/src/oomwoo_cleaning_jobs_lab_interfaces && cd /tmp/valdi_ros_ws && colcon build --packages-select oomwoo_cleaning_jobs_lab_interfaces --parallel-workers 2 --event-handlers console_direct+ > /tmp/rosidl_build.log 2>&1 && source /tmp/valdi_ros_ws/install/setup.bash || { tail -n 40 /tmp/rosidl_build.log; exit 3; }\npython3 /contrib/integration/generate_keepout_lab.py --out /tmp/keepout-fusion --test-room /work/src/oomwoo_sim_support/maps/test_room.yaml --nav-params /work/src/oomwoo_sim_support/config/nav2_params.yaml || exit 3\npython3 - <<'PROVENANCE'\nfrom pathlib import Path\nfrom ament_index_python.packages import get_package_share_directory\nimport hashlib,json\nfrom oomwoo_coverage import coverage_planner_node as planner\nfrom oomwoo_sim_support import coverage_regression_runner as scorer\nfrom oomwoo_sim_support import keepout_config\nfrom oomwoo_sim_support import coverage_meter_node as meter\nshare=Path(get_package_share_directory('oomwoo_sim_support'));r={'planner':planner.__file__,'scorer':scorer.__file__,'keepout_config':keepout_config.__file__,'files':{}}\nfor name in ['launch/coverage_regression.launch.py','launch/sim_bringup.launch.py','worlds/test_room.world','config/nav2_params.yaml','maps/test_room.yaml','maps/test_room.pgm']:\n a=(share/name).read_bytes();b=(Path('/work/src/oomwoo_sim_support')/name).read_bytes();r['files'][name]={'match':a==b,'sha256':hashlib.sha256(a).hexdigest()}\n assert a==b,name\nassert all(p.startswith('/work/') for p in (planner.__file__,scorer.__file__,keepout_config.__file__))\nfrom oomwoo_dock import dock_drive_node\nfrom oomwoo_cleaning_jobs import goal_journal,nav_lease_witness,ros_dock_velocity_relay\nr['reviewed_inputs']={}\nfor module in (dock_drive_node,goal_journal,nav_lease_witness,ros_dock_velocity_relay):\n path=Path(module.__file__);r['reviewed_inputs'][module.__name__]={'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}\n assert str(path).startswith(('/work/','/contrib/'))\nr['planner_sha256']=hashlib.sha256(Path(planner.__file__).read_bytes()).hexdigest()\nr['scorer_sha256']=hashlib.sha256(Path(scorer.__file__).read_bytes()).hexdigest()\nr['meter_sha256']=hashlib.sha256(Path(meter.__file__).read_bytes()).hexdigest()\nassert meter.__file__.startswith('/work/')\nr['wrapper_sha256']=hashlib.sha256(Path('/work/deploy/run_coverage_regression.sh').read_bytes()).hexdigest()\nprint('OOMWOO_SOURCE_PROVENANCE '+json.dumps(r),flush=True)\nPROVENANCE\nif [ $? -ne 0 ]; then exit 3; fi\nbash -n /work/deploy/run_coverage_regression.sh || exit 3\nbash /work/deploy/run_coverage_regression.sh executor:=reactive v_cruise:=0.25 rotate_speed:=0.8 motion_relay_journal:=/tmp/oomwoo-owned-motion.json sweep_cmd_topic:=/valdi/sweep_cmd_vel nav_cmd_topic:=/valdi/nav2_cmd_vel motor_cmd_topic:=/valdi/lab_safe_cmd_vel_output nav_linear_speed:=0.14 nav_angular_speed:=0.7 nav_lookahead:=0.5 keepout_mask:=/tmp/keepout-fusion/keepout_test_room.yaml min_transit_len:=0.0 x_pose:=3.0438363696510855 y_pose:=0.07799449561218721 yaw:=0.0\nbank_code=$?\nexport OOMWOO_BANK_CODE=$bank_code\npython3 - <<'INNER'\nimport json,glob,os\nfrom pathlib import Path\nr={'bank_code':int(os.environ['OOMWOO_BANK_CODE']),'reports':{},'logs':{}}\nfor p in glob.glob('/tmp/coverage_runs.*/run*.json'):\n r['reports'][p]=json.loads(Path(p).read_text())\nfor p in glob.glob('/tmp/coverage_regression.log.*'):\n r['logs'][p]=Path(p).read_text(errors='replace')\nr['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/pids.events'),Path('/sys/fs/cgroup/pids.peak'),Path('/sys/fs/cgroup/memory.peak')] if p.exists()}\np=Path('/tmp/oomwoo-owned-motion.json')\nr['motion_journal']=json.loads(p.read_text()) if p.exists() else None\nr['keepout_fixture']={'generated_manifest':json.loads(Path('/tmp/keepout-fusion/manifest.json').read_text()),'legacy_overlay_and_topics_used':False,'active_mask_topic':'/oomwoo/keepout_mask','active_info_topic':'/oomwoo/keepout_filter_info','active_overlay_builder':'/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py'}\nprint('OOMWOO_GAZEBO_BANK '+json.dumps(r))\nraise SystemExit(int(os.environ['OOMWOO_BANK_CODE']))\nINNER"
+  ],
+  "source_sets": {
+    "ROS": "c67a7fca2105388eb5cf0aea5fca6fb61a3956b2 + explicit single-goal passive-trace fixture",
+    "jobs": "fa8b7af945ad557675dce1180cfac25cb1384a5b",
+    "driver": "validated93c49e1 dock source, frozen SHA in input_sha256"
+  },
+  "fixture_changes": {
+    "planner": {
+      "changed_methods": [
+        "_gapfill_waypoints",
+        "_on_amcl",
+        "_plan_waypoints",
+        "_relay_poll"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "a552054576df9b32160ef4c6db90963419f4d8a8f8104af7a3f492eb0bbec0ab",
+      "fixture_sha256": "6b99e0170ea4ab944ad954cbf56103e9818c755aa22cafc76651fcf30347b4fd"
+    },
+    "scorer": {
+      "changed_methods": [
+        "_audit_feedback",
+        "_on_pose"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "adc9349f2485d5cc6321af7d81853ff5243ff0024ec554b4b4b58f52e59d413f",
+      "fixture_sha256": "001f415152a86b14e382780c05dfed3ca4be17432cf578cffa48ced04755c268"
+    }
+  },
+  "limits": [
+    "Original starting yaw and earlier localization/contact history were not retained; yaw0 and fresh localization are approximations.",
+    "90/80 grader unchanged and expected to miss in single-goal scope; action outcome and observation completeness evaluated separately.",
+    "No hardware or active docking."
+  ],
+  "scope": "ONE actual Nav2 goal from prior segment start GTXY with fresh localization and approximate yaw0. Same immutable private single-goal source/mask/world/control. Only spawn/name/receipts differ from near-end focal. Passive192boundedtrace; no new ROS nodes/timers/subscriptions/clients.",
+  "resource_policy": {
+    "cpu": 2,
+    "memory_gib": 3,
+    "max_wall_s": 75,
+    "host_stop_s": 150,
+    "fifo_duration_s": 210
+  }
+}

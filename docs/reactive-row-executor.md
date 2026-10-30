@@ -940,3 +940,29 @@ it does not fix the source of Nav2's missing progress or establish improved
 coverage. Consolidate it and collect the already-queued approach case668.
 That case uses its earlier immutable sources and does not include this
 bookkeeping change. Further recovery expansion awaits causal native data.
+
+
+The [approach-start native case](../src/oomwoo_sim_support/docs/evidence/nav_progress_approach_delivery_20261030.json)
+stopped before sending any Nav2 goal. Starting in contact with the table
+triggered SWEEP to ESCAPE at 9.0 simulated seconds, then FAULT at 9.6.
+The relay's first revocation records nav2_idle=false with no active UUID,
+while its other general-health fields are true. Its empty-journal
+managed-idle policy excluded ESCAPE, although its sweep-health policy
+already accepted that phase. Thus this run does not reproduce abort105.
+
+All eight source hashes match and there is no host timeout. Gazebo later
+segfaults139 during native-stop shutdown, and the wrapper correctly returns
+exit3. The sampled Keepout audit has zero crossings. These facts establish
+neither successful navigation nor a clean full bank. The conditional
+full-history preparation was halted before creating snapshots when this
+new result appeared; the actual contact-start failure takes priority.
+
+The jobs branch now includes b9ae33e: only ESCAPE is added to the existing
+empty-journal non-navigation phases. All 55 cases in its sequenced-ingress
+file pass, including nine negative proof subcases and prior-phase controls.
+A native contrast is queued as FIFO671 with the exact same spawn/goal and
+seven unchanged input hashes. Only the relay phase-consistency source
+changes. Waiting is capped at .05 CPU, automatically restoring 2 CPU after
+verified own admission. Collect that case before claiming native escape
+continuity or preparing a complete-room replay. Original abort105 and the
+90/80 masked-room acceptance remain unresolved.

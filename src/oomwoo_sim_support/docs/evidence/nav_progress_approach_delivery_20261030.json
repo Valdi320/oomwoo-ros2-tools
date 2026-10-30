@@ -1,0 +1,126 @@
+{
+  "raw_receipt": "nav_progress_approach_20261030.json",
+  "rc": 3,
+  "bank_code": 3,
+  "seconds": 31.067,
+  "host_timeout": false,
+  "all_inputs_unchanged": true,
+  "nav2_status_packets": 0,
+  "nav2_goals_observed": 0,
+  "phases": [
+    {
+      "phase": "IDLE",
+      "wall": 390485.176752484,
+      "sim": 0.2
+    },
+    {
+      "phase": "SWEEP",
+      "wall": 390494.35146517,
+      "sim": 8.8,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          3.043836408202791,
+          0.07586046785029975
+        ],
+        "stamp_ns": 8800000000
+      }
+    },
+    {
+      "phase": "ESCAPE",
+      "wall": 390494.552859555,
+      "sim": 9.0,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          3.043836408202791,
+          0.07586046785029975
+        ],
+        "stamp_ns": 9000000000
+      }
+    },
+    {
+      "phase": "FAULT",
+      "wall": 390495.151649804,
+      "sim": 9.600000000000001,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          3.043836408202791,
+          0.07586046785029975
+        ],
+        "stamp_ns": 9600000000
+      }
+    }
+  ],
+  "first_lease_revocation": {
+    "health": {
+      "dock_inactive": true,
+      "isolated_sources": true,
+      "map_current": true,
+      "nav2_active_goal": null,
+      "nav2_idle": false,
+      "pose_fresh": true,
+      "resources_ok": true,
+      "safety_loop_ok": true,
+      "sweep_inactive": false
+    },
+    "original_ages": {
+      "pose_age_ns": 15000000,
+      "pose_latest_age_ns": 15000000,
+      "pose_latest_stamp_ns": 9000000000,
+      "pose_stamp_ns": 9000000000,
+      "postfilter_age_ns": 930000000,
+      "postfilter_dds_age_ns": 932632126,
+      "postfilter_stamp_ns": 8085000000
+    },
+    "reason": "health contradicts active owner"
+  },
+  "process_failures": [
+    "COVERAGE_PROCESS_FAILURE gazebo-3 139"
+  ],
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 462,
+    "segments": 461,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 1.8938363286728923,
+    "motion_by_phase": {
+      "IDLE": {
+        "poses": 422,
+        "distance_m": 0.0021340277726791,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.8938363286728923
+      },
+      "SWEEP": {
+        "poses": 10,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.8938363672245977
+      },
+      "ESCAPE": {
+        "poses": 30,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.8938363672245977
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "conclusion": "Initial bumper escape revoked the sweep lease before any Nav2 goal: empty-journal managed-idle policy excludes ESCAPE. This does not reproduce or diagnose original Nav2 abort105.",
+  "shutdown_limit": "Gazebo later segfaulted139 after native stop; wrapper correctly propagated failure3. No clean-bank claim.",
+  "next_increment": "Small causal check then minimal managed-idle ESCAPE consistency correction; repeat exact same single-goal spawn only with that relay change if focused tests pass."
+}
