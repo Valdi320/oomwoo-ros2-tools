@@ -786,3 +786,17 @@ unproven. Nominal straight-line time does not guarantee enough time for detours.
 Next: one original masked-room acceptance under the existing FIFO, immutable
 sources, coherent scoring and unchanged 90%/80% criteria. Actual docking remains
 pending. Do not keep tuning a passing component before measuring integration.
+
+
+A [read-only installed-scene inventory](../src/oomwoo_sim_support/docs/evidence/stock_dock_scene_inventory_20261030.json)
+clarifies the next active-docking integration input. The installed kitchen_dining
+world contains vacuum_dock and charging_dock_basic; living_room has no dock-named
+model or dock include in the inspected XML. This project's maps directory has
+test_room, living_room and contour_torture, with no kitchen map. This is not a
+claim about every installed map location. Before a joint real-controller cycle,
+verify an existing world-aligned kitchen map or reuse the current map generator
+with checked extent/collision geometry. That generator already accepts a world
+argument, but fixes its grid extent and output basename; blindly passing the
+kitchen world is insufficient. No map, world or runtime was modified, and this
+inventory is not a docking or charging test. The native transit acceptance
+continues independently with its frozen test_room inputs.

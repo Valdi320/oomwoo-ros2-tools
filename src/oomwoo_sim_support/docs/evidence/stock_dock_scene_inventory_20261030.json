@@ -1,0 +1,541 @@
+{
+  "completed_utc": "2026-10-30T13:23:07.898662+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 5.384,
+  "stdout": "STOCK_DOCK_INVENTORY {\"gazebo_share\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo\", \"worlds\": [{\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/contour_torture.world\", \"sha256\": \"c3e22b8a5adcef989d39522ebde69a34df1de5e9cacd86a23c308147421506ec\", \"includes\": [{\"uri\": \"model://ground plane\", \"name\": \"ground_plane\", \"pose\": \"0 0 0 0 0 0\"}], \"dock_named_elements\": []}, {\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/empty.world\", \"sha256\": \"9fd243f4a1ea1f1ec5a0fffa2d8d46b480556252a5967e89ed297d7c31c8c87a\", \"includes\": [], \"dock_named_elements\": []}, {\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world\", \"sha256\": \"42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9\", \"includes\": [{\"uri\": \"model://ground plane\", \"name\": \"ground_plane\", \"pose\": \"0 0 0 0 0 0\"}, {\"uri\": \"model://room_wall_25x4m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_25x4m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_25x5m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_25x5m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://door_08x2m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://vacuum_dock\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://charging_dock_basic\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://makerspet_poster\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://window_curtains\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://window_curtains\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://window_curtains_small\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://fridge_double_door\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_base_run_w\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://Oven\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_base_run_e\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://range_hood\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_wall_cab_w\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_wall_cab_e\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://coffee_maker\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_base_run_east\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://dishwasher\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_wall_cab_ec\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_wall_cab_es\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kitchen_pantry\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://DiningTable\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://DiningChair\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://DiningChair\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://DiningChair\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://DiningChair\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://person_standing\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://PatientFSit\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://salad_plate\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://pressure_cooker\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://toaster_4_slice\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://dish_drainer\", \"name\": \"\", \"pose\": \"\"}], \"dock_named_elements\": [{\"name\": \"vacuum_dock\", \"pose\": \"-2.45 -0.5 0 0 -0 1.5708\"}, {\"name\": \"charging_dock_basic\", \"pose\": \"-1.9 -1.9 0 0 -0 3.1416\"}]}, {\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world\", \"sha256\": \"ade1e9a53a027511ecea70b33d33898ac424e6ad219a913654ed51664db91116\", \"includes\": [{\"uri\": \"model://ground plane\", \"name\": \"ground_plane\", \"pose\": \"0 0 0 0 0 0\"}, {\"uri\": \"model://makerspet_poster\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://kaiaai_poster\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_2x5m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_2x5m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_2x5m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://room_wall_2x5m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://Chair\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://door_08x2m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://Cabinet\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://Bookshelf\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://cat_figurines\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://FemaleVisitorSit\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://LampAndStand\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://MaleVisitorSit\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://MiniSofa\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://decor_vase\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://Sofa\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://decor_vase_tall\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://TVStand\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://red_ball_10in\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://rug_ivory_2m\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://TableMarble\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://tv_65in_emissive\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://window_curtains\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://window_curtains\", \"name\": \"\", \"pose\": \"\"}], \"dock_named_elements\": []}, {\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/turtlebot3_house.world\", \"sha256\": \"b981427e06e3e244f1896fea3985548f0f57b0c41ddb1fa532e05d98ab03421f\", \"includes\": [{\"uri\": \"model://ground plane\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://sun\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://turtlebot3_house\", \"name\": \"\", \"pose\": \"\"}], \"dock_named_elements\": []}, {\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/turtlebot3_world.world\", \"sha256\": \"da5aa3352f8f18f89f0e8ff6e46d6006b09ab9d917be64e1f1997123a942f25e\", \"includes\": [{\"uri\": \"model://ground plane\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://sun\", \"name\": \"\", \"pose\": \"\"}, {\"uri\": \"model://turtlebot3_world\", \"name\": \"\", \"pose\": \"\"}], \"dock_named_elements\": []}], \"dock_models\": [{\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/charging_dock_basic/model.sdf\", \"sha256\": \"071d97f34c2c7e73551f549574a4a80ad8382fd6dc59f3b0c47ecfecc55f2b8c\", \"model_names\": [\"charging_dock_basic\"], \"dock_includes\": []}, {\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/vacuum_dock/model.sdf\", \"sha256\": \"d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92\", \"model_names\": [\"vacuum_dock\"], \"dock_includes\": []}], \"existing_maps\": [{\"path\": \"/work/src/oomwoo_sim_support/maps/contour_torture.yaml\", \"metadata\": {\"image\": \"contour_torture.pgm\", \"mode\": \"trinary\", \"resolution\": 0.05, \"origin\": [-3.25, -3.25, 0], \"negate\": 0, \"occupied_thresh\": 0.65, \"free_thresh\": 0.196}, \"sha256\": \"ac2b6c43059bc9a9494d83b54c511d997376d263184195be5d0c5eed79f415f8\"}, {\"path\": \"/work/src/oomwoo_sim_support/maps/living_room.yaml\", \"metadata\": {\"image\": \"living_room.pgm\", \"mode\": \"trinary\", \"resolution\": 0.05, \"origin\": [-2.499, -2.456, 0], \"negate\": 0, \"occupied_thresh\": 0.65, \"free_thresh\": 0.196}, \"sha256\": \"1047cc04802915fc30031998c0eab0c8f86b152693da1ffc8568d78d421a0498\"}, {\"path\": \"/work/src/oomwoo_sim_support/maps/test_room.yaml\", \"metadata\": {\"image\": \"test_room.pgm\", \"mode\": \"trinary\", \"resolution\": 0.05, \"origin\": [-1.6, -3.05, 0], \"negate\": 0, \"occupied_thresh\": 0.65, \"free_thresh\": 0.25}, \"sha256\": \"457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83\"}]}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--name",
+    "oomwoo-dock-inventory-bc7c6cabe7",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=64m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 python3 -"
+  ],
+  "fixture_python": "\nfrom pathlib import Path\nimport hashlib,json,xml.etree.ElementTree as ET,yaml\nfrom ament_index_python.packages import get_package_share_directory\npkg=Path(get_package_share_directory('oomwoo_gazebo'))\nresult={'gazebo_share':str(pkg),'worlds':[],'dock_models':[],'existing_maps':[]}\nfor path in sorted((pkg/'worlds').glob('*.world')):\n tree=ET.parse(path)\n entry={'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'includes':[],'dock_named_elements':[]}\n for include in tree.findall('.//include'):\n  uri=include.findtext('uri','');name=include.findtext('name','');pose=include.findtext('pose','')\n  entry['includes'].append({'uri':uri,'name':name,'pose':pose})\n for elem in tree.findall('.//model'):\n  name=elem.get('name','')\n  if 'dock' in name.lower() or 'charg' in name.lower():entry['dock_named_elements'].append({'name':name,'pose':elem.findtext('pose','')})\n result['worlds'].append(entry)\nfor path in sorted((pkg/'models').rglob('model.sdf')):\n text=path.read_text()\n if 'dock' not in text.lower() and 'charg' not in text.lower() and 'dock' not in str(path).lower():continue\n tree=ET.fromstring(text)\n result['dock_models'].append({'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'model_names':[m.get('name','') for m in tree.findall('.//model')],'dock_includes':[{'uri':i.findtext('uri',''),'name':i.findtext('name',''),'pose':i.findtext('pose','')} for i in tree.findall('.//include') if 'dock' in i.findtext('uri','').lower() or 'charg' in i.findtext('uri','').lower()]})\nfor path in sorted(Path('/work/src/oomwoo_sim_support/maps').glob('*.yaml')):\n result['existing_maps'].append({'path':str(path),'metadata':yaml.safe_load(path.read_text()),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})\nprint('STOCK_DOCK_INVENTORY '+json.dumps(result))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-656: Bateria local qwen3.5-9b micro\u00bb desde hace 0 min (pid 3217633). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-656\u00bb.\n",
+  "resources": {
+    "meminfo": "MemAvailable:   10484844 kB",
+    "load": "1.31 1.26 1.28 3/2409 3234091"
+  },
+  "scope": "Read-only installed-world/model/map inventory. No ROS nodes, Gazebo, planning or hardware execution.",
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU exception.",
+  "result": {
+    "gazebo_share": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo",
+    "worlds": [
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/contour_torture.world",
+        "sha256": "c3e22b8a5adcef989d39522ebde69a34df1de5e9cacd86a23c308147421506ec",
+        "includes": [
+          {
+            "uri": "model://ground plane",
+            "name": "ground_plane",
+            "pose": "0 0 0 0 0 0"
+          }
+        ],
+        "dock_named_elements": []
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/empty.world",
+        "sha256": "9fd243f4a1ea1f1ec5a0fffa2d8d46b480556252a5967e89ed297d7c31c8c87a",
+        "includes": [],
+        "dock_named_elements": []
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world",
+        "sha256": "42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9",
+        "includes": [
+          {
+            "uri": "model://ground plane",
+            "name": "ground_plane",
+            "pose": "0 0 0 0 0 0"
+          },
+          {
+            "uri": "model://room_wall_25x4m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_25x4m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_25x5m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_25x5m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://door_08x2m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://vacuum_dock",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://charging_dock_basic",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://makerspet_poster",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://window_curtains",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://window_curtains",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://window_curtains_small",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://fridge_double_door",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_base_run_w",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://Oven",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_base_run_e",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://range_hood",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_wall_cab_w",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_wall_cab_e",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://coffee_maker",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_base_run_east",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://dishwasher",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_wall_cab_ec",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_wall_cab_es",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kitchen_pantry",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://DiningTable",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://DiningChair",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://DiningChair",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://DiningChair",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://DiningChair",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://person_standing",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://PatientFSit",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://salad_plate",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://pressure_cooker",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://toaster_4_slice",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://dish_drainer",
+            "name": "",
+            "pose": ""
+          }
+        ],
+        "dock_named_elements": [
+          {
+            "name": "vacuum_dock",
+            "pose": "-2.45 -0.5 0 0 -0 1.5708"
+          },
+          {
+            "name": "charging_dock_basic",
+            "pose": "-1.9 -1.9 0 0 -0 3.1416"
+          }
+        ]
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world",
+        "sha256": "ade1e9a53a027511ecea70b33d33898ac424e6ad219a913654ed51664db91116",
+        "includes": [
+          {
+            "uri": "model://ground plane",
+            "name": "ground_plane",
+            "pose": "0 0 0 0 0 0"
+          },
+          {
+            "uri": "model://makerspet_poster",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://kaiaai_poster",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_2x5m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_2x5m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_2x5m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://room_wall_2x5m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://Chair",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://door_08x2m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://Cabinet",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://Bookshelf",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://cat_figurines",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://FemaleVisitorSit",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://LampAndStand",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://MaleVisitorSit",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://MiniSofa",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://decor_vase",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://Sofa",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://decor_vase_tall",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://TVStand",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://red_ball_10in",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://rug_ivory_2m",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://TableMarble",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://tv_65in_emissive",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://window_curtains",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://window_curtains",
+            "name": "",
+            "pose": ""
+          }
+        ],
+        "dock_named_elements": []
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/turtlebot3_house.world",
+        "sha256": "b981427e06e3e244f1896fea3985548f0f57b0c41ddb1fa532e05d98ab03421f",
+        "includes": [
+          {
+            "uri": "model://ground plane",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://sun",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://turtlebot3_house",
+            "name": "",
+            "pose": ""
+          }
+        ],
+        "dock_named_elements": []
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/turtlebot3_world.world",
+        "sha256": "da5aa3352f8f18f89f0e8ff6e46d6006b09ab9d917be64e1f1997123a942f25e",
+        "includes": [
+          {
+            "uri": "model://ground plane",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://sun",
+            "name": "",
+            "pose": ""
+          },
+          {
+            "uri": "model://turtlebot3_world",
+            "name": "",
+            "pose": ""
+          }
+        ],
+        "dock_named_elements": []
+      }
+    ],
+    "dock_models": [
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/charging_dock_basic/model.sdf",
+        "sha256": "071d97f34c2c7e73551f549574a4a80ad8382fd6dc59f3b0c47ecfecc55f2b8c",
+        "model_names": [
+          "charging_dock_basic"
+        ],
+        "dock_includes": []
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/vacuum_dock/model.sdf",
+        "sha256": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+        "model_names": [
+          "vacuum_dock"
+        ],
+        "dock_includes": []
+      }
+    ],
+    "existing_maps": [
+      {
+        "path": "/work/src/oomwoo_sim_support/maps/contour_torture.yaml",
+        "metadata": {
+          "image": "contour_torture.pgm",
+          "mode": "trinary",
+          "resolution": 0.05,
+          "origin": [
+            -3.25,
+            -3.25,
+            0
+          ],
+          "negate": 0,
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.196
+        },
+        "sha256": "ac2b6c43059bc9a9494d83b54c511d997376d263184195be5d0c5eed79f415f8"
+      },
+      {
+        "path": "/work/src/oomwoo_sim_support/maps/living_room.yaml",
+        "metadata": {
+          "image": "living_room.pgm",
+          "mode": "trinary",
+          "resolution": 0.05,
+          "origin": [
+            -2.499,
+            -2.456,
+            0
+          ],
+          "negate": 0,
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.196
+        },
+        "sha256": "1047cc04802915fc30031998c0eab0c8f86b152693da1ffc8568d78d421a0498"
+      },
+      {
+        "path": "/work/src/oomwoo_sim_support/maps/test_room.yaml",
+        "metadata": {
+          "image": "test_room.pgm",
+          "mode": "trinary",
+          "resolution": 0.05,
+          "origin": [
+            -1.6,
+            -3.05,
+            0
+          ],
+          "negate": 0,
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.25
+        },
+        "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+      }
+    ]
+  },
+  "findings": {
+    "dock_models_in_kitchen_dining": [
+      "vacuum_dock",
+      "charging_dock_basic"
+    ],
+    "dock_named_elements_in_living_room": [],
+    "inspected_project_map_yamls": [
+      "contour_torture.yaml",
+      "living_room.yaml",
+      "test_room.yaml"
+    ],
+    "matching_kitchen_map_in_inspected_directory": false,
+    "existing_generator": {
+      "path": "tools/gen_livingroom_map.py",
+      "sha256": "6d047c6fe1ec65f3bd75db0e42665db147e434d8d283ddc52c6592fb7d335914",
+      "accepts_world_models_out_args": true,
+      "fixed_grid": "110x110 at0.05m, origin[-2.75,-2.75]",
+      "fixed_output_basename": "living_room"
+    }
+  },
+  "decision": "For future real NAV/SWEEP/DOCK integration, first admit a world-aligned kitchen_dining map or verify an existing stock map/frame. The existing generator may be reused only after checking its fixed extent and generated collision occupancy. Do not substitute the test_room/living_room map or synthetic free map as evidence of that combination.",
+  "limits": [
+    "Read-only XML/YAML inventory, not a running docking/navigation test.",
+    "Map absence is scoped to inspected project maps, not every installed package or filesystem location.",
+    "Model names and poses do not prove electrical charging, sensor readiness or an automatically compatible map.",
+    "No world, generator, map or production runtime was changed."
+  ]
+}
