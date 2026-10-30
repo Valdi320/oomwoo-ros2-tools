@@ -1,0 +1,329 @@
+{
+  "completed_utc": "2026-10-30T22:29:02.085212+00:00",
+  "rc": 0,
+  "seconds": 3.98,
+  "stdout": "FROZEN_TRACK_SEQUENCE_REVIEW {\"results\": [{\"variant\": \"current\", \"saved\": {\"order\": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0]], \"path_m_with_seed_and_straight_connectors\": 131.0593145429248, \"within_cell_length_m\": 119.01301458127348, \"connector_length_m\": 12.046299961651314, \"whole_tracks_unchanged_or_reversed\": true, \"each_track_once\": true, \"saving_vs_original_saved_m\": 0.0}, \"greedy\": {\"order\": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0]], \"path_m_with_seed_and_straight_connectors\": 131.0593145429248, \"within_cell_length_m\": 119.01301458127348, \"connector_length_m\": 12.046299961651314, \"whole_tracks_unchanged_or_reversed\": true, \"each_track_once\": true, \"saving_vs_original_saved_m\": 0.0}, \"finite_exact_reference\": {\"order\": [[3, 0], [8, 0], [4, 0], [5, 0], [6, 0], [7, 0], [0, 0], [1, 0], [2, 0]], \"path_m_with_seed_and_straight_connectors\": 129.35720257995243, \"within_cell_length_m\": 119.01301458127348, \"connector_length_m\": 10.344187998678947, \"whole_tracks_unchanged_or_reversed\": true, \"each_track_once\": true, \"saving_vs_original_saved_m\": 1.702111962972367}, \"reference_states\": 4608, \"reference_wall_s\": 0.1526147480471991, \"tracks_sha256\": \"55bb11ced638fef052c639a4d8053e5f4c2fe8b7341b78223fcb90d217e92a13\"}, {\"variant\": \"frozen_other_cells_lower_with_caps\", \"saved\": {\"order\": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0]], \"path_m_with_seed_and_straight_connectors\": 131.209676842742, \"within_cell_length_m\": 115.66301458127347, \"connector_length_m\": 15.546662261468526, \"whole_tracks_unchanged_or_reversed\": true, \"each_track_once\": true, \"saving_vs_original_saved_m\": -0.1503622998172034}, \"greedy\": {\"order\": [[0, 0], [1, 0], [3, 1], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [2, 0]], \"path_m_with_seed_and_straight_connectors\": 129.14209658257218, \"within_cell_length_m\": 115.66301458127347, \"connector_length_m\": 13.479082001298707, \"whole_tracks_unchanged_or_reversed\": true, \"each_track_once\": true, \"saving_vs_original_saved_m\": 1.917217960352616}, \"finite_exact_reference\": {\"order\": [[0, 1], [7, 1], [6, 1], [5, 1], [4, 1], [3, 0], [8, 0], [1, 1], [2, 0]], \"path_m_with_seed_and_straight_connectors\": 124.69767863020985, \"within_cell_length_m\": 115.66301458127347, \"connector_length_m\": 9.034664048936378, \"whole_tracks_unchanged_or_reversed\": true, \"each_track_once\": true, \"saving_vs_original_saved_m\": 6.361635912714945}, \"reference_states\": 4608, \"reference_wall_s\": 0.10100720095215365, \"tracks_sha256\": \"bd5efd6765b4d11fcb16bb3269bf80166fae8d8a1abb404d4fdb6cdb71201a23\"}], \"input_receipt_sha256\": \"ab7f58499d1650a623ce35cf1ac3b31d20c7f00fca82814591831ced323169f5\", \"scope\": \"Finite offline9-cell/2direction permutation reference under straight inter-cell connector proxy, not a general production planner. Entire stored track geometry is preserved or reversed; cap variant has previously verified zero footprint loss. No Nav2 route/obstacle detour is inferred and no cleaning/80percent claim.\"}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "python3 -"
+  ],
+  "fixture_python": "\nimport json,math,time,hashlib\nfrom pathlib import Path\np=Path('/work/src/oomwoo_sim_support/docs/evidence/narrow_local_caps_review_20261030.json')\nd=json.loads(p.read_text());seed=(0.,0.);output=[]\nfor name in ('current','frozen_other_cells_lower_with_caps'):\n tracks=d['result']['tracks'][name];n=len(tracks)\n assert n==9,'Finite reference intentionally limited to this recorded9-cell fixture'\n points=[[tuple(p) for p in t['points']] for t in tracks]\n lengths=[sum(math.dist(a,b) for a,b in zip(ps,ps[1:])) for ps in points]\n def ends(i,o):return (points[i][0],points[i][-1]) if o==0 else (points[i][-1],points[i][0])\n def evaluate(order):\n  flat=[]\n  for i,o in order:flat.extend(points[i] if o==0 else points[i][::-1])\n  full=sum(math.dist(a,b) for a,b in zip([seed]+flat,flat))\n  return {'order':order,'path_m_with_seed_and_straight_connectors':full,'within_cell_length_m':sum(lengths),'connector_length_m':full-sum(lengths),'whole_tracks_unchanged_or_reversed':all(sorted(flat.count(p) for p in set(flat))==sorted(sum(ps.count(p) for ps in points) for p in set(flat)) for _ in [0]),'each_track_once':sorted(i for i,o in order)==list(range(n))}\n saved=evaluate([(i,0) for i in range(n)])\n cur=seed;remaining=set(range(n));greedy=[]\n while remaining:\n  _,i,o=min((math.dist(cur,ends(i,o)[0]),i,o) for i in remaining for o in (0,1))\n  greedy.append((i,o));remaining.remove(i);cur=ends(i,o)[1]\n started=time.perf_counter();dp={}\n for i in range(n):\n  for o in (0,1):dp[(1<<i,i,o)]=(math.dist(seed,ends(i,o)[0]),None)\n for mask in range(1,1<<n):\n  for last in range(n):\n   if not mask&(1<<last):continue\n   for o in (0,1):\n    key=(mask,last,o)\n    if key not in dp:continue\n    cost,_=dp[key];end=ends(last,o)[1]\n    for nxt in range(n):\n     if mask&(1<<nxt):continue\n     for q in (0,1):\n      k=(mask|(1<<nxt),nxt,q);candidate=cost+math.dist(end,ends(nxt,q)[0])\n      if k not in dp or candidate<dp[k][0]:dp[k]=(candidate,key)\n full=(1<<n)-1;terminal=min(((full,i,o) for i in range(n) for o in (0,1)),key=lambda k:dp[k][0])\n order=[];key=terminal\n while key is not None:\n  order.append((key[1],key[2]));key=dp[key][1]\n order.reverse();exact=evaluate(order)\n assert exact['each_track_once'] and math.isclose(exact['connector_length_m'],dp[terminal][0],abs_tol=1e-8)\n output.append({'variant':name,'saved':saved,'greedy':evaluate(greedy),'finite_exact_reference':exact,'reference_states':len(dp),'reference_wall_s':time.perf_counter()-started,'tracks_sha256':hashlib.sha256(json.dumps(tracks,sort_keys=True).encode()).hexdigest()})\nbase=output[0]['saved']['path_m_with_seed_and_straight_connectors']\nfor item in output:\n for mode in ('saved','greedy','finite_exact_reference'):item[mode]['saving_vs_original_saved_m']=base-item[mode]['path_m_with_seed_and_straight_connectors']\nprint('FROZEN_TRACK_SEQUENCE_REVIEW '+json.dumps({'results':output,'input_receipt_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'scope':'Finite offline9-cell/2direction permutation reference under straight inter-cell connector proxy, not a general production planner. Entire stored track geometry is preserved or reversed; cap variant has previously verified zero footprint loss. No Nav2 route/obstacle detour is inferred and no cleaning/80percent claim.'}))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene «fifo-790: Examen focal equipo ejecutar» desde hace 0 min (pid 3925537). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno «fifo-790».\n",
+  "resource_authorization": "Existing compatible .25CPU/512MiB/noGPU authorization; read-only mounted source, in-memory variants, no native simulation.",
+  "result": {
+    "results": [
+      {
+        "variant": "current",
+        "saved": {
+          "order": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          "path_m_with_seed_and_straight_connectors": 131.0593145429248,
+          "within_cell_length_m": 119.01301458127348,
+          "connector_length_m": 12.046299961651314,
+          "whole_tracks_unchanged_or_reversed": true,
+          "each_track_once": true,
+          "saving_vs_original_saved_m": 0.0
+        },
+        "greedy": {
+          "order": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          "path_m_with_seed_and_straight_connectors": 131.0593145429248,
+          "within_cell_length_m": 119.01301458127348,
+          "connector_length_m": 12.046299961651314,
+          "whole_tracks_unchanged_or_reversed": true,
+          "each_track_once": true,
+          "saving_vs_original_saved_m": 0.0
+        },
+        "finite_exact_reference": {
+          "order": [
+            [
+              3,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "path_m_with_seed_and_straight_connectors": 129.35720257995243,
+          "within_cell_length_m": 119.01301458127348,
+          "connector_length_m": 10.344187998678947,
+          "whole_tracks_unchanged_or_reversed": true,
+          "each_track_once": true,
+          "saving_vs_original_saved_m": 1.702111962972367
+        },
+        "reference_states": 4608,
+        "reference_wall_s": 0.1526147480471991,
+        "tracks_sha256": "55bb11ced638fef052c639a4d8053e5f4c2fe8b7341b78223fcb90d217e92a13"
+      },
+      {
+        "variant": "frozen_other_cells_lower_with_caps",
+        "saved": {
+          "order": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ]
+          ],
+          "path_m_with_seed_and_straight_connectors": 131.209676842742,
+          "within_cell_length_m": 115.66301458127347,
+          "connector_length_m": 15.546662261468526,
+          "whole_tracks_unchanged_or_reversed": true,
+          "each_track_once": true,
+          "saving_vs_original_saved_m": -0.1503622998172034
+        },
+        "greedy": {
+          "order": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              5,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "path_m_with_seed_and_straight_connectors": 129.14209658257218,
+          "within_cell_length_m": 115.66301458127347,
+          "connector_length_m": 13.479082001298707,
+          "whole_tracks_unchanged_or_reversed": true,
+          "each_track_once": true,
+          "saving_vs_original_saved_m": 1.917217960352616
+        },
+        "finite_exact_reference": {
+          "order": [
+            [
+              0,
+              1
+            ],
+            [
+              7,
+              1
+            ],
+            [
+              6,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              8,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "path_m_with_seed_and_straight_connectors": 124.69767863020985,
+          "within_cell_length_m": 115.66301458127347,
+          "connector_length_m": 9.034664048936378,
+          "whole_tracks_unchanged_or_reversed": true,
+          "each_track_once": true,
+          "saving_vs_original_saved_m": 6.361635912714945
+        },
+        "reference_states": 4608,
+        "reference_wall_s": 0.10100720095215365,
+        "tracks_sha256": "bd5efd6765b4d11fcb16bb3269bf80166fae8d8a1abb404d4fdb6cdb71201a23"
+      }
+    ],
+    "input_receipt_sha256": "ab7f58499d1650a623ce35cf1ac3b31d20c7f00fca82814591831ced323169f5",
+    "scope": "Finite offline9-cell/2direction permutation reference under straight inter-cell connector proxy, not a general production planner. Entire stored track geometry is preserved or reversed; cap variant has previously verified zero footprint loss. No Nav2 route/obstacle detour is inferred and no cleaning/80percent claim."
+  }
+}

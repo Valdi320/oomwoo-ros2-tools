@@ -1,0 +1,336 @@
+{
+  "completed_utc": "2026-10-30T22:30:21.198085+00:00",
+  "rc": 0,
+  "seconds": 3.598,
+  "stdout": "FROZEN_TRACK_TWO_OPT_REVIEW {\"results\": [{\"variant\": \"current\", \"seed\": [0.0, 0.0], \"initial_greedy_m\": 131.05931454292477, \"final_with_seed_m\": 131.05931454292477, \"saving_vs_original_saved_m\": 2.842170943040401e-14, \"gap_to_finite_exact_reference_m\": 1.7021119629723387, \"steps\": [], \"final_order\": [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0]], \"converged\": true, \"iteration_cap\": 81, \"tracks_unchanged_or_fully_reversed\": true, \"intra_cell_chords_preserved\": true}, {\"variant\": \"frozen_other_cells_lower_with_caps\", \"seed\": [0.0, 0.0], \"initial_greedy_m\": 129.14209658257218, \"final_with_seed_m\": 124.69767863020982, \"saving_vs_original_saved_m\": 6.3616359127149735, \"gap_to_finite_exact_reference_m\": -2.842170943040401e-14, \"steps\": [{\"iteration\": 1, \"path_m\": 128.4072954701708, \"order\": [[0, 0], [1, 0], [8, 1], [7, 1], [6, 1], [5, 1], [4, 1], [3, 0], [2, 0]]}, {\"iteration\": 2, \"path_m\": 126.65444329421855, \"order\": [[0, 0], [1, 0], [8, 1], [3, 1], [4, 0], [5, 0], [6, 0], [7, 0], [2, 0]]}, {\"iteration\": 3, \"path_m\": 126.39446377960617, \"order\": [[0, 0], [7, 1], [6, 1], [5, 1], [4, 1], [3, 0], [8, 0], [1, 1], [2, 0]]}, {\"iteration\": 4, \"path_m\": 124.69767863020982, \"order\": [[0, 1], [7, 1], [6, 1], [5, 1], [4, 1], [3, 0], [8, 0], [1, 1], [2, 0]]}], \"final_order\": [[0, 1], [7, 1], [6, 1], [5, 1], [4, 1], [3, 0], [8, 0], [1, 1], [2, 0]], \"converged\": true, \"iteration_cap\": 81, \"tracks_unchanged_or_fully_reversed\": true, \"intra_cell_chords_preserved\": true}], \"input_sha256\": {\"narrow_local_caps_review_20261030.json\": \"ab7f58499d1650a623ce35cf1ac3b31d20c7f00fca82814591831ced323169f5\", \"narrow_frozen_sequence_review_20261030.json\": \"25ee946e8e7bf47629c48fc56080c7b4473e0efece043ad25145c530a9dcc7f6\"}, \"scope\": \"Offline cost reference using saved tracks and complete block reversal with direction reversal. No production algorithm, planner rerun, DP rerun, Gazebo, Nav2 path or physical operation.\"}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "python3 -"
+  ],
+  "fixture_python": "\nimport json,math,hashlib\nfrom pathlib import Path\nbase=Path('/work/src/oomwoo_sim_support/docs/evidence')\ntracks_path=base/'narrow_local_caps_review_20261030.json';reference_path=base/'narrow_frozen_sequence_review_20261030.json'\ntracks_doc=json.loads(tracks_path.read_text());reference=json.loads(reference_path.read_text())\nresults=[]\nfor item in reference['result']['results']:\n label=item['variant'];tracks=tracks_doc['result']['tracks'][label]\n points=[t['points'] for t in tracks];n=len(points);seed=(0.,0.)\n internal=sum(math.dist(a,b) for ps in points for a,b in zip(ps,ps[1:]))\n def ends(i,o):return (points[i][0],points[i][-1]) if o==0 else (points[i][-1],points[i][0])\n def cost(order):\n  cur=seed;total=internal\n  for i,o in order:\n   entry,exit=ends(i,o);total+=math.dist(cur,entry);cur=exit\n  return total\n order=[tuple(x) for x in item['greedy']['order']];initial=cost(order);steps=[];converged=False\n for iteration in range(n*n):\n  original=cost(order);best=original;chosen=None\n  for i in range(n):\n   for j in range(i+1,n+1):\n    trial=order[:i]+[(k,1-o) for k,o in reversed(order[i:j])]+order[j:]\n    value=cost(trial)\n    if value<best-1e-9:best,chosen=value,trial\n  if chosen is None:converged=True;break\n  order=chosen;steps.append({'iteration':iteration+1,'path_m':best,'order':order})\n final=cost(order)\n assert sorted(i for i,o in order)==list(range(n))\n assert all(o in (0,1) for i,o in order)\n flat=[]\n for i,o in order:flat.extend(points[i] if o==0 else points[i][::-1])\n actual=sum(math.dist(a,b) for a,b in zip([seed]+flat,flat))\n assert math.isclose(final,actual,abs_tol=1e-8)\n results.append({'variant':label,'seed':[0.,0.],'initial_greedy_m':initial,'final_with_seed_m':final,'saving_vs_original_saved_m':reference['result']['results'][0]['saved']['path_m_with_seed_and_straight_connectors']-final,'gap_to_finite_exact_reference_m':final-item['finite_exact_reference']['path_m_with_seed_and_straight_connectors'],'steps':steps,'final_order':order,'converged':converged,'iteration_cap':n*n,'tracks_unchanged_or_fully_reversed':True,'intra_cell_chords_preserved':True})\nprint('FROZEN_TRACK_TWO_OPT_REVIEW '+json.dumps({'results':results,'input_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (tracks_path,reference_path)},'scope':'Offline cost reference using saved tracks and complete block reversal with direction reversal. No production algorithm, planner rerun, DP rerun, Gazebo, Nav2 path or physical operation.'}))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene «fifo-793: Examen focal equipo ejecutar» desde hace 0 min (pid 3927186). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno «fifo-793».\n",
+  "resource_authorization": "Existing compatible .25CPU/512MiB/noGPU authorization; read-only mounted source, in-memory variants, no native simulation.",
+  "result": {
+    "results": [
+      {
+        "variant": "current",
+        "seed": [
+          0.0,
+          0.0
+        ],
+        "initial_greedy_m": 131.05931454292477,
+        "final_with_seed_m": 131.05931454292477,
+        "saving_vs_original_saved_m": 2.842170943040401e-14,
+        "gap_to_finite_exact_reference_m": 1.7021119629723387,
+        "steps": [],
+        "final_order": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            8,
+            0
+          ]
+        ],
+        "converged": true,
+        "iteration_cap": 81,
+        "tracks_unchanged_or_fully_reversed": true,
+        "intra_cell_chords_preserved": true
+      },
+      {
+        "variant": "frozen_other_cells_lower_with_caps",
+        "seed": [
+          0.0,
+          0.0
+        ],
+        "initial_greedy_m": 129.14209658257218,
+        "final_with_seed_m": 124.69767863020982,
+        "saving_vs_original_saved_m": 6.3616359127149735,
+        "gap_to_finite_exact_reference_m": -2.842170943040401e-14,
+        "steps": [
+          {
+            "iteration": 1,
+            "path_m": 128.4072954701708,
+            "order": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                8,
+                1
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                6,
+                1
+              ],
+              [
+                5,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ]
+          },
+          {
+            "iteration": 2,
+            "path_m": 126.65444329421855,
+            "order": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                8,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                0
+              ],
+              [
+                5,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ]
+          },
+          {
+            "iteration": 3,
+            "path_m": 126.39446377960617,
+            "order": [
+              [
+                0,
+                0
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                6,
+                1
+              ],
+              [
+                5,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ]
+          },
+          {
+            "iteration": 4,
+            "path_m": 124.69767863020982,
+            "order": [
+              [
+                0,
+                1
+              ],
+              [
+                7,
+                1
+              ],
+              [
+                6,
+                1
+              ],
+              [
+                5,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                8,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                0
+              ]
+            ]
+          }
+        ],
+        "final_order": [
+          [
+            0,
+            1
+          ],
+          [
+            7,
+            1
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            8,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "converged": true,
+        "iteration_cap": 81,
+        "tracks_unchanged_or_fully_reversed": true,
+        "intra_cell_chords_preserved": true
+      }
+    ],
+    "input_sha256": {
+      "narrow_local_caps_review_20261030.json": "ab7f58499d1650a623ce35cf1ac3b31d20c7f00fca82814591831ced323169f5",
+      "narrow_frozen_sequence_review_20261030.json": "25ee946e8e7bf47629c48fc56080c7b4473e0efece043ad25145c530a9dcc7f6"
+    },
+    "scope": "Offline cost reference using saved tracks and complete block reversal with direction reversal. No production algorithm, planner rerun, DP rerun, Gazebo, Nav2 path or physical operation."
+  },
+  "delivery": {
+    "demonstrated_utility": "A narrow-cell one-pass replacement with two endpoint caps preserves every baseline free-floor footprint cell in this static fixture. Pure local replacement loses .150m; reordering/reversing saved complete cell tracks yields6.3616m straight-connector saving with all intra-cell geometry preserved.",
+    "acceptance_status": "Promising static construction; production adoption and native90/80 remain unproved.",
+    "minimum_completed": "Exact cap footprint contrast, serialized reusable tracks, finite9-cell/2direction reference, bounded block-reversal heuristic reaching that reference in4improvements without changing other cell geometry.",
+    "cost_observed_s": {
+      "cap_measurement": 8.582,
+      "finite_reference": 3.98,
+      "bounded_heuristic": 3.598
+    },
+    "resource_policy": ".25CPU/512MiB/noGPU; busy machine reported and authorized coexistence used.",
+    "next_increment": "Re-evaluate baseline/final candidate connectors on the actual inflated free grid with obstacle-aware8-neighbor distances and no diagonal corner cutting; no production planner or native trial yet.",
+    "decision": "Advance the measured candidate to obstacle-aware screening; no unconditional narrow-row deletion or exponential production solver.",
+    "evidence_that_changes_decision": "Obstacle-aware savings disappear, new lost swath or inadmissible segments, or proof that a general bounded implementation cannot preserve these guarantees at reasonable cost.",
+    "remaining_scope": "Runtime dynamic pruning, actual Nav2 routes and first90% efficiency; latest full native requirement still fails96%/77.34. No physical robot, charging or maintainer API approval."
+  }
+}
