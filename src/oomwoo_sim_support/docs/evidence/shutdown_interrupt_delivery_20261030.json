@@ -1,0 +1,62 @@
+{
+  "completed_utc": "2026-10-30T19:29:31.787564+00:00",
+  "use": "Close the owned launch after a completed scorer without relying indefinitely on a native Gazebo stop ACK; preserve failure provenance.",
+  "utility_demonstrated": "Actual native stop accepted, framework shutdown completed, requested Gazebo SIGINT-2 identified,14other auxiliary exits0, scored incomplete-coverage1 retained. Unexpected crashes and earlier interrupts still fault in the existing regression file.",
+  "adopted_wrapper_sha256": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+  "unit": {
+    "receipt": "shutdown_interrupt_after_20261030.json",
+    "cases": 54,
+    "test_seconds": 4.58,
+    "total_seconds": 11.102
+  },
+  "style": "shutdown_interrupt_style_20261030.json",
+  "native": {
+    "receipt": "shutdown_interrupt_native_20261030.json",
+    "ticket": 707,
+    "rc": 1,
+    "seconds": 37.727,
+    "host_timeout": false,
+    "clean_auxiliary_count": 14,
+    "requested_interrupt": {
+      "process": "gazebo-3",
+      "returncode": -2,
+      "classified_only_after_existing_framework_shutdown_and_scorer": true
+    },
+    "keepout": {
+      "valid": true,
+      "poses": 868,
+      "segments": 867,
+      "max_pose_gap_s": 0.02,
+      "crossings": 0,
+      "errors": []
+    },
+    "coverage": 0.0,
+    "scored_end_reason": "wall_timeout",
+    "all12_runtime_hashes_unchanged": true
+  },
+  "causal_before": "shutdown_interrupt_before_20261030.json",
+  "rejected_first_candidate": {
+    "receipt": "shutdown_ack_native_20261030.json",
+    "ticket": 705,
+    "rc": 3,
+    "why": "Framework-requested SIGINT logged and returned-2 was classified as process failure. The source as tested705 was not adopted."
+  },
+  "functional_changes": [
+    "Remove positive-ACK shortcut and always use existing Launch shutdown.",
+    "Fuse exit classification with existing context.is_shutdown and completed result0/1/2; only requested SIGINT-2 is expected and explicitly logged.",
+    "Retain all other nonzero exits and pre-shutdown/pre-result interrupts as failures."
+  ],
+  "no_new_timer_node_tool_or_persistent_flag": true,
+  "limits": [
+    "This is passive closure validation, not a successful cleaning acceptance or combined controller run.",
+    "Historical Gazebo139/EventT defect is not repaired by this change; such exits still fail.",
+    "One short native contrast does not establish universal shutdown reliability.",
+    "Old688hang is not recreated; bounded existing framework shutdown is now retained instead of skipped."
+  ],
+  "distance_to_useful_milestone": "Closure increment complete. Masked90/80 performance and real NAV/SWEEP/DOCK cycle remain.",
+  "next_increment": "Run the already prepared joint-cycle smoke fixture after reusing this exact exit classifier in its existing observer.",
+  "decision": "Consolidate closure; prioritize the combined integration over more standalone/passive closure variants.",
+  "decision_changing_evidence": "A real unclassified failure or future hang requires a targeted source/transport diagnosis; do not ignore a nonzero exit to obtain pass.",
+  "physical_robot_moved": false,
+  "remote_writes": false
+}

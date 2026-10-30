@@ -1291,3 +1291,27 @@ The native maneuver was not repeated: its driver source is unchanged.
 Decision: consolidate the reviewed driver and avoid more standalone docking
 variants. Active NAV/SWEEP/DOCK ownership in one run and masked90/80 acceptance
 still remain; neither electrical charging nor physical S12 operation is proved.
+
+
+### Close the launch after a native stop acknowledgement
+
+A previous native stop returned `data: true` while Gazebo and Launch remained
+alive. The wrapper now always requests the existing Launch shutdown after its
+bounded native stop RPC. The first private candidate exposed a classification
+error: Launch sent SIGINT to Gazebo, which returned -2 and was counted as a
+process failure. That candidate was rejected. The adopted callback recognizes
+only SIGINT -2 after the existing shutdown context and completed scorer result;
+it logs that provenance explicitly. Every other nonzero exit, including139
+and earlier interrupts, remains a failure. No timer, node or persistent state
+was added.
+
+The [closure delivery receipt](../src/oomwoo_sim_support/docs/evidence/shutdown_interrupt_delivery_20261030.json)
+records 54 scorer/launcher cases, style/syntax checks and native707. The same
+passive20s observation completed in37.727s with14 auxiliary exits0, the expected
+Gazebo interrupt and scored wall-time exit1. Its868 poses/867 chords were valid
+with0 forbidden crossings; all12 runtime fingerprints stayed unchanged. This
+is closure evidence, not cleaning acceptance. The Gazebo139 defect remains
+observable as a failure, and the historical long-run hang was not recreated.
+
+Decision: consolidate this bounded closure and move to the prepared short
+NAV/SWEEP/DOCK integration. Full masked90/80 performance remains open.

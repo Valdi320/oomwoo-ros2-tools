@@ -83,7 +83,13 @@ def scored(event, context):
     # A required-server Shutdown may leave LaunchService returning zero even
     # when Gazebo exits139 after a positive stop ACK. Never hide that failure.
     if event.action is not scorer:
-        if event.returncode != 0:
+        # Launch sends SIGINT to its children after the scorer has finished.
+        # Only that already-requested shutdown explains POSIX returncode -2.
+        # Preserve every other nonzero exit, including crashes after stop ACK.
+        if event.returncode == -2 and context.is_shutdown and result[0] in (0, 1, 2):
+            print('COVERAGE_EXPECTED_SHUTDOWN_INTERRUPT', event.process_name,
+                  event.returncode, flush=True)
+        elif event.returncode != 0:
             execution_failed[0] = True
             print('COVERAGE_PROCESS_FAILURE', event.process_name,
                   event.returncode, flush=True)
@@ -91,7 +97,8 @@ def scored(event, context):
     result[0] = event.returncode if event.returncode in (0, 1, 2) else 3
     # Stop the owned server through Gazebo before Launch signals its children.
     # The CLI bounds discovery/request time; this callback has a final bound too.
-    # Failure keeps the existing Launch shutdown path and the scored result.
+    # An accepted request does not prove server exit: always request the
+    # existing Launch shutdown, retaining the scored result and child failures.
     try:
         stopped = subprocess.run([
             'gz', 'service', '-s', '/server_control',
@@ -100,11 +107,6 @@ def scored(event, context):
             capture_output=True, text=True, timeout=4)
         print('GZ_NATIVE_STOP', stopped.returncode, stopped.stdout.strip(),
               stopped.stderr.strip(), flush=True)
-        if (stopped.returncode == 0 and any(
-                line.strip() == 'data: true' for line in stopped.stdout.splitlines())):
-            # sim_bringup already requires Gazebo: its own exit shuts down the
-            # launch. Signalling it here would interrupt native teardown.
-            return []
     except (OSError, subprocess.TimeoutExpired) as exc:
         print('GZ_NATIVE_STOP unavailable:', exc, flush=True)
     return [EmitEvent(event=Shutdown(reason='coverage scorer finished'))]

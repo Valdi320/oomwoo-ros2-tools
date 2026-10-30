@@ -269,9 +269,12 @@ def test_wrapper_retains_owned_process_failures(
         cmd=[sys.executable, '-c',
              f'import time; time.sleep(.05); raise SystemExit({score_code})'],
         name='fixture_scorer', output='screen')
+    child_program = (
+        'import signal, sys, time\n'
+        f'signal.signal(signal.SIGINT, lambda *_: sys.exit({child_code}))\n'
+        f'time.sleep({child_delay})\nraise SystemExit({child_code})')
     child = ExecuteProcess(
-        cmd=[sys.executable, '-c',
-             f'import time; time.sleep({child_delay}); raise SystemExit({child_code})'],
+        cmd=[sys.executable, '-c', child_program],
         name='fixture_required_server', output='screen')
     stack = GroupAction(actions=[
         RegisterEventHandler(OnProcessExit(target_action=child, on_exit=[
@@ -630,3 +633,73 @@ def test_inactive_meter_still_observes_independent_keepout_truth(fused_meter):
     assert not fused_meter.covered.any()
     audit = fused_meter._audit_keepout_result()
     assert audit['poses'] == 2 and audit['valid']
+
+
+def test_native_stop_ack_keeps_existing_launch_shutdown_request():
+    """An accepted native stop cannot replace closing the owned launch."""
+    import ast
+    from pathlib import Path
+    from launch.actions import EmitEvent
+    from launch.events import Shutdown
+
+    root = Path(__file__).resolve().parents[3]
+    wrapper = (root / 'deploy/run_coverage_regression.sh').read_text()
+    embedded = wrapper.split("<<'PY'\n", 1)[1].split('\nPY\n', 1)[0]
+    callback = next(item for item in ast.parse(embedded).body
+                    if isinstance(item, ast.FunctionDef) and item.name == 'scored')
+    scorer = object()
+    captured = []
+
+    def emit(*, event):
+        action = EmitEvent(event=event)
+        captured.append((action, event))
+        return action
+
+    namespace = {
+        'scorer': scorer, 'result': [3], 'execution_failed': [False],
+        'EmitEvent': emit, 'Shutdown': Shutdown,
+        'subprocess': SimpleNamespace(run=lambda *a, **kw: SimpleNamespace(
+            returncode=0, stdout='data: true\n', stderr='')),
+    }
+    exec(compile(ast.Module(body=[callback], type_ignores=[]),
+                 'actual-wrapper-stop-callback', 'exec'), namespace)
+    actions = namespace['scored'](SimpleNamespace(
+        action=scorer, returncode=1, process_name='fixture_scorer'), None)
+    assert namespace['result'] == [1]
+    assert not namespace['execution_failed'][0]
+    assert any(action in actions and isinstance(event, Shutdown)
+               for action, event in captured), 'native ACK does not prove server exit'
+
+
+@pytest.mark.parametrize('shutdown,score_code,child_code,expected_fault', [
+    (False, 0, -2, True),
+    (True, 3, -2, True),
+    (True, 0, -2, False),
+    (True, 1, -2, False),
+    (True, 2, -2, False),
+    (True, 0, 139, True),
+    (True, 0, -11, True),
+    (True, 0, -15, True),
+    (False, 0, 139, True),
+])
+def test_framework_stop_interrupt_keeps_exit_provenance(
+        shutdown, score_code, child_code, expected_fault):
+    """Only a completed scorer plus existing framework shutdown explains SIGINT."""
+    import ast
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[3]
+    wrapper = (root / 'deploy/run_coverage_regression.sh').read_text()
+    embedded = wrapper.split("<<'PY'\n", 1)[1].split('\nPY\n', 1)[0]
+    callback = next(item for item in ast.parse(embedded).body
+                    if isinstance(item, ast.FunctionDef) and item.name == 'scored')
+    scorer = object()
+    namespace = {'scorer': scorer, 'result': [score_code], 'execution_failed': [False]}
+    exec(compile(ast.Module(body=[callback], type_ignores=[]),
+                 'actual-wrapper-exit-provenance', 'exec'), namespace)
+    actions = namespace['scored'](SimpleNamespace(
+        action=object(), returncode=child_code, process_name='fixture_server'),
+        SimpleNamespace(is_shutdown=shutdown))
+    assert actions == []
+    assert namespace['result'] == [score_code]
+    assert namespace['execution_failed'][0] is expected_fault

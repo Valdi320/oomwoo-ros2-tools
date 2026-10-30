@@ -1,0 +1,46 @@
+{
+  "completed_utc": "2026-10-30T18:48:32.223609+00:00",
+  "rc": 0,
+  "seconds": 11.189,
+  "stdout": ".............................................                            [100%]\n45 passed in 4.34s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-shutdown-ack-26b646a0f8/ros:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:${PYTHONPATH:-} python3 -m pytest -q -p no:cacheprovider /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py"
+  ],
+  "guard": {
+    "rc": 0,
+    "stdout": "LIBRE: carga 0.77, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14856 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "stderr": ""
+  },
+  "candidate": {
+    "prepared_utc": "2026-10-30T18:45:01.292098+00:00",
+    "baseline_prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/prestart_credit_native_prepared_20261030.json",
+    "freeze": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-shutdown-ack-26b646a0f8",
+    "scope": "Private wrapper/test candidate; no production changes. Positive native ACK must still request existing Launch shutdown. Existing child-exit fixture handles normal SIGINT while retaining its requested failure code."
+  },
+  "scope": "One existing scorer test file; private wrapper removes ACK shortcut. No production change.",
+  "resource_authorization": "Existing compatible .25CPU/512MiB/noGPU exception."
+}

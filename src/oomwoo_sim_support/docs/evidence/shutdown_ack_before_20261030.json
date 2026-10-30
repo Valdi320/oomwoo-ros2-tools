@@ -1,0 +1,41 @@
+{
+  "completed_utc": "2026-10-30T18:45:10.049592+00:00",
+  "rc": 1,
+  "seconds": 8.527,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_________ test_native_stop_ack_keeps_existing_launch_shutdown_request __________\n\n    def test_native_stop_ack_keeps_existing_launch_shutdown_request():\n        \"\"\"An accepted native stop cannot replace closing the owned launch.\"\"\"\n        import ast\n        from pathlib import Path\n        from launch.actions import EmitEvent\n        from launch.events import Shutdown\n    \n        root = Path(__file__).resolve().parents[3]\n        wrapper = (root / 'deploy/run_coverage_regression.sh').read_text()\n        embedded = wrapper.split(\"<<'PY'\\n\", 1)[1].split('\\nPY\\n', 1)[0]\n        callback = next(item for item in ast.parse(embedded).body\n                        if isinstance(item, ast.FunctionDef) and item.name == 'scored')\n        scorer = object()\n        captured = []\n    \n        def emit(*, event):\n            action = EmitEvent(event=event)\n            captured.append((action, event))\n            return action\n    \n        namespace = {\n            'scorer': scorer, 'result': [3], 'execution_failed': [False],\n            'EmitEvent': emit, 'Shutdown': Shutdown,\n            'subprocess': SimpleNamespace(run=lambda *a, **kw: SimpleNamespace(\n                returncode=0, stdout='data: true\\n', stderr='')),\n        }\n        exec(compile(ast.Module(body=[callback], type_ignores=[]),\n                     'actual-wrapper-stop-callback', 'exec'), namespace)\n        actions = namespace['scored'](SimpleNamespace(\n            action=scorer, returncode=1, process_name='fixture_scorer'), None)\n        assert namespace['result'] == [1]\n        assert not namespace['execution_failed'][0]\n>       assert any(action in actions and isinstance(event, Shutdown)\n                   for action, event in captured), 'native ACK does not prove server exit'\nE       AssertionError: native ACK does not prove server exit\nE       assert False\nE        +  where False = any(<generator object test_native_stop_ack_keeps_existing_launch_shutdown_request.<locals>.<genexpr> at 0x7f08471e9210>)\n\n/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py:670: AssertionError\n----------------------------- Captured stdout call -----------------------------\nGZ_NATIVE_STOP 0 data: true \n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py::test_native_stop_ack_keeps_existing_launch_shutdown_request\n1 failed, 44 deselected in 1.50s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-shutdown-ack-26b646a0f8/ros:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:${PYTHONPATH:-} python3 -m pytest -q -p no:cacheprovider /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py -k test_native_stop_ack_keeps_existing_launch_shutdown_request"
+  ],
+  "candidate": {
+    "prepared_utc": "2026-10-30T18:45:01.292098+00:00",
+    "baseline_prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/prestart_credit_native_prepared_20261030.json",
+    "freeze": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-shutdown-ack-26b646a0f8",
+    "scope": "Private wrapper/test candidate; no production changes. Positive native ACK must still request existing Launch shutdown. Existing child-exit fixture handles normal SIGINT while retaining its requested failure code."
+  },
+  "scope": "Single actual callback and real Launch event constructor, no child process or simulator launched.",
+  "resource_authorization": "Explicit compatible .25CPU/512MiB/noGPU small test exception."
+}
