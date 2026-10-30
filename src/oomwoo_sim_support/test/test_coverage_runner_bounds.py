@@ -286,7 +286,7 @@ def test_wrapper_retains_owned_process_failures(
     monkeypatch.setattr(subprocess, 'run', lambda *a, **k: SimpleNamespace(
         returncode=0, stdout='data: true\n', stderr=''))
     monkeypatch.setattr(sys, 'argv', ['coverage-wrapper', str(tmp_path / 'report.json'),
-                                     'with_meter:=true robot_radius:=0.30'])
+                                      'with_meter:=true robot_radius:=0.30'])
     with pytest.raises(SystemExit) as outcome:
         exec(compile(embedded, 'run_coverage_regression.sh:embedded', 'exec'), {})
     assert outcome.value.code == expected
@@ -451,3 +451,17 @@ def test_regression_launch_can_disable_the_separate_meter():
     assert not meters[0].condition.evaluate(context)
     context.launch_configurations['with_meter'] = 'true'
     assert meters[0].condition.evaluate(context)
+
+
+def test_motion_fault_during_completion_grace_cannot_pass(score):
+    def update(node, tick):
+        node.sweep_started = True
+        node.sweep_complete = True
+        node.coverage = .95
+        node.efficiency = .85
+        node._motion_fault = tick >= 2
+
+    code, report, _ = score(wall=10.0, update=update)
+    assert code == 1
+    assert report['end_reason'] == 'motion_fault'
+    assert not report['pass']

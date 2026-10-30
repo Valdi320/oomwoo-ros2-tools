@@ -1,0 +1,41 @@
+{
+  "completed_utc": "2026-10-30T12:43:10.731884+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 7.8,
+  "stdout": "\n4 files checked\nNo problems found\n\nChecked files:\n\n* /work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py\n* /work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n* /work/src/oomwoo_sim_support/launch/coverage_regression.launch.py\n* /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py\nFILES 4 RC 0\n\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-metrics-style-da68e3fd0a",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=96m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\nbash -n /work/deploy/run_coverage_regression.sh || exit 1\npython3 - <<'STYLE'\nfrom ament_flake8.main import main_with_errors\nfiles = ['/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py', '/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py', '/work/src/oomwoo_sim_support/launch/coverage_regression.launch.py', '/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py']\nrc, errors = main_with_errors(argv=files)\nprint('FILES',len(files),'RC',rc)\nprint('\\n'.join(errors))\nraise SystemExit(rc)\nSTYLE\n"
+  ],
+  "source_sha256": {
+    "src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "76cf7a05e435e9030aeb671ff3701932bd6e8d5d2dca3747e759acbf82ab0510",
+    "src/oomwoo_sim_support/launch/coverage_regression.launch.py": "7ba2f8f826db154bf576554762017678049a40601c4bc713658f1630f3ac21ea",
+    "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "14007bd5136f1e26a9a29a862c673a883c6bf70605b80b8bbbe5580d971191b9"
+  },
+  "resource_authorization": "Explicit owner .25CPU/512MB/noGPU coexistence; guard OCUPADA fifo655; available10GB/load2.85; read-only source, no simulation."
+}

@@ -44,6 +44,8 @@ import os
 import sys
 import time
 
+from oomwoo_sim_support.coverage_meter_node import CoverageMeter
+
 import rclpy
 from rclpy.executors import ExternalShutdownException
 from rclpy.qos import (
@@ -52,8 +54,6 @@ from rclpy.qos import (
     QoSProfile,
     QoSReliabilityPolicy,
 )
-
-from oomwoo_sim_support.coverage_meter_node import CoverageMeter
 
 
 class CoverageRunner(CoverageMeter):
@@ -414,6 +414,8 @@ class CoverageRunner(CoverageMeter):
                 reason = 'max_time'
                 break
 
+        if getattr(self, '_motion_fault', False):
+            reason = 'motion_fault'
         if self.sim_unstable:
             reason = 'sim_unstable'
         # a dead clock or a pose teleport both mean the numbers can't be

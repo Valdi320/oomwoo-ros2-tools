@@ -699,7 +699,7 @@ unproven. The next work is the listed focal modules, individually after LIBRE,
 then a discriminating integration. No simulation or new scheduler was started.
 
 
-### Owned follow-up, 30 October: completed masked sweep and grading WIP
+### Owned follow-up, 30 October: completed masked sweep and coherent grading
 
 This update supersedes the verification-pending journal status above. In the
 owned contribution copy, the bounded journal reopen and the subsequent missing
@@ -723,7 +723,7 @@ performance across homes. DockDrive stayed IDLE.
 
 The [focused pre-change reproduction](../src/oomwoo_sim_support/docs/evidence/metric_pairing_false_pass_before_20261030.json)
 also demonstrates a false pass: new 90.1% coverage paired with previous 80.5%
-efficiency, when the matching efficiency is 79.9%. The current **unverified WIP**
+efficiency, when the matching efficiency is 79.9%. The implementation now
 fuses the existing meter and scorer into one process and takes their three
 metrics from one calculation. It removes the scalar metric inputs and duplicate
 truth/active subscriptions. The regression wrapper disables the separate meter;
@@ -733,15 +733,17 @@ The first target crossing is retained during the existing completion grace too.
 Own previously validated phase snapshots and child-failure exit code 3 are
 carried forward; a positive score must not hide a failed owned process.
 
-Prepared focal cases cover actual ROS construction, coherent report values,
+The [final coherent-grading receipt](../src/oomwoo_sim_support/docs/evidence/metric_pairing_fused_delivery_20261030.json)
+records 29 focused cases passing, four changed Python files passing style, and
+valid wrapper shell syntax. Cases cover actual ROS construction/report calls,
 completion-grace crossings in both directions, real launch-condition evaluation,
-and the existing clock/wall/child-exit contracts. **None of the new fusion or
-grace cases has run yet**: the machine guard reports an active FIFO benchmark,
-and the current machine rules prohibit tests unless it reports LIBRE. These
-source edits are a local WIP, not a tested delivery or a new acceptance result.
-The smallest next check is test_coverage_runner_bounds.py in the existing Jazzy
-image with bounded CPU/RAM, followed by relevant measurement/style checks. Do
-not rerun the full 16-minute scene before those focal checks establish coherence.
+and the existing clock/wall/child-exit contracts. A further causal case exposed
+a motion fault arriving during grace being reported as a pass; the final result
+now retains that fault too. Original red evidence is retained. These are
+synthetic inputs through actual methods, ROS objects and Launch events, not a
+new Gazebo acceptance or hardware result. The owner explicitly authorized
+compatible small tests at .25 CPU/512 MB without GPU, and native tests through
+the existing FIFO. Actual occupied lock results were retained, not bypassed.
 
 The [existing-run transit analysis](../src/oomwoo_sim_support/docs/evidence/transit_timeout_review_20261030.json)
 identifies the next candidate bottleneck without another simulation. Even after
@@ -752,8 +754,10 @@ All four recorded net ground-truth motion; the shorter case is not proven stuck.
 No timeout or route was changed. Increasing all timeouts would also change
 handoff waiting and is not justified by this evidence.
 
-Decision: validate coherent grading first, then assess a narrowly scoped transit
-change against actual distance and acceptance results. Its benefit remains
+Decision: coherent grading is checked at component level. Next compare actual
+cell-entry waypoints with the current bounding-box entry heuristic, using a
+bounded in-memory candidate before changing route production code. Then assess
+a justified transit change against actual distance and native acceptance. Its benefit remains
 unproven; the global useful milestone still needs masked efficiency acceptance
 and an active NAV/SWEEP/DOCK integration. Further variants before this evidence
 would add review and maintenance cost without demonstrated utility. The goal

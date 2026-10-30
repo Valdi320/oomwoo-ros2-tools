@@ -1,0 +1,58 @@
+{
+  "date_utc": "2026-10-30T12:50:17.693506+00:00",
+  "base_commit": "9bd01c78c809a15740a6eb92848aeb431494adac",
+  "utility_demonstrated": [
+    "One measured report supplies coverage, efficiency and revisit together, preventing the demonstrated mixed-report false pass.",
+    "A first target crossing during completion grace keeps its matching efficiency even when later samples cross the threshold in either direction.",
+    "An observed motion fault during grace now prevents a pass; its former false pass is reproduced and retained.",
+    "The regression wrapper disables the separate meter; the real launch condition retains standalone default true.",
+    "True measurement geometry remains independent of the planner margin; real child-exit failures remain execution code3."
+  ],
+  "validation": {
+    "focused_file": "test_coverage_runner_bounds.py",
+    "cases_passed": 29,
+    "final_rc": 0,
+    "final_seconds": 12.511,
+    "style_files": 4,
+    "style_rc": 0,
+    "style_seconds": 7.579,
+    "bash_syntax": "PASS in style command",
+    "actual_ROS_constructors": true,
+    "actual_ROS_publish_calls_and_report_functions": true,
+    "actual_Launch_events_with_synthetic_child_processes": true,
+    "source_sha256": {
+      "deploy/run_coverage_regression.sh": "66e706c709a9b8d0a42eddebf49d5f8dba0e251e9396883fe77961b3da37322f",
+      "src/oomwoo_sim_support/launch/coverage_regression.launch.py": "7ba2f8f826db154bf576554762017678049a40601c4bc713658f1630f3ac21ea",
+      "src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+      "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "adc9349f2485d5cc6321af7d81853ff5243ff0024ec554b4b4b58f52e59d413f",
+      "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "24e4e16e2d8f98af408ab6c3b632232eb9f40c6faf8e04f0add1818be52f6f8e"
+    },
+    "scope": "Synthetic maps/state and bounded deterministic scorer input; no Gazebo, Nav2 action server or hardware."
+  },
+  "failures_retained": [
+    "metric_pairing_false_pass_before_20261030.json",
+    "metric_pairing_fused_style_before_20261030.json",
+    "metric_late_motion_fault_before_20261030.json"
+  ],
+  "limits": [
+    "No new native room result; the preceding masked room remains95.60% coverage and78.72% same-report efficiency at90%, below80%.",
+    "Node/subscription reduction is structural; no whole-system CPU, energy or reliability improvement is claimed.",
+    "Active NAV/SWEEP/DOCK cycle and physical S12 integration remain pending."
+  ],
+  "contracts_preserved": [
+    "90% coverage and80% efficiency gates",
+    "0.1745m robot radius and0.20m cleaning radius in regression wrapper",
+    "Original meter denominator and standalone default",
+    "Existing wall/clock/startup bounds, bounded grace and invalid-simulation handling",
+    "Native owned-server stop and child-failure code3"
+  ],
+  "resource_authorization": "Explicit user goal30Oct allows compatible small tests .25CPU/512MB without GPU; native scenes must use the existing FIFO and may run under their own legitimate lock. Guards were called and their OCUPADA results were not hidden.",
+  "next_increment": {
+    "use": "Reduce unnecessary transit cost without hiding missed goals or weakening safety.",
+    "smallest_check": "Compare actual generated cell-entry endpoints against current bounding-box-corner choice on the existing masked test-room plan, using an in-memory candidate only.",
+    "acceptance": "Record actual path/entry-distance and cost deltas, target validity/coverage-set differences and source hashes. No production route change unless evidence supports its benefit.",
+    "remaining_after_check": "Choose a justified route or transit-budget correction, native acceptance through FIFO, then active docking integration.",
+    "cost_expectation": "Small source-only bounded calculation before another953s native scene; actual preparation/review cost remains unmeasured."
+  },
+  "decision": "Consolidate coherent grading; advance to a cheap discriminating transit analysis. Global useful milestone and sweet spot remain incomplete."
+}

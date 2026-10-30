@@ -1,0 +1,50 @@
+{
+  "completed_utc": "2026-10-30T12:49:03.630544+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 7.579,
+  "stdout": "\n4 files checked\nNo problems found\n\nChecked files:\n\n* /work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py\n* /work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n* /work/src/oomwoo_sim_support/launch/coverage_regression.launch.py\n* /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py\nFILES 4 RC 0\n\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-metrics-late-style-f2a342384d",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=96m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\nbash -n /work/deploy/run_coverage_regression.sh || exit 1\npython3 - <<'STYLE'\nfrom ament_flake8.main import main_with_errors\nfiles = ['/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py', '/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py', '/work/src/oomwoo_sim_support/launch/coverage_regression.launch.py', '/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py']\nrc, errors = main_with_errors(argv=files)\nprint('FILES',len(files),'RC',rc)\nprint('\\n'.join(errors))\nraise SystemExit(rc)\nSTYLE\n"
+  ],
+  "source_sha256": {
+    "src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "adc9349f2485d5cc6321af7d81853ff5243ff0024ec554b4b4b58f52e59d413f",
+    "src/oomwoo_sim_support/launch/coverage_regression.launch.py": "7ba2f8f826db154bf576554762017678049a40601c4bc713658f1630f3ac21ea",
+    "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "24e4e16e2d8f98af408ab6c3b632232eb9f40c6faf8e04f0add1818be52f6f8e"
+  },
+  "machine_lock": {
+    "rc": 1,
+    "stdout": "OCUPADA: la maquina la tiene \u00abfifo-655: Bateria local ornith1.5-9b micro\u00bb desde hace 0 min (pid 3199155). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-655\u00bb.\n",
+    "stderr": ""
+  },
+  "resources": {
+    "mem_available_kb": 10515600,
+    "loadavg": "1.64 1.97 1.95 4/2374 3206312"
+  },
+  "resource_authorization": "Explicit owner compatible small tests .25CPU/512MB/noGPU; genuine lock output retained, no bypass."
+}
