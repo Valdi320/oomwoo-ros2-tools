@@ -1,0 +1,130 @@
+{
+  "raw_receipt": "nav_progress_history_20261030.json",
+  "rc": 1,
+  "seconds": 476.543,
+  "host_timeout": false,
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true
+  },
+  "report": {
+    "coverage": 0.5443,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 1.0,
+    "revisit_ratio": 0.2457,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "motion_fault",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "terminal_goals": {
+    "22a9e537f4f84400ae12154c09c859d9": 4,
+    "64dcdf0186a04e5296382ec1686722aa": 4,
+    "615b11becb4f45bd9ad21b4b9c57c6c7": 4,
+    "6f698954b15a4cf6988794066e4b723c": 4,
+    "f3969d638f4f41778624a2a4b3b73bfd": 4,
+    "1fb451b8062540b78d07442fb73e18be": 4,
+    "d43551c7aa9840d4b001e61440e0a46a": 4,
+    "d3056246788d44529747521c2b643190": 4,
+    "5705c3c77c5445de94bcfbb8b3e7f4ab": 4,
+    "758d9740ce484e7b88fac7f106bb18ae": 5
+  },
+  "lease_revocations": [
+    {
+      "health": {
+        "dock_inactive": true,
+        "isolated_sources": true,
+        "map_current": false,
+        "nav2_active_goal": "758d9740ce484e7b88fac7f106bb18ae",
+        "nav2_idle": false,
+        "pose_fresh": true,
+        "resources_ok": true,
+        "safety_loop_ok": true,
+        "sweep_inactive": true
+      },
+      "original_ages": {
+        "pose_age_ns": 0,
+        "pose_latest_age_ns": 0,
+        "pose_latest_stamp_ns": 454800000000,
+        "pose_stamp_ns": 454800000000,
+        "postfilter_age_ns": 1000000000,
+        "postfilter_dds_age_ns": 1001946663,
+        "postfilter_stamp_ns": 453800000000
+      },
+      "reason": "health contradicts active owner"
+    }
+  ],
+  "aux_clean_exits": 19,
+  "unexpected_process_failures": [],
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 22759,
+    "segments": 22758,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 0.2111571518604205,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 2,
+        "distance_m": 9.020562075079398e-21,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000335276126
+      },
+      "IDLE": {
+        "poses": 818,
+        "distance_m": 4.154330725990845e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.3003088703372022
+      },
+      "SWEEP": {
+        "poses": 13648,
+        "distance_m": 46.59239414363748,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2111571518604205
+      },
+      "PREPARE_NAV": {
+        "poses": 521,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.4662385283834407
+      },
+      "TRANSIT": {
+        "poses": 7770,
+        "distance_m": 18.000176049269545,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2997746830526984
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "focal_trace_count": 0,
+  "limits": [
+    "No90/80 pass or efficiency_at_target value; preserve original safety checks.",
+    "No physical robot/charging claim."
+  ],
+  "conclusion": "Full room stops at54.43% because original post-filter map ROSage1s/DDSage1.001946663s exceeds existing1s deadline. Nine goals succeeded, final goal canceled after lease revocation. No abort105 and selected target not reached.",
+  "next_increment": "Measure actual installed Nav2 costmap publication at update2/publish2 versus publish4, using existing loop, preserve1s freshness budget.",
+  "decision": "Diagnose observed source cadence before another full-room attempt."
+}

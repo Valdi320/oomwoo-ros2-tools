@@ -1,0 +1,461 @@
+{
+  "completed_utc": "2026-10-30T16:51:15.275392+00:00",
+  "rc": 1,
+  "host_timeout": false,
+  "seconds": 35.58,
+  "stdout": "[INFO] [launch]: All log files can be found below /tmp/roslogs/2026-10-30-16-50-46-925537-41a5e7292d0f-42\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [owned_costmap_cadence_target-1]: process started with pid [58]\n[owned_costmap_cadence_target-1] [WARN] [1793379047.112969735] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[owned_costmap_cadence_target-1] [WARN] [1793379047.112982065] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[owned_costmap_cadence_target-1] [INFO] [1793379047.127536662] [global_costmap.global_costmap]: \n[owned_costmap_cadence_target-1] \tglobal_costmap lifecycle node launched. \n[owned_costmap_cadence_target-1] \tWaiting on external lifecycle transitions to activate\n[owned_costmap_cadence_target-1] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[owned_costmap_cadence_target-1] [INFO] [1793379047.128839108] [global_costmap.global_costmap]: Creating Costmap\n[owned_costmap_cadence_target-1] [INFO] [1793379047.381225306] [global_costmap.global_costmap]: Configuring\n[owned_costmap_cadence_target-1] [INFO] [1793379047.385373093] [global_costmap.global_costmap]: Using plugin \"static_layer\"\n[owned_costmap_cadence_target-1] [INFO] [1793379047.387967425] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability\n[owned_costmap_cadence_target-1] [INFO] [1793379047.389007532] [global_costmap.global_costmap]: Initialized plugin \"static_layer\"\n[owned_costmap_cadence_target-1] [INFO] [1793379047.399221522] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 20 X 20 at 0.100000 m/pix\n[owned_costmap_cadence_target-1] [INFO] [1793379047.421327356] [global_costmap.global_costmap]: Activating\n[owned_costmap_cadence_target-1] [INFO] [1793379047.421343026] [global_costmap.global_costmap]: Checking transform\n[owned_costmap_cadence_target-1] [INFO] [1793379047.421416456] [global_costmap.global_costmap]: start\n[INFO] [owned_costmap_cadence_target-1]: sending signal 'SIGINT' to process[owned_costmap_cadence_target-1]\n[owned_costmap_cadence_target-1] [INFO] [1793379073.961512614] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[owned_costmap_cadence_target-1] [INFO] [1793379073.961585774] [global_costmap.global_costmap]: Running Nav2 LifecycleNode rcl preshutdown (global_costmap)\n[owned_costmap_cadence_target-1] [INFO] [1793379073.961632284] [global_costmap.global_costmap]: Deactivating\n[owned_costmap_cadence_target-1] [INFO] [1793379074.421625462] [global_costmap.global_costmap]: Cleaning up\n[owned_costmap_cadence_target-1] [INFO] [1793379074.423182887] [global_costmap.global_costmap]: Destroying bond (global_costmap) to lifecycle manager.\n[owned_costmap_cadence_target-1] [INFO] [1793379074.425511670] [global_costmap.global_costmap]: Destroying\n[ERROR] [owned_costmap_cadence_target-1]: process has died [pid 58, exit code -11, cmd '/opt/ros/jazzy/lib/nav2_costmap_2d/nav2_costmap_2d --ros-args -r __node:=global_costmap -r __ns:=/global_costmap --params-file /tmp/costmap_cadence.yaml'].\nCOSTMAP_CADENCE_RESULT {\"ok\": false, \"scope\": \"Actual installed Nav2 costmap binary, synthetic static map/TF/clock; reused Observer node/subscription, no Gazebo/motor.\", \"clock_quantum_s\": 0.5, \"update_frequency\": 2.0, \"publish_before\": 2.0, \"publish_after\": 4.0, \"summaries\": {\"baseline\": {\"count\": 16, \"ros_gaps_s\": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], \"dds_gaps_s\": [1.000000197, 1.000004227, 0.999997867, 0.999996647, 1.0000046470000001, 0.9999980900000001, 0.99999998, 1.000004197, 0.999993078, 0.9999980690000001, 1.000006749, 0.999998589, 1.0000018880000001, 0.9999981050000001, 0.9999993300000001], \"max_ros_gap_s\": 1.0, \"max_dds_gap_s\": 1.000006749}, \"candidate\": {\"count\": 16, \"ros_gaps_s\": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], \"dds_gaps_s\": [0.49999592000000004, 0.500001068, 0.500002589, 0.49999467000000003, 0.5000116880000001, 0.499994629, 0.500004879, 0.49999340900000006, 0.500002061, 0.49999913100000004, 0.5000029690000001, 0.499993348, 0.50000296, 0.499999919, 0.499998398], \"max_ros_gap_s\": 0.5, \"max_dds_gap_s\": 0.5000116880000001}}, \"samples\": {\"baseline\": [{\"ros_ns\": 2040000000, \"dds_ns\": 1793379047921587144, \"received_wall_ns\": 1793379047936397820, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 3040000000, \"dds_ns\": 1793379048921585491, \"received_wall_ns\": 1793379048933332996, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 4040000000, \"dds_ns\": 1793379049921582839, \"received_wall_ns\": 1793379049929507356, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 5040000000, \"dds_ns\": 1793379050921583036, \"received_wall_ns\": 1793379050929599262, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 6040000000, \"dds_ns\": 1793379051921587263, \"received_wall_ns\": 1793379051927824975, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 7040000000, \"dds_ns\": 1793379052921585130, \"received_wall_ns\": 1793379052923968832, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 8040000000, \"dds_ns\": 1793379053921581777, \"received_wall_ns\": 1793379053940463181, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 9040000000, \"dds_ns\": 1793379054921586424, \"received_wall_ns\": 1793379054937076258, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 10040000000, \"dds_ns\": 1793379055921584514, \"received_wall_ns\": 1793379055934191947, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 11040000000, \"dds_ns\": 1793379056921584494, \"received_wall_ns\": 1793379056930784556, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 12040000000, \"dds_ns\": 1793379057921588691, \"received_wall_ns\": 1793379057927521564, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 13040000000, \"dds_ns\": 1793379058921581769, \"received_wall_ns\": 1793379058924580770, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 14040000000, \"dds_ns\": 1793379059921579838, \"received_wall_ns\": 1793379059941617739, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 15040000000, \"dds_ns\": 1793379060921586587, \"received_wall_ns\": 1793379060939359384, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 16040000000, \"dds_ns\": 1793379061921585176, \"received_wall_ns\": 1793379061935528665, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 17040000000, \"dds_ns\": 1793379062921587064, \"received_wall_ns\": 1793379062932325563, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 18040000000, \"dds_ns\": 1793379063921585169, \"received_wall_ns\": 1793379063928643178, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 19040000000, \"dds_ns\": 1793379064921584499, \"received_wall_ns\": 1793379064925331538, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}], \"candidate\": [{\"ros_ns\": 19540000000, \"dds_ns\": 1793379065421585107, \"received_wall_ns\": 1793379065440534911, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 20040000000, \"dds_ns\": 1793379065921584417, \"received_wall_ns\": 1793379065924174390, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 20540000000, \"dds_ns\": 1793379066421585755, \"received_wall_ns\": 1793379066427400318, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 21040000000, \"dds_ns\": 1793379066921581675, \"received_wall_ns\": 1793379066931111426, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 21540000000, \"dds_ns\": 1793379067421582743, \"received_wall_ns\": 1793379067434432345, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 22040000000, \"dds_ns\": 1793379067921585332, \"received_wall_ns\": 1793379067938077063, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 22540000000, \"dds_ns\": 1793379068421580002, \"received_wall_ns\": 1793379068441660012, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 23040000000, \"dds_ns\": 1793379068921591690, \"received_wall_ns\": 1793379068928324351, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 23540000000, \"dds_ns\": 1793379069421586319, \"received_wall_ns\": 1793379069431972838, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 24040000000, \"dds_ns\": 1793379069921591198, \"received_wall_ns\": 1793379069935450647, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 24540000000, \"dds_ns\": 1793379070421584607, \"received_wall_ns\": 1793379070439286784, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 25040000000, \"dds_ns\": 1793379070921586668, \"received_wall_ns\": 1793379070922366626, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 25540000000, \"dds_ns\": 1793379071421585799, \"received_wall_ns\": 1793379071425727137, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 26040000000, \"dds_ns\": 1793379071921588768, \"received_wall_ns\": 1793379071929064706, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 26540000000, \"dds_ns\": 1793379072421582116, \"received_wall_ns\": 1793379072431885445, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 27040000000, \"dds_ns\": 1793379072921585076, \"received_wall_ns\": 1793379072935231445, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 27540000000, \"dds_ns\": 1793379073421584995, \"received_wall_ns\": 1793379073438370675, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}, {\"ros_ns\": 28040000000, \"dds_ns\": 1793379073921583393, \"received_wall_ns\": 1793379073942066052, \"geometry\": \"7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5\", \"width\": 20, \"height\": 20, \"frame\": \"map\"}]}, \"nav2_version\": \"ros-jazzy-nav2-costmap-2d\\t1.3.13-1noble.20260921.024946\", \"target_exit_codes\": [-11]}\n",
+  "stderr": "[WARN] [1793379046.616864014] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[WARN] [1793379046.616874494] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n",
+  "result": {
+    "ok": false,
+    "scope": "Actual installed Nav2 costmap binary, synthetic static map/TF/clock; reused Observer node/subscription, no Gazebo/motor.",
+    "clock_quantum_s": 0.5,
+    "update_frequency": 2.0,
+    "publish_before": 2.0,
+    "publish_after": 4.0,
+    "summaries": {
+      "baseline": {
+        "count": 16,
+        "ros_gaps_s": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "dds_gaps_s": [
+          1.000000197,
+          1.000004227,
+          0.999997867,
+          0.999996647,
+          1.0000046470000001,
+          0.9999980900000001,
+          0.99999998,
+          1.000004197,
+          0.999993078,
+          0.9999980690000001,
+          1.000006749,
+          0.999998589,
+          1.0000018880000001,
+          0.9999981050000001,
+          0.9999993300000001
+        ],
+        "max_ros_gap_s": 1.0,
+        "max_dds_gap_s": 1.000006749
+      },
+      "candidate": {
+        "count": 16,
+        "ros_gaps_s": [
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ],
+        "dds_gaps_s": [
+          0.49999592000000004,
+          0.500001068,
+          0.500002589,
+          0.49999467000000003,
+          0.5000116880000001,
+          0.499994629,
+          0.500004879,
+          0.49999340900000006,
+          0.500002061,
+          0.49999913100000004,
+          0.5000029690000001,
+          0.499993348,
+          0.50000296,
+          0.499999919,
+          0.499998398
+        ],
+        "max_ros_gap_s": 0.5,
+        "max_dds_gap_s": 0.5000116880000001
+      }
+    },
+    "samples": {
+      "baseline": [
+        {
+          "ros_ns": 2040000000,
+          "dds_ns": 1793379047921587144,
+          "received_wall_ns": 1793379047936397820,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 3040000000,
+          "dds_ns": 1793379048921585491,
+          "received_wall_ns": 1793379048933332996,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 4040000000,
+          "dds_ns": 1793379049921582839,
+          "received_wall_ns": 1793379049929507356,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 5040000000,
+          "dds_ns": 1793379050921583036,
+          "received_wall_ns": 1793379050929599262,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 6040000000,
+          "dds_ns": 1793379051921587263,
+          "received_wall_ns": 1793379051927824975,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 7040000000,
+          "dds_ns": 1793379052921585130,
+          "received_wall_ns": 1793379052923968832,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 8040000000,
+          "dds_ns": 1793379053921581777,
+          "received_wall_ns": 1793379053940463181,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 9040000000,
+          "dds_ns": 1793379054921586424,
+          "received_wall_ns": 1793379054937076258,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 10040000000,
+          "dds_ns": 1793379055921584514,
+          "received_wall_ns": 1793379055934191947,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 11040000000,
+          "dds_ns": 1793379056921584494,
+          "received_wall_ns": 1793379056930784556,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 12040000000,
+          "dds_ns": 1793379057921588691,
+          "received_wall_ns": 1793379057927521564,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 13040000000,
+          "dds_ns": 1793379058921581769,
+          "received_wall_ns": 1793379058924580770,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 14040000000,
+          "dds_ns": 1793379059921579838,
+          "received_wall_ns": 1793379059941617739,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 15040000000,
+          "dds_ns": 1793379060921586587,
+          "received_wall_ns": 1793379060939359384,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 16040000000,
+          "dds_ns": 1793379061921585176,
+          "received_wall_ns": 1793379061935528665,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 17040000000,
+          "dds_ns": 1793379062921587064,
+          "received_wall_ns": 1793379062932325563,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 18040000000,
+          "dds_ns": 1793379063921585169,
+          "received_wall_ns": 1793379063928643178,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 19040000000,
+          "dds_ns": 1793379064921584499,
+          "received_wall_ns": 1793379064925331538,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        }
+      ],
+      "candidate": [
+        {
+          "ros_ns": 19540000000,
+          "dds_ns": 1793379065421585107,
+          "received_wall_ns": 1793379065440534911,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 20040000000,
+          "dds_ns": 1793379065921584417,
+          "received_wall_ns": 1793379065924174390,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 20540000000,
+          "dds_ns": 1793379066421585755,
+          "received_wall_ns": 1793379066427400318,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 21040000000,
+          "dds_ns": 1793379066921581675,
+          "received_wall_ns": 1793379066931111426,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 21540000000,
+          "dds_ns": 1793379067421582743,
+          "received_wall_ns": 1793379067434432345,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 22040000000,
+          "dds_ns": 1793379067921585332,
+          "received_wall_ns": 1793379067938077063,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 22540000000,
+          "dds_ns": 1793379068421580002,
+          "received_wall_ns": 1793379068441660012,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 23040000000,
+          "dds_ns": 1793379068921591690,
+          "received_wall_ns": 1793379068928324351,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 23540000000,
+          "dds_ns": 1793379069421586319,
+          "received_wall_ns": 1793379069431972838,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 24040000000,
+          "dds_ns": 1793379069921591198,
+          "received_wall_ns": 1793379069935450647,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 24540000000,
+          "dds_ns": 1793379070421584607,
+          "received_wall_ns": 1793379070439286784,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 25040000000,
+          "dds_ns": 1793379070921586668,
+          "received_wall_ns": 1793379070922366626,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 25540000000,
+          "dds_ns": 1793379071421585799,
+          "received_wall_ns": 1793379071425727137,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 26040000000,
+          "dds_ns": 1793379071921588768,
+          "received_wall_ns": 1793379071929064706,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 26540000000,
+          "dds_ns": 1793379072421582116,
+          "received_wall_ns": 1793379072431885445,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 27040000000,
+          "dds_ns": 1793379072921585076,
+          "received_wall_ns": 1793379072935231445,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 27540000000,
+          "dds_ns": 1793379073421584995,
+          "received_wall_ns": 1793379073438370675,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        },
+        {
+          "ros_ns": 28040000000,
+          "dds_ns": 1793379073921583393,
+          "received_wall_ns": 1793379073942066052,
+          "geometry": "7a12e561363385e9dfeeab326368731c030ed4b374e7f5897ac819159d2884c5",
+          "width": 20,
+          "height": 20,
+          "frame": "map"
+        }
+      ]
+    },
+    "nav2_version": "ros-jazzy-nav2-costmap-2d\t1.3.13-1noble.20260921.024946",
+    "target_exit_codes": [
+      -11
+    ]
+  },
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-costmap-cadence-after-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/contrib/src:/contrib/integration:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=96 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'CADENCE'\nimport asyncio,json,time,math,hashlib,subprocess,inspect\nfrom pathlib import Path\nimport yaml,rclpy\nfrom launch import LaunchService,LaunchDescription\nfrom launch.actions import ExecuteProcess,RegisterEventHandler\nfrom launch.event_handlers import OnProcessExit\nfrom lifecycle_msgs.srv import ChangeState\nfrom rcl_interfaces.srv import SetParameters\nfrom rclpy.parameter import Parameter\nfrom rclpy.qos import QoSProfile,QoSReliabilityPolicy,QoSDurabilityPolicy\nfrom geometry_msgs.msg import TransformStamped\nfrom nav_msgs.msg import OccupancyGrid\nfrom tf2_msgs.msg import TFMessage\nfrom rosgraph_msgs.msg import Clock\nfrom probe_real_nav2_keepout import Observer\n\nasync def main():\n    rclpy.init();node=Observer();samples={'baseline':[],'candidate':[]}\n    phase=['warmup'];exit_codes=[]\n    def observe(msg,info):\n        node.global_grid=msg\n        if phase[0] in samples:\n            samples[phase[0]].append({'ros_ns':msg.header.stamp.sec*1000000000+msg.header.stamp.nanosec,\n                'dds_ns':int(info['source_timestamp']),'received_wall_ns':time.time_ns(),\n                'geometry':hashlib.sha256(bytes((int(v)+256)%256 for v in msg.data)).hexdigest(),\n                'width':msg.info.width,'height':msg.info.height,'frame':msg.header.frame_id})\n    sub=next(s for s in node.subscriptions if s.topic_name=='/global_costmap/costmap')\n    sub.callback=observe\n    q=QoSProfile(depth=1,reliability=QoSReliabilityPolicy.RELIABLE,\n                 durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)\n    maps=node.create_publisher(OccupancyGrid,'/map',q)\n    tf=node.create_publisher(TFMessage,'/tf_static',q)\n    clocks=node.create_publisher(Clock,'/clock',10)\n    grid=OccupancyGrid();grid.header.frame_id='map';grid.header.stamp.sec=1\n    grid.info.resolution=.1;grid.info.width=grid.info.height=20\n    grid.info.origin.position.x=grid.info.origin.position.y=-1.\n    grid.info.origin.orientation.w=1.;grid.data=[0]*400\n    maps.publish(grid)\n    transform=TransformStamped();transform.header.frame_id='map'\n    transform.child_frame_id='base_link';transform.header.stamp.sec=1\n    transform.transform.rotation.w=1.;tf.publish(TFMessage(transforms=[transform]))\n    cfg={'/**':{'ros__parameters':{'use_sim_time':True,'global_frame':'map',\n        'robot_base_frame':'base_link','update_frequency':2.,'publish_frequency':2.,\n        'always_send_full_costmap':True,'rolling_window':False,'width':2,'height':2,\n        'resolution':.1,'origin_x':-1.,'origin_y':-1.,'robot_radius':.1745,\n        'plugins':['static_layer'],'static_layer':{'plugin':'nav2_costmap_2d::StaticLayer',\n            'map_topic':'/map','map_subscribe_transient_local':True}}}}\n    params=Path('/tmp/costmap_cadence.yaml');params.write_text(yaml.safe_dump(cfg))\n    process=ExecuteProcess(cmd=['/opt/ros/jazzy/lib/nav2_costmap_2d/nav2_costmap_2d',\n        '--ros-args','-r','__node:=global_costmap','-r','__ns:=/global_costmap',\n        '--params-file',str(params)],name='owned_costmap_cadence_target',output='screen')\n    launch=LaunchService();launch.include_launch_description(LaunchDescription([\n        process,RegisterEventHandler(OnProcessExit(target_action=process,\n            on_exit=lambda event,context:exit_codes.append(event.returncode) or []))]))\n    task=asyncio.create_task(launch.run_async())\n    start=time.monotonic();clock_anchor=[None];clock_base=[1000000000];last_ns=[0]\n    def emit_clock():\n        now=time.monotonic()\n        ns=(1000000000+int((now-start)/.02)*20000000 if clock_anchor[0] is None\n            else clock_base[0]+int((now-clock_anchor[0])/.5)*500000000)\n        assert ns>=last_ns[0];last_ns[0]=ns\n        msg=Clock();msg.clock.sec=ns//1000000000;msg.clock.nanosec=ns%1000000000\n        clocks.publish(msg)\n    async def until(pred,seconds):\n        end=time.monotonic()+seconds\n        while time.monotonic()<end:\n            if task.done():raise RuntimeError('costmap process/launch terminated before measurements')\n            emit_clock();rclpy.spin_once(node,timeout_sec=0.)\n            if pred():return\n            await asyncio.sleep(.01)\n        raise RuntimeError('cadence probe stage timeout')\n    lifecycle=node.create_client(ChangeState,'/global_costmap/global_costmap/change_state')\n    settings=node.create_client(SetParameters,'/global_costmap/global_costmap/set_parameters')\n    result={'ok':False,'scope':'Actual installed Nav2 costmap binary, synthetic static map/TF/clock; reused Observer node/subscription, no Gazebo/motor.','clock_quantum_s':.5,'update_frequency':2.,'publish_before':2.,'publish_after':4.}\n    try:\n        await until(lifecycle.service_is_ready,20)\n        for transition in (1,3):\n            req=ChangeState.Request();req.transition.id=transition\n            future=lifecycle.call_async(req);await until(future.done,20)\n            assert future.result().success,('lifecycle',transition)\n        clock_base[0]=last_ns[0];clock_anchor[0]=time.monotonic()-.25\n        phase[0]='baseline';await until(lambda:len(samples['baseline'])>=18,35)\n        await until(settings.service_is_ready,5)\n        req=SetParameters.Request();req.parameters=[Parameter('publish_frequency',value=4.).to_parameter_msg()]\n        future=settings.call_async(req);await until(future.done,5)\n        assert all(p.successful for p in future.result().results)\n        phase[0]='candidate';await until(lambda:len(samples['candidate'])>=18,20)\n        summaries={}\n        for key,raw in samples.items():\n            data=raw[2:];ros=[(b['ros_ns']-a['ros_ns'])*1e-9 for a,b in zip(data,data[1:])]\n            dds=[(b['dds_ns']-a['dds_ns'])*1e-9 for a,b in zip(data,data[1:])]\n            assert len(ros)>=12 and all(x>0 for x in ros)\n            summaries[key]={'count':len(data),'ros_gaps_s':ros,'dds_gaps_s':dds,\n                'max_ros_gap_s':max(ros),'max_dds_gap_s':max(dds)}\n        result.update(summaries=summaries,samples=samples)\n        assert max(summaries['baseline']['ros_gaps_s'])>=1.\n        assert max(summaries['candidate']['ros_gaps_s'])<=.500000001\n        assert max(summaries['candidate']['dds_gaps_s'])<.9\n        assert len({s['geometry'] for data in samples.values() for s in data})==1\n        result.update(ok=True,summaries=summaries,samples=samples,\n            nav2_version=subprocess.check_output(['dpkg-query','-W','ros-jazzy-nav2-costmap-2d'],text=True).strip())\n    except Exception as exc:result['error']=repr(exc)\n    finally:\n        phase[0]='cleanup';shutdown=launch.shutdown()\n        if inspect.isawaitable(shutdown):await shutdown\n        try:await asyncio.wait_for(task,timeout=15)\n        except Exception as exc:result['cleanup_error']=repr(exc);result['ok']=False\n        result['target_exit_codes']=exit_codes\n        if exit_codes!=[0]:result['ok']=False\n        node.destroy_node();rclpy.shutdown()\n        print('COSTMAP_CADENCE_RESULT '+json.dumps(result),flush=True)\n    return 0 if result['ok'] else 1\nraise SystemExit(asyncio.run(main()))\n\nCADENCE\n"
+  ],
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU compatible test. No physical hardware or persistent tool.",
+  "guard": "LIBRE before launch",
+  "new_evidence": "Jazzy MessageInfo is dict in actual relay; LaunchService.shutdown inspected and returns coroutine inside loop; both corrected in probe only."
+}

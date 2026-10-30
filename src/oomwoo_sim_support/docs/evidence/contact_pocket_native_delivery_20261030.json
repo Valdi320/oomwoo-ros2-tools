@@ -1,0 +1,234 @@
+{
+  "raw_receipt": "contact_pocket_20261030.json",
+  "rc": 1,
+  "seconds": 38.428,
+  "host_timeout": false,
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true
+  },
+  "report": {
+    "coverage": 0.0046,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 0.0,
+    "revisit_ratio": 0.0,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "motion_fault",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "phases": [
+    {
+      "phase": "IDLE",
+      "wall": 394812.180286315,
+      "sim": 1.6,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          3.0438364249051064,
+          0.0765395596366905
+        ],
+        "stamp_ns": 1480000000
+      }
+    },
+    {
+      "phase": "SWEEP",
+      "wall": 394825.245362323,
+      "sim": 14.200000000000001,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          3.0438364081240272,
+          0.075523491319318
+        ],
+        "stamp_ns": 14200000000
+      }
+    },
+    {
+      "phase": "ESCAPE",
+      "wall": 394825.444977032,
+      "sim": 14.4,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          3.0438364081240272,
+          0.075523491319318
+        ],
+        "stamp_ns": 14400000000
+      }
+    },
+    {
+      "phase": "SWEEP",
+      "wall": 394828.046355799,
+      "sim": 17.0,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          2.837753161739419,
+          0.11968594963385634
+        ],
+        "stamp_ns": 17000000000
+      }
+    },
+    {
+      "phase": "PREPARE_NAV",
+      "wall": 394828.245162429,
+      "sim": 17.200000000000003,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          2.8377531458300687,
+          0.11968493539639212
+        ],
+        "stamp_ns": 17200000000
+      }
+    },
+    {
+      "phase": "TRANSIT",
+      "wall": 394829.246157496,
+      "sim": 18.200000000000003,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          2.8377531012938464,
+          0.11968292554829521
+        ],
+        "stamp_ns": 18200000000
+      }
+    },
+    {
+      "phase": "FAULT",
+      "wall": 394829.444965407,
+      "sim": 18.400000000000002,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          2.8377531012938464,
+          0.11968292554829521
+        ],
+        "stamp_ns": 18400000000
+      },
+      "nav_feedback": {
+        "uuid": "ffaa456a3f5c46a190c34f2bb702cea6",
+        "frame": "map",
+        "stamp_ns": 18200000000,
+        "position": [
+          2.8412974002334836,
+          0.18784084765226347,
+          0.01250017509422494
+        ],
+        "orientation": [
+          -1.4663736326817981e-06,
+          -5.308371780148086e-07,
+          -0.6476170887008565,
+          0.7619659483337788
+        ],
+        "received_wall": 394829.257173486,
+        "received_sim": 18.21,
+        "distance_remaining": 0.0,
+        "navigation_time_ns": 10000000
+      }
+    }
+  ],
+  "status": [
+    {
+      "wall": 394829.246615414,
+      "sim": 18.200000000000003,
+      "states": [
+        [
+          "ffaa456a3f5c46a190c34f2bb702cea6",
+          2
+        ]
+      ]
+    },
+    {
+      "wall": 394829.276978692,
+      "sim": 18.23,
+      "states": [
+        [
+          "ffaa456a3f5c46a190c34f2bb702cea6",
+          6
+        ]
+      ]
+    }
+  ],
+  "aux_clean_exits": 19,
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 920,
+    "segments": 919,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 1.6877530603156532,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 74,
+        "distance_m": 0.001454935981231796,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.893836327917385
+      },
+      "IDLE": {
+        "poses": 636,
+        "distance_m": 0.0010160683224305904,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.8938363671429124
+      },
+      "SWEEP": {
+        "poses": 20,
+        "distance_m": 1.0143622337502534e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6877531048518755
+      },
+      "ESCAPE": {
+        "poses": 130,
+        "distance_m": 0.21625454391389193,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6877531207612257
+      },
+      "PREPARE_NAV": {
+        "poses": 50,
+        "distance_m": 2.010362551515827e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6877530603156532
+      },
+      "TRANSIT": {
+        "poses": 10,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6877530603156532
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "actual_nav2_uuid": "ffaa456a3f5c46a190c34f2bb702cea6",
+  "terminal_outcome": "aborted",
+  "nav2_error_code": 208,
+  "conclusion": "After contact escape, the previously unattempted target is retained and an actual Nav2 UUID is sent. Nav2 immediately aborts; explicitSTOP remains. Target-bookkeeping correction is demonstrated, successful navigation is not.",
+  "next_increment": "Retain route-failure context; first address the independent full-room map publication cadence blocker. No ABORTED retry policy relaxation.",
+  "limits": [
+    "Single-goal fixture cannot pass full90/80 and did not reach goal.",
+    "No physical robot/charging claim."
+  ]
+}

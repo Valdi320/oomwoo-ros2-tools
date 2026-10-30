@@ -230,7 +230,9 @@ global_costmap:
   global_costmap:
     ros__parameters:
       update_frequency: 2.0
-      publish_frequency: 2.0
+      # Nav2 checks publication within the update loop with a strict time comparison.
+      # Request 4 Hz so the existing 2 Hz loop can publish every update.
+      publish_frequency: 4.0
       global_frame: map
       robot_base_frame: base_link
       transform_tolerance: 5.0

@@ -1,0 +1,102 @@
+{
+  "completed_utc": "2026-10-30T16:53:18.517357+00:00",
+  "raw_receipts": [
+    "costmap_cadence_probe_20261030.json",
+    "costmap_cadence_after_20261030.json",
+    "costmap_cadence_final_20261030.json"
+  ],
+  "measurement_valid": true,
+  "overall_probe_pass": false,
+  "standalone_cleanup_pass": false,
+  "standalone_exit_code": -11,
+  "nav2_version": "ros-jazzy-nav2-costmap-2d\t1.3.13-1noble.20260921.024946",
+  "summaries": {
+    "baseline": {
+      "count": 16,
+      "ros_gaps_s": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "dds_gaps_s": [
+        1.000005998,
+        0.9999926160000001,
+        1.000003836,
+        0.999997349,
+        0.999998818,
+        1.000001388,
+        0.999998947,
+        1.0000033560000001,
+        1.000001469,
+        0.9999985670000001,
+        0.9999980180000001,
+        1.000000487,
+        0.999999658,
+        1.000000988,
+        0.9999993770000001
+      ],
+      "max_ros_gap_s": 1.0,
+      "max_dds_gap_s": 1.000005998
+    },
+    "candidate": {
+      "count": 16,
+      "ros_gaps_s": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "dds_gaps_s": [
+        0.500000568,
+        0.500003019,
+        0.49999794900000005,
+        0.499998849,
+        0.5000020190000001,
+        0.49999791800000004,
+        0.49999957800000006,
+        0.5000040290000001,
+        0.49999680700000004,
+        0.5000007980000001,
+        0.500001559,
+        0.500000318,
+        0.49999715800000005,
+        0.500001299,
+        0.49999938800000004
+      ],
+      "max_ros_gap_s": 0.5,
+      "max_dds_gap_s": 0.5000040290000001
+    }
+  },
+  "geometry_unchanged": true,
+  "source": "https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_costmap_2d/src/costmap_2d_ros.cpp#L477-L527",
+  "change": "Only global publish_frequency2->4. Update2Hz and original1s freshness admission unchanged. No timer/node/client added.",
+  "demonstrated_utility": "Actual existing binary publishes new original source stamps every0.5s instead of1s in equality case; no fabricated timestamps or repeated cached messages.",
+  "cost": "No extra map update iterations; costmap serialization can occur every existing update instead of every second update. End-to-end resource impact unmeasured.",
+  "remaining": "Full-room native acceptance with normal lifecycle manager still required. Original abort105, error208 and90/80 unresolved.",
+  "decision": "Stop standalone-cleanup line after two -11 outcomes; preserve failures. Advance independent normal Gazebo configuration contrast with original safety/graders.",
+  "would_change_decision": "Normal native run still violates source freshness or reveals excessive publishing cost.",
+  "config_validation": "costmap_cadence_config_20261030.json: semantic diff only global publish2->4; two existing Jazzy launch-graph cases PASS, none skipped."
+}

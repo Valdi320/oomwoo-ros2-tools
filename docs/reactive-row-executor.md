@@ -1025,3 +1025,52 @@ not native navigation or a full-room gain. Reserve a short same-spawn
 contrast behind full-history673, changing only this contact method from
 the previous case671. The existing full-history source is frozen and
 excludes this new correction, preserving its original diagnostic context.
+
+
+The [full-history native result](../src/oomwoo_sim_support/docs/evidence/nav_progress_history_delivery_20261030.json)
+ends at 54.43% coverage: nine navigation goals succeed and the tenth is
+canceled after the original map-freshness check revokes the lease. Its
+post-filter ROS age is exactly 1 s and original DDS source age is
+1.001946663 s, beyond the existing 1 s limit. Other health proofs remain
+valid. Nineteen auxiliary processes close cleanly; all eight source hashes
+remain unchanged. The selected focal target is never reached, and abort105
+is not reproduced. The sampled Keepout audit records 22,759 poses and
+22,758 chords with zero footprint crossings. Full90/80 remains unmet.
+
+The separate [native contact-pocket contrast](../src/oomwoo_sim_support/docs/evidence/contact_pocket_native_delivery_20261030.json)
+confirms that the previously discarded target is retained after contact
+escape and an actual Nav2 UUID is sent. Nav2 then aborts immediately with
+error208; explicit STOP is preserved. This establishes accurate target
+bookkeeping and an attempted transit, not successful navigation. All eight
+source hashes remain unchanged and nineteen auxiliary exits are clean.
+The full-history run excludes the pocket correction, preserving isolation.
+
+Prioritize the observed map-publication cadence before another full-room
+run. Compare the installed costmap binary at update2/publish2 and
+update2/publish4 with original source timestamps and identical geometry.
+Keep the 1 s freshness limit and fatal-navigation behavior unchanged.
+
+
+The [actual-binary cadence contrast](../src/oomwoo_sim_support/docs/evidence/costmap_cadence_delivery_20261030.json)
+reproduces a 1 s publication interval with global update2/publish2.
+Changing only publish_frequency to4 yields 0.5 s intervals over fifteen
+measured gaps, with identical map geometry and original ROS/DDS stamps.
+This is consistent with Nav2 1.3.13's strict publication-time comparison
+inside its existing update loop. Global update_frequency remains2; no
+additional update loop or timer is introduced. The original1s freshness
+limit remains unchanged. Serialization may occur on each existing update;
+end-to-end resource cost is not yet measured.
+
+The standalone probe is NOT an overall pass: both measurements finish,
+but the target exits-11 during shutdown, including after successful
+deactivate/cleanup transitions. Preserve those receipts and stop that
+cleanup line after two identical outcomes. The initial attempt also
+records the corrected Jazzy metadata/await transport mistakes. Validate
+the configuration independently through the existing normal Gazebo bank,
+whose preceding run closed nineteen auxiliary processes cleanly. Native
+coverage90/efficiency80 and the earlier navigation aborts remain open.
+
+The [configuration check](../src/oomwoo_sim_support/docs/evidence/costmap_cadence_config_20261030.json)
+confirms that only global publish_frequency changes semantically. Both
+existing Jazzy launch-graph cases execute and pass, including opt-in
+Keepout overlay generation. This is not the pending native room result.
