@@ -42,9 +42,9 @@
   "driver_sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
   "runtime_source_identical_to_previous_native": true,
   "prior_native_evidence": {
-    "dock_native_nominal_maneuver_20261030.json": "46bad8dc50227325bd34b6d18d86a82bca7c3b4f",
     "dock_gazebo_feedback_loss_20261030.json": "84bbe4188e07b781ac98ebd8c3bce54f65815d68",
-    "dock_gazebo_feedback_loss_delivery_20261030.json": "79ce3e8e43e7c3d5fdb77f7742228ab59f81d73d"
+    "dock_gazebo_feedback_loss_delivery_20261030.json": "79ce3e8e43e7c3d5fdb77f7742228ab59f81d73d",
+    "dock_stock_gazebo_first_20261030.json": "100229f55a66efbcbfca0155fc366b2baeaa8ff3"
   },
   "utility_demonstrated": "Delivery branch now contains the exact driver used in existing nominal/feedback-loss native evidence; stale/replayed/wrong-frame detector and wheel messages no longer renew movement permission. The single regression file passes with this branch imports.",
   "limits": [
@@ -55,5 +55,16 @@
   "distance_to_useful_milestone": "Driver integration complete; combined active ownership cycle and masked90/80 acceptance remain.",
   "decision": "Consolidate exact proven driver; postpone more standalone docking variants until combined integration.",
   "next_increment": "Finish native705 shutdown-only contrast before further native integrated work.",
-  "decision_changing_evidence": "A regression under combined ownership or an incompatible sensor frame/source contract requires targeted diagnosis."
+  "decision_changing_evidence": "A regression under combined ownership or an incompatible sensor frame/source contract requires targeted diagnosis.",
+  "verified_native_driver_provenance": {
+    "dock_stock_gazebo_first_20261030.json": {
+      "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+      "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+    },
+    "dock_gazebo_feedback_loss_20261030.json": {
+      "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+      "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+    }
+  },
+  "provenance_note": "Native nominal means the original Gazebo trial (stock_gazebo_first), whose recorded imported driver SHA is identical. Earlier 2D nominal used3779 and is not the source-identity evidence."
 }
