@@ -86,10 +86,10 @@
     "peer_evidence": "control_remates_cortos_20261030.json in peer outputs uses actual reactive tick.10cm caps can be consumed when starting exactly at prior point under12cm reach tolerance; a12cm residual retains target and turns.",
     "interpretation": "Does not prove inevitable whole-plan loss; no reach tolerance altered. Native observation must cover actual caps and measured floor, not just theoretical endpoints."
   },
-  "remaining_distance": "Native whole-room90/80 not yet tested for this code. Latest previous full trial96%/77.34 remains failed. This source result does not certify actual travel, charging, startup reliability or physical robot.",
+  "remaining_distance": "First full native failed at48.98%coverage on projected-motion Keepout stop; audit separately records3SWEEP crossing chords. No first90efficiency or real travel saving established.",
   "next_increment": {
     "minimum": "Freeze this exact implementation, normal _plan_waypoints/_gapfill_waypoints, current safety and actual sensors. Reuse existing bounded native fixture/FIFO, add only bounded passive cap/target observations through existing poll; record explicit config differences and clean owned teardown.",
-    "decision": "Consolidate implementation and advance to necessary native validation; no more unchanged static/oracle repetitions.",
+    "decision": "Hold further route optimization and unchanged full-run repetition; diagnose the two independent Keepout issues in full_compaction_native_delivery_20261031.json.",
     "benefit_cost": "6.36m ideal path and4fewer turns for roughly.0103CPU s additional preparation observed; obstacle-aware proxy previously retains6.30m. Runtime benefit remains provisional.",
     "evidence_that_changes_decision": "Native cap execution/pruning loses coverage, Nav2 detours erase savings, invalid Keepout/closure, or preparation exceeds measured useful range."
   },
@@ -108,5 +108,10 @@
     "general_compaction_style_failure_20261030.json": "9b8da768e187bf909e9c92a7f883be0e538eff19434c414d9c2b1616c1836d5f",
     "general_compaction_style_reversal_failure_20261030.json": "824e76bc5843bcb9f178b0980473a5acf638f7ce1a583dd00c175875fc0845aa"
   },
-  "delivery_policy": "Own local commit; no push/PR/merge, remote comments, hardware or new persistent tooling."
+  "delivery_policy": "Own local commit; no push/PR/merge, remote comments, hardware or new persistent tooling.",
+  "native_validation": {
+    "receipt": "full_compaction_native_delivery_20261031.json",
+    "result": "49%coverage, motion_fault,3valid audit crossings;90/80 not reached",
+    "decision": "Static implementation remains experimental; prioritize safety diagnosis before further optimization/native repeats."
+  }
 }

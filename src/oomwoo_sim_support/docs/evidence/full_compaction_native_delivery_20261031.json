@@ -1,0 +1,396 @@
+{
+  "observed_utc": "2026-10-30T23:31:16.814886+00:00",
+  "scope": "First native full normal-plan/gapfill trial of delivered general compaction; configured private map-frame integration, not default-odom acceptance.",
+  "status": "FAILED_MOTION_SAFETY;90/80 not reached; do not repeat unchanged trial",
+  "source_delivery_commit": "dc2794c34c09d4ae63d23c4bcacb0f1041264ca9",
+  "native_result": {
+    "rc": 1,
+    "seconds": 504.187,
+    "host_timeout": false,
+    "container": "oomwoo-full-compact-3cd804f79e",
+    "input_sha256": {
+      "planner": "9ea5639edf69141021a9c628949073498c2a20ad3626b1c5db8bf833911b8c02",
+      "scorer": "6a6370be14b03ee89ab5d7187f9416644134b606cd068740b5b7794439a50a8f",
+      "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+      "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+      "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+      "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+      "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+      "relay": "07734e4aecd4a3764bca5728c6adf613686e193717caa05f66e95700eb1d55a1",
+      "nav2_config": "c16b7f77f36a2e0c284aa7758594b1bce491db3b97e65b17f0dfa3659f6d2696",
+      "planner_production": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98",
+      "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+      "sim_launch": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+      "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+      "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+      "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+      "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+    },
+    "input_unchanged": {
+      "planner": true,
+      "scorer": true,
+      "meter": true,
+      "wrapper": true,
+      "driver": true,
+      "journal": true,
+      "witness": true,
+      "relay": true,
+      "nav2_config": true,
+      "planner_production": true,
+      "coverage_launch": true,
+      "sim_launch": true,
+      "lifecycle_response_qos": true,
+      "world": true,
+      "map_yaml": true,
+      "map_image": true
+    },
+    "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/full_compaction_native_20261031.log",
+    "raw_sha256": "93c60c56e7980999bccdca805bdb8ae6587e8396a4829c8a65aabe3b139189eb"
+  },
+  "grade": {
+    "coverage": 0.4898,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 1.0,
+    "end_reason": "motion_fault",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "provenance": {
+    "planner": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+    "scorer": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+    "keepout_config": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py",
+    "files": {
+      "launch/coverage_regression.launch.py": {
+        "match": true,
+        "sha256": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86"
+      },
+      "launch/sim_bringup.launch.py": {
+        "match": true,
+        "sha256": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8"
+      },
+      "worlds/test_room.world": {
+        "match": true,
+        "sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+      },
+      "config/nav2_params.yaml": {
+        "match": true,
+        "sha256": "c16b7f77f36a2e0c284aa7758594b1bce491db3b97e65b17f0dfa3659f6d2696"
+      },
+      "maps/test_room.yaml": {
+        "match": true,
+        "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+      },
+      "maps/test_room.pgm": {
+        "match": true,
+        "sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+      }
+    },
+    "reviewed_inputs": {
+      "oomwoo_dock.dock_drive_node": {
+        "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+        "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+      },
+      "oomwoo_cleaning_jobs.goal_journal": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/goal_journal.py",
+        "sha256": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c"
+      },
+      "oomwoo_cleaning_jobs.nav_lease_witness": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/nav_lease_witness.py",
+        "sha256": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721"
+      },
+      "oomwoo_cleaning_jobs.ros_dock_velocity_relay": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+        "sha256": "07734e4aecd4a3764bca5728c6adf613686e193717caa05f66e95700eb1d55a1"
+      }
+    },
+    "planner_sha256": "9ea5639edf69141021a9c628949073498c2a20ad3626b1c5db8bf833911b8c02",
+    "scorer_sha256": "6a6370be14b03ee89ab5d7187f9416644134b606cd068740b5b7794439a50a8f",
+    "meter_sha256": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+    "wrapper_sha256": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+    "costmap_cadence_parameters": {
+      "update_frequency": 2.0,
+      "publish_frequency": 4.0,
+      "global_frame": "map",
+      "robot_base_frame": "base_link",
+      "transform_tolerance": 5.0,
+      "robot_radius": 0.1745,
+      "resolution": 0.05,
+      "track_unknown_space": true,
+      "plugins": [
+        "static_layer",
+        "obstacle_layer",
+        "voxel_layer",
+        "inflation_layer"
+      ],
+      "obstacle_layer": {
+        "plugin": "nav2_costmap_2d::ObstacleLayer",
+        "enabled": true,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "voxel_layer": {
+        "plugin": "nav2_costmap_2d::VoxelLayer",
+        "enabled": true,
+        "publish_voxel_map": true,
+        "origin_z": 0.0,
+        "z_resolution": 0.05,
+        "z_voxels": 16,
+        "max_obstacle_height": 2.0,
+        "mark_threshold": 0,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "static_layer": {
+        "plugin": "nav2_costmap_2d::StaticLayer",
+        "map_subscribe_transient_local": true,
+        "transform_tolerance": 5.0
+      },
+      "inflation_layer": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "inflation_radius": 0.1,
+        "cost_scaling_factor": 10.0
+      },
+      "always_send_full_costmap": true
+    }
+  },
+  "independent_keepout_audit": {
+    "poses_before_mask": 0,
+    "poses": 24121,
+    "segments": 24120,
+    "footprint_crossings": 3,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 0.17996633215972418,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 10,
+        "distance_m": 5.766017172410995e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000329510108
+      },
+      "IDLE": {
+        "poses": 981,
+        "distance_m": 1.0438542068938262e-05,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.3825500518543854
+      },
+      "SWEEP": {
+        "poses": 9519,
+        "distance_m": 30.229102293379228,
+        "nonclear_segments": 3,
+        "min_sampled_center_to_mask_bbox_m": 0.17996633215972418
+      },
+      "PREPARE_NAV": {
+        "poses": 791,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2890094773332065
+      },
+      "TRANSIT": {
+        "poses": 12660,
+        "distance_m": 30.858727984720808,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2627888144087238
+      },
+      "TRANSIT_CANCEL": {
+        "poses": 30,
+        "distance_m": 0.004864971427099975,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6486438490395885
+      },
+      "ESCAPE": {
+        "poses": 130,
+        "distance_m": 0.2849987267025623,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6486488197858118
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "cause_of_final_stop": {
+    "actual_reason": "projected motion intersects keepout",
+    "uuid": "9b7fd95474784e509ded5db6cb36f8e3",
+    "original_ages": {
+      "pose_age_ns": 15000000,
+      "pose_error": null,
+      "pose_latest_age_ns": 15000000,
+      "pose_latest_stamp_ns": 482060000000,
+      "pose_map_cell": 9999,
+      "pose_map_value": 0,
+      "pose_stamp_ns": 482060000000,
+      "pose_xy_m": [
+        1.3899248270336202,
+        0.5448909823357797
+      ],
+      "postfilter_age_ns": 450000000,
+      "postfilter_dds_age_ns": 447076965,
+      "postfilter_stamp_ns": 481625000000
+    },
+    "point_replay": {
+      "recorded_reason": "projected motion intersects keepout",
+      "current_tf_xy": [
+        1.3899248270336202,
+        0.5448909823357797
+      ],
+      "current_tf_stamp_ns": 482060000000,
+      "current_tf_age_ns": 15000000,
+      "point_distance_to_bbox_m": 0.239924786055427,
+      "body_radius18cm_clear": true,
+      "radius_plus_margin24cm_clear": false,
+      "stationary_projection_blocker": "recorded_keepout",
+      "target_from_actual_journal_cell": [
+        1.4250000450760125,
+        0.7750000569969417
+      ],
+      "target_guard_disk_clear": true,
+      "first_nav_tf_xy": [
+        1.540262020442717,
+        0.01019207768302166
+      ],
+      "straight_start_to_target_guard_clear": true,
+      "current_distance_from_direct_segment_m": 0.06897537624113696,
+      "reconstructed_mask_matches_recorded_bbox_and220cells": true,
+      "source_receipt_sha256": "f600be7b34cebda7f2c19d39014b62d7059bc7e18ff0519f5194ee1b0ed71de8",
+      "audit_separate_sweep_crossings": 3,
+      "audit_min_center_clearance_m": 0.17996633215972418,
+      "scope": "Point/directed segment geometry from recorded actual TF and immutable ROS-float32 mask; zero-velocity geometry avoids inventing current yaw/command. Proves why current point is already inside guard margin, not actual planned Nav2 path. Three earlier SWEEP crossings have no original event positions/times in saved aggregate, so their cause remains unknown."
+    },
+    "attribution_limit": "Recorded current pose is inside existing24cm guard disk; target/direct segment are clear. Actual Nav2 global/local path and current exact command/yaw not retained, so planner-path versus tracking cause is unresolved."
+  },
+  "separate_sweep_issue": {
+    "crossings": 3,
+    "audit_valid": true,
+    "phase": "SWEEP",
+    "first_crossing_original_event_not_recorded": true,
+    "limitation": "Minimum clearance and counts do not identify original chord/time/target. Do not attribute to caps or conflate with later NAV projected stop. No threshold relaxed."
+  },
+  "action_status": {
+    "uuids": 15,
+    "final_counts": {
+      "4": 13,
+      "5": 2
+    },
+    "terminal_journal": {
+      "job_id": "coverage_sweep",
+      "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+      "outcome": "canceled",
+      "revision": 45,
+      "schema": 1,
+      "state": "terminal",
+      "target_cell": 10700,
+      "token": "5dc81f56101c4e908cc193e529df3070-1",
+      "uuid": "9b7fd95474784e509ded5db6cb36f8e3"
+    }
+  },
+  "bounded_observation": {
+    "records": 5,
+    "observed_indices": [
+      53,
+      76,
+      129,
+      139
+    ],
+    "reasons": [
+      "nav_progress"
+    ],
+    "observer_errors": 0,
+    "interpretation": "All5records are nav_progress samples; no cap events observed before early stop. This trial does not validate actual short-cap execution/swath.",
+    "cap_records": 0,
+    "nav_progress_records": 5
+  },
+  "closure": {
+    "clean_auxiliary_count": 18,
+    "clean_auxiliaries": [
+      "create-10",
+      "initialpose_pub-16",
+      "lifecycle_manager-20",
+      "lifecycle_manager-15",
+      "parameter_bridge-9",
+      "robot_state_publisher-8",
+      "costmap_filter_info_server-6",
+      "map_server-5",
+      "map_server-13",
+      "bt_navigator-19",
+      "amcl-14",
+      "lifecycle_manager-7",
+      "planner_server-18",
+      "controller_server-17",
+      "dock_drive-2",
+      "ground_truth-4",
+      "coverage_planner-11",
+      "python3-1"
+    ],
+    "process_nonzero": [
+      [
+        "coverage_regression_runner-12",
+        "1"
+      ],
+      [
+        "gazebo-3",
+        "-2"
+      ]
+    ],
+    "gazebo_interrupt_explicitly_expected": true,
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "324\n",
+      "/sys/fs/cgroup/memory.peak": "1649070080\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    "host_process_state_after_return": "Controller/unified session terminal, Podman --rm container no longer running, own scope inactive; no external process stopped."
+  },
+  "demonstrated_utility": [
+    "Normal source path really generates318targets in Gazebo with actual serialized map/mask; no supplied target route.",
+    "Full grading rejects motion fault and3independent forbidden-disk crossings despite valid stable measurement; no false acceptance.",
+    "Recorded-data replay rules out treating the final guard as an arbitrary transport timeout; focus on incoming path/tracking margin."
+  ],
+  "remaining_distance": "No native efficiency improvement established;90%coverage not reached, first-target efficiency undefined. Static6.36m saving/zero ideal swath loss and30focalPASS remain narrower evidence.",
+  "next_increment": {
+    "use": "Correct incoming motion near virtual zones without weakening final guard; distinguish global path/steering from unknown earlier SWEEP crossing.",
+    "minimum": "Fuse first observed forbidden chord into the existing runner motion_fault path immediately and retain one bounded original-stamp/XY/phase crossing record; validate with focal real-runner cases. This prevents continuing an already-invalid safety trial and supplies missing evidence. Then inspect actual Nav2 path/steering in a short causal case; no further unchanged full-room run.",
+    "acceptance": "Keep existing18cm audit disk,24cm output margin,mask and grade thresholds; obtain source-stamped discriminating evidence for each independent safety issue. A focal action success alone does not clear full90/80.",
+    "decision": "Consolidate failed native, prioritize safety diagnosis over additional route optimization.",
+    "benefit_cost": "One504.187s native exposed an integration failure that static cost/swath missed;0.893s compatible replay confirms the immediate geometric stop. Avoid a second blind8–16minute run.",
+    "evidence_that_changes_decision": "A causal corrected path/steering case with valid independent Keepout and no regression, plus original first-SWEEP-crossing evidence.",
+    "limitation": "Earlier harness stop/diagnostics is necessary reliability work, not a substitute for repairing actual incoming movement and establishing90/80."
+  },
+  "resource_policy": "Existing FIFO839 own parentPID/start/head/TOMADO verified before2CPU3GiB/noGPU; source/memory bounded and no hardware. Replay.25CPU512MiB under authorized coexistence with occupied FIFO850.",
+  "evidence": {
+    "full_compaction_native_20261031.json": "f600be7b34cebda7f2c19d39014b62d7059bc7e18ff0519f5194ee1b0ed71de8",
+    "full_compaction_point_replay_20261031.json": "f706a2f3d2bf3c6acb29e66e87db2daf22121755fc70999135cc4ee939ad5ade"
+  },
+  "delivery_policy": "Local commits only; no push/PR/merge or remote comments. Source remains experimental and not native-accepted."
+}

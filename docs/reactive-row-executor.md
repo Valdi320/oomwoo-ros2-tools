@@ -29,9 +29,14 @@ swath, cost or preparation limits do not permit the change. Thirty focal
 cases and style checks pass; the source-method contrast adds about 10 ms of
 CPU in this observation. This remains geometric/source evidence. Short caps
 can be consumed by the unchanged reach tolerance; their actual tracking and
-coverage must be observed in the next native test.
+coverage require native observation. The first [configured full native trial](../src/oomwoo_sim_support/docs/evidence/full_compaction_native_delivery_20261031.json)
+ended at 48.98% coverage with a projected-motion Keepout stop; its valid
+independent audit separately counted three forbidden-disk crossing chords
+in SWEEP. The 90% target was not reached. This candidate has no demonstrated
+native efficiency gain. Prioritize incoming path/tracking and the separate
+SWEEP issue, retaining all margins and thresholds before another full run.
 
-Masked full-room acceptance remains open: the [latest peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
+Masked full-room acceptance remains open: the [earlier peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged
 80% requirement. The default local costmap frame remains `odom`; the private
 `map` experiment is not adopted. Consolidate the demonstrated reliability
