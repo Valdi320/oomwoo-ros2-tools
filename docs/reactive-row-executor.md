@@ -814,3 +814,21 @@ was produced or admitted, and no dependency was installed. Metadata collection
 exiting zero does not mean map generation passed. Resolve the relevant geometry
 in the existing generator or use an existing mapping path before the joint
 cycle; the pending native transit test is unchanged.
+
+
+The [oriented-box correction](../src/oomwoo_sim_support/docs/evidence/map_tilted_box_delivery_20261030.json)
+now resolves that primitive transform issue in the existing generator. T_of
+uses full roll/pitch/yaw. add_box intersects a cell center's vertical body-band
+segment with all three local box constraints, retaining the existing grid-center
+convention. The existing mesh import is deferred until mesh loading; no library
+was installed. Eleven geometry cases pass, including a causal shifted-foot
+failure before the fix, composed rotations, planar symmetry and height exclusion.
+
+Five original kitchen table/chair models were also run through collisions_of.
+Eight cell centers become occupied and six stop being occupied. One newly
+occupied chair-foot point is independently inside the original SDF box using
+SciPy's RPY transform. This is static geometry evidence, not eight avoided
+physical collisions or a complete-map result. No kitchen map was generated or
+admitted; mesh loading/projection and cylinder handling are unchanged. The
+native transit run remains on immutable c67a7fc sources. Consolidate this fix
+and wait for that native result before expanding generator work.

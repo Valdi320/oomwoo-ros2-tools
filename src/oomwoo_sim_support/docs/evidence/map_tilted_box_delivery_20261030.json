@@ -1,0 +1,61 @@
+{
+  "date_utc": "2026-10-30T13:59:32.999740+00:00",
+  "base_commit": "bbe6e75d7f6d761d06cb7e96b00463607369c125",
+  "utility_demonstrated": "The existing map generator now retains full roll/pitch/yaw and intersects each grid center vertical body band with all three oriented-box constraints. A previously missed actual chair-foot point is now occupied; planar and out-of-height cases retain their contracts.",
+  "implementation": [
+    "Replace yaw-only T_of with full Rz*Ry*Rx transform.",
+    "Fuse projected-height and oriented-box constraints in existing add_box using NumPy; same cell-center raster convention and original0.02..0.20m band.",
+    "Defer the already-required trimesh import to existing add_mesh, so box geometry can be verified without installing that dependency."
+  ],
+  "validation": {
+    "causal_before": "Tilted45deg leg at z0.4 incorrectly has no occupied cell at x-0.25.",
+    "geometry_cases": 11,
+    "geometry_rc": 0,
+    "geometry_seconds": 8.21,
+    "package_test_style_rc": 0,
+    "package_test_style_seconds": 6.309,
+    "source_sha256": {
+      "tools/gen_livingroom_map.py": "da298c8ed1a8c5b2dd8fcb5e44fd8967239574a0d3298a5b2da56d4366102bce",
+      "src/oomwoo_sim_support/test/test_meter_geometry.py": "05500492eb7ccbae420e7eff026c4aa1dee03f47307cb5e896e3078de877c75a"
+    },
+    "actual_stock_models": 5,
+    "stock_comparison_seconds": 6.399,
+    "stock_cells_added": 8,
+    "stock_cells_removed": 6,
+    "independent_positive_witness": {
+      "model": "dining_chair_s_east",
+      "collision": "Box005",
+      "cell": [
+        56,
+        33
+      ],
+      "world_xyz": [
+        0.07500000000000018,
+        -1.075,
+        0.02
+      ],
+      "box_local_xyz": [
+        0.016048714372951668,
+        0.01547198665445444,
+        -0.19870247932637913
+      ],
+      "box_half_extents": [
+        0.02,
+        0.02,
+        0.218077
+      ],
+      "reference": "SciPy Rotation.from_euler xyz, original SDF transforms; positive sampled 3D point inside box and robot-height band"
+    },
+    "scope": "Actual generator helpers and original table/chair SDF through collisions_of, with independent SciPy RPY transform point witness. No mesh load, full map, Gazebo, hardware or physical cleaning."
+  },
+  "limits": [
+    "No kitchen map generated or admitted; missing mesh dependency still blocks the full generator in the inspected environment.",
+    "Mesh loading/projection and cylinder support remain unchanged.",
+    "Cell-center occupancy is retained; this is not a certificate that every intersected map cell or a physical footprint is represented.",
+    "Changed cell counts are geometry observations, not demonstrated avoided collisions or runtime coverage gains.",
+    "Package test file style passed; no whole-repo/tool-directory lint claim."
+  ],
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU tests; source mounts read-only, guards called with real occupied results. No tool, timer, node, hook or dependency added.",
+  "decision": "Consolidate oriented-box fix. Do not expand generator variants before the currently running native transit result; full map admission and joint active docking remain pending.",
+  "native_run_independence": "FIFO657 uses immutablec67a7fc sources, unaffected by this generator/test change."
+}

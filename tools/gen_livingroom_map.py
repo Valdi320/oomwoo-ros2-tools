@@ -18,7 +18,6 @@ import sys
 import xml.etree.ElementTree as ET
 
 import numpy as np
-import trimesh
 from PIL import Image
 from scipy import ndimage
 
@@ -32,11 +31,15 @@ SKIP = ('poster', 'sun', 'ground', 'curtain', 'rug', 'tv_65')
 
 
 def T_of(p):
-    x, y, z, _r, _p, yw = (list(p) + [0] * 6)[:6]
-    cy, sy = math.cos(yw), math.sin(yw)   # roll/pitch are 0 in this world
+    x, y, z, roll, pitch, yaw = (list(p) + [0] * 6)[:6]
+    cr, sr = math.cos(roll), math.sin(roll)
+    cp, sp = math.cos(pitch), math.sin(pitch)
+    cy, sy = math.cos(yaw), math.sin(yaw)
+    Rx = np.array([[1., 0., 0.], [0., cr, -sr], [0., sr, cr]])
+    Ry = np.array([[cp, 0., sp], [0., 1., 0.], [-sp, 0., cp]])
+    Rz = np.array([[cy, -sy, 0.], [sy, cy, 0.], [0., 0., 1.]])
     T = np.eye(4)
-    T[0, 0], T[0, 1] = cy, -sy
-    T[1, 0], T[1, 1] = sy, cy
+    T[:3, :3] = Rz @ Ry @ Rx
     T[:3, 3] = [x, y, z]
     return T
 
@@ -66,6 +69,8 @@ def rasterize_tris(occ, tris):
 
 
 def add_mesh(occ, mesh_path, scale, T):
+    import trimesh
+
     g = trimesh.load(mesh_path, force='mesh')
     V = g.vertices * scale
     V = np.c_[V, np.ones(len(V))] @ T.T
@@ -79,19 +84,31 @@ def add_mesh(occ, mesh_path, scale, T):
 
 
 def add_box(occ, size, T):
-    sx, sy, sz = size
-    cz = T[2, 3]
-    if cz + sz / 2 < Z_MIN or cz - sz / 2 > Z_MAX:
-        return 0   # entirely above/below the robot band
+    """Mark cell centers whose vertical body band intersects the oriented box."""
+    half = np.asarray(size, dtype=float) / 2.
+    z_extent = float(np.abs(T[2, :3]) @ half)
+    if T[2, 3] + z_extent < Z_MIN or T[2, 3] - z_extent > Z_MAX:
+        return 0
     gx, gy = np.meshgrid(np.arange(W), np.arange(H))
     wx = OX + (gx + 0.5) * RES
     wy = OY + (gy + 0.5) * RES
-    cx, cy = T[0, 3], T[1, 3]
-    yaw = math.atan2(T[1, 0], T[0, 0])
-    c, s = math.cos(-yaw), math.sin(-yaw)
-    lx = c * (wx - cx) - s * (wy - cy)
-    ly = s * (wx - cx) + c * (wy - cy)
-    occ |= (np.abs(lx) <= sx / 2) & (np.abs(ly) <= sy / 2)
+    lower = np.full(occ.shape, Z_MIN, dtype=float)
+    upper = np.full(occ.shape, Z_MAX, dtype=float)
+    valid = np.ones(occ.shape, dtype=bool)
+    # In box-local coordinates each axis bounds an interval in world Z.
+    # All three intervals must meet the SAME point in the robot's body band.
+    for axis in range(3):
+        dz = T[2, axis]
+        base = (T[0, axis] * (wx - T[0, 3]) + T[1, axis] * (wy - T[1, 3])
+                - dz * T[2, 3])
+        if abs(dz) < 1e-12:
+            valid &= np.abs(base) <= half[axis]
+        else:
+            first = (-half[axis] - base) / dz
+            last = (half[axis] - base) / dz
+            lower = np.maximum(lower, np.minimum(first, last))
+            upper = np.minimum(upper, np.maximum(first, last))
+    occ |= valid & (lower <= upper)
     return 1
 
 

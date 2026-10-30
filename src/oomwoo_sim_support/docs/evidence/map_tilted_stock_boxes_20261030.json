@@ -1,0 +1,137 @@
+{
+  "completed_utc": "2026-10-30T13:56:07.352302+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 6.399,
+  "stdout": "STOCK_BOX_GEOMETRY {\"results\": [{\"variant\": \"before\", \"occupied_cells\": 78, \"models\": [{\"name\": \"DiningTable\", \"boxes_in_band\": 8}, {\"name\": \"dining_chair_n_west\", \"boxes_in_band\": 4}, {\"name\": \"dining_chair_n_east\", \"boxes_in_band\": 4}, {\"name\": \"dining_chair_s_west\", \"boxes_in_band\": 4}, {\"name\": \"dining_chair_s_east\", \"boxes_in_band\": 4}]}, {\"variant\": \"after\", \"occupied_cells\": 80, \"models\": [{\"name\": \"DiningTable\", \"boxes_in_band\": 6}, {\"name\": \"dining_chair_n_west\", \"boxes_in_band\": 4}, {\"name\": \"dining_chair_n_east\", \"boxes_in_band\": 4}, {\"name\": \"dining_chair_s_west\", \"boxes_in_band\": 4}, {\"name\": \"dining_chair_s_east\", \"boxes_in_band\": 4}]}], \"added_cells\": 8, \"removed_cells\": 6, \"positive_originally_missed_foot_witness\": {\"model\": \"dining_chair_s_east\", \"collision\": \"Box005\", \"cell\": [56, 33], \"world_xyz\": [0.07500000000000018, -1.075, 0.02], \"box_local_xyz\": [0.016048714372951668, 0.01547198665445444, -0.19870247932637913], \"box_half_extents\": [0.02, 0.02, 0.218077], \"reference\": \"SciPy Rotation.from_euler xyz, original SDF transforms; positive sampled 3D point inside box and robot-height band\"}, \"world_sha256\": \"42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9\", \"model_sha256\": {\"DiningTable\": \"ab08e74a08c7092cf22848c6a5438734b15dc5ea55bf7c712f01d2d124e04712\", \"dining_chair_n_west\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"dining_chair_n_east\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"dining_chair_s_west\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"dining_chair_s_east\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\"}, \"before_sha256\": \"6ae505f07c4a5aa151fb2c408087d6cfcb515e896ed391c7e0169cd80bf5f093\", \"after_sha256\": \"da298c8ed1a8c5b2dd8fcb5e44fd8967239574a0d3298a5b2da56d4366102bce\", \"scope\": \"Five actual stock table/chair model geometries through existing collisions_of; static body-height raster only. Positive witness independent SciPy transform; no complete map, mesh loading, Nav2/Gazebo/hardware.\"}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--name",
+    "oomwoo-stock-boxes-0900c21762",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=64m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/gen_livingroom_map.py.antes_transformada_y_box3d:/baseline.py:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 python3 -"
+  ],
+  "fixture_python": "\nfrom pathlib import Path\nimport importlib.util,json,hashlib,xml.etree.ElementTree as ET\nimport numpy as np\nfrom scipy.spatial.transform import Rotation\nfrom ament_index_python.packages import get_package_share_directory\npkg=Path(get_package_share_directory('oomwoo_gazebo'));world=pkg/'worlds/kitchen_dining.world'\ndef load(name,path):\n spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m\nbefore=load('box_before','/baseline.py');after=load('box_after','/work/tools/gen_livingroom_map.py')\nselected=[m for m in ET.parse(world).findall('.//world/model') if m.get('name')=='DiningTable' or m.get('name','').startswith('dining_chair_')]\nresults=[];grids=[];hashes={};witness_boxes=[]\ndef independent_transform(pose):\n values=[float(v) for v in (pose.text.split() if pose is not None and pose.text else [])]+[0.]*6\n t=np.eye(4);t[:3,:3]=Rotation.from_euler('xyz',values[3:6]).as_matrix();t[:3,3]=values[:3];return t\nfor label,module in [('before',before),('after',after)]:\n grid=np.zeros((module.H,module.W),dtype=bool);counts=[]\n for wm in selected:\n  uri=wm.findtext('include/uri');mdir=pkg/'models'/uri[len('model://'):];path=mdir/'model.sdf';hashes[wm.get('name')]=hashlib.sha256(path.read_bytes()).hexdigest();model=ET.parse(path).getroot().find('model')\n  boxes,triangles=module.collisions_of(model,module.T_of(module.pose_of(wm)),str(mdir),grid);assert triangles==0\n  counts.append({'name':wm.get('name'),'boxes_in_band':boxes})\n  if label=='after':\n   world_t=independent_transform(wm.find('pose'));model_t=independent_transform(model.find('pose'))\n   for link in model.findall('link'):\n    for collision in link.findall('collision'):\n     size=collision.findtext('geometry/box/size')\n     if size is None:continue\n     transform=world_t@model_t@independent_transform(link.find('pose'))@independent_transform(collision.find('pose'))\n     witness_boxes.append((wm.get('name'),collision.get('name'),np.asarray([float(v) for v in size.split()])/2,transform))\n grids.append(grid);results.append({'variant':label,'occupied_cells':int(grid.sum()),'models':counts})\nadded=grids[1]&~grids[0];removed=grids[0]&~grids[1];witness=None\nfor row,col in np.argwhere(added):\n x=after.OX+(int(col)+.5)*after.RES;y=after.OY+(int(row)+.5)*after.RES;z=np.linspace(after.Z_MIN,after.Z_MAX,1001);points=np.column_stack([np.full_like(z,x),np.full_like(z,y),z])\n for model,name,half,t in witness_boxes:\n  local=(points-t[:3,3])@t[:3,:3];inside=np.all(np.abs(local)<=half+1e-12,axis=1)\n  if inside.any():\n   k=int(np.flatnonzero(inside)[0]);witness={'model':model,'collision':name,'cell':[int(col),int(row)],'world_xyz':points[k].tolist(),'box_local_xyz':local[k].tolist(),'box_half_extents':half.tolist(),'reference':'SciPy Rotation.from_euler xyz, original SDF transforms; positive sampled 3D point inside box and robot-height band'};break\n if witness:break\nr={'results':results,'added_cells':int(added.sum()),'removed_cells':int(removed.sum()),'positive_originally_missed_foot_witness':witness,'world_sha256':hashlib.sha256(world.read_bytes()).hexdigest(),'model_sha256':hashes,'before_sha256':hashlib.sha256(Path('/baseline.py').read_bytes()).hexdigest(),'after_sha256':hashlib.sha256(Path('/work/tools/gen_livingroom_map.py').read_bytes()).hexdigest(),'scope':'Five actual stock table/chair model geometries through existing collisions_of; static body-height raster only. Positive witness independent SciPy transform; no complete map, mesh loading, Nav2/Gazebo/hardware.'}\nprint('STOCK_BOX_GEOMETRY '+json.dumps(r))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-657: Aceptacion Oomwoo transitos y metricas coherentes\u00bb desde hace 0 min (pid 3223865). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14855 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+  "resources": {
+    "meminfo": "MemAvailable:   10563072 kB",
+    "load": "1.77 2.65 1.93 4/2733 3263219"
+  },
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU small tests; current large native test has its own legitimate FIFO657.",
+  "result": {
+    "results": [
+      {
+        "variant": "before",
+        "occupied_cells": 78,
+        "models": [
+          {
+            "name": "DiningTable",
+            "boxes_in_band": 8
+          },
+          {
+            "name": "dining_chair_n_west",
+            "boxes_in_band": 4
+          },
+          {
+            "name": "dining_chair_n_east",
+            "boxes_in_band": 4
+          },
+          {
+            "name": "dining_chair_s_west",
+            "boxes_in_band": 4
+          },
+          {
+            "name": "dining_chair_s_east",
+            "boxes_in_band": 4
+          }
+        ]
+      },
+      {
+        "variant": "after",
+        "occupied_cells": 80,
+        "models": [
+          {
+            "name": "DiningTable",
+            "boxes_in_band": 6
+          },
+          {
+            "name": "dining_chair_n_west",
+            "boxes_in_band": 4
+          },
+          {
+            "name": "dining_chair_n_east",
+            "boxes_in_band": 4
+          },
+          {
+            "name": "dining_chair_s_west",
+            "boxes_in_band": 4
+          },
+          {
+            "name": "dining_chair_s_east",
+            "boxes_in_band": 4
+          }
+        ]
+      }
+    ],
+    "added_cells": 8,
+    "removed_cells": 6,
+    "positive_originally_missed_foot_witness": {
+      "model": "dining_chair_s_east",
+      "collision": "Box005",
+      "cell": [
+        56,
+        33
+      ],
+      "world_xyz": [
+        0.07500000000000018,
+        -1.075,
+        0.02
+      ],
+      "box_local_xyz": [
+        0.016048714372951668,
+        0.01547198665445444,
+        -0.19870247932637913
+      ],
+      "box_half_extents": [
+        0.02,
+        0.02,
+        0.218077
+      ],
+      "reference": "SciPy Rotation.from_euler xyz, original SDF transforms; positive sampled 3D point inside box and robot-height band"
+    },
+    "world_sha256": "42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9",
+    "model_sha256": {
+      "DiningTable": "ab08e74a08c7092cf22848c6a5438734b15dc5ea55bf7c712f01d2d124e04712",
+      "dining_chair_n_west": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+      "dining_chair_n_east": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+      "dining_chair_s_west": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+      "dining_chair_s_east": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9"
+    },
+    "before_sha256": "6ae505f07c4a5aa151fb2c408087d6cfcb515e896ed391c7e0169cd80bf5f093",
+    "after_sha256": "da298c8ed1a8c5b2dd8fcb5e44fd8967239574a0d3298a5b2da56d4366102bce",
+    "scope": "Five actual stock table/chair model geometries through existing collisions_of; static body-height raster only. Positive witness independent SciPy transform; no complete map, mesh loading, Nav2/Gazebo/hardware."
+  }
+}

@@ -31,6 +31,8 @@ from oomwoo_sim_support.coverage_meter_node import (
     _stamp_disk,
 )
 
+import pytest
+
 
 def _room_with_alcove():
     """Build a walled room with a 3-cell-wide slot only a slim robot enters."""
@@ -108,3 +110,56 @@ def test_stamp_disk_masks_walls():
     _stamp_disk(covered, mask, cx=5, cy=5, rad=3)
     assert bool(covered[5, 5]) and bool(covered[5, 3])
     assert not covered[:, 6:].any(), 'disk must never stamp non-free cells'
+
+
+@pytest.fixture
+def map_generator():
+    import importlib.util
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[3] / 'tools/gen_livingroom_map.py'
+    spec = importlib.util.spec_from_file_location('existing_map_generator', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.W = module.H = 21
+    module.OX = module.OY = -.525
+    return module
+
+
+def test_map_generator_preserves_the_shifted_foot_of_a_tilted_leg(map_generator):
+    import math
+
+    module = map_generator
+    grid = np.zeros((module.H, module.W), dtype=bool)
+    pose = module.T_of([0., 0., .4, 0., math.pi / 4., 0.])
+    module.add_box(grid, [.08, .08, .8], pose)
+    # At z=.15, the tilted leg crosses x=-.25; x=0 is above the body band.
+    assert grid[10, 5]
+    assert not grid[10, 10]
+
+
+def test_map_generator_applies_roll_before_pitch_and_yaw(map_generator):
+    import math
+
+    transform = map_generator.T_of([1., 2., 3., math.pi / 2., math.pi / 2., 0.])
+    assert transform @ np.array([0., 1., 0., 1.]) == pytest.approx([2., 2., 3., 1.])
+
+
+def test_map_generator_retains_planar_rotation_of_box_cells(map_generator):
+    import math
+
+    module = map_generator
+    unturned = np.zeros((module.H, module.W), dtype=bool)
+    quarter = np.zeros_like(unturned)
+    module.add_box(unturned, [.31, .61, .4], module.T_of([0., 0., .1, 0., 0., 0.]))
+    module.add_box(quarter, [.31, .61, .4], module.T_of([0., 0., .1, 0., 0., math.pi / 2.]))
+    assert np.array_equal(quarter, np.rot90(unturned))
+    assert unturned[10, 10] and int(unturned.sum()) > 0
+
+
+@pytest.mark.parametrize('height', [-1., 1.])
+def test_map_generator_excludes_boxes_outside_body_height(map_generator, height):
+    module = map_generator
+    grid = np.zeros((module.H, module.W), dtype=bool)
+    module.add_box(grid, [.3, .6, .2], module.T_of([0., 0., height, .2, .3, .4]))
+    assert not grid.any()

@@ -1,0 +1,48 @@
+{
+  "completed_utc": "2026-10-30T13:47:22.169671+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 8.21,
+  "stdout": "...........                                                              [100%]\n11 passed in 1.40s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-tilted-box-after-1faf661da0",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_sim_support/test/test_meter_geometry.py\n"
+  ],
+  "source_sha256": {
+    "tools/gen_livingroom_map.py": "da298c8ed1a8c5b2dd8fcb5e44fd8967239574a0d3298a5b2da56d4366102bce",
+    "src/oomwoo_sim_support/test/test_meter_geometry.py": "a17f59709b960470f11c68b5220373664501bf5353a69c36b990b204150f7cf5"
+  },
+  "inputs_unchanged": true,
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-656: Bateria local qwen3.5-9b micro\u00bb desde hace 0 min (pid 3217633). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-656\u00bb.\n",
+  "resources": {
+    "meminfo": "MemAvailable:   11068104 kB",
+    "load": "1.99 1.39 1.24 3/2416 3254858"
+  },
+  "scope": "Existing meter geometry file plus actual generator RPY/box helpers with analytic tilted-foot and planar/height cases; no mesh load/map generation/Gazebo/hardware.",
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU small tests."
+}
