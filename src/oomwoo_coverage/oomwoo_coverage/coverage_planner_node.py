@@ -150,6 +150,12 @@ class CoveragePlanner(Node):
         self.goal_deadline = None      # per-waypoint watchdog start
         self.declare_parameter('goal_timeout_sec', 30.0)
         self.goal_timeout = self.get_parameter('goal_timeout_sec').value
+        # Optional known transit speed; zero preserves the legacy fixed budget.
+        self.declare_parameter('nav_linear_speed', 0.0)
+        self.nav_linear_speed = self.get_parameter('nav_linear_speed').value
+        if not math.isfinite(self.nav_linear_speed) or self.nav_linear_speed < 0:
+            raise ValueError('nav_linear_speed must be finite and nonnegative')
+        self._nav_goal_budget_s = self.goal_timeout
         # No-progress skip: if the robot doesn't get meaningfully closer to the
         # current waypoint for this long it's stuck/blocked — give up FAST rather
         # than waiting out Nav2's collision-averse recovery ladder (backup/spin/
@@ -754,6 +760,17 @@ class CoveragePlanner(Node):
         goal.pose = p
         self.awaiting = True
         self.goal_deadline = self.get_clock().now()
+        self._nav_goal_budget_s = self.goal_timeout
+        if self.nav_linear_speed > 0 and self.robot_xy is not None:
+            target = p.pose.position
+            distance = math.hypot(target.x - self.robot_xy[0], target.y - self.robot_xy[1])
+            if math.isfinite(distance):
+                # Keep the existing no-progress allowance and a finite backstop.
+                # Handoff/boot still use the unchanged goal_timeout, not this budget.
+                self._nav_goal_budget_s = min(
+                    2.0 * self.goal_timeout,
+                    max(self.goal_timeout,
+                        distance / self.nav_linear_speed + self.no_progress_sec))
         self._goal_best_dist = None     # reset no-progress tracking for this goal
         self._goal_progress_t = self.get_clock().now()
         options = {} if goal_uuid is None else {'goal_uuid': goal_uuid}
@@ -1038,8 +1055,9 @@ class CoveragePlanner(Node):
 
         No-progress means the robot isn't getting closer to the target — it's
         stuck/blocked and Nav2's recovery ladder can't help, so skip on one
-        strike (not a retry); gap-fill revisits later. goal_timeout is only a
-        slow absolute backstop for a robot that creeps but never arrives.
+        strike (not a retry); gap-fill revisits later. The per-goal absolute
+        budget may allow known-speed travel, capped at twice goal_timeout.
+        Handoff deadlines and the no-progress window are not extended.
         """
         stuck = False
         if self.robot_xy is not None \
@@ -1057,7 +1075,8 @@ class CoveragePlanner(Node):
                     and self._elapsed(self._goal_progress_t) \
                     >= self.no_progress_sec:
                 stuck = True
-        if stuck or self._elapsed(self.goal_deadline) >= self.goal_timeout:
+        budget = getattr(self, '_nav_goal_budget_s', self.goal_timeout)
+        if stuck or self._elapsed(self.goal_deadline) >= budget:
             self.get_logger().warn(
                 f'waypoint {self.wp_index} '
                 + ('stuck (no progress)' if stuck else 'timed out')

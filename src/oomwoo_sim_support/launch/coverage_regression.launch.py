@@ -147,6 +147,8 @@ def generate_launch_description() -> LaunchDescription:
                      'long_axis_sweep': ParameterValue(
                          LaunchConfiguration('long_axis'), value_type=bool),
                      'executor': LaunchConfiguration('executor'),
+                     'nav_linear_speed': ParameterValue(
+                         LaunchConfiguration('nav_linear_speed'), value_type=float),
                      'v_cruise': ParameterValue(
                          LaunchConfiguration('v_cruise'), value_type=float),
                      'rotate_speed': ParameterValue(

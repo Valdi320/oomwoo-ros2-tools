@@ -39,7 +39,8 @@ def reactive_driver():
     target = SimpleNamespace(pose=SimpleNamespace(
         position=SimpleNamespace(x=0.5, y=0.0)))
     node = SimpleNamespace(
-        awaiting=False, goal_deadline=None,
+        awaiting=False, goal_deadline=None, goal_timeout=30.0,
+        nav_linear_speed=0.0, robot_xy=None,
         _maybe_wedge_escape=lambda: False,
         _robot_pose=lambda: (0.0, 0.0, 0.0),
         _advance_to_target=lambda: True,
@@ -674,6 +675,7 @@ def test_relay_boot_deadline_also_bounds_a_nav_server_that_never_starts(monkeypa
     node._relay_fault = None
     node._relay_stage_wall = 0.0
     node.goal_timeout = 30.0
+    node._nav_goal_budget_s = 60.0
     node._relay_snapshot = {}
     node._relay_epoch = 0
     node.goal_handle = None
@@ -873,3 +875,88 @@ def test_unmasked_obstacle_inflation_retains_its_cardinal_contract():
     assert node.free_mask[35, 35]
     assert not node.free_mask[32, 35]
     assert faults == []
+
+
+def transit_budget_driver(speed=.14):
+    node, _, now = timed_reactive_driver()
+    node.nav_linear_speed = speed
+    node.robot_xy = (0.0, 0.0)
+    node.cached_poses = [row_target(6.0)]
+    node._dispatch_goal(node.cached_poses[0])
+    canceled = []
+    node.goal_handle = SimpleNamespace(cancel_goal_async=lambda: canceled.append(True))
+    return node, now, canceled
+
+
+def test_transit_budget_allows_long_trip_that_is_still_progressing():
+    node, now, canceled = transit_budget_driver()
+    now[0] = 32.0
+    node.robot_xy = (4.0, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert not canceled
+    assert node.awaiting
+    assert node.goal_timeout == 30.0
+
+
+def test_transit_budget_keeps_absolute_deadline_even_with_fresh_progress():
+    node, now, canceled = transit_budget_driver()
+    assert node._nav_goal_budget_s == pytest.approx(6.0 / .14 + 6.0)
+    now[0] += node._nav_goal_budget_s + .1
+    node.robot_xy = (5.0, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+
+
+def test_transit_budget_does_not_extend_no_progress_window():
+    node, now, canceled = transit_budget_driver()
+    now[0] = 2.0
+    node.robot_xy = (.1, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert not canceled
+    now[0] = 8.1
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+
+
+def test_transit_budget_zero_speed_preserves_legacy_absolute_deadline():
+    node, now, canceled = transit_budget_driver(speed=0.0)
+    now[0] = 32.0
+    node.robot_xy = (4.0, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+    assert node._nav_goal_budget_s == 30.0
+
+
+def test_transit_budget_recomputed_for_each_dispatched_goal():
+    node, now, canceled = transit_budget_driver()
+    assert node._nav_goal_budget_s > 30.0
+    node.cached_poses = [row_target(1.0)]
+    node._dispatch_goal(node.cached_poses[0])
+    assert node._nav_goal_budget_s == 30.0
+    now[0] = 32.0
+    node.robot_xy = (.5, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+
+
+def test_transit_budget_slow_speed_remains_capped():
+    node, now, canceled = transit_budget_driver(speed=.001)
+    assert node._nav_goal_budget_s == 60.0
+    now[0] = 62.0
+    node.robot_xy = (1.0, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+
+
+@pytest.mark.parametrize('speed', ['-0.14', '.nan', '.inf'])
+def test_transit_budget_rejects_invalid_configured_speed(speed):
+    import rclpy
+
+    rclpy.init(args=['--ros-args', '-p', 'nav_linear_speed:=' + speed])
+    node = CoveragePlanner.__new__(CoveragePlanner)
+    try:
+        with pytest.raises(ValueError, match='nav_linear_speed'):
+            node.__init__()
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()

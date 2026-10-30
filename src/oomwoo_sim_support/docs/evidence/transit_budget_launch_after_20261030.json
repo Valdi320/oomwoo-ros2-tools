@@ -1,0 +1,43 @@
+{
+  "completed_utc": "2026-10-30T13:03:35.934208+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 12.996,
+  "stdout": "..............................                                           [100%]\n30 passed in 6.06s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-transit-launch-5ff72b3482",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py\n"
+  ],
+  "source_sha256": {
+    "src/oomwoo_sim_support/launch/coverage_regression.launch.py": "9c24a2e1de7373662d33257b1fd9632e3b438076b4157bf44b2a783a23c7c675",
+    "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "664859250e4605ea22e97e65597a84a9623f8b3038ee5262290f45b9cd1cb687"
+  },
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-656: Bateria local qwen3.5-9b micro\u00bb desde hace 0 min (pid 3217633). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-656\u00bb.\n",
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU small tests.",
+  "scope": "Actual launch ParameterValue evaluation and existing scorer file; no Gazebo or hardware."
+}

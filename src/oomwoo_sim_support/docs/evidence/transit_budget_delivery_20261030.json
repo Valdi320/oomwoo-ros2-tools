@@ -1,0 +1,44 @@
+{
+  "date_utc": "2026-10-30T13:06:14.207749+00:00",
+  "base_commit": "8d1d6a66687406f32b9dd0137ecdc12bbe6883d3",
+  "utility_demonstrated": "A6m transit at configured0.14m/s still progressing at31s is no longer canceled solely by the legacy30s deadline. Existing no-progress cancellation, finite absolute backstop, per-dispatch reset and boot/handoff30s are preserved.",
+  "formula_s": "min(2*goal_timeout, max(goal_timeout, start_distance/nav_linear_speed + no_progress_sec))",
+  "opt_in": "Planner nav_linear_speed defaults0 (legacy deadline); regression launch reuses its existing Nav2 speed argument for the planner. Negative/nonfinite configured speeds rejected.",
+  "validation": {
+    "causal_before": "1 focused failure: actual dispatch/watchdog cancels moving goal at31s",
+    "planner_cases": 82,
+    "planner_rc": 0,
+    "planner_seconds": 9.391,
+    "scorer_launch_cases": 30,
+    "scorer_launch_rc": 0,
+    "scorer_launch_seconds": 12.996,
+    "style_files": 4,
+    "style_rc": 0,
+    "style_seconds": 8.908,
+    "bash_syntax": "PASS in style invocation",
+    "planner_AST_unchanged_after_whitespace_wrap": true,
+    "final_source_sha256": {
+      "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "a552054576df9b32160ef4c6db90963419f4d8a8f8104af7a3f492eb0bbec0ab",
+      "src/oomwoo_coverage/test/test_planner_geometry.py": "6d24e6194e7f6030c20337dc6492a94c096a6b10e24a8f6297530c8a1cdbbf6c",
+      "src/oomwoo_sim_support/launch/coverage_regression.launch.py": "9c24a2e1de7373662d33257b1fd9632e3b438076b4157bf44b2a783a23c7c675",
+      "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "664859250e4605ea22e97e65597a84a9623f8b3038ee5262290f45b9cd1cb687"
+    },
+    "source_scope": "Actual dispatch/watchdog, invalid-config ROS constructors and actual launch ParameterValue evaluation; deterministic synthetic state. No native scene or hardware."
+  },
+  "unchanged": [
+    "goal_timeout30s for boot/handoff",
+    "no_progress6s and existing near-goal exception",
+    "ABORTED policy, UUID/journal checks and Keepout",
+    "90%/80% grading, meter geometry and coverage denominator",
+    "No new timer, node, worker, tool or ROS subscription"
+  ],
+  "limits": [
+    "Straight-line duration plus existing allowance is a nominal budget, not proof of enough time around obstacles.",
+    "Extension is capped at twice the configured fixed deadline; very slow/long trips can still time out.",
+    "Short canceled waypoint290 still has30s budget; its cause remains unproven.",
+    "No measured path/coverage/efficiency improvement yet; preceding native room still fails80%."
+  ],
+  "resource_authorization": "Compatible small .25CPU/512MB/noGPU tests as explicitly authorized by user. Actual occupied guard outputs retained. Large scene must use existing FIFO and its own legitimate turn.",
+  "next_minimum": "One native masked room with immutable final sources, coherent grader, original90/80 criteria and original assets; collect exact UUID outcomes, Keepout audit, process exits and first failure.",
+  "decision": "Consolidate component change, then advance native acceptance through existing FIFO. Active docking integration and global sweet spot still pending."
+}

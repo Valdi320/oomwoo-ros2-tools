@@ -1,0 +1,46 @@
+{
+  "completed_utc": "2026-10-30T12:59:16.459432+00:00",
+  "rc": 1,
+  "host_timeout": false,
+  "seconds": 9.515,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________ test_transit_budget_allows_long_trip_that_is_still_progressing ________\n\n    def test_transit_budget_allows_long_trip_that_is_still_progressing():\n        node, now, canceled = transit_budget_driver()\n        now[0] = 32.0\n        node.robot_xy = (4.0, 0.0)\n        CoveragePlanner._goal_watchdog(node)\n>       assert not canceled\nE       assert not [True]\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:896: AssertionError\n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_transit_budget_allows_long_trip_that_is_still_progressing\n1 failed in 2.80s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-transit-before-48f462a2bb",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py::test_transit_budget_allows_long_trip_that_is_still_progressing\n"
+  ],
+  "source_sha256": {
+    "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "762047ad3cd6638688c31519af02d65bfc3cf66f6ae43eddcac40f578f94353f",
+    "src/oomwoo_coverage/test/test_planner_geometry.py": "6d24e6194e7f6030c20337dc6492a94c096a6b10e24a8f6297530c8a1cdbbf6c"
+  },
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-655: Bateria local ornith1.5-9b micro\u00bb desde hace 0 min (pid 3199155). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-655\u00bb.\n",
+  "resources": {
+    "meminfo": "MemAvailable:   10389268 kB",
+    "load": "0.78 1.20 1.59 3/2370 3215216"
+  },
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU small tests."
+}

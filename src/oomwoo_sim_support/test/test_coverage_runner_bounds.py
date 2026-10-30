@@ -465,3 +465,28 @@ def test_motion_fault_during_completion_grace_cannot_pass(score):
     assert code == 1
     assert report['end_reason'] == 'motion_fault'
     assert not report['pass']
+
+
+def test_regression_launch_passes_the_configured_nav_speed_to_planner(monkeypatch):
+    import importlib.util
+    from pathlib import Path
+
+    from launch import LaunchContext
+
+    path = Path(__file__).resolve().parents[1] / 'launch/coverage_regression.launch.py'
+    spec = importlib.util.spec_from_file_location('coverage_speed_launch', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    real_node = module.Node
+    planner_parameters = []
+
+    def record_node(**kwargs):
+        if kwargs['executable'] == 'coverage_planner':
+            planner_parameters.extend(kwargs['parameters'])
+        return real_node(**kwargs)
+
+    monkeypatch.setattr(module, 'Node', record_node)
+    module.generate_launch_description()
+    context = LaunchContext()
+    context.launch_configurations['nav_linear_speed'] = '0.14'
+    assert planner_parameters[0]['nav_linear_speed'].evaluate(context) == .14

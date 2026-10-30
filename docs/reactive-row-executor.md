@@ -767,3 +767,22 @@ and an active NAV/SWEEP/DOCK integration. Further variants before this evidence
 would add review and maintenance cost without demonstrated utility. The goal
 is not complete and its overall sweet spot has not been established. Everything
 here is local; no upstream push, PR, merge or comment was made.
+
+
+The [per-goal transit-budget component receipt](../src/oomwoo_sim_support/docs/evidence/transit_budget_delivery_20261030.json)
+now records the causal moving-goal cancellation before the change, 82 planner
+cases passing after it, 30 scorer/launch cases passing, four-file style and shell
+syntax checks. A known positive nav_linear_speed allows the existing watchdog
+min(2 * goal_timeout, max(goal_timeout, distance / speed + no_progress_sec))
+seconds for that goal. Zero, the planner default, preserves the fixed deadline;
+the regression launch reuses the same speed argument as Nav2. Each dispatch
+resets its budget. Negative/nonfinite speed settings are rejected. Boot/handoff
+still use the original fixed deadline, and the existing no-progress check,
+near-goal exception and ABORTED policy remain intact. No timer or node was added.
+
+This demonstrates component behavior, not improved native efficiency. The
+shorter canceled goal still gets the original 30 seconds; its cause remains
+unproven. Nominal straight-line time does not guarantee enough time for detours.
+Next: one original masked-room acceptance under the existing FIFO, immutable
+sources, coherent scoring and unchanged 90%/80% criteria. Actual docking remains
+pending. Do not keep tuning a passing component before measuring integration.
