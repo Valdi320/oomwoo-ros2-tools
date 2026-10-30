@@ -1,0 +1,63 @@
+{
+  "observed_utc": "2026-10-30T22:15:24.535447+00:00",
+  "scope": "Recover lost read-only status queries in CoveragePlanner optional motion relay; existing 5Hz poll, no node/timer/parameter/API addition.",
+  "base_commit": "9f2bfec4e69eff15fc4ebd7640d888e424e0b6da",
+  "demonstrated_utility": [
+    "Baseline lost query remains pending and prevents later status; new poll replaces queries older than1.5s.",
+    "Fresh replacement reply is accepted; expired/delayed/old-epoch replies cannot renew status proof.",
+    "Active-owner stale STOP remains2.5s after the last actual accepted status; a retry is not authority.",
+    "Real installed rclpy client removes/cancels old pending request and receives next genuine DDS response without retaining pending entries."
+  ],
+  "source_review": {
+    "changed_methods": [
+      "_init_motion_relay",
+      "_relay_poll"
+    ],
+    "new_or_removed_methods": [],
+    "before_sha256": "5282caadfc76f692992f17d4f1729e5048cd7b0268004f1975d69511bd6d3a30",
+    "after_sha256": "f13571866a923a2ed1f8c49f1b4a71ea18de5fba45f88939611b2ea1c1fc7529",
+    "test_sha256": "271d6e4cb7843b7a9db03488dfd4f47094cb76644f2fe60b7caaa20750fb4da5",
+    "request_timeout_s": 1.5,
+    "existing_active_status_timeout_s": 2.5,
+    "existing_tick_hz": 5,
+    "deadline_evaluation": "At existing ticks; >1.5s, not a new timer; retries only read-only status, never control/goal commands.",
+    "expired_completion": "Discard before accepting result, including a future already done after its budget.",
+    "installed_rclpy_contract": {
+      "rclpy.client": {
+        "path": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/client.py",
+        "sha256": "ab3523d5b99998d71ce5990ec9babcb4ba9d352a73899e03ede55cf727ca5d5f"
+      },
+      "rclpy.task": {
+        "path": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+        "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77"
+      },
+      "remove_pending_request": "    def remove_pending_request(self, future: Future) -> None:\n        \"\"\"\n        Remove a future from the list of pending requests.\n\n        This prevents a future from receiving a response and executing its done callbacks.\n\n        :param future: A future returned from :meth:`call_async`\n        \"\"\"\n        with self._lock:\n            for seq, req_future in self._pending_requests.items():\n                if future is req_future:\n                    del self._pending_requests[seq]\n                    break\n",
+      "cancel": "    def cancel(self):\n        \"\"\"Request cancellation of the running task if it is not done already.\"\"\"\n        with self._lock:\n            if not self._pending():\n                return\n\n        self._state = FutureState.CANCELLED\n        self._schedule_or_invoke_done_callbacks()\n"
+    }
+  },
+  "evidence": {
+    "relay_status_recovery_before_20261030.json": "2b4ae56ec93c2cbda2f6fe66fb09df6e5fdbff5c9bdc145d9a4e7a46c146fd18",
+    "relay_status_recovery_setup_failure_20261030.json": "73324627d3753c30875a26f19fe4259ab6a00d5f149ca595afc92aeb0894a7d8",
+    "relay_status_recovery_after_20261030.json": "266f4493de912c1c1b532464c06813c6678b02bcabfd9badf5b1f513cb8c74da"
+  },
+  "verification": {
+    "before": "5 failed,1 passed,99 deselected; failures demonstrate missing recovery, original epoch rejection already passes.",
+    "initial_after": "23 passed,1 setup failure,82 deselected: private generated interface absent in lightweight image; production cases passed.",
+    "final_after": "24 passed,82 deselected; no suite.",
+    "wire_scope": "Built-in std_srvs/Trigger uses actual Client/call_async/remove_pending_request/Future and actual service/executor replies. It verifies generic transport cleanup/requery; private status payload acceptance is separately checked with real rclpy futures.",
+    "resource_policy": ".25CPU/512MiB/noGPU; occupied machine reported; authorized coexistence.",
+    "execution_seconds": 10.079
+  },
+  "historical_evidence": {
+    "joint_handoff": "An observer status future previously remained pending until196.269s test deadline; this change addresses the same general query mechanism in the actual planner, not historical planner attribution.",
+    "joint_status_native": "Existing private observer1.5s requery preceded real DOCK/BACK in ticket725; that trial later failed on map health, not status. No new full native trial performed for this increment."
+  },
+  "remaining_distance": "Full-room90/80 still unachieved; latest map-frame trial96%coverage/77.34%first90. This reliability fix claims no efficiency improvement and no statistical DDS repair.",
+  "next_increment": {
+    "decision": "Consolidate this bounded reliability fix; no repeat of passed tests or native joint cycle without new evidence.",
+    "priority": "Peer owns dynamic pruning/narrow-cell geometry investigation. Review its measured footprint/cost before considering another full-room run.",
+    "benefit_cost": "Observed missing recovery addressed with11 production lines, short focal tests; avoid~16min full-room rerun that does not decide this mechanism.",
+    "evidence_that_changes_decision": "A real current planner status loss that cannot recover, a stale-proof violation, or peer demonstrated full-footprint route saving."
+  },
+  "delivery_policy": "Local commit only; no push/PR/merge, no remote comments, no hardware."
+}

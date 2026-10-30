@@ -29,6 +29,7 @@ from oomwoo_coverage.coverage_planner_node import (
 )
 import pytest
 from rclpy.clock import ClockType
+from rclpy.task import Future
 from rclpy.time import Time
 from tf2_ros import Buffer
 
@@ -639,6 +640,7 @@ def private_relay_planner(tmp_path):
     node._relay_owner = 'reactive_sweep'
     node._relay_rpc = None
     node._relay_status_future = None
+    node._relay_status_started = None
     node._relay_status_client = SimpleNamespace(service_is_ready=lambda: False)
     node._relay_status_epoch = 0
     node._relay_status_last = None
@@ -684,16 +686,184 @@ def test_relay_journals_uuid_before_successful_nav_permission_and_send(tmp_path)
 
 
 def test_preclaim_status_reply_cannot_overwrite_new_navigation_owner(tmp_path):
+    import time
     node, _, sends = private_relay_planner(tmp_path)
     CoveragePlanner._send_goal_to(node, row_target(2.0))
     relay_reply(node, 'release_motion')
     old_epoch = node._relay_epoch
     node._relay_status_epoch = old_epoch
+    node._relay_status_started = time.monotonic()
     node._relay_status_future = SimpleNamespace(done=lambda: True, result=lambda: SimpleNamespace(
         ok=True, status_json='{"owner":"stopped"}'))
     relay_reply(node, 'claim_nav', owner='navigation')
     assert node._relay_epoch > old_epoch
     assert node._relay_owner == 'navigation' and len(sends) == 1
+
+
+
+def status_relay_planner(tmp_path, monkeypatch):
+    """Use real rclpy futures with the planner's existing status poll/tick."""
+    node, sent, sends = private_relay_planner(tmp_path)
+    now, requests, removed = [10.0], [], []
+    monkeypatch.setattr('oomwoo_coverage.coverage_planner_node.time.monotonic',
+                        lambda: now[0])
+
+    def call_async(request):
+        future = Future()
+        requests.append(future)
+        return future
+
+    node._relay_status_client = SimpleNamespace(
+        service_is_ready=lambda: True, call_async=call_async,
+        remove_pending_request=removed.append)
+    node._relay_status_type = SimpleNamespace(Request=lambda: object())
+    node._relay_snapshot = {'owner': 'reactive_sweep'}
+    return node, now, requests, removed, sent, sends
+
+
+@pytest.mark.parametrize('late_done', [False, True])
+def test_relay_status_lost_or_late_response_is_replaced_without_refresh(
+        tmp_path, monkeypatch, late_done):
+    node, now, requests, removed, _, sends = status_relay_planner(tmp_path, monkeypatch)
+    node._relay_poll()
+    first = requests[0]
+    now[0] = 11.4
+    node._relay_poll()
+    assert requests == [first] and removed == []
+    if late_done:
+        first.set_result(SimpleNamespace(ok=True, status_json='{"owner":"navigation"}'))
+    now[0] = 11.6
+    node._relay_poll()
+    assert removed == [first] and len(requests) == 2
+    assert node._relay_status_last is None
+    assert node._relay_snapshot == {'owner': 'reactive_sweep'}
+    assert sends == []
+    if not late_done:
+        assert first.cancelled()
+    requests[1].set_result(SimpleNamespace(ok=True, status_json='{"owner":"stopped"}'))
+    now[0] = 11.8
+    node._relay_poll()
+    assert node._relay_owner == 'stopped'
+    assert node._relay_status_last == 11.8 and len(requests) == 3
+
+
+def test_relay_status_late_abandoned_future_cannot_override_current_reply(tmp_path, monkeypatch):
+    node, now, requests, removed, _, _ = status_relay_planner(tmp_path, monkeypatch)
+    node._relay_poll()
+    first = requests[0]
+    now[0] = 11.6
+    node._relay_poll()
+    # Simulate an executor which had already taken the abandoned response.
+    first.set_result(SimpleNamespace(ok=True, status_json='{"owner":"navigation"}'))
+    requests[1].set_result(SimpleNamespace(ok=True, status_json='{"owner":"stopped"}'))
+    node._relay_poll()
+    assert node._relay_owner == 'stopped' and removed == [first]
+
+
+def test_relay_status_reply_before_control_epoch_cannot_renew_health(tmp_path, monkeypatch):
+    node, now, requests, _, _, _ = status_relay_planner(tmp_path, monkeypatch)
+    node._relay_poll()
+    node._relay_epoch += 1
+    node._relay_owner = 'navigation'
+    requests[0].set_result(SimpleNamespace(ok=True, status_json='{"owner":"stopped"}'))
+    now[0] = 10.2
+    node._relay_poll()
+    assert node._relay_owner == 'navigation' and node._relay_status_last is None
+    assert node._relay_status_epoch == node._relay_epoch
+
+
+def test_relay_status_retries_preserve_active_stale_stop(tmp_path, monkeypatch):
+    node, now, requests, removed, sent, _ = status_relay_planner(tmp_path, monkeypatch)
+    node._relay_stage = node._relay_last_stage = 'nav'
+    node._relay_stage_wall = 10.0
+    node._relay_owner = 'navigation'
+    node._relay_status_last = 10.0
+    node._relay_snapshot = {'owner': 'navigation'}
+    node.finished, node.plan_started, node.awaiting = False, True, False
+    node._relay_phase = MethodType(CoveragePlanner._relay_phase, node)
+    node._relay_phase_pub = SimpleNamespace(publish=lambda msg: None)
+    node._relay_nav_contact = lambda: False
+    node._relay_fail = MethodType(CoveragePlanner._relay_fail, node)
+    node.goal_handle = None
+    node._relay_stop_future = None
+    node._relay_control = SimpleNamespace(service_is_ready=lambda: False)
+    node.get_logger = lambda: SimpleNamespace(error=lambda message: None)
+    assert CoveragePlanner._relay_tick(node) is True
+    now[0] = 11.6
+    assert CoveragePlanner._relay_tick(node) is True
+    assert len(requests) == 2 and removed == [requests[0]]
+    assert node._relay_status_last == 10.0 and node._relay_fault is None
+    now[0] = 12.6
+    assert CoveragePlanner._relay_tick(node) is True
+    assert node._relay_fault == 'relay status stopped arriving'
+    assert node._relay_stage == 'fault' and sent[-1] == (0.0, 0.0)
+
+
+def test_relay_status_unavailable_server_does_not_accumulate_pending_requests(tmp_path, monkeypatch):
+    node, now, requests, removed, _, _ = status_relay_planner(tmp_path, monkeypatch)
+    node._relay_poll()
+    node._relay_status_client.service_is_ready = lambda: False
+    now[0] = 11.6
+    node._relay_poll()
+    assert len(requests) == len(removed) == 1
+    assert node._relay_status_future is None
+    now[0] = 30.0
+    node._relay_poll()
+    assert len(requests) == 1 and node._relay_status_last is None
+
+
+def test_relay_status_real_client_discards_old_dds_response_and_recovers(tmp_path, monkeypatch):
+    """Check transport cleanup/requery with a built-in wire type, independent of payload."""
+    import time
+    import rclpy
+    from rclpy.context import Context
+    from rclpy.executors import SingleThreadedExecutor
+    from std_srvs.srv import Trigger
+
+    node, now, _, _, _, _ = status_relay_planner(tmp_path, monkeypatch)
+    context = Context()
+    context.init(args=[])
+    ros_node = rclpy.create_node('status_retry_contract', context=context)
+    executor = SingleThreadedExecutor(context=context)
+    executor.add_node(ros_node)
+    served = []
+
+    def respond(request, response):
+        served.append(request)
+        response.success = True
+        response.message = 'actual response'
+        return response
+
+    try:
+        service = ros_node.create_service(Trigger, '~/status', respond)
+        client = ros_node.create_client(Trigger, '~/status')
+        assert client.wait_for_service(timeout_sec=2.0)
+        node._relay_status_client = client
+        node._relay_status_type = Trigger
+        node._relay_poll()
+        abandoned = node._relay_status_future
+        assert abandoned is not None and not abandoned.done()
+        now[0] = 11.6
+        node._relay_poll()
+        current = node._relay_status_future
+        assert abandoned.cancelled() and current is not abandoned
+        assert list(client._pending_requests.values()) == [current]
+        end = time.perf_counter() + 5.0
+        while not current.done() and time.perf_counter() < end:
+            executor.spin_once(timeout_sec=0.05)
+        assert current.done() and len(served) == 2
+        assert abandoned.cancelled() and not abandoned.done()
+        assert current.result().success and current.result().message == 'actual response'
+        assert node._relay_status_last is None
+        # The executor schedules the normal client's cleanup as a separate task.
+        while client._pending_requests and time.perf_counter() < end:
+            executor.spin_once(timeout_sec=0.05)
+        assert client._pending_requests == {}
+        ros_node.destroy_service(service)
+    finally:
+        executor.shutdown(timeout_sec=1.0)
+        ros_node.destroy_node()
+        context.shutdown()
 
 
 def test_finished_owned_sweep_requests_release_before_legacy_finished_return():

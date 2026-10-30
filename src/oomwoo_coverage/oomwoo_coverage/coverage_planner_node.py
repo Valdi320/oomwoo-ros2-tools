@@ -1187,6 +1187,7 @@ class CoveragePlanner(Node):
         self._relay_snapshot = {}
         self._relay_status_last = None
         self._relay_status_future = None
+        self._relay_status_started = None
         self._relay_rpc = None
         self._relay_rpc_operation = None
         self._relay_rpc_started = None
@@ -1313,6 +1314,14 @@ class CoveragePlanner(Node):
                             self._dispatch_goal(self._relay_goal_pose, goal_uuid)
                         elif operation == 'release_nav':
                             self._relay_stage = 'claim_sweep'
+        # A lost read-only response must not stall every later status query.
+        # Retrying does not refresh the separate 2.5 s active-owner proof.
+        if self._relay_status_future is not None \
+                and time.monotonic() - self._relay_status_started > 1.5:
+            self._relay_status_client.remove_pending_request(self._relay_status_future)
+            self._relay_status_future.cancel()
+            self._relay_status_future = None
+            self._relay_status_started = None
         if self._relay_status_future is not None and self._relay_status_future.done():
             try:
                 response = self._relay_status_future.result()
@@ -1320,6 +1329,7 @@ class CoveragePlanner(Node):
                 self._relay_fail('status transport failed: ' + str(exc))
                 response = None
             self._relay_status_future = None
+            self._relay_status_started = None
             if response is not None and response.ok \
                     and self._relay_status_epoch == self._relay_epoch:
                 self._relay_snapshot = json.loads(response.status_json)
@@ -1327,6 +1337,7 @@ class CoveragePlanner(Node):
                 self._relay_status_last = time.monotonic()
         if self._relay_status_future is None and self._relay_status_client.service_is_ready():
             self._relay_status_epoch = self._relay_epoch
+            self._relay_status_started = time.monotonic()
             self._relay_status_future = self._relay_status_client.call_async(
                 self._relay_status_type.Request())
 
