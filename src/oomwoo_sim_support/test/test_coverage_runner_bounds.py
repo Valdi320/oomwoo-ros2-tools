@@ -151,9 +151,10 @@ def truth_audit():
     """Bind the existing scorer callbacks to a fixed original-stamp clock."""
     now = [10_200_000_000]
     node = SimpleNamespace(
-        _keepout_audit_mask=None, _keepout_audit_previous=None,
+        _motion_fault=False, _keepout_audit_mask=None, _keepout_audit_previous=None,
         _keepout_audit={'poses_before_mask': 0, 'poses': 0, 'segments': 0,
-                        'footprint_crossings': 0, 'max_pose_gap_s': 0., 'errors': []},
+                        'footprint_crossings': 0, 'max_pose_gap_s': 0., 'errors': [],
+                        'first_footprint_crossing': None},
         get_clock=lambda: SimpleNamespace(now=lambda: SimpleNamespace(nanoseconds=now[0])))
     for name in ('_audit_keepout_mask', '_audit_keepout_truth',
                  '_audit_keepout_error', '_audit_keepout_result'):
@@ -189,6 +190,55 @@ def test_ground_truth_audit_detects_crossing_between_two_clear_endpoints():
     assert result['footprint_crossings'] == 1
 
 
+def test_first_crossing_latches_motion_fault_before_final_report_and_keeps_it():
+    node, mask, _ = truth_audit()
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(.565, 10_000_000_000))
+    assert not node._motion_fault
+    node._audit_keepout_truth(truth_pose(.575, 10_100_000_000))
+    assert node._motion_fault  # before any final scoring/snapshot
+    node._audit_keepout_truth(truth_pose(.565, 10_150_000_000))
+    node._audit_keepout_truth(truth_pose(.555, 10_200_000_000))
+    assert node._motion_fault
+    assert node._audit_keepout_result()['footprint_crossings'] == 2
+
+
+@pytest.mark.parametrize('during_grace', [False, True], ids=['running', 'completion_grace'])
+def test_first_crossing_ends_existing_run_on_same_callback(score, during_grace):
+    audit, mask, _ = truth_audit()
+
+    def update(node, tick):
+        if tick == 1:
+            node.motion_audit = True
+            node.motion_graph = {}
+            node.motion_samples = {'phase': [], 'status': [], 'feedback': []}
+            node._motion_status_count = 0
+            node._motion_fault = False
+            node._audit_graph = lambda: None
+            node.get_clock = audit.get_clock
+            node._keepout_audit = audit._keepout_audit
+            node._keepout_audit_mask = None
+            node._keepout_audit_previous = None
+            node._keepout_audit_bbox = None
+            for name in ('_audit_keepout_mask', '_audit_keepout_truth',
+                         '_audit_keepout_error', '_audit_keepout_result'):
+                setattr(node, name, MethodType(getattr(runner.CoverageRunner, name), node))
+            node._audit_keepout_mask(mask)
+            node.sweep_started = True
+            node.sweep_complete = during_grace
+            node.coverage = .95 if during_grace else .20
+            node.efficiency = .85
+            node._audit_keepout_truth(truth_pose(.565, 10_000_000_000))
+        elif tick == 2:
+            node._audit_keepout_truth(truth_pose(.575, 10_100_000_000))
+
+    code, report, elapsed = score(wall=5.0, update=update)
+    assert code == 1 and report['end_reason'] == 'motion_fault'
+    assert report['measurement_valid'] and not report['pass']
+    assert report['motion_audit']['keepout']['footprint_crossings'] == 1
+    assert elapsed == .5  # exactly the second callback, no further spins/grace
+
+
 def test_ground_truth_audit_retains_a_clear_motion_segment():
     node, mask, _ = truth_audit()
     node._audit_keepout_mask(mask)
@@ -197,7 +247,9 @@ def test_ground_truth_audit_retains_a_clear_motion_segment():
     result = node._audit_keepout_result()
     assert result['valid'] and result['segments'] == 1
     assert result['footprint_crossings'] == 0
+    assert result['first_footprint_crossing'] is None
     assert result['min_sampled_center_to_mask_bbox_m'] == pytest.approx(1.)
+    assert not node._motion_fault
 
 
 def test_ground_truth_audit_never_certifies_missing_or_empty_mask():
@@ -221,6 +273,7 @@ def test_ground_truth_audit_preserves_rejected_source_and_clock_stamps(stamp, ag
     now[0] += 1_000_000_000
     result = node._audit_keepout_result()
     assert not result['valid'] and result['errors'] and result['poses'] == 0
+    assert not node._motion_fault
     error = result['errors'][0]
     assert "frame_prefix='map'" in error
     assert f'stamp_ns={stamp}' in error
@@ -703,3 +756,69 @@ def test_framework_stop_interrupt_keeps_exit_provenance(
     assert actions == []
     assert namespace['result'] == [score_code]
     assert namespace['execution_failed'][0] is expected_fault
+
+
+def test_first_crossing_retains_original_chord_clock_and_mask_identity():
+    import hashlib
+
+    node, mask, _ = truth_audit()
+    node.motion_samples = {'phase': [{'phase': 'SWEEP', 'sim': 9.9, 'wall': 123.5}]}
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(.2, 10_000_000_000))
+    node._audit_keepout_truth(truth_pose(1.4, 10_100_000_000))
+    first = node._audit_keepout_result()['first_footprint_crossing']
+    assert first is not None
+    assert first['previous'] == {'xy_m': [.2, .125], 'stamp_ns': 10_000_000_000}
+    assert first['current'] == {'xy_m': [1.4, .125], 'stamp_ns': 10_100_000_000}
+    assert first['observed_ros_ns'] == 10_200_000_000
+    assert first['source_age_ns'] == 100_000_000
+    assert first['phase_label'] == 'SWEEP'
+    assert first['phase_observed_sim_s'] == 9.9
+    assert first['phase_observed_monotonic_s'] == 123.5
+    assert first['footprint_radius_m'] == .18 and first['margin_cells'] == 0
+    assert first['pose_number'] == 2
+    assert first['mask_geometry'] == {
+        'width': 20, 'height': 20, 'resolution': .25,
+        'origin_x': -2.5, 'origin_y': -2.5, 'yaw': 0.,
+        'data_sha256': hashlib.sha256(bytes(mask.data)).hexdigest()}
+
+
+def test_first_crossing_keeps_first_evidence_after_duplicate_clear_and_later_crossing():
+    import json
+
+    node, mask, _ = truth_audit()
+    node.motion_samples = {'phase': [{'phase': 'SWEEP', 'sim': 9.9, 'wall': 123.5}]}
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(.2, 10_000_000_000))
+    node._audit_keepout_truth(truth_pose(1.4, 10_100_000_000))
+    first = node._audit_keepout_result()['first_footprint_crossing']
+    assert first is not None
+    snapshot = json.dumps(first, sort_keys=True)
+    node._audit_keepout_truth(truth_pose(1.4, 10_100_000_000))
+    node.motion_samples['phase'][-1]['phase'] = 'TRANSIT'
+    node._audit_keepout_truth(truth_pose(1.6, 10_120_000_000))
+    node._audit_keepout_truth(truth_pose(.2, 10_140_000_000))
+    result = node._audit_keepout_result()
+    assert result['footprint_crossings'] == 2 and result['poses'] == 4
+    assert json.dumps(result['first_footprint_crossing'], sort_keys=True) == snapshot
+    assert result['first_footprint_crossing']['phase_label'] == 'SWEEP'
+
+
+def test_first_crossing_supports_initial_overlapping_disk_without_previous_pose():
+    node, mask, _ = truth_audit()
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(.85, 10_000_000_000))
+    first = node._audit_keepout_result()['first_footprint_crossing']
+    assert first is not None and first['previous'] is None
+    assert first['current'] == {'xy_m': [.85, .125], 'stamp_ns': 10_000_000_000}
+    assert first['phase_label'] == 'UNSEEN' and first['phase_observed_sim_s'] is None
+
+
+@pytest.mark.parametrize('stamp', [8_000_000_000, 10_220_000_000])
+def test_first_crossing_is_not_created_from_rejected_stale_or_future_pose(stamp):
+    node, mask, _ = truth_audit()
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(.85, stamp))
+    result = node._audit_keepout_result()
+    assert result['first_footprint_crossing'] is None
+    assert result['footprint_crossings'] == 0 and result['errors']

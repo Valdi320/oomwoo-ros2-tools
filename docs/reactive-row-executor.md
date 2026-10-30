@@ -36,6 +36,15 @@ in SWEEP. The 90% target was not reached. This candidate has no demonstrated
 native efficiency gain. Prioritize incoming path/tracking and the separate
 SWEEP issue, retaining all margins and thresholds before another full run.
 
+The [first-crossing reliability increment](../src/oomwoo_sim_support/docs/evidence/first_crossing_abort_delivery_20261031.json)
+now latches the existing runner motion fault on the first independently
+observed forbidden chord and leaves completion grace on that fault. It
+retains one original chord/pose, source stamps and mask digest; the phase
+is the last received label with receipt times, not synchronized authority
+proof. Twenty-five selected cases and two-file style checks pass. This
+cuts an already-invalid assay through existing launch shutdown; it does
+not repair motion or certify an immediate physical motor stop.
+
 Masked full-room acceptance remains open: the [earlier peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged
 80% requirement. The default local costmap frame remains `odom`; the private

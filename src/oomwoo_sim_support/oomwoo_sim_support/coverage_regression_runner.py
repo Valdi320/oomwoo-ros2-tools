@@ -38,6 +38,7 @@ coverage_regression.launch.py with_meter:=false; direct launches must also
 disable the separate meter and supply the intended meter geometry.
 """
 
+import hashlib
 import json
 import math
 import os
@@ -85,6 +86,7 @@ class CoverageRunner(CoverageMeter):
         self._keepout_audit = {
             'poses_before_mask': 0, 'poses': 0, 'segments': 0,
             'footprint_crossings': 0, 'max_pose_gap_s': 0.0, 'errors': [],
+            'first_footprint_crossing': None,
             'min_sampled_center_to_mask_bbox_m': None,
             'motion_by_phase': {},
             'footprint_radius_m': 0.18, 'source': '/ground_truth/pose',
@@ -231,6 +233,8 @@ class CoverageRunner(CoverageMeter):
                     self._keepout_audit['max_pose_gap_s'], gap)
             start = previous[:2] if previous is not None else (x, y)
             clear = swept_disk_clear(self._keepout_audit_mask, start, (x, y), 0.18, 0)
+            if not clear:
+                self._motion_fault = True
             bbox = self._keepout_audit_bbox
             distance = None
             if bbox is not None:
@@ -244,6 +248,28 @@ class CoverageRunner(CoverageMeter):
             if phase not in ('IDLE', 'SWEEP', 'TRANSIT', 'PREPARE_NAV',
                              'TRANSIT_CANCEL', 'ESCAPE', 'FAULT', 'UNSEEN'):
                 phase = 'OTHER'
+            if not clear and self._keepout_audit.get('first_footprint_crossing') is None:
+                mask = self._keepout_audit_mask
+                # Retain one original chord, not a growing trajectory. Phase
+                # metadata is last received, not a synchronized owner proof.
+                self._keepout_audit['first_footprint_crossing'] = {
+                    'previous': ({'xy_m': list(previous[:2]), 'stamp_ns': previous[2]}
+                                 if previous is not None else None),
+                    'current': {'xy_m': [x, y], 'stamp_ns': stamp},
+                    'source_frame': msg.header.frame_id,
+                    'observed_ros_ns': now_ns, 'source_age_ns': age,
+                    'pose_number': self._keepout_audit['poses'] + 1,
+                    'phase_label': phase,
+                    'phase_observed_sim_s': phases[-1].get('sim') if phases else None,
+                    'phase_observed_monotonic_s': phases[-1].get('wall') if phases else None,
+                    'footprint_radius_m': 0.18, 'margin_cells': 0,
+                    'center_to_mask_bbox_m': distance,
+                    'mask_geometry': {
+                        'width': mask.width, 'height': mask.height,
+                        'resolution': mask.resolution,
+                        'origin_x': mask.origin_x, 'origin_y': mask.origin_y,
+                        'yaw': mask.yaw,
+                        'data_sha256': hashlib.sha256(bytes(mask.data)).hexdigest()}}
             observed = self._keepout_audit.setdefault('motion_by_phase', {}).setdefault(
                 phase, {'poses': 0, 'distance_m': 0., 'nonclear_segments': 0,
                         'min_sampled_center_to_mask_bbox_m': None})
@@ -405,6 +431,8 @@ class CoverageRunner(CoverageMeter):
                                 wall_start + self.max_wall)
                 while rclpy.ok() and time.monotonic() < grace_end:
                     rclpy.spin_once(self, timeout_sec=0.2)
+                    if getattr(self, '_motion_fault', False):
+                        break
                     # Retain the first paired crossing during grace too;
                     # later stopping samples must not replace its efficiency.
                     if not self.target_crossed and self.coverage >= self.cov_target:

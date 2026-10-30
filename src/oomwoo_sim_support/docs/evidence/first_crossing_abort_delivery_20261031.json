@@ -1,0 +1,73 @@
+{
+  "recorded_utc": "2026-10-30T23:50:41.987194+00:00",
+  "scope": "Existing coverage runner fault latch and completion-grace exit plus single original first-crossing record. No new node/timer/subscription/gate or change to command output.",
+  "source_base_commit": "345445542d1982d7221bd0943eca1e7c464e6b95",
+  "peer_adoption": {
+    "repo": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools",
+    "commit": "5474149",
+    "source_without_own_four_lines_byte_identical_to_peer": true,
+    "authorship": "Adopt peer first-event capture and five focal cases; own immediate latch/grace exit and three causal cases."
+  },
+  "source_sha256": "7f60bca47401d0810df734371cfdfc20ce1caf0e839b3334821109cd9b16b8ea",
+  "test_source_sha256": "8940488aa5c3c1180d3d813f093a8fc866b9a8d6cb27c4dec57d810958b2251c",
+  "review": {
+    "changed_methods": [
+      "__init__",
+      "_audit_keepout_truth",
+      "run"
+    ],
+    "other_source_change": "hashlib import only",
+    "unchanged_contracts": [
+      "18cm audit disk",
+      "24cm relay projection margin",
+      "original-stamp/frame/age rejection",
+      "mask validation",
+      "existing final grading and closure",
+      "planner and actual commands"
+    ]
+  },
+  "causal_contrast": {
+    "before": "Three cases fail: no early latch and run waits5.0/3.25s in synthetic clock.",
+    "after": "Same cases exit on second original callback at0.5s; clear samples cannot reset fault.",
+    "combined": "25 passed,37 deselected; two files style checked with no problems."
+  },
+  "demonstrated_utility": "Stop the already-invalid simulation assay in the runner iteration observing a crossing, including completion grace; retain one immutable original chord/pose with source stamps and mask digest for diagnosis.",
+  "remaining_distance": "No corrected navigation or SWEEP motion demonstrated; native839 failed48.98% with three SWEEP crossing chords and later relay guard. No full90/80 acceptance or actual savings. The old run cannot gain missing original crossing coordinates retroactively.",
+  "next_increment": {
+    "use": "Distinguish Nav2 global path from tracking near Keepout and acquire first SWEEP crossing in the next causally necessary simulation.",
+    "acceptance": "Original source-stamped pose/path/commands; unchanged footprint, margin, world and90/80; meaningful corrected-motion contrast with independently valid audit.",
+    "minimum": "Inspect installed RPP/controller contract and frozen history, derive one discriminating short case before FIFO simulation; do not rerun full room for this diagnostic addition alone.",
+    "decision": "Consolidate this bounded reliability increment, then advance actual-motion diagnosis.",
+    "benefit_cost": "Combined selected oracle8.096s plus style7.305s at.25CPU512MiB/noGPU; no extra native run. Missing cause of unsafe motion now has priority over more route optimization.",
+    "evidence_that_changes_decision": "Source-stamped native cause discriminates global route versus steering or reactive SWEEP; a corrected causal run removes crossings without weakening guards."
+  },
+  "limits": [
+    "Runner exit uses existing launch shutdown; not a certified immediate physical motor stop.",
+    "Latest received phase includes receipt times but is not synchronized authority proof.",
+    "One fixed-size diagnostic; no growing trajectory.",
+    "No hardware access or remote writes."
+  ],
+  "resource_policy": "Guard reported LIBRE before both combined checks; Podman.25CPU512MiB/noGPU; only selected cases from one file, not a suite.",
+  "evidence": {
+    "first_crossing_abort_after_20261031.json": {
+      "rc": 0,
+      "sha256": "3851a038a7114dd59b9f075fa3a1599fe909e085dd98f696d9c7910aef4e36bc"
+    },
+    "first_crossing_abort_before_20261031.json": {
+      "rc": 1,
+      "sha256": "e7a825e45313bdb5456ac253809e827b3627cc4377c43da355fa9dfb2279c58a"
+    },
+    "first_crossing_abort_combined_20261031.json": {
+      "rc": 0,
+      "sha256": "7d95f2e786b07f78f98cc8bbb8f4b5809f180ab06deae24b0c73e97c3d65f669"
+    },
+    "first_crossing_abort_combined_style_20261031.json": {
+      "rc": 0,
+      "sha256": "6fb782f8a16becb0d367255d39a1f623a37102a6f0cba9930807b71fb419f91a"
+    },
+    "first_crossing_abort_style_20261031.json": {
+      "rc": 0,
+      "sha256": "a0d6b411757b44ac302f984dac15809bf1ed8d8d4d6a324445058711720de77c"
+    }
+  }
+}
