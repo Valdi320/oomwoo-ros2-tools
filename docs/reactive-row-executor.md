@@ -754,10 +754,14 @@ All four recorded net ground-truth motion; the shorter case is not proven stuck.
 No timeout or route was changed. Increasing all timeouts would also change
 handoff waiting and is not justified by this evidence.
 
-Decision: coherent grading is checked at component level. Next compare actual
-cell-entry waypoints with the current bounding-box entry heuristic, using a
-bounded in-memory candidate before changing route production code. Then assess
-a justified transit change against actual distance and native acceptance. Its benefit remains
+Decision: coherent grading is checked at component level. The
+[static cell-entry comparison](../src/oomwoo_sim_support/docs/evidence/cell_entry_cost_comparison_20261030.json)
+found identical 326 targets, 130.198 m path and 149.698 m path/turn cost for the
+actual-entry candidate and current heuristic. No route code was changed: zero
+benefit in this scene does not justify its extra work. Next address the existing
+30-second transit timeout using the configured Nav2 speed and a per-goal budget,
+while retaining the handoff deadline and no-progress cancellation. Any benefit
+must be checked by native acceptance through the existing FIFO. Its benefit remains
 unproven; the global useful milestone still needs masked efficiency acceptance
 and an active NAV/SWEEP/DOCK integration. Further variants before this evidence
 would add review and maintenance cost without demonstrated utility. The goal

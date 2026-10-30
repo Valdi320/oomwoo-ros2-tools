@@ -1,0 +1,99 @@
+{
+  "completed_utc": "2026-10-30T12:52:07.416313+00:00",
+  "source_commit": "62186d004979a7da26de6389379fb8550760accf",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 7.567,
+  "stdout": "ENTRY_COST_COMPARISON {\"results\": [{\"variant\": \"current\", \"waypoints\": 326, \"free_cells\": 12360, \"path_m\": 130.19835577503864, \"seed_to_first_m\": 0.8609587678861281, \"cost_path_plus_turn_penalty_m\": 149.69835577503864, \"turns\": 65, \"long_gaps_over_0_7_m\": 4, \"long_gap_distance_m\": 10.985341193765178, \"all_targets_in_free_mask\": true, \"planning_wall_s\": 0.029014418018050492, \"first_target\": [0.375, -0.7749999999999999]}, {\"variant\": \"actual_entry_candidate\", \"waypoints\": 326, \"free_cells\": 12360, \"path_m\": 130.19835577503864, \"seed_to_first_m\": 0.8609587678861281, \"cost_path_plus_turn_penalty_m\": 149.69835577503864, \"turns\": 65, \"long_gaps_over_0_7_m\": 4, \"long_gap_distance_m\": 10.985341193765178, \"all_targets_in_free_mask\": true, \"planning_wall_s\": 0.0892867980292067, \"first_target\": [0.375, -0.7749999999999999]}], \"same_unique_target_set\": true, \"current_only_targets\": 0, \"candidate_only_targets\": 0, \"path_saving_m\": 0.0, \"cost_saving_m\": 0.0, \"source_sha256\": \"762047ad3cd6638688c31519af02d65bfc3cf66f6ae43eddcac40f578f94353f\", \"candidate_sha256\": \"95e25dc1f261466d0d722bcc2c3ef246247e42e246eac8f6451e7fd44d5c4b1d\", \"mask_cells\": 220, \"scope\": \"One static masked test_room plan at seed0,0; candidate compiled in memory only. No Gazebo, action execution, measured cleaning or hardware. Long-gap count is geometric, not observed Nav2 dispatch count.\"}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--name",
+    "oomwoo-cell-entry-e0afb9ee16",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_coverage:/work/src/oomwoo_sim_support:$PYTHONPATH python3 -"
+  ],
+  "fixture_python": "\nimport json\nfrom pathlib import Path\nfrom types import SimpleNamespace,MethodType\nimport numpy as np,yaml\nfrom nav_msgs.msg import OccupancyGrid\nfrom oomwoo_coverage.coverage_planner_node import CoveragePlanner\nfrom oomwoo_sim_support.keepout_config import _pgm\nroot=Path('/work/src/oomwoo_sim_support');m=yaml.safe_load((root/'maps/test_room.yaml').read_text())\nw,h,p=_pgm(root/'maps/test_room.pgm')\npix=np.flipud(np.frombuffer(p,dtype=np.uint8).reshape(h,w))\nocc=(255-pix.astype(float))/255\ngrid=np.where(occ>m['occupied_thresh'],100,np.where(occ<m['free_thresh'],0,-1))\ng=OccupancyGrid();g.header.frame_id='map';g.info.width=w;g.info.height=h\ng.info.resolution=m['resolution'];g.info.origin.position.x=m['origin'][0];g.info.origin.position.y=m['origin'][1];g.info.origin.orientation.w=1.\ng.data=grid.reshape(-1).astype(int).tolist()\nmask=OccupancyGrid();mask.header=g.header;mask.info=g.info;mask.data=[0]*(w*h)\nfor row in range(h):\n for col in range(w):\n  x=m['origin'][0]+(col+.5)*m['resolution'];y=m['origin'][1]+(row+.5)*m['resolution']\n  if .67<=x<=1.14 and -.55<=y<=.55:mask.data[row*w+col]=100\n\nimport math,hashlib\nfrom oomwoo_coverage import coverage_planner_node as module\nsource=Path(module.__file__).read_text()\nstart=source.index('        def build_sweep(cell_data):')\nend=source.index('        def sweep_cost(wps):',start)\nreplacement=\"\"\"\n        def build_sweep(cell_data):\n            variants = []\n            for cd in cell_data:\n                choices = [cell_waypoints(cd, major_last, minor_last)\n                           for _, _, major_last, minor_last in cd['corners']]\n                choices = [points for points in choices if points]\n                if choices:\n                    variants.append(choices)\n            wps = []\n            cur = (ox + (seed[1] + .5) * res, oy + (seed[0] + .5) * res)\n            while variants:\n                best = None\n                for ci, choices in enumerate(variants):\n                    for vi, points in enumerate(choices):\n                        distance = (points[0][0] - cur[0]) ** 2 + (points[0][1] - cur[1]) ** 2\n                        if best is None or distance < best[0]:\n                            best = distance, ci, vi\n                _, ci, vi = best\n                points = variants.pop(ci)[vi]\n                wps.extend(points)\n                cur = points[-1]\n            return wps\n\n\"\"\"\ncandidate_source=source[:start]+replacement+source[end:]\nnamespace={'__name__':'cell_entry_candidate','__file__':module.__file__}\nexec(compile(candidate_source,module.__file__+':in-memory-entry-candidate','exec'),namespace)\nresults=[];point_sets=[]\nfor label,C in (('current',CoveragePlanner),('actual_entry_candidate',namespace['CoveragePlanner'])):\n node=SimpleNamespace(map_msg=g,keepout=None,_keepout_geometry_value=None,_keepout_fault=None,_keepout_required=True,_relay_enabled=True,robot_radius=.18,total_free_cells=0,free_mask=None,robot_xy=(0.,0.),cleaning_radius=.20,row_overlap=0.,min_segment_len=.20,row_substep_m=.4,long_axis_sweep=True,global_frame='map',get_logger=lambda:SimpleNamespace(info=lambda s:None,warn=lambda s:None))\n node._keepout_geometry=C._keepout_geometry\n def bad(message):raise ValueError(message)\n node._invalid_keepout=bad\n node._build_masks=MethodType(C._build_masks,node)\n C._on_keepout(node,mask)\n t0=__import__('time').perf_counter()\n poses=C._plan_waypoints(node)\n elapsed=__import__('time').perf_counter()-t0\n points=np.asarray([(p.pose.position.x,p.pose.position.y) for p in poses])\n step=np.diff(points,axis=0);dist=np.hypot(step[:,0],step[:,1])\n head=np.arctan2(step[:,1],step[:,0]);turns=int((np.abs((np.diff(head)+np.pi)%(2*np.pi)-np.pi)>.52).sum())\n valid=all(node.free_mask[int((y-g.info.origin.position.y)/g.info.resolution),int((x-g.info.origin.position.x)/g.info.resolution)] for x,y in points)\n point_sets.append({tuple(round(float(v),8) for v in xy) for xy in points})\n results.append({'variant':label,'waypoints':len(points),'free_cells':node.total_free_cells,'path_m':float(dist.sum()),'seed_to_first_m':float(np.linalg.norm(points[0])),'cost_path_plus_turn_penalty_m':float(dist.sum())+.3*turns,'turns':turns,'long_gaps_over_0_7_m':int((dist>.7).sum()),'long_gap_distance_m':float(dist[dist>.7].sum()),'all_targets_in_free_mask':bool(valid),'planning_wall_s':elapsed,'first_target':points[0].tolist()})\ncomparison={'results':results,'same_unique_target_set':point_sets[0]==point_sets[1],'current_only_targets':len(point_sets[0]-point_sets[1]),'candidate_only_targets':len(point_sets[1]-point_sets[0]),'path_saving_m':results[0]['path_m']-results[1]['path_m'],'cost_saving_m':results[0]['cost_path_plus_turn_penalty_m']-results[1]['cost_path_plus_turn_penalty_m'],'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'candidate_sha256':hashlib.sha256(candidate_source.encode()).hexdigest(),'mask_cells':sum(v==100 for v in mask.data),'scope':'One static masked test_room plan at seed0,0; candidate compiled in memory only. No Gazebo, action execution, measured cleaning or hardware. Long-gap count is geometric, not observed Nav2 dispatch count.'}\nprint('ENTRY_COST_COMPARISON '+json.dumps(comparison))\n",
+  "machine_lock": {
+    "rc": 1,
+    "stdout": "OCUPADA: la maquina la tiene \u00abfifo-655: Bateria local ornith1.5-9b micro\u00bb desde hace 0 min (pid 3199155). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-655\u00bb.\n"
+  },
+  "resources": {
+    "mem_available_kb": 10084804,
+    "loadavg": "1.81 2.00 1.97 2/2351 3208967"
+  },
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU small test exception.",
+  "result": {
+    "results": [
+      {
+        "variant": "current",
+        "waypoints": 326,
+        "free_cells": 12360,
+        "path_m": 130.19835577503864,
+        "seed_to_first_m": 0.8609587678861281,
+        "cost_path_plus_turn_penalty_m": 149.69835577503864,
+        "turns": 65,
+        "long_gaps_over_0_7_m": 4,
+        "long_gap_distance_m": 10.985341193765178,
+        "all_targets_in_free_mask": true,
+        "planning_wall_s": 0.029014418018050492,
+        "first_target": [
+          0.375,
+          -0.7749999999999999
+        ]
+      },
+      {
+        "variant": "actual_entry_candidate",
+        "waypoints": 326,
+        "free_cells": 12360,
+        "path_m": 130.19835577503864,
+        "seed_to_first_m": 0.8609587678861281,
+        "cost_path_plus_turn_penalty_m": 149.69835577503864,
+        "turns": 65,
+        "long_gaps_over_0_7_m": 4,
+        "long_gap_distance_m": 10.985341193765178,
+        "all_targets_in_free_mask": true,
+        "planning_wall_s": 0.0892867980292067,
+        "first_target": [
+          0.375,
+          -0.7749999999999999
+        ]
+      }
+    ],
+    "same_unique_target_set": true,
+    "current_only_targets": 0,
+    "candidate_only_targets": 0,
+    "path_saving_m": 0.0,
+    "cost_saving_m": 0.0,
+    "source_sha256": "762047ad3cd6638688c31519af02d65bfc3cf66f6ae43eddcac40f578f94353f",
+    "candidate_sha256": "95e25dc1f261466d0d722bcc2c3ef246247e42e246eac8f6451e7fd44d5c4b1d",
+    "mask_cells": 220,
+    "scope": "One static masked test_room plan at seed0,0; candidate compiled in memory only. No Gazebo, action execution, measured cleaning or hardware. Long-gap count is geometric, not observed Nav2 dispatch count."
+  },
+  "decision": "Reject this candidate for the demonstrated native case: zero path/cost savings and the same unique targets. No production planner change. Prioritize a per-goal travel budget using the existing configured Nav2 speed, without changing handoff/no-progress deadlines.",
+  "limits": [
+    "One static scene and seed; no global performance or coverage conclusion.",
+    "Planning wall times are single observations under CPU throttling; no statistical speed claim.",
+    "Static long-gap count does not predict actual Nav2 requests because runtime pruning/recovery changes targets."
+  ]
+}
