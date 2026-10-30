@@ -638,3 +638,25 @@ before mask arrival were counted but excluded from this observation. Full masked
 coverage, intermittent-failure diagnosis, actual docking and physical validation
 remain open. No hardware exists. See [exact source versions, all observations
 and retained failures](evidence/reactive_keepout_fusion_codex_20261030.json).
+
+
+The subsequent full masked acceptance **failed** at53.84% coverage after423.92s
+wall time. Its19975 poses and19974 chords had20ms maximum spacing and zero
+proxy-footprint crossings. Six Nav2 UUIDs succeeded and three were canceled;
+eight of nine NAV releases were acknowledged. The first revocation was
+"Nav2 goal journal missing/corrupted" during another immediate cancellation.
+The final valid canceled journal does not erase that observed failure. A prior
+rapid cancellation in the same scene did release successfully and resumed
+SWEEP/escape, providing native evidence for the between-ticks callback repair.
+
+The existing journal can independently reproduce a legitimate atomic-replace
+race: after opening the old file but before fstat, accepted() replaces it; the
+old descriptor has nlink0 and is rejected while the new named record is valid.
+The native witness discards its exact read exception, so this remains a
+reproduced candidate cause, not a proven explanation of the native failure.
+An unapplied bounded-reopen proposal and three proposed focal cases are ready.
+User machine rule7 requires explicit authorization before changing persistence;
+that protected production source remains unchanged. Full masked acceptance
+remains open. Gazebo also exited139 after its positive native ACK in this full
+attempt;19 other auxiliary processes closed cleanly. This is distinct from the
+previous FastDDS bridge issue and has no established repair. No hardware exists.

@@ -1,6 +1,6 @@
 {
-  "date_utc": "2026-10-30T00:30:02.052094+00:00",
-  "status": "Bounded combined Gazebo movement observed; full masked coverage and intermittent failures unresolved",
+  "date_utc": "2026-10-30T00:47:23.264782+00:00",
+  "status": "Full masked acceptance attempted and FAILED on journal witness; bounded observation remains valid, persistence proposal awaits explicit owner approval",
   "scope": "Design/software/simulation only. Native mask/filter, actual Nav2 and coverage software under the existing sole relay; no hardware or physical validation.",
   "parents": [
     "d8e3a1fa697e610b9554dbc96cffe9967f5ca104",
@@ -206,13 +206,20 @@
       "sha256": "62342395a1ecce0a8eda073aadc74b7476cca5e3a111da228b58b22c47f9eb11",
       "rc": 0,
       "seconds": 34.86
+    },
+    "full_masked_journal_and_Gazebo_failure": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_keepout_full_room_20261030.json",
+      "sha256": "6ec62cd9afdba532f78da5c7fbc7d8f37691af6ad183536137d82a8ef09599a2",
+      "rc": 0,
+      "seconds": 423.92
     }
   },
   "next_required": [
-    "Complete masked coverage and investigate any recurrence with the retained first-cause telemetry. The bounded180s scene is not the90%/80% full-room acceptance. Do not repeat that partial green without a new acceptance question.",
-    "Resolve or reproduce the intermediate unexplained lease loss using original measurement times; do not silently relax freshness limits or claim its cause is known.",
-    "Keep the first Gazebo SIGSEGV after native ACK open. Two later clean closes do not identify or repair its original cause.",
-    "Actual docking under the common output, managed real-controller fault cases and broader scenes remain outside this partial milestone. Physical validation stays0%."
+    "Obtain explicit owner authorization before modifying protected journal persistence. Prepared proposal only: one bounded reopen for detached old regular fd, keeping all original validation; three focal cases proposed, not executed against that proposal.",
+    "Diagnose the native journal failure without claiming the reproduced inode race is its proven cause; preserve the original exception detail when necessary. No blind full-room repeats.",
+    "A full masked acceptance remains required. Current full attempt stopped at53.84% with motion_fault despite a valid19975-pose zero-crossing proxy audit.",
+    "Keep recurrent Gazebo SIGSEGV139 after native ACK open; this is distinct from the old FastDDS bridge teardown. Two later clean closes did not establish reliability.",
+    "Actual docking under common output, managed real-controller faults and broader scenes remain open. An independent committed nominal docking scene exists; reuse its evidence instead of duplicating it. Physical validation0%."
   ],
   "limits": [
     "The first DDS rearm failure lacks preserved first-cause evidence. The queued-zero race is independently reproduced/fixed; final17-check success does not prove that original failure cause or reliability.",
@@ -223,7 +230,8 @@
     "Final scorer13 and five-file lint/admission contexts pass. The final relay44 cases include the callback race and retained first-cause case; DDS17 passed after callback fix before diagnostic-only additions. Exact native source hashes are recorded separately.",
     "Minimum sampled center-to-mask-bbox distance was0.2060m for the0.18m circular audit proxy. This proves neither the0.06m estimated-pose margin in ground truth nor the full URDF/hardware footprint. Sampling covers after mask arrival; eight earlier poses were counted but not tested.",
     "One real Nav2 cancellation/release occurred in the final scene, but the10ms cancellation race was not forced there. Its specific repair has a deterministic focal test and DDS evidence, not a reliability proof.",
-    "Original nominal98.51% full-room coverage remains tied to the previous unmasked source versions; it is not the completion percentage of this project or of current masked coverage."
+    "Original nominal98.51% full-room coverage remains tied to the previous unmasked source versions; it is not the completion percentage of this project or of current masked coverage.",
+    "The full attempt observed a separate rapid cancellation about10ms after Nav2 start, followed by successful release/SWEEP/escape. A later cancellation failed the journal witness instead. Thus the callback repair has native evidence, while complete cycle and journal reliability remain incomplete."
   ],
   "Gazebo_bounded_observation": {
     "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_keepout_first_cause_diagnostic_20261030.json",
@@ -613,5 +621,233 @@
       "root": "Unknown. Final reason overwrote first cause; invalid/stale truth message in same run does not establish causality."
     }
   ],
-  "uncommitted_at_evidence_preparation": true
+  "uncommitted_at_evidence_preparation": true,
+  "Gazebo_full_attempt": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_keepout_full_room_20261030.json",
+    "sha256": "6ec62cd9afdba532f78da5c7fbc7d8f37691af6ad183536137d82a8ef09599a2",
+    "rc": 0,
+    "seconds": 423.92,
+    "bank_code": 1,
+    "coverage_report": {
+      "coverage": 0.5384,
+      "coverage_target": 0.9,
+      "target_crossed": false,
+      "efficiency_at_target": null,
+      "efficiency_final": 1.0,
+      "revisit_ratio": 0.1741,
+      "efficiency_target": 0.8,
+      "time_to_target_s": null,
+      "end_reason": "motion_fault",
+      "sim_unstable": false,
+      "measurement_valid": true,
+      "pass": false
+    },
+    "keepout_audit": {
+      "poses_before_mask": 25,
+      "poses": 19975,
+      "segments": 19974,
+      "footprint_crossings": 0,
+      "max_pose_gap_s": 0.02,
+      "errors": [],
+      "min_sampled_center_to_mask_bbox_m": 0.23805807998139805,
+      "motion_by_phase": {
+        "IDLE": {
+          "poses": 757,
+          "distance_m": 1.170223444853982e-06,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.26969083945220573
+        },
+        "SWEEP": {
+          "poses": 13869,
+          "distance_m": 46.27260051761478,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.23805807998139805
+        },
+        "PREPARE_NAV": {
+          "poses": 459,
+          "distance_m": 9.066516103849802e-05,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+        },
+        "TRANSIT": {
+          "poses": 4589,
+          "distance_m": 10.982187673798615,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.2595227156848093
+        },
+        "TRANSIT_CANCEL": {
+          "poses": 41,
+          "distance_m": 6.208962765034732e-06,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 1.7332268720907669
+        },
+        "ESCAPE": {
+          "poses": 260,
+          "distance_m": 0.5689606561716076,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 1.6165582354598023
+        }
+      },
+      "footprint_radius_m": 0.18,
+      "source": "/ground_truth/pose",
+      "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+      "forbidden_cells": 220,
+      "forbidden_bbox_xyxy": [
+        0.6500000335276126,
+        -0.5499999627470968,
+        1.1500000409781932,
+        0.5500000536441805
+      ],
+      "mask_seen": true,
+      "valid": true
+    },
+    "terminal_UUID_counts": {
+      "4": 6,
+      "5": 3
+    },
+    "handoffs": {
+      "claim_sweep": 9,
+      "release_motion": 9,
+      "claim_nav": 9,
+      "release_nav": 8
+    },
+    "first_revocation_lines": [
+      "[python3-1] [WARN] [1793320824.853823282] [valdi_experimental_cmdvel_relay]: MOTION_LEASE_REVOKED {\"health\": null, \"original_ages\": {\"pose_age_ns\": 0, \"pose_stamp_ns\": 399600000000, \"postfilter_age_ns\": 220000000, \"postfilter_dds_age_ns\": 220963687, \"postfilter_stamp_ns\": 399380000000}, \"reason\": \"Nav2 goal journal missing/corrupted\"}"
+    ],
+    "final_dispatcher_fault": [
+      "[coverage_planner-12] [ERROR] [1793320825.243329648] [coverage_planner]: motion relay fault: release_nav: fresh exact Nav2 terminal/zero not observed"
+    ],
+    "last_journal": {
+      "job_id": "coverage_sweep",
+      "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+      "outcome": "canceled",
+      "revision": 27,
+      "schema": 1,
+      "state": "terminal",
+      "target_cell": 8789,
+      "uuid": "df163962b63e4b6cbcbb42907e8586d0"
+    },
+    "native_stop_ack": true,
+    "Gazebo_exit": 139,
+    "clean_auxiliary_processes": 19,
+    "source_sha256": {
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "05c82152fee1a0ae753abfd0ccf38e3ad57b8e6667a0858e66561debd054effc",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "4b69ba794a043ae4b78e96452471cddfaa90e312015298733cc44de176401131",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "cf153418178b987648d09f3c5e5e744aad5f0b218aa56d55332497b8a498d4ff",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "68f643e50283ca5f0b10fc8862c06950679b96e164647fa1096af1fc658d46dd",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/deploy/run_coverage_regression.sh": "e344c63fc7ab45c6f6605b317191938d87f98419257d4c939632ffb093d95246",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "12585bd3b6f35cbaba305056500a348e5ad3872cd233607e562aaf5eeaee0837",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/reactive_keepout_envelope.py": "a879bd89ba58e821af524da2f53067b2be44a58c56652af39795de17932a9005",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/lab_topic_guard.py": "03ab57a830d20ea6586decf8fba59b71a75d17bc33ed3e493872ffc3b6309056",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/map_admission.py": "a469701cb56b3267092dff7c5d0a919c21832ed67bfe07a1f3f980c30c8f07b5",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/nav_keepout_admission.py": "6d5a63c3a93cc9ccb8a42c2291507a721c9516d6d5a575932db770f58b79e8b5",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/swept_footprint.py": "7a58e3afdfa29ee1740ef0beac6fb9d1cca064a34b14f9ea670b0aa2c8761334",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/integration/generate_keepout_lab.py": "3883aeb9280fc91843208c58e8014a16059d2849da075045d2fcb5e2e3831fdb"
+    },
+    "graph": {
+      "/cmd_vel": [],
+      "/cmd_vel_nav": [],
+      "/navigate_to_pose/_action/status": [
+        [
+          "bt_navigator",
+          "/",
+          "action_msgs/msg/GoalStatusArray",
+          "010f7f01e9035daf0000000000003c03"
+        ]
+      ],
+      "/valdi/nav2_cmd_vel": [
+        [
+          "controller_server",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01e70302620000000000006e03"
+        ]
+      ],
+      "/valdi/sweep_cmd_vel": [
+        [
+          "coverage_planner",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01cd0279290000000000001d03"
+        ]
+      ],
+      "/valdi/dock_drive_cmd_vel": [
+        [
+          "dock_drive",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01c202f75c0000000000001403"
+        ]
+      ],
+      "/valdi/lab_safe_cmd_vel_output": [
+        [
+          "valdi_experimental_cmdvel_relay",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01c1029b440000000000001603"
+        ]
+      ],
+      "/oomwoo/keepout_mask": [
+        [
+          "oomwoo_keepout_mask_server",
+          "/",
+          "nav_msgs/msg/OccupancyGrid",
+          "010f7f01c502da970000000000002203"
+        ]
+      ],
+      "/oomwoo/keepout_filter_info": [
+        [
+          "oomwoo_keepout_info_server",
+          "/",
+          "nav2_msgs/msg/CostmapFilterInfo",
+          "010f7f01c70221e50000000000002003"
+        ]
+      ],
+      "/global_costmap/costmap": [
+        [
+          "global_costmap",
+          "/global_costmap",
+          "nav_msgs/msg/OccupancyGrid",
+          "010f7f01e803f6190000000000004d03"
+        ]
+      ],
+      "/ground_truth/pose": [
+        [
+          "ground_truth",
+          "/",
+          "geometry_msgs/msg/PoseStamped",
+          "010f7f01c402938b0000000000001403"
+        ]
+      ],
+      "safe_output_subscribers": [
+        [
+          "ros_gz_bridge",
+          "/",
+          "geometry_msgs/msg/Twist"
+        ]
+      ]
+    },
+    "acceptance": false,
+    "hardware": false
+  },
+  "journal_read_race_reproduction": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_journal_atomic_replace_reproduction_20261030.json",
+    "sha256": "9341ac27426a66fd5527dea1f8db1ad0f591191a41f4ae15c338a36a4c33581f",
+    "rc": 0,
+    "seconds": 0.18,
+    "interpretation": "A legitimate accepted() atomic replacement between open and fstat yields old-fd nlink0 and the existing inode error while current named record is valid. Demonstrates a contract race; native witness erased exact exception, so native root cause is not proven."
+  },
+  "persistence_proposal": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_journal_persistence_proposal_20261030.json",
+    "sha256": "a8fcde3dd3a67c1e8cf961725bf97254379aee3706695eb6169c00685aa358ba",
+    "rc": null,
+    "seconds": null,
+    "patch": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/PROPUESTA-relectura-atomica-diario-20261030.patch",
+    "applied": false,
+    "protected_source_sha256": "b20eabed765b5eb3c2bc7bc7ba2fb173c948fac96e2f843001b484e9f9fa823f",
+    "authorization": "Required by user AGENTS rule7; async approval requested, unanswered at preparation.",
+    "proposal_functional_tests_run": false,
+    "apply_check_only_rc": 0
+  }
 }
