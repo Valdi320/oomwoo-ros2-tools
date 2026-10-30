@@ -1129,3 +1129,28 @@ reuse installed navigate_w_replanning_distance.xml, whose DistanceController
 recomputes after1m on the existing tree tick. It adds neither recovery
 actions nor a RateController, and retains the same planner/controller
 writers. This is a hypothesis to check, not a proven stall repair.
+
+
+The [private distance-replanning graph check](../src/oomwoo_sim_support/docs/evidence/distance_replan_graph_final_20261030.json)
+passes four baseline/candidate and normal/managed combinations using
+the actual Jazzy Node constructor and extracted navigation_setup function.
+Installed XML/plugin checks confirm1m DistanceController, one
+ComputePathToPose and one FollowPath, with no RateController, RecoveryNode,
+Spin, BackUp, Wait or ClearEntireCostmap. Managed lifecycle servers and
+quarantined external goal remapping are retained; normal-mode selection
+is unchanged. No ROS process is executed by this graph check.
+
+The initial check failed because ROS_LOG_DIR was not assigned inside a
+read-only container. Its [failure receipt](../src/oomwoo_sim_support/docs/evidence/distance_replan_graph_20261030.json)
+is preserved; assigning the existing bounded/tmp log convention corrects
+that fixture setup. No application fix is attributed to this correction.
+
+A single full-room contrast is reserved as FIFO688, waiting behind687,
+with .05CPU while queued and2CPU/3GiB only after verified own admission.
+The frozen copy changes only the managed stock-tree filename functionally.
+The existing bounded planner observer alone is retargeted to(1.525,-2.525);
+its other methods are AST-identical and eight other prior source hashes
+match679. sim_bringup is a tenth immutable input. Production still uses
+the previously validated configuration. Collect the same native handle;
+this graph result proves neither renewed runtime paths nor a stall fix,
+efficiency gain or complete90/80 acceptance.

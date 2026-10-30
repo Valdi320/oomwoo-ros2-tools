@@ -1,0 +1,86 @@
+{
+  "completed_utc": "2026-10-30T17:29:21.951488+00:00",
+  "rc": 0,
+  "seconds": 6.34,
+  "stdout": "DISTANCE_REPLAN_GRAPH {\"ok\": true, \"cases\": {\"baseline_normal\": {\"actions\": 5, \"lifecycle_names\": [\"controller_server\", \"planner_server\", \"behavior_server\", \"bt_navigator\"], \"tree\": \"navigate_to_pose_w_replanning_and_recovery.xml\", \"external_goal_remap_preserved\": true}, \"baseline_managed\": {\"actions\": 4, \"lifecycle_names\": [\"controller_server\", \"planner_server\", \"bt_navigator\"], \"tree\": \"navigate_w_replanning_only_if_goal_is_updated.xml\", \"external_goal_remap_preserved\": true}, \"candidate_normal\": {\"actions\": 5, \"lifecycle_names\": [\"controller_server\", \"planner_server\", \"behavior_server\", \"bt_navigator\"], \"tree\": \"navigate_to_pose_w_replanning_and_recovery.xml\", \"external_goal_remap_preserved\": true}, \"candidate_managed\": {\"actions\": 4, \"lifecycle_names\": [\"controller_server\", \"planner_server\", \"bt_navigator\"], \"tree\": \"navigate_w_replanning_distance.xml\", \"external_goal_remap_preserved\": true}}, \"scope\": \"Actual Jazzy Node normalization and extracted unchanged navigation_setup function; no node executed. Installed XML and plugin verified; not runtime planning or navigation.\"}\n",
+  "stderr": "",
+  "result": {
+    "ok": true,
+    "cases": {
+      "baseline_normal": {
+        "actions": 5,
+        "lifecycle_names": [
+          "controller_server",
+          "planner_server",
+          "behavior_server",
+          "bt_navigator"
+        ],
+        "tree": "navigate_to_pose_w_replanning_and_recovery.xml",
+        "external_goal_remap_preserved": true
+      },
+      "baseline_managed": {
+        "actions": 4,
+        "lifecycle_names": [
+          "controller_server",
+          "planner_server",
+          "bt_navigator"
+        ],
+        "tree": "navigate_w_replanning_only_if_goal_is_updated.xml",
+        "external_goal_remap_preserved": true
+      },
+      "candidate_normal": {
+        "actions": 5,
+        "lifecycle_names": [
+          "controller_server",
+          "planner_server",
+          "behavior_server",
+          "bt_navigator"
+        ],
+        "tree": "navigate_to_pose_w_replanning_and_recovery.xml",
+        "external_goal_remap_preserved": true
+      },
+      "candidate_managed": {
+        "actions": 4,
+        "lifecycle_names": [
+          "controller_server",
+          "planner_server",
+          "bt_navigator"
+        ],
+        "tree": "navigate_w_replanning_distance.xml",
+        "external_goal_remap_preserved": true
+      }
+    },
+    "scope": "Actual Jazzy Node normalization and extracted unchanged navigation_setup function; no node executed. Installed XML and plugin verified; not runtime planning or navigation."
+  },
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-costmap-cadence-075c7995d0:/baseline:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313:/candidate:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome python3 -"
+  ],
+  "fixture_python": "import ast,os,json,xml.etree.ElementTree as ET\nfrom pathlib import Path\nfrom ament_index_python.packages import get_package_share_directory\nfrom launch import LaunchContext\nfrom launch.conditions import IfCondition\nfrom launch.substitutions import LaunchConfiguration\nfrom launch_ros.actions import Node\nbt_dir=str(Path(get_package_share_directory('nav2_bt_navigator'))/'behavior_trees')\nfiles={'baseline':'/baseline/ros/src/oomwoo_sim_support/launch/sim_bringup.launch.py','candidate':'/candidate/ros/src/oomwoo_sim_support/launch/sim_bringup.launch.py'}\nresults={}\nfor label,path in files.items():\n source=Path(path).read_text();f=next(n for n in ast.walk(ast.parse(source)) if isinstance(n,ast.FunctionDef) and n.name=='navigation_setup')\n for managed in (False,True):\n  records=[]\n  def record_node(**kwargs):\n   records.append(kwargs);return Node(**kwargs)\n  controller=Node(package='nav2_controller',executable='controller_server')\n  planner=Node(package='nav2_planner',executable='planner_server')\n  behavior=Node(package='nav2_behaviors',executable='behavior_server')\n  ns=dict(os=os,bt_dir=bt_dir,Node=record_node,LaunchConfiguration=LaunchConfiguration,with_nav=IfCondition('true'),nav2_params='/candidate/ros/src/oomwoo_sim_support/config/nav2_params.yaml',nav_common={'use_sim_time':True},controller=controller,planner=planner,behavior=behavior)\n  exec(compile(ast.Module(body=[f],type_ignores=[]),path,'exec'),ns)\n  ctx=LaunchContext();ctx.launch_configurations.update(managed_motion=str(managed).lower(),nav_goal_pose_topic='/valdi/quarantined_goal_pose')\n  graph=ns['navigation_setup'](ctx)\n  assert len(graph)==(4 if managed else 5)\n  bt=next(x for x in records if x['package']=='nav2_bt_navigator')\n  params=bt['parameters'][-1];selected=Path(params['default_nav_to_pose_bt_xml'])\n  lifecycle=next(x for x in records if x['package']=='nav2_lifecycle_manager')\n  names=lifecycle['parameters'][0]['node_names']\n  assert names==(['controller_server','planner_server','bt_navigator'] if managed else ['controller_server','planner_server','behavior_server','bt_navigator'])\n  if managed:\n   assert params['navigators']==['navigate_to_pose']\n   tree=ET.parse(selected);tags=[x.tag for x in tree.iter()]\n   assert not set(tags)&{'RateController','RecoveryNode','Spin','BackUp','Wait','ClearEntireCostmap'}\n   assert tags.count('ComputePathToPose')==tags.count('FollowPath')==1\n   expected='navigate_w_replanning_distance.xml' if label=='candidate' else 'navigate_w_replanning_only_if_goal_is_updated.xml'\n   assert selected.name==expected\n   if label=='candidate':\n    assert tree.find('.//DistanceController').attrib['distance']=='1.0'\n    assert Path('/opt/ros/jazzy/lib/libnav2_distance_controller_bt_node.so').exists()\n  else:assert selected.name=='navigate_to_pose_w_replanning_and_recovery.xml'\n  results[label+('_managed' if managed else '_normal')]={'actions':len(graph),'lifecycle_names':names,'tree':selected.name,'external_goal_remap_preserved':bt['remappings'][0][0]=='goal_pose' and bt['remappings'][0][1].perform(ctx)=='/valdi/quarantined_goal_pose'}\nassert Path(files['candidate']).read_text().replace('navigate_w_replanning_distance.xml','navigate_w_replanning_only_if_goal_is_updated.xml')==Path(files['baseline']).read_text()\nprint('DISTANCE_REPLAN_GRAPH '+json.dumps({'ok':True,'cases':results,'scope':'Actual Jazzy Node normalization and extracted unchanged navigation_setup function; no node executed. Installed XML and plugin verified; not runtime planning or navigation.'}))\n",
+  "resource_authorization": "Explicit compatible .25CPU/512MiB/noGPU small test exception.",
+  "prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/distance_replan_native_prepared_20261030.json",
+  "new_evidence": "Jazzy launch logging requires writable ROS_LOG_DIR; use existing bounded/tmp log convention rather than default root filesystem. Resolve remapping with real LaunchConfiguration.perform."
+}
