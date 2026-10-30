@@ -79,6 +79,7 @@ def generate_launch_description() -> LaunchDescription:
         DeclareLaunchArgument('v_cruise', default_value='0.35'),
         DeclareLaunchArgument('rotate_speed', default_value='1.0'),
         DeclareLaunchArgument('motion_relay_journal', default_value=''),
+        DeclareLaunchArgument('keepout_mask', default_value=''),
         DeclareLaunchArgument('sweep_cmd_topic', default_value='cmd_vel'),
         DeclareLaunchArgument('nav_cmd_topic', default_value='cmd_vel'),
         DeclareLaunchArgument('motor_cmd_topic', default_value='cmd_vel'),
@@ -115,6 +116,7 @@ def generate_launch_description() -> LaunchDescription:
             'nav_lookahead': LaunchConfiguration('nav_lookahead'),
             'nav_goal_pose_topic': LaunchConfiguration('nav_goal_pose_topic'),
             'managed_motion': LaunchConfiguration('managed_motion', default='false'),
+            'keepout_mask': LaunchConfiguration('keepout_mask'),
         }.items())
 
     coverage_meter = Node(
@@ -148,24 +150,40 @@ def generate_launch_description() -> LaunchDescription:
                          LaunchConfiguration('rotate_speed'), value_type=float),
                      'motion_relay_journal': ParameterValue(
                          LaunchConfiguration('motion_relay_journal'), value_type=str),
+                     'require_keepout_filter': ParameterValue(
+                         LaunchConfiguration('coverage_keepout_required', default='false'),
+                         value_type=bool),
                      'min_transit_len': ParameterValue(
                          LaunchConfiguration('min_transit_len'), value_type=float),
                      'use_sim_time': True}],
         remappings=[('cmd_vel', LaunchConfiguration('sweep_cmd_topic')),
+                    ('keepout_filter_mask', LaunchConfiguration(
+                        'coverage_keepout_topic', default='keepout_filter_mask')),
                     ('map', '/map'),
                     ('coverage_ratio', '/coverage_meter/ratio'),
                     ('covered_grid', '/coverage_meter/covered_grid'),
                     ('navigate_to_pose', '/navigate_to_pose')])
 
     def existing_motion_components(context):
+        mask = context.perform_substitution(LaunchConfiguration('keepout_mask'))
+        actions = []
+        if mask:
+            if not os.path.isabs(mask):
+                raise ValueError('keepout_mask must be an absolute disposable lab path')
+            actions += [
+                SetLaunchConfiguration('coverage_keepout_required', 'true'),
+                SetLaunchConfiguration('coverage_keepout_topic', '/oomwoo/keepout_mask')]
         path = context.perform_substitution(LaunchConfiguration('motion_relay_journal'))
         if not path:
-            return []
+            if mask:
+                raise ValueError(
+                    'keepout coverage requires the existing motion_relay_journal mode')
+            return actions
         if not os.path.isabs(path):
             raise ValueError('motion_relay_journal must be an absolute disposable lab path')
         # Reuse the contributor relay and OOMWOO DockDrive. Direct inclusion
         # avoids dock.launch's parent Shutdown action on driver exit.
-        return [
+        return actions + [
             # Fast DDS 2.14.7 detected heap corruption in SharedMemTransport
             # teardown after a successful managed run. Keep this workaround
             # local to the disposable lab, retaining any explicit parent choice.
@@ -179,6 +197,7 @@ def generate_launch_description() -> LaunchDescription:
                 'oomwoo_cleaning_jobs.ros_dock_velocity_relay', '--ros-args',
                 '-p', 'simulation_lab:=true', '-p', 'three_way:=true',
                 '-p', 'managed_nav2:=true', '-p', 'use_sim_time:=true',
+                '-p', 'require_keepout_filter:=' + ('true' if mask else 'false'),
                 '-p', 'goal_journal_path:=' + path], output='screen'),
             Node(package='oomwoo_dock', executable='dock_drive', name='dock_drive',
                  parameters=[{'use_sim_time': True, 'auto_start': False,

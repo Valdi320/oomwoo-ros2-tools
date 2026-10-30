@@ -584,3 +584,57 @@ The earlier 98.66% result stays tied to its original hashes. A positive native
 ACK followed by a permanently hung Gazebo destructor has not been fault
 injected; this uses the existing required-server exit without a new watchdog.
 All evidence concerns software and simulation; no physical prototype exists.
+
+
+### Keepout fusion in progress: direct command and transport evidence
+
+The opt-in integration connects the native /oomwoo/keepout_mask to the planner
+and folds the existing arc/swept-disk projection into the relay's sole output.
+The synthetic envelope retains its original three-map checks. The live mask
+path attests immutable aligned content, stable publishers and a recent original
+post-filter global costmap; receiving static bytes does not refresh their age.
+Masked coverage requires the existing relay/journal mode because a Nav2 sweep
+can still issue a direct bumper/wedge escape. No extra output node or timer is
+introduced. Ordinary obstacle/contact clearance retains its previous behavior;
+keepout dilation now includes corners and its explicit margin.
+
+The projection22, relay42 and planner70 focused cases pass. One existing DDS
+probe run passes17 checks with required mask evidence, including direct virtual
+intersection, stale post-filter map and fresh-but-unenforced map. It uses
+synthetic clock/maps/commands, not an actual Nav2 server or Gazebo. A queued
+zero from before a new lease is ignored without acquiring command/release proof;
+old nonzero commands still fault. The first DDS rearm failure remains recorded
+without a confirmed original cause. A separate diagnostic assertion was updated
+because the output pose limit stops earlier than the common health witness.
+
+The scorer's final13 cases and five-file lint/admission contexts pass. The
+first masked Gazebo scene observed5181 poses with no disk/chord crossings, but
+failed to release a goal canceled immediately after acceptance. A deterministic
+case reproduced the lost ACTIVE observation between50ms output ticks. The
+existing Nav2-status callback now passes its observed health to the mux, keeping
+exact UUID, journal and common-health requirements. Its43-case module and17 DDS
+checks passed. A later44-case module also checks that the first lease revocation
+survives subsequent stopped commands in the existing bounded log/status record.
+
+The next native run failed early with unexplained ownership loss and an invalid
+or stale truth sample. Its original first cause was not retained; no clock or
+transport cause is established. The first run also had Gazebo SIGSEGV139 after
+a positive native stop reply. Two later clean closes do not repair that cause.
+Both failed runs remain part of the evidence.
+
+A final bounded180s scene observed8858 original ground-truth poses,8857 chords,
+maximum20ms spacing and zero crossings for the0.18m circular proxy. Observed
+SWEEP distance was9.74m, TRANSIT10.42m and ESCAPE0.28m. Native mask/info servers
+and the post-filter global costmap were connected; the graph retained one final
+output. Five Nav2 UUIDs succeeded and one was canceled. All20 auxiliary processes
+closed cleanly. The scorer correctly exited1 for wall_timeout:16.37% coverage is
+partial, not the full90%/80% acceptance. Final observed phase wasSWEEP, not a
+completed sweep or an IDLE handoff.
+
+Minimum sampled center-to-mask-bbox distance was0.206m. This supports the
+reported circular-proxy observation, not a ground-truth0.06m margin, complete
+URDF-footprint certificate, hardware stop or reliability claim. Eight poses
+before mask arrival were counted but excluded from this observation. Full masked
+coverage, intermittent-failure diagnosis, actual docking and physical validation
+remain open. No hardware exists. See [exact source versions, all observations
+and retained failures](evidence/reactive_keepout_fusion_codex_20261030.json).

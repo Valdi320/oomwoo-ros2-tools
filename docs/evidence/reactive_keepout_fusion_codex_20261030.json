@@ -1,0 +1,617 @@
+{
+  "date_utc": "2026-10-30T00:30:02.052094+00:00",
+  "status": "Bounded combined Gazebo movement observed; full masked coverage and intermittent failures unresolved",
+  "scope": "Design/software/simulation only. Native mask/filter, actual Nav2 and coverage software under the existing sole relay; no hardware or physical validation.",
+  "parents": [
+    "d8e3a1fa697e610b9554dbc96cffe9967f5ca104",
+    "757d10a9be89109c63c3e190a8fbf27dfbe30394"
+  ],
+  "source_sha256_at_preparation": {
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "68f643e50283ca5f0b10fc8862c06950679b96e164647fa1096af1fc658d46dd",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/test/test_planner_geometry.py": "9b18fb93a405b6ffd51c3aa3b2ed551ba67470da17b6305fb8c91e0cdf6e964d",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "b51785ddebae0816895e3d8683c218ff542b7517a2b6d37a62baa98d99d0572e",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "4b69ba794a043ae4b78e96452471cddfaa90e312015298733cc44de176401131",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "2d2b3455ed3f9f53aa1c96d668a185f7536b9602e40c24b06750cda82346a7b8",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/integration/ros_dock_velocity_relay_probe.py": "e7d747f32588e80f5d3f5bd69508c19da358cd5ce4cc8c175fccfd579f624fb7",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/lab_topic_guard.py": "03ab57a830d20ea6586decf8fba59b71a75d17bc33ed3e493872ffc3b6309056",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/reactive_keepout_envelope.py": "a879bd89ba58e821af524da2f53067b2be44a58c56652af39795de17932a9005",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "f4d09fda9f2c44d7a42abceedc799454a76c363965a6898baf354cf5b53481d5",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/tests/test_sequenced_motion_ingress_20261029.py": "703f48787191f68a35a888347e3a062cfca4688a5a621f098632f43d9ff48846"
+  },
+  "changes": [
+    "Factor the existing bounded arc/swept-disk geometry; keep the synthetic wrapper checks on all three original maps. Fuse virtual-mask projection into the relay final nonzero output for its current owner.",
+    "Require a binary immutable aligned mask, stable unique graph endpoints, type0/base0/multiplier1 FilterInfo, and a recent original ROS+DDS post-filter global costmap that proves every forbidden cell. Cache by immutable costmap revision. No receipt-time rejuvenation.",
+    "Connect the planner mask topic, wait for required mask, reject invalid/changed grids and use square keepout dilation including corners. Preserve legacy cardinal ordinary-obstacle clearance; it was previously mislabeled square.",
+    "Masked coverage uses the existing final relay/journal because even Nav2 execution can issue direct wedge/bumper escapes. Unsupported unrelayed mask coverage is rejected in the existing launch/constructor admission.",
+    "Ignore a harmless queued preclaim zero without renewing any command/zero proof or granting old nonzero data. Preserve replay, command-age, quiet and UUID rules.",
+    "Extend existing optional motion audit with ground-truth disk/chord samples, distance per observed phase and minimum sampled distance to mask bounding box. Observer only; existing coverage acceptance remains unchanged.",
+    "Propagate observed exact-UUID Nav2 status through aggregate health in its existing callback so a real ACTIVE followed by CANCELED between50ms output ticks is not lost. Deterministic before/after test; common-health rejection preserved.",
+    "Retain one first revocation per velocity lease in existing log/status, including original TF/costmap ages. Subsequent stopped commands cannot overwrite it. Clear stale adapter token when the core has already expired ownership. No extra timer, node or tool."
+  ],
+  "focal_results": {
+    "projection_wrapper22": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_projection_reuse_20261030.json",
+      "sha256": "fee44df5aa75b23b3bb9e2297171ab0a7d6563a97bf571332b21daf56078808f",
+      "rc": 0,
+      "seconds": 0.14
+    },
+    "relay42": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_relay_geometry_final_20261030.json",
+      "sha256": "3211153f1306b30b7112b5b9220ed2e4b7e1432bf878a745696b76f4243628c5",
+      "rc": 0,
+      "seconds": null
+    },
+    "planner70": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_planner_geometry_verified_20261030.json",
+      "sha256": "99138484fccd7edf6ff937bba1884a43545308ddc6e1ecdb452647b2b0990dc0",
+      "rc": 0,
+      "seconds": 2.33
+    },
+    "scorer13_before_last_phase_statistics": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_truth_audit_final_20261030.json",
+      "sha256": "ab4837ed68662c74f005655ba15cbe3213987a60dfa566e45b411deb98c5e23e",
+      "rc": 0,
+      "seconds": 2.13
+    },
+    "launch_context_and_lint5_before_last_admission_edit": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_fusion_lint_20261030.json",
+      "sha256": "3e7d9599fe139fafa3c86f82c7a300159259d637918fdb9fb0d0c8e443531808",
+      "rc": 0,
+      "seconds": 2.52
+    },
+    "DDS17": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_three_way_DDS_verified_20261030.json",
+      "sha256": "9c431720512ee82d08beaac4cea61e3c0798266df9e968c7a61abe66ea4510ef",
+      "rc": 0,
+      "seconds": 37.77
+    },
+    "scorer13_current": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_truth_audit_observation_verified_20261030.json",
+      "sha256": "82131510eee3ca7df3c177ef5bc5ff359fbb64c0ab961b167e11ad7c5b394725",
+      "rc": 0,
+      "seconds": 1.98
+    },
+    "launch_context_and_lint5_current": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_fusion_lint_delivery_20261030.json",
+      "sha256": "b95737287a49f5e916fab4aabcc48a3cdab15a1e3cda66213c6fbab3df5fc346",
+      "rc": 0,
+      "seconds": 2.04
+    },
+    "relay43_fast_cancel": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_fast_cancel_module_verified_20261030.json",
+      "sha256": "fbc779d3ebd1ef1560525cf475bda6ca0c140118f90c01afa0182aaba1a84db5",
+      "rc": 0,
+      "seconds": 1.03
+    },
+    "DDS17_after_fast_cancel_before_diagnostics": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_fast_cancel_DDS_verified_20261030.json",
+      "sha256": "55fa618cee0b94d81c81eff4ebe8e7b37e900d1f45dfcb83f9d547d877642f1d",
+      "rc": 0,
+      "seconds": 36.4
+    },
+    "relay44_first_cause": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_first_cause_module_verified_20261030.json",
+      "sha256": "12c6047fd844a7181560779cdf229b6370ecd5a3f1269db3d87d69a844878f82",
+      "rc": 0,
+      "seconds": 1.16
+    }
+  },
+  "DDS": {
+    "ok": true,
+    "checks": [
+      "missing_tf_denies_sweep",
+      "sweep_nonzero_through_real_dds",
+      "virtual_mask_blocks_direct_command_with_other_witnesses_healthy",
+      "stale_original_postfilter_costmap_revokes_sweep",
+      "fresh_but_unenforced_mask_revokes_sweep",
+      "foreign_nav_command_revokes_sweep",
+      "percent_battery_revokes_and_denies_sweep",
+      "sweep_to_exact_uuid_nav_handoff",
+      "missing_nav_status_revokes_active_navigation",
+      "exact_uuid_nav_to_dock_handoff",
+      "software_dock_phase_release_not_physical_contact",
+      "tf_dropout_revokes_sweep",
+      "command_lease_expiry_is_stop",
+      "overspeed_rejected_without_raising_limits",
+      "second_writer_revokes_ownership",
+      "paused_ros_clock_does_not_suspend_output_watchdog",
+      "changed_map_latches_reconciliation_required"
+    ],
+    "elapsed_s": 24.99,
+    "keepout_required": true,
+    "actual_nav2_action_server": false,
+    "physical_contact_or_charging": false,
+    "metadata": [
+      {
+        "keys": [
+          "publication_sequence_number",
+          "received_timestamp",
+          "reception_sequence_number",
+          "source_timestamp"
+        ],
+        "publication_sequence_number": 1,
+        "publisher_gid_bytes": 0,
+        "source_timestamp_positive": true,
+        "type": "dict"
+      }
+    ],
+    "expected_injected_reset_reason_counts": {
+      "ROS odometry header stale/replayed/invalid": 16,
+      "projected motion intersects keepout": 1,
+      "health contradicts active owner": 4,
+      "source or lease token does not own cmd_vel": 22,
+      "keepout pose stamp missing/stale": 1,
+      "invalid wheel command": 1,
+      "velocity writer graph changed/nonexclusive": 3,
+      "invalid/changed motion map": 1
+    }
+  },
+  "retained_failures": {
+    "missing_math_import": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_planner_geometry_contract_20261030.json",
+      "sha256": "775397828cafc53b343f7abd1d8b4a954910a25ec3db797450032bab2a6e27db",
+      "rc": 1,
+      "seconds": 2.79
+    },
+    "docstring_lint": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_launch_lint_20261030.json",
+      "sha256": "cfd04080887288bd7570fbc085aaafba43866af3d10fecc4203f42a87ac15541",
+      "rc": 1,
+      "seconds": 2.19
+    },
+    "DDS_initial_rearm": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_three_way_DDS17_20261030.json",
+      "sha256": "c21d546c5386e4641294e938fd405dc4da7fad6ae1391e56ad14ee417652ed1a",
+      "rc": 1,
+      "seconds": 20.35
+    },
+    "DDS_stricter_pose_stop_vs_old_test_assertion": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_three_way_DDS_trace_20261030.json",
+      "sha256": "d75480fb177d426732a6196140732adaa932b85eced0882a5eaba65defbee8ef",
+      "rc": 1,
+      "seconds": 28.25
+    },
+    "preclaim_zero_case": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_preclaim_zero_reproduction_20261030.json",
+      "sha256": "796e91895d2aa690009c5be6935412d14768bd871169eceaae5d94ea4f99417b",
+      "rc": 1,
+      "seconds": null
+    },
+    "unit_fixture_clock_rewind": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_preclaim_zero_fixed_20261030.json",
+      "sha256": "c7446f78d5b7071f7a0ead6736f36cd54985195a47f3cdcc49b96014d1173f7d",
+      "rc": 1,
+      "seconds": null
+    },
+    "launch_line_length": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_fusion_lint_final_20261030.json",
+      "sha256": "35c6e0a30fd4986d7c6f25fd35810abe53bf603c09135b9a27c675e2f185243d",
+      "rc": 1,
+      "seconds": 2.06
+    },
+    "fast_cancel_between_ticks_reproduced": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_fast_cancel_reproduction_20261030.json",
+      "sha256": "fba03eb242b76b10edf12fb6d3fdda9b313b88cd2fcfcd66015b0aac30068616",
+      "rc": 1,
+      "seconds": 0.2
+    },
+    "Gazebo_initial_fast_cancel_and_SIGSEGV": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_keepout_short_20261030.json",
+      "sha256": "e4a60ad75b577325458872219a486eb28e9394a9a2180d880939ff5868f080f8",
+      "rc": 0,
+      "seconds": 127.04
+    },
+    "Gazebo_unexplained_lease_loss_and_invalid_truth_stamp": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_keepout_fast_cancel_verified_20261030.json",
+      "sha256": "62342395a1ecce0a8eda073aadc74b7476cca5e3a111da228b58b22c47f9eb11",
+      "rc": 0,
+      "seconds": 34.86
+    }
+  },
+  "next_required": [
+    "Complete masked coverage and investigate any recurrence with the retained first-cause telemetry. The bounded180s scene is not the90%/80% full-room acceptance. Do not repeat that partial green without a new acceptance question.",
+    "Resolve or reproduce the intermediate unexplained lease loss using original measurement times; do not silently relax freshness limits or claim its cause is known.",
+    "Keep the first Gazebo SIGSEGV after native ACK open. Two later clean closes do not identify or repair its original cause.",
+    "Actual docking under the common output, managed real-controller fault cases and broader scenes remain outside this partial milestone. Physical validation stays0%."
+  ],
+  "limits": [
+    "The first DDS rearm failure lacks preserved first-cause evidence. The queued-zero race is independently reproduced/fixed; final17-check success does not prove that original failure cause or reliability.",
+    "The second DDS failure assumed the common0.5s pose witness had expired immediately after the new0.2s output check stopped motion; its diagnostic assertion now waits for that original witness. No watchdog budget was relaxed.",
+    "Ground-truth audit is sampled disks/chords of a0.18m simulation proxy after mask arrival, including mask-raster bounds. Phase attribution is by observed callback phase, not atomic authenticated owner evidence. No continuous-time/physical braking certificate.",
+    "No dynamic mask hot-update (changes require reconciliation), docking trajectory, ARM/energy, MCU/RF or physical validation.",
+    "No new tool/implementation node/timer/worker, no remote write and no change applied to original colleague repositories.",
+    "Final scorer13 and five-file lint/admission contexts pass. The final relay44 cases include the callback race and retained first-cause case; DDS17 passed after callback fix before diagnostic-only additions. Exact native source hashes are recorded separately.",
+    "Minimum sampled center-to-mask-bbox distance was0.2060m for the0.18m circular audit proxy. This proves neither the0.06m estimated-pose margin in ground truth nor the full URDF/hardware footprint. Sampling covers after mask arrival; eight earlier poses were counted but not tested.",
+    "One real Nav2 cancellation/release occurred in the final scene, but the10ms cancellation race was not forced there. Its specific repair has a deterministic focal test and DDS evidence, not a reliability proof.",
+    "Original nominal98.51% full-room coverage remains tied to the previous unmasked source versions; it is not the completion percentage of this project or of current masked coverage."
+  ],
+  "Gazebo_bounded_observation": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_keepout_first_cause_diagnostic_20261030.json",
+    "sha256": "ed5376c1420dbb92e991bfd106269e4f8a6f6c7cf2f2dfc4c7d680fcc78edb6a",
+    "rc": 0,
+    "seconds": 198.79,
+    "bank_code": 1,
+    "coverage_pass": false,
+    "end_reason": "wall_timeout",
+    "coverage_fraction": 0.1637,
+    "coverage_complete": false,
+    "measurement_valid": true,
+    "sim_unstable": false,
+    "keepout_audit": {
+      "poses_before_mask": 8,
+      "poses": 8858,
+      "segments": 8857,
+      "footprint_crossings": 0,
+      "max_pose_gap_s": 0.02,
+      "errors": [],
+      "min_sampled_center_to_mask_bbox_m": 0.20603262685580306,
+      "motion_by_phase": {
+        "UNSEEN": {
+          "poses": 51,
+          "distance_m": 2.512362021584844e-09,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000303857173
+        },
+        "IDLE": {
+          "poses": 599,
+          "distance_m": 1.0124354421311022e-09,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.28923429126571143
+        },
+        "SWEEP": {
+          "poses": 3455,
+          "distance_m": 9.740770942655866,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.20603262685580306
+        },
+        "PREPARE_NAV": {
+          "poses": 302,
+          "distance_m": 0.0,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+        },
+        "TRANSIT": {
+          "poses": 4321,
+          "distance_m": 10.423123430119299,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.2860414430197084
+        },
+        "ESCAPE": {
+          "poses": 130,
+          "distance_m": 0.2845467250594848,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 1.5715729294093672
+        }
+      },
+      "footprint_radius_m": 0.18,
+      "source": "/ground_truth/pose",
+      "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+      "forbidden_cells": 220,
+      "forbidden_bbox_xyxy": [
+        0.6500000335276126,
+        -0.5499999627470968,
+        1.1500000409781932,
+        0.5500000536441805
+      ],
+      "mask_seen": true,
+      "valid": true
+    },
+    "graph": {
+      "/cmd_vel": [],
+      "/cmd_vel_nav": [],
+      "/navigate_to_pose/_action/status": [
+        [
+          "bt_navigator",
+          "/",
+          "action_msgs/msg/GoalStatusArray",
+          "010f7f01e903d15a0000000000003c03"
+        ]
+      ],
+      "/valdi/nav2_cmd_vel": [
+        [
+          "controller_server",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01e70384cf0000000000006e03"
+        ]
+      ],
+      "/valdi/sweep_cmd_vel": [
+        [
+          "coverage_planner",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01cd0245820000000000001d03"
+        ]
+      ],
+      "/valdi/dock_drive_cmd_vel": [
+        [
+          "dock_drive",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01c2021bc70000000000001403"
+        ]
+      ],
+      "/valdi/lab_safe_cmd_vel_output": [
+        [
+          "valdi_experimental_cmdvel_relay",
+          "/",
+          "geometry_msgs/msg/Twist",
+          "010f7f01c1023d220000000000001603"
+        ]
+      ],
+      "/oomwoo/keepout_mask": [
+        [
+          "oomwoo_keepout_mask_server",
+          "/",
+          "nav_msgs/msg/OccupancyGrid",
+          "010f7f01c50253590000000000002203"
+        ]
+      ],
+      "/oomwoo/keepout_filter_info": [
+        [
+          "oomwoo_keepout_info_server",
+          "/",
+          "nav2_msgs/msg/CostmapFilterInfo",
+          "010f7f01c6029fdc0000000000002003"
+        ]
+      ],
+      "/global_costmap/costmap": [
+        [
+          "global_costmap",
+          "/global_costmap",
+          "nav_msgs/msg/OccupancyGrid",
+          "010f7f01e8039b360000000000004d03"
+        ]
+      ],
+      "/ground_truth/pose": [
+        [
+          "ground_truth",
+          "/",
+          "geometry_msgs/msg/PoseStamped",
+          "010f7f01c40264aa0000000000001403"
+        ]
+      ],
+      "safe_output_subscribers": [
+        [
+          "ros_gz_bridge",
+          "/",
+          "geometry_msgs/msg/Twist"
+        ]
+      ]
+    },
+    "terminal_UUID_counts": {
+      "4": 5,
+      "5": 1
+    },
+    "last_observed_phase": "SWEEP",
+    "last_journal_outcome": "succeeded",
+    "native_stop_ack": true,
+    "clean_processes": [
+      "create-10",
+      "initialpose_pub-17",
+      "gazebo-3",
+      "lifecycle_manager-21",
+      "lifecycle_manager-16",
+      "parameter_bridge-9",
+      "costmap_filter_info_server-6",
+      "map_server-5",
+      "robot_state_publisher-8",
+      "map_server-14",
+      "lifecycle_manager-7",
+      "amcl-15",
+      "bt_navigator-20",
+      "coverage_meter-11",
+      "controller_server-18",
+      "ground_truth-4",
+      "python3-1",
+      "dock_drive-2",
+      "coverage_planner-12",
+      "planner_server-19"
+    ],
+    "nonzero_exit_processes": [
+      "coverage_regression_runner-13"
+    ],
+    "mask_fixture": {
+      "generated_manifest": {
+        "count": 220,
+        "filter_info_topic": "/valdi/keepout_costmap_filter_info",
+        "filters_global": [
+          "keepout_filter",
+          "keepout_inflation"
+        ],
+        "filters_local": [
+          "keepout_filter",
+          "keepout_inflation"
+        ],
+        "mask_topic": "/valdi/keepout_filter_mask",
+        "mask_yaml": "/tmp/keepout-fusion/keepout_test_room.yaml",
+        "nav_params": "/tmp/keepout-fusion/nav2_keepout_params.yaml",
+        "origin": [
+          -1.6,
+          -3.05,
+          0.0
+        ],
+        "params_source": "/work/src/oomwoo_sim_support/config/nav2_params.yaml",
+        "pgm": "/tmp/keepout-fusion/keepout_test_room.pgm",
+        "rectangle_world": [
+          [
+            0.67,
+            -0.55
+          ],
+          [
+            1.14,
+            0.55
+          ]
+        ],
+        "resolution_m": 0.05,
+        "shape": "rectangular experimental no-go area",
+        "source_map_fingerprint": "29a8c8d57d560e6eb4612beaa4e8eae02e20f7c232400bae81f4e93f3522c789",
+        "source_map_yaml": "/work/src/oomwoo_sim_support/maps/test_room.yaml"
+      },
+      "legacy_overlay_and_topics_used": false,
+      "active_mask_topic": "/oomwoo/keepout_mask",
+      "active_info_topic": "/oomwoo/keepout_filter_info",
+      "active_overlay_builder": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py"
+    },
+    "source_sha256": {
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py": "05c82152fee1a0ae753abfd0ccf38e3ad57b8e6667a0858e66561debd054effc",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "4b69ba794a043ae4b78e96452471cddfaa90e312015298733cc44de176401131",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "cf153418178b987648d09f3c5e5e744aad5f0b218aa56d55332497b8a498d4ff",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "68f643e50283ca5f0b10fc8862c06950679b96e164647fa1096af1fc658d46dd",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/deploy/run_coverage_regression.sh": "e344c63fc7ab45c6f6605b317191938d87f98419257d4c939632ffb093d95246",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py": "12585bd3b6f35cbaba305056500a348e5ad3872cd233607e562aaf5eeaee0837",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/reactive_keepout_envelope.py": "a879bd89ba58e821af524da2f53067b2be44a58c56652af39795de17932a9005",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/lab_topic_guard.py": "03ab57a830d20ea6586decf8fba59b71a75d17bc33ed3e493872ffc3b6309056",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/map_admission.py": "a469701cb56b3267092dff7c5d0a919c21832ed67bfe07a1f3f980c30c8f07b5",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/nav_keepout_admission.py": "6d5a63c3a93cc9ccb8a42c2291507a721c9516d6d5a575932db770f58b79e8b5",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/src/oomwoo_cleaning_jobs/swept_footprint.py": "7a58e3afdfa29ee1740ef0beac6fb9d1cca064a34b14f9ea670b0aa2c8761334",
+      "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-b7a0154/integration/generate_keepout_lab.py": "3883aeb9280fc91843208c58e8014a16059d2849da075045d2fcb5e2e3831fdb"
+    },
+    "acceptance": "Bounded combined-motion observation only: valid sampled audit, SWEEP/TRANSIT movement and one output, no motion fault,20 clean process exits. Scorer1 is expected wall_timeout, not coverage PASS."
+  },
+  "intermediate_native_observations": [
+    {
+      "raw": {
+        "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_managed_keepout_short_20261030.json",
+        "sha256": "e4a60ad75b577325458872219a486eb28e9394a9a2180d880939ff5868f080f8",
+        "rc": 0,
+        "seconds": 127.04
+      },
+      "reason": "motion_fault",
+      "coverage_pass": false,
+      "audit": {
+        "poses_before_mask": 0,
+        "poses": 5181,
+        "segments": 5180,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.2,
+        "errors": [],
+        "min_sampled_center_to_mask_bbox_m": 0.22540724966337827,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 9,
+            "distance_m": 6.295332622839101e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000328980793
+          },
+          "IDLE": {
+            "poses": 571,
+            "distance_m": 3.5247974637159463e-09,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.3035282091594839
+          },
+          "SWEEP": {
+            "poses": 3199,
+            "distance_m": 8.979357056996237,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.22540724966337827
+          },
+          "PREPARE_NAV": {
+            "poses": 201,
+            "distance_m": 7.311036853572265e-06,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+          },
+          "TRANSIT": {
+            "poses": 1181,
+            "distance_m": 2.3648619889501985,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.30329471167476857
+          },
+          "TRANSIT_CANCEL": {
+            "poses": 20,
+            "distance_m": 1.0983819770321232e-06,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 1.7540212718113461
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "release_error": "Nav2 release not proven",
+      "Gazebo_exit": 139,
+      "native_ack": true,
+      "root": "Fast ACTIVE/CANCELED between50ms ticks independently reproduced in real relay methods/core; Gazebo crash source unknown."
+    },
+    {
+      "raw": {
+        "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_keepout_fast_cancel_verified_20261030.json",
+        "sha256": "62342395a1ecce0a8eda073aadc74b7476cca5e3a111da228b58b22c47f9eb11",
+        "rc": 0,
+        "seconds": 34.86
+      },
+      "reason": "motion_fault",
+      "coverage_pass": false,
+      "audit": {
+        "poses_before_mask": 0,
+        "poses": 682,
+        "segments": 681,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.04,
+        "errors": [
+          "ground-truth stamp/frame/position invalid or stale"
+        ],
+        "min_sampled_center_to_mask_bbox_m": 0.3968594122410012,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 34,
+            "distance_m": 9.68270038907537e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+          },
+          "IDLE": {
+            "poses": 368,
+            "distance_m": 4.855523755758791e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000298963409
+          },
+          "SWEEP": {
+            "poses": 9,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+          },
+          "PREPARE_NAV": {
+            "poses": 51,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+          },
+          "TRANSIT": {
+            "poses": 220,
+            "distance_m": 0.4049398480397315,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.3968594122410012
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": false
+      },
+      "release_error": "ownership lost: source or lease token does not own cmd_vel",
+      "native_shutdown": "all auxiliary processes clean",
+      "root": "Unknown. Final reason overwrote first cause; invalid/stale truth message in same run does not establish causality."
+    }
+  ],
+  "uncommitted_at_evidence_preparation": true
+}

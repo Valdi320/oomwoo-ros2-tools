@@ -37,6 +37,7 @@ Intended to be launched alongside coverage_regression.launch.py.
 """
 
 import json
+import math
 import os
 import sys
 import time
@@ -78,6 +79,16 @@ class CoverageRunner(Node):
         self.motion_samples['phase'] = []
         self._motion_graph_wall = 0.0
         self._motion_status_count = 0
+        self._keepout_audit_mask = None
+        self._keepout_audit_previous = None
+        self._keepout_audit_bbox = None
+        self._keepout_audit = {
+            'poses_before_mask': 0, 'poses': 0, 'segments': 0,
+            'footprint_crossings': 0, 'max_pose_gap_s': 0.0, 'errors': [],
+            'min_sampled_center_to_mask_bbox_m': None,
+            'motion_by_phase': {},
+            'footprint_radius_m': 0.18, 'source': '/ground_truth/pose',
+            'scope': 'sampled ground-truth disk and chords after mask arrival; no physical claim'}
         self.declare_parameter('sim_battery_fraction',
                                float(os.environ.get('OOMWOO_SIM_BATTERY_FRACTION', '-1')))
         fraction = self.get_parameter('sim_battery_fraction').value
@@ -92,6 +103,8 @@ class CoverageRunner(Node):
             self._sim_battery_pub = self.create_publisher(BatteryState, '/battery_state', 10)
         if self.motion_audit:
             from action_msgs.msg import GoalStatusArray
+            from geometry_msgs.msg import PoseStamped
+            from nav_msgs.msg import OccupancyGrid
             from nav2_msgs.action import NavigateToPose
             from std_msgs.msg import String
             self.create_subscription(String, '/coverage_planner/motion_state',
@@ -102,6 +115,13 @@ class CoverageRunner(Node):
             self.create_subscription(
                 NavigateToPose.Impl.FeedbackMessage, '/navigate_to_pose/_action/feedback',
                 self._audit_feedback, 10)
+            self.create_subscription(
+                OccupancyGrid, '/oomwoo/keepout_mask', self._audit_keepout_mask,
+                QoSProfile(depth=1, history=QoSHistoryPolicy.KEEP_LAST,
+                           reliability=QoSReliabilityPolicy.RELIABLE,
+                           durability=QoSDurabilityPolicy.TRANSIENT_LOCAL))
+            self.create_subscription(
+                PoseStamped, '/ground_truth/pose', self._audit_keepout_truth, 10)
         self.cov_target = self.get_parameter('coverage_target').value
         self.eff_target = self.get_parameter('efficiency_target').value
         self.max_t = self.get_parameter('max_sim_time_s').value
@@ -151,6 +171,97 @@ class CoverageRunner(Node):
                 phases.pop(0)
             phases.append({'phase': msg.data, 'wall': time.monotonic(), 'sim': self._sim_now()})
 
+    def _audit_keepout_error(self, message):
+        errors = self._keepout_audit['errors']
+        if message not in errors and len(errors) < 8:
+            errors.append(message)
+
+    def _audit_keepout_mask(self, msg):
+        try:
+            from oomwoo_cleaning_jobs.map_admission import Raster
+            mask = Raster.from_ros(msg)
+            if any(value not in (0, 100) for value in mask.data):
+                raise ValueError('nonbinary audit mask')
+            if not any(value == 100 for value in mask.data):
+                raise ValueError('audit mask has no forbidden cells')
+            if self._keepout_audit_mask is not None and mask != self._keepout_audit_mask:
+                raise ValueError('audit mask changed')
+            self._keepout_audit_mask = mask
+            forbidden = [i for i, value in enumerate(mask.data) if value == 100]
+            self._keepout_audit['forbidden_cells'] = len(forbidden)
+            if abs(mask.yaw) <= 1e-8:
+                cols = [i % mask.width for i in forbidden]
+                rows = [i // mask.width for i in forbidden]
+                self._keepout_audit_bbox = (
+                    mask.origin_x + min(cols) * mask.resolution,
+                    mask.origin_y + min(rows) * mask.resolution,
+                    mask.origin_x + (max(cols) + 1) * mask.resolution,
+                    mask.origin_y + (max(rows) + 1) * mask.resolution)
+                self._keepout_audit['forbidden_bbox_xyxy'] = self._keepout_audit_bbox
+        except (ImportError, ValueError, TypeError) as exc:
+            self._audit_keepout_error(str(exc))
+
+    def _audit_keepout_truth(self, msg):
+        if self._keepout_audit_mask is None:
+            self._keepout_audit['poses_before_mask'] += 1
+            return
+        try:
+            from oomwoo_cleaning_jobs.swept_footprint import swept_disk_clear
+            stamp = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
+            age = self.get_clock().now().nanoseconds - stamp
+            x, y = msg.pose.position.x, msg.pose.position.y
+            if (msg.header.frame_id != 'map' or stamp <= 0 or not 0 <= age <= 500_000_000
+                    or not math.isfinite(x) or not math.isfinite(y)):
+                raise ValueError('ground-truth stamp/frame/position invalid or stale')
+            previous = self._keepout_audit_previous
+            if previous is not None:
+                if stamp == previous[2] and (x, y) == previous[:2]:
+                    return
+                if stamp <= previous[2]:
+                    raise ValueError('ground-truth pose reordered')
+                gap = (stamp - previous[2]) * 1e-9
+                self._keepout_audit['max_pose_gap_s'] = max(
+                    self._keepout_audit['max_pose_gap_s'], gap)
+            start = previous[:2] if previous is not None else (x, y)
+            clear = swept_disk_clear(self._keepout_audit_mask, start, (x, y), 0.18, 0)
+            bbox = self._keepout_audit_bbox
+            distance = None
+            if bbox is not None:
+                distance = math.hypot(max(bbox[0] - x, 0., x - bbox[2]),
+                                      max(bbox[1] - y, 0., y - bbox[3]))
+                old = self._keepout_audit.get('min_sampled_center_to_mask_bbox_m')
+                self._keepout_audit['min_sampled_center_to_mask_bbox_m'] = (
+                    distance if old is None else min(old, distance))
+            phases = getattr(self, 'motion_samples', {}).get('phase', [])
+            phase = phases[-1]['phase'] if phases else 'UNSEEN'
+            if phase not in ('IDLE', 'SWEEP', 'TRANSIT', 'PREPARE_NAV',
+                             'TRANSIT_CANCEL', 'ESCAPE', 'FAULT', 'UNSEEN'):
+                phase = 'OTHER'
+            observed = self._keepout_audit.setdefault('motion_by_phase', {}).setdefault(
+                phase, {'poses': 0, 'distance_m': 0., 'nonclear_segments': 0,
+                        'min_sampled_center_to_mask_bbox_m': None})
+            observed['poses'] += 1
+            observed['nonclear_segments'] += int(not clear)
+            if previous is not None:
+                observed['distance_m'] += math.hypot(x - previous[0], y - previous[1])
+            if distance is not None:
+                old = observed['min_sampled_center_to_mask_bbox_m']
+                observed['min_sampled_center_to_mask_bbox_m'] = (
+                    distance if old is None else min(old, distance))
+            self._keepout_audit['poses'] += 1
+            self._keepout_audit['segments'] += int(previous is not None)
+            self._keepout_audit['footprint_crossings'] += int(not clear)
+            self._keepout_audit_previous = (x, y, stamp)
+        except (ImportError, ValueError, TypeError, ArithmeticError) as exc:
+            self._audit_keepout_error(str(exc))
+
+    def _audit_keepout_result(self):
+        result = dict(self._keepout_audit)
+        result['mask_seen'] = self._keepout_audit_mask is not None
+        result['valid'] = bool(result['mask_seen'] and result['poses'] > 1
+                               and not result['errors'] and result['max_pose_gap_s'] <= 0.2)
+        return result
+
     def _audit_status(self, msg):
         self._motion_status_count += 1
         if len(self.motion_samples['status']) >= 256:
@@ -180,7 +291,9 @@ class CoverageRunner(Node):
         self._motion_graph_wall = now
         for topic in ('/cmd_vel', '/cmd_vel_nav', '/navigate_to_pose/_action/status',
                       '/valdi/nav2_cmd_vel', '/valdi/sweep_cmd_vel',
-                      '/valdi/dock_drive_cmd_vel', '/valdi/lab_safe_cmd_vel_output'):
+                      '/valdi/dock_drive_cmd_vel', '/valdi/lab_safe_cmd_vel_output',
+                      '/oomwoo/keepout_mask', '/oomwoo/keepout_filter_info',
+                      '/global_costmap/costmap', '/ground_truth/pose'):
             publishers = self.get_publishers_info_by_topic(topic)
             snapshot = sorted((p.node_name, p.node_namespace, p.topic_type,
                                bytes(p.endpoint_gid).hex()) for p in publishers)
@@ -335,6 +448,7 @@ class CoverageRunner(Node):
             result['motion_audit'] = {
                 'graph': self.motion_graph, 'samples': self.motion_samples,
                 'status_packets_total': self._motion_status_count,
+                'keepout': self._audit_keepout_result(),
                 'dds_builtin_transports': os.environ.get(
                     'FASTDDS_BUILTIN_TRANSPORTS', 'DEFAULT')}
         try:

@@ -58,6 +58,98 @@ def reactive_driver():
     return node, sent, dispatched
 
 
+def keepout_grid(width=64, height=64):
+    """Build a virtual zone on empty map pixels with real ROS metadata."""
+    grid = OccupancyGrid()
+    grid.header.frame_id = 'map'
+    grid.info.width, grid.info.height = width, height
+    grid.info.resolution = .05
+    grid.info.origin.position.x = grid.info.origin.position.y = -1.6
+    grid.info.origin.orientation.w = 1.
+    grid.data = [0] * (width * height)
+    grid.data[32 * width + 32] = 100
+    return grid
+
+
+def keepout_driver():
+    """Exercise actual mask callbacks/building with the existing STOP path recorded."""
+    base = keepout_grid()
+    base.data = [0] * len(base.data)
+    faults = []
+    node = SimpleNamespace(
+        map_msg=base, keepout=None, _keepout_geometry_value=None,
+        _keepout_fault=None, _keepout_required=True, _relay_enabled=True,
+        robot_radius=.18, total_free_cells=0, free_mask=None,
+        _relay_fail=faults.append,
+        _keepout_geometry=CoveragePlanner._keepout_geometry)
+    for name in ('_on_keepout', '_build_masks', '_invalid_keepout'):
+        setattr(node, name, MethodType(getattr(CoveragePlanner, name), node))
+    return node, faults
+
+
+def test_required_keepout_waits_for_mask_before_any_plan_free_space():
+    node, faults = keepout_driver()
+    node._build_masks()
+    assert node.free_mask is None and node.total_free_cells == 0
+    assert faults == []
+
+
+def test_keepout_margin_blocks_diagonal_footprint_overlap_and_retains_distant_floor():
+    node, faults = keepout_driver()
+    node._on_keepout(keepout_grid())
+    # At (.15,.15) offset, the disk intersects the forbidden pixel's corner.
+    # Cardinal-only dilation would leave this diagonally overlapping cell free.
+    assert not node.free_mask[35, 35]
+    assert node.free_mask[43, 43]
+    assert faults == [] and node.total_free_cells > 0
+
+
+@pytest.mark.parametrize('invalid', [
+    'shift', 'rotation', 'resolution', 'size', 'unknown', 'gray', 'frame',
+])
+def test_invalid_keepout_geometry_or_encoding_uses_existing_fault_stop(invalid):
+    node, faults = keepout_driver()
+    mask = keepout_grid(63) if invalid == 'size' else keepout_grid()
+    if invalid == 'shift':
+        mask.info.origin.position.x += .05
+    elif invalid == 'rotation':
+        mask.info.origin.orientation.z = .6
+        mask.info.origin.orientation.w = .8
+    elif invalid == 'resolution':
+        mask.info.resolution = .1
+    elif invalid == 'unknown':
+        mask.data[0] = -1
+    elif invalid == 'gray':
+        mask.data[0] = 50
+    elif invalid == 'frame':
+        mask.header.frame_id = 'odom'
+    node._on_keepout(mask)
+    assert faults and node._keepout_fault
+    assert node.free_mask is None and node.total_free_cells == 0
+
+
+def test_mask_arriving_before_map_is_validated_when_map_arrives():
+    node, faults = keepout_driver()
+    base = node.map_msg
+    node.map_msg = None
+    node._on_keepout(keepout_grid())
+    base.info.origin.position.x += .05
+    node.map_msg = base
+    node._build_masks()
+    assert faults and node.free_mask is None
+
+
+def test_changed_mask_cannot_leave_old_plan_running_or_rearm_with_old_bytes():
+    node, faults = keepout_driver()
+    node._on_keepout(keepout_grid())
+    changed = keepout_grid()
+    changed.data[0] = 100
+    node._on_keepout(changed)
+    node._on_keepout(keepout_grid())
+    assert faults and node._keepout_fault
+    assert node.free_mask is None
+
+
 @pytest.mark.parametrize('transition', [
     'pose_unavailable', 'no_target', 'reached', 'stalled',
     'transit_ready', 'transit_unready',

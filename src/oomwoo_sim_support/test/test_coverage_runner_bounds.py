@@ -14,8 +14,10 @@
 """Clock and startup bounds of the real coverage scorer, with deterministic input."""
 
 import json
-from types import SimpleNamespace
+from types import MethodType, SimpleNamespace
 
+from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import OccupancyGrid
 from oomwoo_sim_support import coverage_regression_runner as runner
 import pytest
 
@@ -143,3 +145,84 @@ def test_motion_fault_cannot_pass_even_after_coverage_target(score):
     assert code == 1
     assert report['pass'] is False and report['end_reason'] == 'motion_fault'
     assert report['measurement_valid'] is True and elapsed == 0.25
+
+
+def truth_audit():
+    """Bind the existing scorer callbacks to a fixed original-stamp clock."""
+    now = [10_200_000_000]
+    node = SimpleNamespace(
+        _keepout_audit_mask=None, _keepout_audit_previous=None,
+        _keepout_audit={'poses_before_mask': 0, 'poses': 0, 'segments': 0,
+                        'footprint_crossings': 0, 'max_pose_gap_s': 0., 'errors': []},
+        get_clock=lambda: SimpleNamespace(now=lambda: SimpleNamespace(nanoseconds=now[0])))
+    for name in ('_audit_keepout_mask', '_audit_keepout_truth',
+                 '_audit_keepout_error', '_audit_keepout_result'):
+        setattr(node, name, MethodType(getattr(runner.CoverageRunner, name), node))
+    mask = OccupancyGrid()
+    mask.header.frame_id = 'map'
+    mask.info.width = mask.info.height = 20
+    mask.info.resolution = .25
+    mask.info.origin.position.x = mask.info.origin.position.y = -2.5
+    mask.info.origin.orientation.w = 1.
+    mask.data = [0] * 400
+    mask.data[10 * 20 + 13] = 100  # x in[.75,1.0], y in[0,.25]
+    return node, mask, now
+
+
+def truth_pose(x, nanoseconds):
+    """Build a ground-truth sample carrying its original ROS stamp."""
+    pose = PoseStamped()
+    pose.header.frame_id = 'map'
+    pose.header.stamp.sec = nanoseconds // 1_000_000_000
+    pose.header.stamp.nanosec = nanoseconds % 1_000_000_000
+    pose.pose.position.x, pose.pose.position.y = x, .125
+    return pose
+
+
+def test_ground_truth_audit_detects_crossing_between_two_clear_endpoints():
+    node, mask, _ = truth_audit()
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(.2, 10_000_000_000))
+    node._audit_keepout_truth(truth_pose(1.4, 10_100_000_000))
+    result = node._audit_keepout_result()
+    assert result['valid'] and result['poses'] == 2
+    assert result['footprint_crossings'] == 1
+
+
+def test_ground_truth_audit_retains_a_clear_motion_segment():
+    node, mask, _ = truth_audit()
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(-.3, 10_000_000_000))
+    node._audit_keepout_truth(truth_pose(-.25, 10_050_000_000))
+    result = node._audit_keepout_result()
+    assert result['valid'] and result['segments'] == 1
+    assert result['footprint_crossings'] == 0
+    assert result['min_sampled_center_to_mask_bbox_m'] == pytest.approx(1.)
+
+
+def test_ground_truth_audit_never_certifies_missing_or_empty_mask():
+    node, mask, _ = truth_audit()
+    node._audit_keepout_truth(truth_pose(0., 10_000_000_000))
+    assert not node._audit_keepout_result()['valid']
+    mask.data = [0] * 400
+    node._audit_keepout_mask(mask)
+    assert not node._audit_keepout_result()['valid']
+
+
+def test_ground_truth_audit_preserves_stale_stamp_instead_of_refreshing_receipt():
+    node, mask, _ = truth_audit()
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(0., 8_000_000_000))
+    result = node._audit_keepout_result()
+    assert not result['valid'] and result['errors'] and result['poses'] == 0
+
+
+def test_ground_truth_audit_reports_insufficient_sample_cadence():
+    node, mask, now = truth_audit()
+    now[0] = 10_500_000_000
+    node._audit_keepout_mask(mask)
+    node._audit_keepout_truth(truth_pose(-.3, 10_000_000_000))
+    node._audit_keepout_truth(truth_pose(-.2, 10_400_000_000))
+    result = node._audit_keepout_result()
+    assert result['max_pose_gap_s'] == .4
+    assert not result['valid']

@@ -42,6 +42,7 @@ sim pass certifies the sweep + the harness loop, not a standalone estimator.
 
 import hashlib
 import json
+import math
 import time
 from typing import List, Optional
 import uuid
@@ -96,6 +97,7 @@ class CoveragePlanner(Node):
         self.declare_parameter('cleaning_radius', 0.16)   # m, effective clean swath / 2
         self.declare_parameter('row_overlap', 0.10)       # fraction of swath overlapped
         self.declare_parameter('robot_radius', 0.17)      # m, for obstacle inflation
+        self.declare_parameter('require_keepout_filter', False)
         # coverage_target is a GATE the harness asserts on, not a stop switch:
         # by default the sweep runs to completion (all rows + gap-fill passes)
         # so the reported number is uncapped — it can distinguish a planner
@@ -119,6 +121,7 @@ class CoveragePlanner(Node):
         self.cleaning_radius = self.get_parameter('cleaning_radius').value
         self.row_overlap = self.get_parameter('row_overlap').value
         self.robot_radius = self.get_parameter('robot_radius').value
+        self._keepout_required = self.get_parameter('require_keepout_filter').value is True
         self.row_substep_m = self.get_parameter('row_substep_m').value
         self.long_axis_sweep = self.get_parameter('long_axis_sweep').value
         self.coverage_target = self.get_parameter('coverage_target').value
@@ -132,6 +135,8 @@ class CoveragePlanner(Node):
         self.map_msg: Optional[OccupancyGrid] = None
         self.free_mask: Optional[np.ndarray] = None       # bool[H,W], inflated-free
         self.keepout: Optional[np.ndarray] = None         # bool[H,W], True = no-go
+        self._keepout_geometry_value = None
+        self._keepout_fault = None
         self.total_free_cells = 0
         self.robot_xy = None            # latest robot pose (map frame), for seeding
         self.ext_ratio = 0.0            # coverage %, from the coverage_meter
@@ -273,6 +278,10 @@ class CoveragePlanner(Node):
         self.declare_parameter('motion_relay_journal', '')
         relay_path = self.get_parameter('motion_relay_journal').value
         self._relay_enabled = bool(relay_path)
+        if self._keepout_required and not self._relay_enabled:
+            # Nav2-only execution can still enter a direct bumper/wedge
+            # escape. Its mask must therefore share the existing final relay.
+            raise ValueError('keepout coverage requires the existing motion relay')
         if self._relay_enabled:
             self._init_motion_relay(relay_path)
         # 5 Hz coverage accounting; planning kicks off once the map arrives
@@ -290,14 +299,73 @@ class CoveragePlanner(Node):
             f'{self.total_free_cells} reachable free cells')
 
     def _on_keepout(self, msg: OccupancyGrid) -> None:
-        # keepout filter mask uses the same grid geometry; occupied => no-go
-        data = np.asarray(msg.data, dtype=np.int16).reshape(
-            msg.info.height, msg.info.width)
-        self.keepout = data >= OCC_THRESH
-        if self.map_msg is not None:
-            self._build_masks()
+        try:
+            geometry = self._keepout_geometry(msg)
+            data = np.asarray(msg.data, dtype=np.int16).reshape(
+                msg.info.height, msg.info.width)
+            if not np.all((data == 0) | (data == 100)):
+                raise ValueError('keepout mask must be binary 0/100')
+            if not np.any(data == 100) or np.all(data == 100):
+                raise ValueError('keepout mask needs both forbidden and free cells')
+            if self.map_msg is not None and geometry != self._keepout_geometry(self.map_msg):
+                raise ValueError('keepout geometry differs from current map')
+            mask = data == 100
+            if self.keepout is not None and (
+                    geometry != self._keepout_geometry_value
+                    or not np.array_equal(mask, self.keepout)):
+                raise ValueError('keepout changed; restart/reconcile the plan')
+            if self._keepout_fault is not None:
+                return
+            self.keepout = mask
+            self._keepout_geometry_value = geometry
+            if self.map_msg is not None:
+                self._build_masks()
+        except (ValueError, TypeError, AttributeError) as exc:
+            self._invalid_keepout(str(exc))
+
+    @staticmethod
+    def _keepout_geometry(msg):
+        """Validate the axis-aligned map geometry actually used by this planner."""
+        info = msg.info
+        p, q = info.origin.position, info.origin.orientation
+        values = (info.resolution, p.x, p.y, p.z, q.x, q.y, q.z, q.w)
+        if (msg.header.frame_id != 'map' or info.width <= 0 or info.height <= 0
+                or not all(math.isfinite(v) for v in values) or info.resolution <= 0
+                or any(abs(v) > 1e-8 for v in (q.x, q.y, q.z))
+                or abs(abs(q.w) - 1.) > 1e-8):
+            raise ValueError('invalid/rotated keepout grid geometry')
+        return (info.width, info.height, float(info.resolution), p.x, p.y, p.z)
+
+    def _invalid_keepout(self, reason):
+        """Retain a mask fault and stop the existing producer/lease path."""
+        self._keepout_fault = reason
+        self.free_mask = None
+        self.total_free_cells = 0
+        if getattr(self, '_relay_enabled', False):
+            self._relay_fail(reason)
+        else:
+            self.get_logger().error(reason)
+            self.finished = True
+            self.active_pub.publish(Bool(data=False))
+            self.cmd_pub.publish(Twist())
+            if self.goal_handle is not None:
+                self.goal_handle.cancel_goal_async()
+            elif self.awaiting:
+                self.cancel_on_accept = True
 
     def _build_masks(self) -> None:
+        if (getattr(self, '_keepout_fault', None) is not None
+                or (getattr(self, '_keepout_required', False) and self.keepout is None)):
+            self.free_mask = None
+            self.total_free_cells = 0
+            return
+        if self.keepout is not None:
+            try:
+                if self._keepout_geometry_value != self._keepout_geometry(self.map_msg):
+                    raise ValueError('keepout geometry differs from current map')
+            except (ValueError, TypeError, AttributeError) as exc:
+                self._invalid_keepout(str(exc))
+                return
         info = self.map_msg.info
         h, w = info.height, info.width
         grid = np.asarray(self.map_msg.data, dtype=np.int16).reshape(h, w)
@@ -309,8 +377,12 @@ class CoveragePlanner(Node):
         blocked = _dilate(obstacle | unknown, infl)
         free = (grid == FREE) & ~blocked
 
-        if self.keepout is not None and self.keepout.shape == free.shape:
-            free &= ~self.keepout
+        if self.keepout is not None:
+            # Match the .18 m lab footprint + .06 m keepout margin at the
+            # final output. Square dilation conservatively covers corners;
+            # retain the legacy cardinal obstacle clearance above.
+            keepout_radius = int(math.ceil((self.robot_radius + .06) / info.resolution))
+            free &= ~_dilate(self.keepout, keepout_radius, square=True)
 
         self.free_mask = free
         self.total_free_cells = int(free.sum())
@@ -1418,8 +1490,8 @@ def _yaw_from_quat(q) -> float:
                             1.0 - 2.0 * (q.y * q.y + q.z * q.z)))
 
 
-def _dilate(mask: np.ndarray, radius: int) -> np.ndarray:
-    """Binary dilation by a square structuring element of given radius."""
+def _dilate(mask: np.ndarray, radius: int, *, square=False) -> np.ndarray:
+    """Dilate with legacy cardinal neighbours, optionally including corners."""
     if radius <= 0:
         return mask.copy()
     out = mask.copy()
@@ -1429,6 +1501,11 @@ def _dilate(mask: np.ndarray, radius: int) -> np.ndarray:
         shifted[:-1, :] |= out[1:, :]
         shifted[:, 1:] |= out[:, :-1]
         shifted[:, :-1] |= out[:, 1:]
+        if square:
+            shifted[1:, 1:] |= out[:-1, :-1]
+            shifted[1:, :-1] |= out[:-1, 1:]
+            shifted[:-1, 1:] |= out[1:, :-1]
+            shifted[:-1, :-1] |= out[1:, 1:]
         out = shifted
     return out
 
