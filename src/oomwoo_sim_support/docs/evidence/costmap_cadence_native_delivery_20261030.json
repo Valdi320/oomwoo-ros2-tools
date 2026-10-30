@@ -1,0 +1,388 @@
+{
+  "completed_utc": "2026-10-30T17:13:41.628783+00:00",
+  "raw_receipt": "costmap_cadence_native_20261030.json",
+  "rc": 1,
+  "seconds": 963.585,
+  "host_timeout": false,
+  "report": {
+    "coverage": 0.955,
+    "coverage_target": 0.9,
+    "target_crossed": true,
+    "efficiency_at_target": 0.7819,
+    "efficiency_final": 0.6666,
+    "revisit_ratio": 0.3058,
+    "efficiency_target": 0.8,
+    "time_to_target_s": 762.0,
+    "end_reason": "sweep_complete",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true,
+    "nav2_config": true
+  },
+  "all_eight_prior_code_hashes_identical": true,
+  "only_functional_difference": "global publish2->4; ninth YAML source frozen and mounted into installed config path",
+  "terminal_goals": {
+    "c669f41024914844a38c2f83949f98e8": {
+      "status": 4,
+      "sim": 15.450000000000001
+    },
+    "63c874613f484c71a00cab75efb2a636": {
+      "status": 4,
+      "sim": 40.84
+    },
+    "881f3c1b61dd487aa4258bbe07c08fce": {
+      "status": 4,
+      "sim": 85.44000000000001
+    },
+    "25e6ee5af4da4891a6230dcb8c7681d4": {
+      "status": 4,
+      "sim": 126.45
+    },
+    "20376004a14b435facbd6766a5942a40": {
+      "status": 4,
+      "sim": 157.05
+    },
+    "3d656f6ab2b54a2ab1ee2d3f0fe88962": {
+      "status": 4,
+      "sim": 362.035
+    },
+    "ac5e5babd91841e68f821c6e3ae2fbf2": {
+      "status": 4,
+      "sim": 380.85
+    },
+    "fa77a0e8112a4c87b4d9967415ace9a9": {
+      "status": 4,
+      "sim": 419.45000000000005
+    },
+    "8a19a83d50b043d0968098f24e77d102": {
+      "status": 4,
+      "sim": 458.25000000000006
+    },
+    "45c015f7f99e4906a138e2695696fef9": {
+      "status": 4,
+      "sim": 480.64000000000004
+    },
+    "abe31958af504eb1a80e8c70434b4f01": {
+      "status": 4,
+      "sim": 542.85
+    },
+    "6ab04115914f4c1887627d0137bc77b3": {
+      "status": 4,
+      "sim": 560.0400000000001
+    },
+    "7442fa0d58844382a5308b677587587b": {
+      "status": 4,
+      "sim": 608.25
+    },
+    "721ec425180d4fd2996d929a3fe7ba05": {
+      "status": 5,
+      "sim": 757.0200000000001
+    },
+    "a551d18f11ef4d2c810448f52515867f": {
+      "status": 4,
+      "sim": 798.0500000000001
+    },
+    "b141a9b9d95d419084f4343462b19324": {
+      "status": 4,
+      "sim": 806.6400000000001
+    },
+    "e8ebfb56ede0499784c72a87e889a636": {
+      "status": 4,
+      "sim": 828.44
+    },
+    "c0634cf2ac7f448abc27cf971df57dc3": {
+      "status": 4,
+      "sim": 841.245
+    },
+    "4c7185213b8942edb99b8f8b1694c842": {
+      "status": 4,
+      "sim": 859.6500000000001
+    },
+    "0882d14d5cce4e5698238bf99c6216cd": {
+      "status": 4,
+      "sim": 897.84
+    },
+    "ac1704cbbb004d8786e7ef3f106a8d80": {
+      "status": 4,
+      "sim": 912.6500000000001
+    },
+    "74698a26ae25413e8bb01b23b8b24369": {
+      "status": 4,
+      "sim": 925.24
+    },
+    "67b04d46e6bb4f39a9f1cb709d1ae722": {
+      "status": 4,
+      "sim": 937.44
+    }
+  },
+  "terminal_status_counts": {
+    "4": 22,
+    "5": 1
+  },
+  "lease_revocations": [],
+  "motion_faults": [],
+  "focal_goal": {
+    "uuid": "8a19a83d50b043d0968098f24e77d102",
+    "samples": 52,
+    "start_sim": 447.8,
+    "terminal": {
+      "status": 4,
+      "sim": 458.25000000000006
+    },
+    "all_map_current": true,
+    "max_postfilter_ros_age_ns": 470000000,
+    "max_postfilter_dds_age_ns": 472231652
+  },
+  "aux_clean_exits": 19,
+  "unexpected_process_failures": [],
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 47140,
+    "segments": 47139,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 0.22996835999593715,
+    "motion_by_phase": {
+      "IDLE": {
+        "poses": 1479,
+        "distance_m": 4.1543307259998664e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.30281883913696955
+      },
+      "SWEEP": {
+        "poses": 24231,
+        "distance_m": 81.32670790878953,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.22996835999593715
+      },
+      "PREPARE_NAV": {
+        "poses": 1190,
+        "distance_m": 1.004301380083476e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.24029071059312224
+      },
+      "TRANSIT": {
+        "poses": 20110,
+        "distance_m": 46.86771439781712,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.24029071059312224
+      },
+      "ESCAPE": {
+        "poses": 130,
+        "distance_m": 0.21994774215746832,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.735613675801197
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "first_crossing_meter_fields": {
+    "coverage": "0.9003",
+    "efficiency": "0.7819",
+    "revisit_ratio": "0.2461",
+    "path_m": "109.48",
+    "ideal_m": "85.60",
+    "reachable_cells": "13696",
+    "sim_t": "757.8",
+    "target_hit": "True",
+    "t_target": "757.7700000000001",
+    "pose_jumps": "0",
+    "sim_unstable": "False"
+  },
+  "single_run_distance_shortfall": {
+    "ideal_path_m": 85.6,
+    "path_at_first_crossing_m_rounded_1Hz": 109.48,
+    "path_limit_for_80_percent_m": 106.99999999999999,
+    "approx_required_saving_m": 2.48,
+    "scope": "Arithmetic for this measured run, not a predicted saving or transferable guarantee."
+  },
+  "demonstrated_utility": "Normal native full-room reaches sweep_complete95.50% with no original-map-freshness fault; selected focal Nav2 goal succeeds. Strict1s original-source deadline retained.",
+  "remaining": "Efficiency at90% is78.19%, below80%; original abort105 is not a proven universal fix; latest contact-pocket9d excluded for contrast and joint docking still untested.",
+  "decision": "Consolidate cadence correction; inspect already-recorded path versus coverage gain before another simulation or route change.",
+  "next_increment_acceptance": "Rank existing pre90 transits using recorded samples, original stamps and explicit time-alignment uncertainty; choose a measured source of redundant distance worth implementation. No new simulator/observer or relaxed thresholds.",
+  "route_cost_observation": {
+    "source": "Existing native status and1Hz meter logs; no replay or additional observation",
+    "log_unix_minus_monotonic_s_median": 1792982594.4430642,
+    "alignment_offset_spread_s": 0.00040435791015625,
+    "sampling_limit": "Nearest1Hz boundaries can include part of adjacent phase; do not call these exact transit path lengths or infer avoidability.",
+    "pre_first_crossing_transits_ranked_by_distance": [
+      {
+        "index": 12,
+        "uuid": "7442fa0d58844382a5308b677587587b",
+        "start_sim": 563.6,
+        "duration_s": 44.64999999999998,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (-0.97, -0.86) to (4.93, -0.87)",
+        "path_delta_m_from_nearest_1Hz": 5.67,
+        "coverage_delta_pp_from_nearest_1Hz": 0.95,
+        "boundary_time_error_s": 0.3998
+      },
+      {
+        "index": 7,
+        "uuid": "fa77a0e8112a4c87b4d9967415ace9a9",
+        "start_sim": 383.40000000000003,
+        "duration_s": 36.05000000000001,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (-0.94, 3.42) to (2.73, 0.48)",
+        "path_delta_m_from_nearest_1Hz": 4.49,
+        "coverage_delta_pp_from_nearest_1Hz": 0.17,
+        "boundary_time_error_s": 0.4512
+      },
+      {
+        "index": 10,
+        "uuid": "abe31958af504eb1a80e8c70434b4f01",
+        "start_sim": 515.6,
+        "duration_s": 27.25,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (4.87, -0.74) to (1.33, -0.82)",
+        "path_delta_m_from_nearest_1Hz": 3.44,
+        "coverage_delta_pp_from_nearest_1Hz": 0.3,
+        "boundary_time_error_s": 0.3995
+      },
+      {
+        "index": 4,
+        "uuid": "20376004a14b435facbd6766a5942a40",
+        "start_sim": 130.20000000000002,
+        "duration_s": 26.849999999999994,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (-0.62, 0.93) to (2.88, 0.98)",
+        "path_delta_m_from_nearest_1Hz": 3.32,
+        "coverage_delta_pp_from_nearest_1Hz": 0.84,
+        "boundary_time_error_s": 0.2006
+      },
+      {
+        "index": 3,
+        "uuid": "25e6ee5af4da4891a6230dcb8c7681d4",
+        "start_sim": 101.0,
+        "duration_s": 25.450000000000003,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (2.67, 0.82) to (-0.72, 0.93)",
+        "path_delta_m_from_nearest_1Hz": 3.15,
+        "coverage_delta_pp_from_nearest_1Hz": 0.86,
+        "boundary_time_error_s": 0.4509
+      },
+      {
+        "index": 13,
+        "uuid": "721ec425180d4fd2996d929a3fe7ba05",
+        "start_sim": 727.0,
+        "duration_s": 30.020000000000095,
+        "terminal_status": 5,
+        "route_log_rounded_xy": "current location (-0.98, -2.51) to (1.53, -2.52)",
+        "path_delta_m_from_nearest_1Hz": 2.83,
+        "coverage_delta_pp_from_nearest_1Hz": 0.27,
+        "boundary_time_error_s": 0.0214
+      },
+      {
+        "index": 5,
+        "uuid": "3d656f6ab2b54a2ab1ee2d3f0fe88962",
+        "start_sim": 345.6,
+        "duration_s": 16.435000000000002,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (3.50, 3.38) to (1.33, 3.53)",
+        "path_delta_m_from_nearest_1Hz": 2.0,
+        "coverage_delta_pp_from_nearest_1Hz": 0.05,
+        "boundary_time_error_s": 0.3994
+      },
+      {
+        "index": 6,
+        "uuid": "ac5e5babd91841e68f821c6e3ae2fbf2",
+        "start_sim": 366.6,
+        "duration_s": 14.25,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (1.05, 3.53) to (-1.07, 3.53)",
+        "path_delta_m_from_nearest_1Hz": 1.94,
+        "coverage_delta_pp_from_nearest_1Hz": 0.12,
+        "boundary_time_error_s": 0.3994
+      },
+      {
+        "index": 11,
+        "uuid": "6ab04115914f4c1887627d0137bc77b3",
+        "start_sim": 549.6,
+        "duration_s": 10.440000000000055,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (0.57, -0.85) to (-1.07, -0.82)",
+        "path_delta_m_from_nearest_1Hz": 1.4,
+        "coverage_delta_pp_from_nearest_1Hz": 0.12,
+        "boundary_time_error_s": 0.3991
+      },
+      {
+        "index": 8,
+        "uuid": "8a19a83d50b043d0968098f24e77d102",
+        "start_sim": 447.8,
+        "duration_s": 10.450000000000045,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (2.86, 0.09) to (4.23, 0.03)",
+        "path_delta_m_from_nearest_1Hz": 1.34,
+        "coverage_delta_pp_from_nearest_1Hz": 1.54,
+        "boundary_time_error_s": 0.2512
+      },
+      {
+        "index": 9,
+        "uuid": "45c015f7f99e4906a138e2695696fef9",
+        "start_sim": 473.40000000000003,
+        "duration_s": 7.240000000000009,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (4.26, -0.40) to (3.03, -0.37)",
+        "path_delta_m_from_nearest_1Hz": 1.0,
+        "coverage_delta_pp_from_nearest_1Hz": 0.44,
+        "boundary_time_error_s": 0.4014
+      },
+      {
+        "index": 2,
+        "uuid": "881f3c1b61dd487aa4258bbe07c08fce",
+        "start_sim": 74.60000000000001,
+        "duration_s": 10.840000000000003,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (-0.62, 0.81) to (0.48, 0.83)",
+        "path_delta_m_from_nearest_1Hz": 0.94,
+        "coverage_delta_pp_from_nearest_1Hz": 0.03,
+        "boundary_time_error_s": 0.4407
+      },
+      {
+        "index": 1,
+        "uuid": "63c874613f484c71a00cab75efb2a636",
+        "start_sim": 36.0,
+        "duration_s": 4.840000000000003,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (-0.33, -0.37) to (0.38, 0.03)",
+        "path_delta_m_from_nearest_1Hz": 0.66,
+        "coverage_delta_pp_from_nearest_1Hz": 0.32,
+        "boundary_time_error_s": 0.1575
+      },
+      {
+        "index": 0,
+        "uuid": "c669f41024914844a38c2f83949f98e8",
+        "start_sim": 9.600000000000001,
+        "duration_s": 5.85,
+        "terminal_status": 4,
+        "route_log_rounded_xy": "current location (-0.00, -0.00) to (0.38, -0.77)",
+        "path_delta_m_from_nearest_1Hz": 0.62,
+        "coverage_delta_pp_from_nearest_1Hz": 0.77,
+        "boundary_time_error_s": 0.4514
+      }
+    ],
+    "interpretation": "Several long transits spend distance with little new coverage, including a36s long transit and a44.65s traversal across the room. Nearest actual-entry test previously saved0; obstacle-aware routing remains a separate unproven hypothesis. Avoid implementation before a small actual map route comparison."
+  }
+}

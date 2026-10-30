@@ -1074,3 +1074,39 @@ The [configuration check](../src/oomwoo_sim_support/docs/evidence/costmap_cadenc
 confirms that only global publish_frequency changes semantically. Both
 existing Jazzy launch-graph cases execute and pass, including opt-in
 Keepout overlay generation. This is not the pending native room result.
+
+
+The [normal native cadence contrast](../src/oomwoo_sim_support/docs/evidence/costmap_cadence_native_delivery_20261030.json)
+finishes at95.50% coverage, sweep_complete, without lease revocation or
+motion fault. Twenty-two actual goals succeed and one is canceled by the
+existing timeout. The selected goal(4.225,0.025) succeeds in10.45simsec;
+its52 existing-status observations keep map_current true, with maximum
+original DDS costmap age472231652ns. All nineteen auxiliary processes
+close cleanly; the scorer alone returns its proper exit1. All nine
+frozen input hashes remain unchanged; the previous eight code hashes
+match baseline673 and only global publication cadence changes. The
+sampled Keepout audit has47140poses,47139chords and zero disk crossings.
+
+The full90/80 gate still FAILS: efficiency at the first90% crossing is
+78.19%, although coverage subsequently reaches95.50%. The first crossing
+meter record has path109.48m versus ideal85.60m: this run would need
+approximately2.48m less path to reach80%, with the same measured coverage.
+That arithmetic is not a predicted optimization gain. Latest contact-
+pocket9d is deliberately excluded; no universal abort105 repair, joint
+docking or physical-robot result is claimed.
+
+Consolidate the source-cadence correction. The next small diagnostic will
+rank path length and coverage gain of already-recorded pre90 transits,
+retaining original time sources and stating the1Hz alignment uncertainty.
+Implement another route change only if that evidence identifies useful
+savings; do not repeat this complete room without a discriminating change.
+
+Existing1Hz meter samples aligned to original status events identify
+pre90 transits of approximately5.67m/0.95percentage-points new coverage,
+4.49m/0.17points and3.44m/0.30points. Nearest-sample boundary error is
+at most0.452s and log-clock alignment spread0.000405s. These are ranked
+cost observations, not exact transit lengths or evidence those transits
+can be removed. The earlier actual-entry-only static candidate saved0
+and should not be repeated unchanged. Assess a distinct entry/exit
+ordering hypothesis against the same map and waypoint set before any
+production route edit or another native room.
