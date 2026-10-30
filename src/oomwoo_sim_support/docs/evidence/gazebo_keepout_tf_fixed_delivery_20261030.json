@@ -1,0 +1,124 @@
+{
+  "date_utc": "2026-10-30T12:02:29.701366+00:00",
+  "source_sets": {
+    "ROS": "43e142a2b34824ac3f652f5569e527ee017dbc64",
+    "driver_wrapper": "93c49e1 (runtime implementation identical58ceea4)",
+    "scorer": "63c516b + two methods93c49e1, hash pinned",
+    "jobs": "fa8b7af945ad557675dce1180cfac25cb1384a5b"
+  },
+  "rc": 1,
+  "bank_code": 1,
+  "seconds": 953.064,
+  "coverage": 0.956,
+  "end_reason": "sweep_complete",
+  "measurement_valid": true,
+  "pass": false,
+  "source_inputs_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true
+  },
+  "score_efficiency_at_target": 0.7888,
+  "meter_same_report_efficiency_at_first_reported_target": 0.7872,
+  "meter_report_precision_decimals": 4,
+  "score_final_efficiency": 0.6791,
+  "criteria": {
+    "coverage": 0.9,
+    "efficiency": 0.8,
+    "unchanged": true
+  },
+  "metric_pairing_evidence": {
+    "preceding_source_report": "[coverage_meter-11] [INFO] [1793359678.579512225] [coverage_meter]: COVERAGE_REPORT coverage=0.8987 efficiency=0.7888 revisit_ratio=0.2344 path_m=108.52 ideal_m=85.60 reachable_cells=13696 sim_t=756.2 target_hit=False t_target=None pose_jumps=0 sim_unstable=False",
+    "first_target_source_report": "[coverage_meter-11] [INFO] [1793359679.578667761] [coverage_meter]: COVERAGE_REPORT coverage=0.9011 efficiency=0.7872 revisit_ratio=0.2339 path_m=108.74 ideal_m=85.60 reachable_cells=13696 sim_t=757.2 target_hit=True t_target=757.2 pose_jumps=0 sim_unstable=False",
+    "source_contract": "Meter publishes ratio then efficiency in _report; scorer spin_once can latch new coverage with previous efficiency. The reported78.88% matches the preceding89.87% report; the same-report90.11% efficiency is78.72%.",
+    "effect": "Both fail80%; do not call this a pass or treat asynchronous snapshot as an exact paired metric."
+  },
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 46507,
+    "segments": 46506,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.04,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 0.21174076276715667,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 30,
+        "distance_m": 1.9005223890846854e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000316270902
+      },
+      "IDLE": {
+        "poses": 1508,
+        "distance_m": 2.253808336915171e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2869584945862004
+      },
+      "SWEEP": {
+        "poses": 24139,
+        "distance_m": 80.86281355236187,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.21174076276715667
+      },
+      "PREPARE_NAV": {
+        "poses": 1223,
+        "distance_m": 9.242155047834844e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.23390324738390944
+      },
+      "TRANSIT": {
+        "poses": 19477,
+        "distance_m": 44.977813342397276,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.23390324738390944
+      },
+      "ESCAPE": {
+        "poses": 130,
+        "distance_m": 0.21311504999292866,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.7231721722240043
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "uuid_terminal_counts": {
+    "4": 20,
+    "5": 4
+  },
+  "accepted_control_counts": {
+    "claim_nav": 24,
+    "release_nav": 24,
+    "claim_sweep": 25,
+    "release_motion": 25
+  },
+  "clean_processes": 20,
+  "failed_process_lines": [
+    "[ERROR] [coverage_regression_runner-13]: process has died [pid 719, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_43jbrlf0']."
+  ],
+  "motion_lease_revocations": [],
+  "utility_demonstrated": "The masked room now completes without clock-order lease loss, with valid sampled disk/chord Keepout audit and clean non-scorer process exits.",
+  "limits": [
+    "One native simulation case; no reliability rate or physical proof.",
+    "Source phase instrumentation is active; it retains independent stamp origins, not synchronized ground-truth/AMCL claims.",
+    "Gate remains failed due efficiency; current scorer also pairs two different1Hz metric reports.",
+    "Active DOCK cycle is not tested; DockDrive remainedIDLE."
+  ],
+  "decision": "First fix the demonstrated metric pairing defect by fusing existing meter and scorer, then assess path improvements. Do not rerun this expensive scene just to fish for a green.",
+  "next_minimum": "One authoritative atomic ratio/efficiency snapshot; retain original meter footprint/denominator, wall/clock safeguards, CLI default standalone meter and native stop ownership; focused causal tests and actualROS construction before another native run.",
+  "cost_limits": "953.064s process elapsed; total preparation/review/AI cost not inferred. Approximate distance margin to80% is1.74m using the first paired report path108.74m and unchanged ideal85.60m."
+}

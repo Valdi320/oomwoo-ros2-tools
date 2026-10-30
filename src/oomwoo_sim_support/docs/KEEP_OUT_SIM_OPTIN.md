@@ -139,3 +139,30 @@ The phase audit now includes actual original pose stamps and action UUIDs.
 See [full native result](evidence/gazebo_keepout_corner_fixed_20261030.json).
 Clock/TF arrival ordering must be handled without accepting future poses or
 extending their freshness budgets before another full-room attempt.
+
+
+### Completed room after the TF ordering correction (2026-10-30)
+
+With contributor relay fa8b7af, the same native trial completed the sweep at
+95.60% coverage in 953.064 seconds of process time. All seven read-only inputs
+were unchanged. The audit was valid for 46,507 truth poses and 46,506 chords,
+with no forbidden disk crossings and a maximum pose gap of 0.04 seconds.
+Twenty non-scorer processes, including Gazebo, exited cleanly; the scorer
+returned 1 because efficiency remained below the unchanged 80% requirement.
+There were 24 terminal Nav2 UUIDs (20 succeeded, 4 canceled), each with an
+accepted NAV release, and no motion-lease revocations. DockDrive stayed IDLE.
+
+The scorer reported 78.88% efficiency at its first target crossing, but this
+matches the **preceding** meter report: coverage 89.87%, efficiency 78.88%.
+The meter's first target report pairs coverage 90.11% with efficiency 78.72%.
+The meter publishes these scalars separately and the scorer can latch coverage
+before its matching efficiency callback. Both values fail the gate. Preserve
+the raw result; neither is a full acceptance pass. The two observations use
+different start-time origins, so their elapsed times must not be conflated.
+
+Next, fuse the existing meter and scorer into one regression process so the
+grade consumes their same atomic calculation. Keep the standalone meter path,
+original 0.1745 m meter footprint, denominator, 90%/80% criteria and native
+shutdown checks. Then assess the small remaining distance-efficiency margin.
+See [full native result](evidence/gazebo_keepout_tf_fixed_20261030.json) and
+[receipt and limits](evidence/gazebo_keepout_tf_fixed_delivery_20261030.json).
