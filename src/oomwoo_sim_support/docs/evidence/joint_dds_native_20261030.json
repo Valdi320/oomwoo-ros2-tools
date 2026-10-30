@@ -1,0 +1,1143 @@
+{
+  "completed_utc": "2026-10-30T21:04:25.513421+00:00",
+  "rc": 0,
+  "seconds": 78.221,
+  "host_timeout": false,
+  "container": "oomwoo-joint-dds-08b9f3f204",
+  "fifo": {
+    "admitted_utc": "2026-10-30T21:03:07.293560+00:00",
+    "controller_pid": 3704486,
+    "podman_pid": 3704498,
+    "ticket": 736,
+    "fifo_pid": 3671221,
+    "container": "oomwoo-joint-dds-08b9f3f204",
+    "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-736: Ciclo Oomwoo con respuesta de ciclo de vida acotada\u00bb desde hace 0 min (pid 3671221). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14856 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/joint_dds_native_prepared_20261030.json"
+  },
+  "input_sha256": {
+    "planner": "2e68421bf3fa92b299967870d5a4a69352ef93da0cac98cc8704f996feb68b9e",
+    "scorer": "6a6370be14b03ee89ab5d7187f9416644134b606cd068740b5b7794439a50a8f",
+    "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+    "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+    "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+    "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+    "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+    "relay": "9a2e5a5bedb7ded15320cb8b2ab880c7ce030ed7b5a66d226eff6c992a5a75cb",
+    "nav2_config": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45",
+    "sim_launch": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+    "coverage_launch": "b583bbdf61a7fc31072254232c77256be21a47b1eba716fc8305b2a68f373806",
+    "ground_truth": "b5accc0e850e220db0ec077bbc9fd6465b9339bdd09dee98c5eb8224d1f260ac",
+    "station_model": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+    "station_world": "ed90a44429bc23b2790ecc0adf2806de38a9d0fdcea60c80c76ea7a2fef572d1",
+    "station_map_yaml": "2c010a963f73a9a519b5fcd872439b0d0aa2aa6135bf818e8f7144d8dd6862b3",
+    "station_map_image": "246af86b428237970fe253d5160240407a05a156403eda4e1f4d95469fa8f3e5",
+    "detector": "4eaab4a2499444496378d342526fbf1e05a2f1523c621334f73a260099d1c56e",
+    "beacon": "b463789241a3e969c2a2368dcae8c486e0375c179c2bf4e1e07136019f360083",
+    "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86"
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true,
+    "nav2_config": true,
+    "sim_launch": true,
+    "coverage_launch": true,
+    "ground_truth": true,
+    "station_model": true,
+    "station_world": true,
+    "station_map_yaml": true,
+    "station_map_image": true,
+    "detector": true,
+    "beacon": true,
+    "lifecycle_response_qos": true
+  },
+  "provenance": {
+    "modules": {
+      "planner": {
+        "path": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+        "sha256": "2e68421bf3fa92b299967870d5a4a69352ef93da0cac98cc8704f996feb68b9e"
+      },
+      "scorer": {
+        "path": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+        "sha256": "6a6370be14b03ee89ab5d7187f9416644134b606cd068740b5b7794439a50a8f"
+      },
+      "meter": {
+        "path": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py",
+        "sha256": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5"
+      },
+      "driver": {
+        "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+        "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+      },
+      "ground_truth": {
+        "path": "/work/src/oomwoo_sim_support/oomwoo_sim_support/ground_truth_node.py",
+        "sha256": "b5accc0e850e220db0ec077bbc9fd6465b9339bdd09dee98c5eb8224d1f260ac"
+      },
+      "beacon": {
+        "path": "/work/src/oomwoo_sim_support/oomwoo_sim_support/ir_beacon_sim_node.py",
+        "sha256": "b463789241a3e969c2a2368dcae8c486e0375c179c2bf4e1e07136019f360083"
+      },
+      "detector": {
+        "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_detector_node.py",
+        "sha256": "4eaab4a2499444496378d342526fbf1e05a2f1523c621334f73a260099d1c56e"
+      },
+      "journal": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/goal_journal.py",
+        "sha256": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c"
+      },
+      "witness": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/nav_lease_witness.py",
+        "sha256": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721"
+      },
+      "relay": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+        "sha256": "9a2e5a5bedb7ded15320cb8b2ab880c7ce030ed7b5a66d226eff6c992a5a75cb"
+      }
+    },
+    "installed_matches": {
+      "launch/sim_bringup.launch.py": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+      "launch/coverage_regression.launch.py": "b583bbdf61a7fc31072254232c77256be21a47b1eba716fc8305b2a68f373806",
+      "config/nav2_params.yaml": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45"
+    },
+    "scene": {
+      "dock_test_room.world": "ed90a44429bc23b2790ecc0adf2806de38a9d0fdcea60c80c76ea7a2fef572d1",
+      "dock_test_room.yaml": "2c010a963f73a9a519b5fcd872439b0d0aa2aa6135bf818e8f7144d8dd6862b3",
+      "dock_test_room.pgm": "246af86b428237970fe253d5160240407a05a156403eda4e1f4d95469fa8f3e5"
+    },
+    "wrapper_sha256": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+    "observer_transport": {
+      "rmw": "rmw_fastrtps_cpp",
+      "fastdds_builtin_transports": "UDPv4"
+    },
+    "lifecycle_response_qos": {
+      "path": "/fixture/lifecycle_response_qos.xml",
+      "sha256": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86"
+    }
+  },
+  "joint_result": {
+    "pass": true,
+    "checks": {
+      "sweep_completed": true,
+      "real_nav_active_then_success": true,
+      "NAV_SWEEP_DOCK_nonzero_output": true,
+      "dock_claim_before_enable": true,
+      "actual_dock_states": true,
+      "dock_fix_observed": true,
+      "geometric_seated": true,
+      "dock_lateral_capture": true,
+      "dock_yaw_capture": true,
+      "NAV_SWEEP_DOCK_translation": true,
+      "sole_managed_dispatcher": true,
+      "dock_no_overshoot": true,
+      "keepout_valid_no_crossings": true,
+      "exclusive_final_writer": true,
+      "no_direct_motor_publishers": true,
+      "stop_confirmed_after_release": true,
+      "no_lease_revocation": true
+    },
+    "active_uuids": [
+      "59c60f0039fe480d99fed371a011850e",
+      "e0077e13ffff4ecab7a450f10c0a9de2"
+    ],
+    "terminal_status": {
+      "e0077e13ffff4ecab7a450f10c0a9de2": 4,
+      "59c60f0039fe480d99fed371a011850e": 4
+    },
+    "final_truth": [
+      -1.03954458541634,
+      -0.5006725117765275,
+      -0.0040686818399649155
+    ],
+    "final_in_dock": [
+      0.054544585416340156,
+      0.0006725117765274957,
+      3.137523971749828
+    ],
+    "dock_max_tail_m": 0.22904458541634015,
+    "relay": {
+      "snapshot": {
+        "battery_fresh": true,
+        "dock_state": "DONE",
+        "docked": true,
+        "last_lease_revocation": null,
+        "last_output": [
+          0.0,
+          0.0
+        ],
+        "managed_backend": {
+          "active": true,
+          "query_pending": false,
+          "response_fresh": true,
+          "send_goal_clients": [
+            [
+              "coverage_planner",
+              "/"
+            ],
+            [
+              "bt_navigator",
+              "/"
+            ]
+          ],
+          "service_ready": true,
+          "single_dispatcher": true
+        },
+        "managed_nav2": true,
+        "mode": "ISOLATED ROS2 SIMULATION ONLY",
+        "motion_health": {
+          "dock_inactive": false,
+          "isolated_sources": true,
+          "map_current": true,
+          "nav2_active_goal": null,
+          "nav2_idle": true,
+          "pose_fresh": true,
+          "resources_ok": true,
+          "safety_loop_ok": true,
+          "sweep_inactive": true
+        },
+        "motion_inputs": {
+          "dock_drive": {
+            "age": 0.0,
+            "zero": true
+          },
+          "navigation": {
+            "age": 19.97,
+            "zero": true
+          },
+          "reactive_sweep": {
+            "age": 0.09999999999999432,
+            "zero": true
+          }
+        },
+        "motor_hardware_connected": false,
+        "nav_idle": true,
+        "nav_status_fresh": false,
+        "nav_uuid_evidence": {
+          "fault": null,
+          "saw_current_goal_active": true,
+          "terminal_journal_matched": true,
+          "uuid": "59c60f0039fe480d99fed371a011850e"
+        },
+        "odom_fresh": true,
+        "owner": "stopped",
+        "physical_dock_service_verified": false,
+        "policy": "three_way",
+        "reason": "source released; await fresh quiet odometry"
+      },
+      "request_operation": "release_motion",
+      "last_status_poll": 411669.683212558,
+      "calls": [
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": false,
+          "state": "stopped",
+          "error": "new owner lacks fresh quiet/health/idle proofs"
+        },
+        {
+          "operation": "claim_dock",
+          "ok": true,
+          "state": "dock_drive",
+          "error": ""
+        },
+        {
+          "operation": "release_motion",
+          "ok": true,
+          "state": "stopped",
+          "error": ""
+        }
+      ],
+      "claimed": true,
+      "enabled": true,
+      "released": true,
+      "post_release_snapshot": {
+        "battery_fresh": true,
+        "dock_state": "DONE",
+        "docked": true,
+        "last_lease_revocation": null,
+        "last_output": [
+          0.0,
+          0.0
+        ],
+        "managed_backend": {
+          "active": true,
+          "query_pending": false,
+          "response_fresh": true,
+          "send_goal_clients": [
+            [
+              "coverage_planner",
+              "/"
+            ],
+            [
+              "bt_navigator",
+              "/"
+            ]
+          ],
+          "service_ready": true,
+          "single_dispatcher": true
+        },
+        "managed_nav2": true,
+        "mode": "ISOLATED ROS2 SIMULATION ONLY",
+        "motion_health": {
+          "dock_inactive": false,
+          "isolated_sources": true,
+          "map_current": true,
+          "nav2_active_goal": null,
+          "nav2_idle": true,
+          "pose_fresh": true,
+          "resources_ok": true,
+          "safety_loop_ok": true,
+          "sweep_inactive": true
+        },
+        "motion_inputs": {
+          "dock_drive": {
+            "age": 0.0,
+            "zero": true
+          },
+          "navigation": {
+            "age": 19.97,
+            "zero": true
+          },
+          "reactive_sweep": {
+            "age": 0.09999999999999432,
+            "zero": true
+          }
+        },
+        "motor_hardware_connected": false,
+        "nav_idle": true,
+        "nav_status_fresh": false,
+        "nav_uuid_evidence": {
+          "fault": null,
+          "saw_current_goal_active": true,
+          "terminal_journal_matched": true,
+          "uuid": "59c60f0039fe480d99fed371a011850e"
+        },
+        "odom_fresh": true,
+        "owner": "stopped",
+        "physical_dock_service_verified": false,
+        "policy": "three_way",
+        "reason": "source released; await fresh quiet odometry"
+      }
+    },
+    "dock_phases": [
+      {
+        "phase": "IDLE",
+        "sim_s": 0.05
+      },
+      {
+        "phase": "SEARCH",
+        "sim_s": 36.88
+      },
+      {
+        "phase": "GOTO",
+        "sim_s": 36.900000000000006
+      },
+      {
+        "phase": "TURN",
+        "sim_s": 43.1
+      },
+      {
+        "phase": "BACK",
+        "sim_s": 47.650000000000006
+      },
+      {
+        "phase": "DONE",
+        "sim_s": 54.300000000000004
+      }
+    ],
+    "counts": {
+      "docked": 2,
+      "cmd": 1188,
+      "scan": 273,
+      "odom": 2712,
+      "truth": 2718,
+      "phase": 1092,
+      "fix": 76
+    },
+    "safe_nonzero_counts": {
+      "navigation": 436,
+      "reactive_sweep": 64,
+      "dock_drive": 354
+    },
+    "safe_translating_counts": {
+      "navigation": 344,
+      "reactive_sweep": 32,
+      "dock_drive": 231
+    },
+    "observed_owner_path_m": {
+      "stopped": 4.1543307259998664e-09,
+      "reactive_sweep": 0.26845354344857336,
+      "navigation": 2.2002995968980708,
+      "dock_drive": 1.0601434430689778
+    },
+    "coverage_scope": "No cleaning grade for this integration trial; meter observations after sweep completion include the later docking phase.",
+    "motion_audit": {
+      "keepout": {
+        "poses_before_mask": 0,
+        "poses": 2725,
+        "segments": 2724,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02,
+        "errors": [],
+        "min_sampled_center_to_mask_bbox_m": 0.48891576414932736,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 7,
+            "distance_m": 4.921861252466338e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000330354264
+          },
+          "IDLE": {
+            "poses": 1378,
+            "distance_m": 1.0601434467311224,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+          },
+          "SWEEP": {
+            "poses": 190,
+            "distance_m": 0.26845354344857336,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6490778827333862
+          },
+          "PREPARE_NAV": {
+            "poses": 110,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6490778827333862
+          },
+          "TRANSIT": {
+            "poses": 1040,
+            "distance_m": 2.2002995968980708,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.48891576414932736
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "graph": {
+        "/cmd_vel": [],
+        "/cmd_vel_nav": [],
+        "/navigate_to_pose/_action/status": [
+          [
+            "bt_navigator",
+            "/",
+            "action_msgs/msg/GoalStatusArray",
+            "010f7f01e00321880000000000003c03"
+          ]
+        ],
+        "/valdi/nav2_cmd_vel": [
+          [
+            "controller_server",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01de03460e0000000000006e03"
+          ]
+        ],
+        "/valdi/sweep_cmd_vel": [
+          [
+            "coverage_planner",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01c3028a290000000000001d03"
+          ]
+        ],
+        "/valdi/dock_drive_cmd_vel": [
+          [
+            "dock_drive",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01b902fa2c0000000000001403"
+          ]
+        ],
+        "/valdi/lab_safe_cmd_vel_output": [
+          [
+            "valdi_experimental_cmdvel_relay",
+            "/",
+            "geometry_msgs/msg/Twist",
+            "010f7f01b8025f2b0000000000001603"
+          ]
+        ],
+        "/oomwoo/keepout_mask": [
+          [
+            "oomwoo_keepout_mask_server",
+            "/",
+            "nav_msgs/msg/OccupancyGrid",
+            "010f7f01bc028c120000000000002203"
+          ]
+        ],
+        "/oomwoo/keepout_filter_info": [
+          [
+            "oomwoo_keepout_info_server",
+            "/",
+            "nav2_msgs/msg/CostmapFilterInfo",
+            "010f7f01bd0211090000000000002003"
+          ]
+        ],
+        "/global_costmap/costmap": [
+          [
+            "global_costmap",
+            "/global_costmap",
+            "nav_msgs/msg/OccupancyGrid",
+            "010f7f01df0348cf0000000000004d03"
+          ]
+        ],
+        "/ground_truth/pose": [
+          [
+            "ground_truth",
+            "/",
+            "geometry_msgs/msg/PoseStamped",
+            "010f7f01bb0249bd0000000000001403"
+          ]
+        ],
+        "safe_output_subscribers": [
+          [
+            "coverage_meter",
+            "/",
+            "geometry_msgs/msg/Twist"
+          ],
+          [
+            "ros_gz_bridge",
+            "/",
+            "geometry_msgs/msg/Twist"
+          ]
+        ]
+      },
+      "samples": {
+        "status": [
+          {
+            "wall": 411621.535535332,
+            "sim": 8.8,
+            "states": [
+              [
+                "e0077e13ffff4ecab7a450f10c0a9de2",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 411630.183872794,
+            "sim": 16.78,
+            "states": [
+              [
+                "e0077e13ffff4ecab7a450f10c0a9de2",
+                4
+              ]
+            ]
+          },
+          {
+            "wall": 411636.054791296,
+            "sim": 22.6,
+            "states": [
+              [
+                "e0077e13ffff4ecab7a450f10c0a9de2",
+                4
+              ],
+              [
+                "59c60f0039fe480d99fed371a011850e",
+                2
+              ]
+            ]
+          },
+          {
+            "wall": 411649.294782122,
+            "sim": 34.555,
+            "states": [
+              [
+                "e0077e13ffff4ecab7a450f10c0a9de2",
+                4
+              ],
+              [
+                "59c60f0039fe480d99fed371a011850e",
+                4
+              ]
+            ]
+          }
+        ],
+        "feedback": [
+          {
+            "first_wall": 411621.53605949,
+            "last_wall": 411649.274549901,
+            "count": 2182,
+            "max_gap_wall": 5.891892132000066
+          }
+        ],
+        "phase": [
+          {
+            "phase": "IDLE",
+            "wall": 411612.417300635,
+            "sim": 0.305,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                4.921861252466338e-10,
+                5.3640495756619585e-20
+              ],
+              "stamp_ns": 140000000
+            }
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 411620.299593407,
+            "sim": 7.6000000000000005,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                3.183225974848148e-09,
+                -1.918011704623273e-18
+              ],
+              "stamp_ns": 7600000000
+            }
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 411620.498722938,
+            "sim": 7.800000000000001,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                3.183225974848148e-09,
+                -1.918011704623273e-18
+              ],
+              "stamp_ns": 7800000000
+            }
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 411621.535397063,
+            "sim": 8.8,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                3.183225974848148e-09,
+                -1.918011704623273e-18
+              ],
+              "stamp_ns": 8800000000
+            }
+          },
+          {
+            "phase": "IDLE",
+            "wall": 411630.61160586,
+            "sim": 17.200000000000003,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                -0.0927133129166405,
+                0.8274730051906467
+              ],
+              "stamp_ns": 17200000000
+            },
+            "nav_feedback": {
+              "uuid": "e0077e13ffff4ecab7a450f10c0a9de2",
+              "frame": "map",
+              "stamp_ns": 16760000000,
+              "position": [
+                -0.13458842046113986,
+                0.813967428914923,
+                0.012499374897382261
+              ],
+              "orientation": [
+                1.5460556844815668e-07,
+                1.3788574165175115e-07,
+                0.8126749599048763,
+                0.5827172638111594
+              ],
+              "received_wall": 411630.163398413,
+              "received_sim": 16.765
+            }
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 411631.412765189,
+            "sim": 18.0,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                -0.0927133129166405,
+                0.8274730051906467
+              ],
+              "stamp_ns": 18000000000
+            },
+            "nav_feedback": {
+              "uuid": "e0077e13ffff4ecab7a450f10c0a9de2",
+              "frame": "map",
+              "stamp_ns": 16760000000,
+              "position": [
+                -0.13458842046113986,
+                0.813967428914923,
+                0.012499374897382261
+              ],
+              "orientation": [
+                1.5460556844815668e-07,
+                1.3788574165175115e-07,
+                0.8126749599048763,
+                0.5827172638111594
+              ],
+              "received_wall": 411630.163398413,
+              "received_sim": 16.765
+            }
+          },
+          {
+            "phase": "PREPARE_NAV",
+            "wall": 411634.839415511,
+            "sim": 21.400000000000002,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                0.13881252513085507,
+                0.9499868398168869
+              ],
+              "stamp_ns": 21400000000
+            },
+            "nav_feedback": {
+              "uuid": "e0077e13ffff4ecab7a450f10c0a9de2",
+              "frame": "map",
+              "stamp_ns": 16760000000,
+              "position": [
+                -0.13458842046113986,
+                0.813967428914923,
+                0.012499374897382261
+              ],
+              "orientation": [
+                1.5460556844815668e-07,
+                1.3788574165175115e-07,
+                0.8126749599048763,
+                0.5827172638111594
+              ],
+              "received_wall": 411630.163398413,
+              "received_sim": 16.765
+            }
+          },
+          {
+            "phase": "TRANSIT",
+            "wall": 411636.054649577,
+            "sim": 22.6,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                0.13881252513085507,
+                0.9499868398168869
+              ],
+              "stamp_ns": 22600000000
+            },
+            "nav_feedback": {
+              "uuid": "e0077e13ffff4ecab7a450f10c0a9de2",
+              "frame": "map",
+              "stamp_ns": 16760000000,
+              "position": [
+                -0.13458842046113986,
+                0.813967428914923,
+                0.012499374897382261
+              ],
+              "orientation": [
+                1.5460556844815668e-07,
+                1.3788574165175115e-07,
+                0.8126749599048763,
+                0.5827172638111594
+              ],
+              "received_wall": 411630.163398413,
+              "received_sim": 16.765
+            }
+          },
+          {
+            "phase": "IDLE",
+            "wall": 411649.736855316,
+            "sim": 35.0,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                -0.09991440359848021,
+                -0.3407904208473616
+              ],
+              "stamp_ns": 35000000000
+            },
+            "nav_feedback": {
+              "uuid": "59c60f0039fe480d99fed371a011850e",
+              "frame": "map",
+              "stamp_ns": 34520000000,
+              "position": [
+                -0.18311813073489125,
+                -0.33244687045172333,
+                0.012499241635156706
+              ],
+              "orientation": [
+                -1.6623813818848158e-08,
+                2.1618329189415967e-08,
+                -0.8077772617529733,
+                0.589487824636665
+              ],
+              "received_wall": 411649.274549901,
+              "received_sim": 34.535000000000004
+            }
+          },
+          {
+            "phase": "SWEEP",
+            "wall": 411650.554063539,
+            "sim": 35.800000000000004,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                -0.09991440359848021,
+                -0.3407904208473616
+              ],
+              "stamp_ns": 35800000000
+            },
+            "nav_feedback": {
+              "uuid": "59c60f0039fe480d99fed371a011850e",
+              "frame": "map",
+              "stamp_ns": 34520000000,
+              "position": [
+                -0.18311813073489125,
+                -0.33244687045172333,
+                0.012499241635156706
+              ],
+              "orientation": [
+                -1.6623813818848158e-08,
+                2.1618329189415967e-08,
+                -0.8077772617529733,
+                0.589487824636665
+              ],
+              "received_wall": 411649.274549901,
+              "received_sim": 34.535000000000004
+            }
+          },
+          {
+            "phase": "IDLE",
+            "wall": 411650.755191714,
+            "sim": 36.0,
+            "truth_position": {
+              "frame": "map",
+              "position": [
+                -0.09991440359848021,
+                -0.3407904208473616
+              ],
+              "stamp_ns": 36000000000
+            },
+            "nav_feedback": {
+              "uuid": "59c60f0039fe480d99fed371a011850e",
+              "frame": "map",
+              "stamp_ns": 34520000000,
+              "position": [
+                -0.18311813073489125,
+                -0.33244687045172333,
+                0.012499241635156706
+              ],
+              "orientation": [
+                -1.6623813818848158e-08,
+                2.1618329189415967e-08,
+                -0.8077772617529733,
+                0.589487824636665
+              ],
+              "received_wall": 411649.274549901,
+              "received_sim": 34.535000000000004
+            }
+          }
+        ]
+      }
+    },
+    "status_observation": {
+      "service_ready": true,
+      "future_pending": false,
+      "pending_age_s": null
+    },
+    "wall_s": 62.976
+  },
+  "joint_closed": {
+    "launch_code": 0,
+    "owned_exits": [
+      {
+        "name": "create-10",
+        "returncode": 0
+      },
+      {
+        "name": "initialpose_pub-17",
+        "returncode": 0
+      },
+      {
+        "name": "gazebo-3",
+        "returncode": 0
+      },
+      {
+        "name": "lifecycle_manager-21",
+        "returncode": 0
+      },
+      {
+        "name": "map_server-14",
+        "returncode": 0
+      },
+      {
+        "name": "lifecycle_manager-16",
+        "returncode": 0
+      },
+      {
+        "name": "parameter_bridge-9",
+        "returncode": 0
+      },
+      {
+        "name": "map_server-5",
+        "returncode": 0
+      },
+      {
+        "name": "robot_state_publisher-8",
+        "returncode": 0
+      },
+      {
+        "name": "lifecycle_manager-7",
+        "returncode": 0
+      },
+      {
+        "name": "bt_navigator-20",
+        "returncode": 0
+      },
+      {
+        "name": "costmap_filter_info_server-6",
+        "returncode": 0
+      },
+      {
+        "name": "amcl-15",
+        "returncode": 0
+      },
+      {
+        "name": "dock_detector-13",
+        "returncode": 0
+      },
+      {
+        "name": "ir_beacon_sim-12",
+        "returncode": 0
+      },
+      {
+        "name": "planner_server-19",
+        "returncode": 0
+      },
+      {
+        "name": "controller_server-18",
+        "returncode": 0
+      },
+      {
+        "name": "ground_truth-4",
+        "returncode": 0
+      },
+      {
+        "name": "coverage_planner-11",
+        "returncode": 0
+      },
+      {
+        "name": "dock_drive-2",
+        "returncode": 0
+      },
+      {
+        "name": "python3-1",
+        "returncode": 0
+      }
+    ],
+    "pass_before_shutdown": true,
+    "unexpected_process_failure": false
+  },
+  "manifest_unchanged": true,
+  "fixture_sha256": "6ebf615ccf152e457d5d4f62981d512113132b71074e008257d580c84ff0d96d",
+  "bank": {
+    "bank_code": 0,
+    "reports": {},
+    "logs": {},
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "354\n",
+      "/sys/fs/cgroup/memory.peak": "1532370944\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    "motion_journal": {
+      "job_id": "coverage_sweep",
+      "map_digest": "bf1c82dc19dff29782278b1fcef1bcdb8a24ee954e4c5107d7bc6aba0a267f10",
+      "outcome": "succeeded",
+      "revision": 6,
+      "schema": 1,
+      "state": "terminal",
+      "target_cell": 7027,
+      "token": "d90e8c52241840c98987b59acea171ff-1",
+      "uuid": "59c60f0039fe480d99fed371a011850e"
+    },
+    "keepout_fixture": {
+      "generated_manifest": {
+        "count": 220,
+        "filter_info_topic": "/valdi/keepout_costmap_filter_info",
+        "filters_global": [
+          "keepout_filter",
+          "keepout_inflation"
+        ],
+        "filters_local": [
+          "keepout_filter",
+          "keepout_inflation"
+        ],
+        "mask_topic": "/valdi/keepout_filter_mask",
+        "mask_yaml": "/tmp/keepout-fusion/keepout_test_room.yaml",
+        "nav_params": "/tmp/keepout-fusion/nav2_keepout_params.yaml",
+        "origin": [
+          -1.6,
+          -3.05,
+          0.0
+        ],
+        "params_source": "/work/src/oomwoo_sim_support/config/nav2_params.yaml",
+        "pgm": "/tmp/keepout-fusion/keepout_test_room.pgm",
+        "rectangle_world": [
+          [
+            0.67,
+            -0.55
+          ],
+          [
+            1.14,
+            0.55
+          ]
+        ],
+        "resolution_m": 0.05,
+        "shape": "rectangular experimental no-go area",
+        "source_map_fingerprint": "e10cc827079fffa8b72d2df36d237dd29848d51265c139d982181678a77f7dd9",
+        "source_map_yaml": "/fixture/scene/dock_test_room.yaml"
+      },
+      "legacy_overlay_and_topics_used": false,
+      "active_mask_topic": "/oomwoo/keepout_mask",
+      "active_info_topic": "/oomwoo/keepout_filter_info",
+      "active_overlay_builder": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py"
+    }
+  },
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/joint_dds_native_20261030.log",
+  "raw_sha256": "b716b989b0fd20c0ff7befd99e12328aa49dad4cc82500d38e042a46c696f84a",
+  "args": [
+    "podman",
+    "run",
+    "--memory-swap=3584m",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--tmpfs",
+    "/tmp:rw,exec,size=1024m,mode=1777",
+    "--memory=3g",
+    "--cpus=2",
+    "--pids-limit=512",
+    "-e",
+    "ROS_LOG_DIR=/tmp/roslogs",
+    "-e",
+    "ROS_DOMAIN_ID=88",
+    "-e",
+    "ROS_LOCALHOST_ONLY=1",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed/ros:/work:ro",
+    "--name",
+    "oomwoo-joint-dds-08b9f3f204",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed/ros/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed/jobs:/contrib:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed/ros/src/oomwoo_sim_support/launch/coverage_regression.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/coverage_regression.launch.py:ro",
+    "--ulimit",
+    "core=0",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed/driver.py:/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py:ro",
+    "--cpu-shares",
+    "2",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed/ros/src/oomwoo_sim_support/config/nav2_params.yaml:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/config/nav2_params.yaml:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-joint-dds-2fb318b1ed:/fixture:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport FASTRTPS_DEFAULT_PROFILES_FILE=/fixture/lifecycle_response_qos.xml\nexport FASTDDS_BUILTIN_TRANSPORTS=${FASTDDS_BUILTIN_TRANSPORTS:-UDPv4}\nexport PYTHONDONTWRITEBYTECODE=1 OOMWOO_MOTION_AUDIT=1 OOMWOO_SIM_BATTERY_FRACTION=0.92\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/work/src/oomwoo_dock:/contrib/src:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2\nexport MAX_WALL_TIME_S=180 CLOCK_DEAD_WALL_S=12 RUNS=1\nmkdir -p /tmp/valdi_ros_ws/src && cp -r /contrib/ros2_lab_interfaces /tmp/valdi_ros_ws/src/oomwoo_cleaning_jobs_lab_interfaces && cd /tmp/valdi_ros_ws && colcon build --packages-select oomwoo_cleaning_jobs_lab_interfaces --parallel-workers 2 --event-handlers console_direct+ > /tmp/rosidl_build.log 2>&1 && source /tmp/valdi_ros_ws/install/setup.bash || { tail -n 40 /tmp/rosidl_build.log; exit 3; }\npython3 /contrib/integration/generate_keepout_lab.py --out /tmp/keepout-fusion --test-room /fixture/scene/dock_test_room.yaml --nav-params /work/src/oomwoo_sim_support/config/nav2_params.yaml || exit 3\nexport OOMWOO_STATION_SHA256=d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92 ROS_HOME=/tmp/roshome\npython3 - <<'JOINT'\n\nimport os,time,json,math,threading,subprocess,hashlib,ast\nfrom pathlib import Path\nimport rclpy\nfrom rclpy.qos import QoSProfile,QoSDurabilityPolicy,QoSReliabilityPolicy,qos_profile_sensor_data\nfrom geometry_msgs.msg import PoseStamped,Twist\nfrom nav_msgs.msg import Odometry\nfrom sensor_msgs.msg import LaserScan\nfrom std_msgs.msg import String,Bool\nfrom oomwoo_cleaning_jobs_lab_interfaces.srv import ControlCleaning,GetCleaningStatus\nfrom ament_index_python.packages import get_package_share_directory\nfrom launch import LaunchDescription,LaunchService\nfrom launch.actions import IncludeLaunchDescription,RegisterEventHandler\nfrom launch.event_handlers import OnProcessExit\nfrom launch.launch_description_sources import PythonLaunchDescriptionSource\nfrom launch_ros.actions import Node\nfrom oomwoo_sim_support.coverage_regression_runner import CoverageRunner\nfrom oomwoo_dock.dock_template import inv,mul,wrap\nfrom oomwoo_dock import dock_harness\nos.environ['GZ_PARTITION']='oomwoo-joint-'+__import__('uuid').uuid4().hex\npkg_sim=Path(get_package_share_directory('oomwoo_sim_support'))\npkg_gz=Path(get_package_share_directory('oomwoo_gazebo'))\npkg_robot=Path(get_package_share_directory('oomwoo_one'))\nos.environ['GZ_SIM_RESOURCE_PATH']=os.pathsep.join([str(pkg_gz/'models'),str(pkg_robot),os.environ.get('GZ_SIM_RESOURCE_PATH','')])\nassert hashlib.sha256((pkg_gz/'models/vacuum_dock/model.sdf').read_bytes()).hexdigest()==os.environ['OOMWOO_STATION_SHA256']\n\nmanifest=json.loads(Path('/fixture/manifest.json').read_text())\nfrom oomwoo_coverage import coverage_planner_node as joint_planner\nfrom oomwoo_sim_support import coverage_regression_runner as joint_scorer,coverage_meter_node as joint_meter,ground_truth_node as joint_truth,ir_beacon_sim_node as joint_beacon\nfrom oomwoo_dock import dock_drive_node as joint_driver,dock_detector_node as joint_detector\nfrom oomwoo_cleaning_jobs import goal_journal as joint_journal,nav_lease_witness as joint_witness,ros_dock_velocity_relay as joint_relay\nmodules={'planner':joint_planner,'scorer':joint_scorer,'meter':joint_meter,'driver':joint_driver,'ground_truth':joint_truth,'beacon':joint_beacon,'detector':joint_detector,'journal':joint_journal,'witness':joint_witness,'relay':joint_relay}\nprovenance={'modules':{},'installed_matches':{},'scene':{}}\nfor key,module in modules.items():\n path=Path(module.__file__);digest=hashlib.sha256(path.read_bytes()).hexdigest()\n assert str(path).startswith(('/work/','/contrib/')),(key,str(path))\n assert digest==manifest['input_sha256'][key],(key,digest)\n provenance['modules'][key]={'path':str(path),'sha256':digest}\nfor relative in ('launch/sim_bringup.launch.py','launch/coverage_regression.launch.py','config/nav2_params.yaml'):\n actual=(pkg_sim/relative).read_bytes();reviewed=(Path('/work/src/oomwoo_sim_support')/relative).read_bytes()\n assert actual==reviewed,relative\n provenance['installed_matches'][relative]=hashlib.sha256(actual).hexdigest()\nfor name,key in [('dock_test_room.world','station_world'),('dock_test_room.yaml','station_map_yaml'),('dock_test_room.pgm','station_map_image')]:\n digest=hashlib.sha256((Path('/fixture/scene')/name).read_bytes()).hexdigest();assert digest==manifest['input_sha256'][key]\n provenance['scene'][name]=digest\ndigest=hashlib.sha256(Path('/work/deploy/run_coverage_regression.sh').read_bytes()).hexdigest()\nassert digest==manifest['input_sha256']['wrapper']\nprovenance['wrapper_sha256']=digest\nprovenance['observer_transport']={'rmw':os.environ.get('RMW_IMPLEMENTATION'),'fastdds_builtin_transports':os.environ.get('FASTDDS_BUILTIN_TRANSPORTS')}\nqos_path=Path(os.environ['FASTRTPS_DEFAULT_PROFILES_FILE']);qos_digest=hashlib.sha256(qos_path.read_bytes()).hexdigest()\nassert qos_digest==manifest['input_sha256']['lifecycle_response_qos']\nprovenance['lifecycle_response_qos']={'path':str(qos_path),'sha256':qos_digest}\nprint('OOMWOO_JOINT_PROVENANCE '+json.dumps(provenance),flush=True)\n\nrclpy.init(args=['--ros-args','-p','use_sim_time:=true','-p','cleaning_radius:=0.20','-p','robot_radius:=0.1745','-p','motion_audit:=true','-p','sim_battery_fraction:=0.92'])\n# Fuse the existing meter/auditor with the former dock-trial observer.\n# No separate coverage node, fake motion source or new product timer.\nn=CoverageRunner()\nlatched=QoSProfile(depth=1,reliability=QoSReliabilityPolicy.RELIABLE,durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)\nenable=n.create_publisher(Bool,'/dock_drive/enable',10)\ncontrol=n.create_client(ControlCleaning,'/valdi/relay/control')\nstatus=n.create_client(GetCleaningStatus,'/valdi/relay/status')\nlatest={};counts={};dock_phases=[];safe_nonzero={};safe_translating={};owner_path={};previous_truth=None;dock_min_tail=None;dock_max_tail=None\nintegration={'snapshot':None,'status_future':None,'request_future':None,'request_operation':None,'last_status_poll':0.,'calls':[],'claimed':False,'enabled':False,'released':False,'post_release_snapshot':None}\nresult={};stop=threading.Event();owned_exits=[]\n\n# Reuse the exact adopted and tested wrapper callback for owned child exits.\nembedded=Path('/work/deploy/run_coverage_regression.sh').read_text().split(\"<<'PY'\\n\",1)[1].split('\\nPY\\n',1)[0]\ncallback=next(node for node in ast.parse(embedded).body if isinstance(node,ast.FunctionDef) and node.name=='scored')\nexit_policy={'scorer':object(),'result':[3],'execution_failed':[False]}\nexec(compile(ast.Module(body=[callback],type_ignores=[]),'adopted-wrapper-owned-child-policy','exec'),exit_policy)\n\ndef pose(m):\n p=m.pose;q=p.orientation\n return [p.position.x,p.position.y,math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))]\ndef record(key,msg):\n global dock_max_tail,dock_min_tail,previous_truth\n counts[key]=counts.get(key,0)+1;latest[key]=msg\n if key=='phase' and (not dock_phases or dock_phases[-1]['phase']!=msg.data):\n  dock_phases.append({'phase':msg.data,'sim_s':n._sim_now()})\n  print('JOINT_DOCK_PHASE '+json.dumps(dock_phases[-1]),flush=True)\n if key=='cmd' and (abs(msg.linear.x)>1e-6 or abs(msg.angular.z)>1e-6):\n  snap=integration['snapshot'] or {};owner=snap.get('owner','unknown')\n  safe_nonzero[owner]=safe_nonzero.get(owner,0)+1\n  if abs(msg.linear.x)>1e-6:safe_translating[owner]=safe_translating.get(owner,0)+1\n if key=='truth':\n  point=pose(msg);owner=(integration['snapshot'] or {}).get('owner','unknown')\n  if previous_truth is not None and previous_truth[0]==owner:\n   owner_path[owner]=owner_path.get(owner,0.)+math.hypot(point[0]-previous_truth[1][0],point[1]-previous_truth[1][1])\n  previous_truth=(owner,point)\n if key=='truth' and integration['enabled']:\n  body=mul(inv((-.985,-.5,math.pi)),pose(msg));tail=body[0]+dock_harness.BODY_RADIUS_M\n  dock_max_tail=tail if dock_max_tail is None else max(dock_max_tail,tail)\n  dock_min_tail=tail if dock_min_tail is None else min(dock_min_tail,tail)\nfor key,kind,topic,qos in [('odom',Odometry,'/odom',qos_profile_sensor_data),('scan',LaserScan,'/scan',qos_profile_sensor_data),('fix',PoseStamped,'/dock_detector/dock_pose',10),('truth',PoseStamped,'/ground_truth/pose',10),('phase',String,'/dock_drive/state',10),('docked',Bool,'/dock_drive/docked',latched),('cmd',Twist,'/valdi/lab_safe_cmd_vel_output',10)]:\n n.create_subscription(kind,topic,lambda msg,k=key:record(k,msg),qos)\n\ndef request(operation):\n assert integration['request_future'] is None\n req=ControlCleaning.Request();req.request_id='joint-'+__import__('uuid').uuid4().hex;req.operation=operation;req.isolated_disposable_sim=True\n integration['request_future']=control.call_async(req);integration['request_operation']=operation\n\ndef integration_tick(now):\n status_received=False\n sf=integration['status_future']\n if sf is not None and not sf.done() and now-integration['last_status_poll']>=1.5:\n  sf.cancel();integration['status_future']=None;sf=None\n  print('JOINT_STATUS_RETRY '+json.dumps({'pending_age_s':round(now-integration['last_status_poll'],3)}),flush=True)\n if sf is not None and sf.done():\n  reply=sf.result();integration['status_future']=None\n  if reply is None or not reply.ok:raise RuntimeError('relay status failed')\n  integration['snapshot']=json.loads(reply.status_json)\n  status_received=True\n  if integration['released']:integration['post_release_snapshot']=integration['snapshot']\n if integration['status_future'] is None and now-integration['last_status_poll']>=.10 and status.service_is_ready():\n  integration['status_future']=status.call_async(GetCleaningStatus.Request());integration['last_status_poll']=now\n rf=integration['request_future']\n if rf is not None and rf.done():\n  reply=rf.result();op=integration['request_operation'];integration['request_future']=None\n  row={'operation':op,'ok':reply is not None and reply.ok,'state':None if reply is None else reply.state,'error':None if reply is None else reply.error}\n  integration['calls'].append(row);print('JOINT_CONTROL '+json.dumps(row),flush=True)\n  if not row['ok']:\n   if (op=='claim_dock' and row['state']=='stopped'\n       and row['error']=='new owner lacks fresh quiet/health/idle proofs'):\n    return\n   raise RuntimeError('joint control rejected: '+str(row))\n  if op=='claim_dock':\n   if row['state']!='dock_drive':raise RuntimeError('claim did not grant DOCK')\n   integration['claimed']=True\n  elif op=='release_motion':\n   if row['state']!='stopped':raise RuntimeError('release did not grant STOP')\n   integration['released']=True\n snap=integration['snapshot']\n if snap is None or integration['request_future'] is not None:return\n if snap.get('last_lease_revocation'):raise RuntimeError('lease revoked: '+str(snap['last_lease_revocation']))\n if status_received and n.sweep_complete and not integration['claimed'] and snap.get('owner')=='stopped' and snap.get('last_output')==[0.0,0.0] and control.service_is_ready():\n  request('claim_dock')\n if integration['claimed'] and not integration['enabled'] and snap.get('owner')=='dock_drive':\n  if 'phase' not in latest or latest['phase'].data!='IDLE':raise RuntimeError('dock was active before enabling')\n  enable.publish(Bool(data=True));integration['enabled']=True\n  print('JOINT_DOCK_ENABLED '+json.dumps({'sim_s':n._sim_now(),'after_claim':True}),flush=True)\n if integration['enabled'] and not integration['released'] and latest.get('phase') is not None and latest['phase'].data=='DONE' and latest.get('docked') is not None and latest['docked'].data and snap.get('last_output')==[0.0,0.0]:\n  request('release_motion')\n\nservice=LaunchService()\ndef child_exit(event,context):\n row={'name':event.process_name,'returncode':event.returncode};owned_exits.append(row)\n exit_policy['result'][0]=0 if result.get('pass') else 1 if result else 3\n return exit_policy['scored'](event,context)\nbase=IncludeLaunchDescription(PythonLaunchDescriptionSource(str(pkg_sim/'launch/coverage_regression.launch.py')),launch_arguments={\n 'world':'/fixture/scene/dock_test_room.world','map':'/fixture/scene/dock_test_room.yaml','with_meter':'false',\n 'robot_model':'oomwoo_one','executor':'reactive','v_cruise':'0.25','rotate_speed':'0.8',\n 'motion_relay_journal':'/tmp/oomwoo-owned-motion.json','sweep_cmd_topic':'/valdi/sweep_cmd_vel',\n 'nav_cmd_topic':'/valdi/nav2_cmd_vel','motor_cmd_topic':'/valdi/lab_safe_cmd_vel_output',\n 'nav_linear_speed':'0.14','nav_angular_speed':'0.7','nav_lookahead':'0.5',\n 'keepout_mask':'/tmp/keepout-fusion/keepout_test_room.yaml'}.items())\nbeacon=Node(package='oomwoo_sim_support',executable='ir_beacon_sim',name='ir_beacon_sim',output='screen',parameters=[{'use_sim_time':True,'dock_x':-.985,'dock_y':-.5,'dock_yaw_deg':180.}],remappings=[('~/bearing','/dock_detector/beacon_bearing'),('~/visible','/dock_drive/beacon_visible')])\ndetector=Node(package='oomwoo_dock',executable='dock_detector',name='dock_detector',output='screen',parameters=[{'use_sim_time':True}])\nservice.include_launch_description(LaunchDescription([RegisterEventHandler(OnProcessExit(on_exit=child_exit)),base,beacon,detector]))\n\ndef observe():\n global result\n started=time.monotonic();last_report=started;last_sim=0.;last_advance=started\n try:\n  while not stop.is_set():\n   rclpy.spin_once(n,timeout_sec=.03);now=time.monotonic();sim=n._sim_now()\n   if now-n._sim_battery_last>=.5:\n    n._sim_battery_pub.publish(n._sim_battery_message);n._sim_battery_last=now\n   n._audit_graph()\n   if sim>last_sim:last_sim=sim;last_advance=now\n   if now-started>=180.:raise RuntimeError('joint trial wall deadline')\n   if now-last_advance>=12.:raise RuntimeError('joint trial clock stalled')\n   if n._motion_fault or n.sim_unstable:raise RuntimeError('actual meter/phase fault')\n   integration_tick(now)\n   snap=integration['post_release_snapshot']\n   if integration['released'] and snap is not None and snap.get('owner')=='stopped' and snap.get('last_output')==[0.0,0.0]:\n    audit=n._audit_keepout_result();truth=pose(latest['truth']);body=mul(inv((-.985,-.5,math.pi)),truth)\n    phases={row['phase'] for row in dock_phases}\n    terminals={};active=set()\n    for packet in n.motion_samples['status']:\n     for uid,code in packet['states']:\n      if code==2:active.add(uid)\n      if code in (4,5,6):terminals[uid]=code\n    graph=n.motion_graph\n    checks={'sweep_completed':n.sweep_complete,'real_nav_active_then_success':len(active)>=2 and all(terminals.get(uid)==4 for uid in active),\n     'NAV_SWEEP_DOCK_nonzero_output':all(safe_nonzero.get(role,0)>0 for role in ('navigation','reactive_sweep','dock_drive')),\n     'dock_claim_before_enable':integration['claimed'] and integration['enabled'],\n     'actual_dock_states':{'SEARCH','GOTO','TURN','BACK','DONE'}<=phases,\n     'dock_fix_observed':counts.get('fix',0)>1,'geometric_seated':dock_harness.seated(body),\n     'dock_lateral_capture':abs(body[1])<dock_harness.BAY_HALF_M-dock_harness.BODY_RADIUS_M,\n     'dock_yaw_capture':abs(wrap(body[2]-math.pi))<math.radians(6.),\n     'NAV_SWEEP_DOCK_translation':all(safe_translating.get(role,0)>0 and owner_path.get(role,0.)>.05 for role in ('navigation','reactive_sweep','dock_drive')),\n     'sole_managed_dispatcher':(snap.get('managed_backend') or {}).get('single_dispatcher') is True,\n     'dock_no_overshoot':dock_max_tail is not None and dock_max_tail<=dock_harness.BAY_DEPTH_M+dock_harness.OVERSHOOT_M,\n     'keepout_valid_no_crossings':audit['valid'] and audit['footprint_crossings']==0,\n     'exclusive_final_writer':len(graph.get('/valdi/lab_safe_cmd_vel_output',[]))==1,\n     'no_direct_motor_publishers':not graph.get('/cmd_vel') and not graph.get('/cmd_vel_nav'),\n     'stop_confirmed_after_release':snap['owner']=='stopped' and snap['last_output']==[0.0,0.0],\n     'no_lease_revocation':snap.get('last_lease_revocation') is None}\n    result={'pass':all(checks.values()),'checks':checks,'active_uuids':sorted(active),'terminal_status':terminals,'final_truth':truth,'final_in_dock':body,'dock_max_tail_m':dock_max_tail,'relay':integration,'dock_phases':dock_phases,'counts':counts,'safe_nonzero_counts':safe_nonzero,'safe_translating_counts':safe_translating,'observed_owner_path_m':owner_path,'coverage_scope':'No cleaning grade for this integration trial; meter observations after sweep completion include the later docking phase.','motion_audit':{'keepout':audit,'graph':graph,'samples':n.motion_samples}}\n    break\n   if now-last_report>=15.:\n    print('JOINT_PROGRESS '+json.dumps({'wall_s':round(now-started,1),'sim_s':sim,'coverage':n.coverage,'sweep_complete':n.sweep_complete,'owner':(integration['snapshot'] or {}).get('owner'),'dock_phase':None if 'phase' not in latest else latest['phase'].data,'status_service_ready':status.service_is_ready(),'status_future_pending':integration['status_future'] is not None and not integration['status_future'].done(),'status_pending_age_s':None if integration['status_future'] is None else round(now-integration['last_status_poll'],3)}),flush=True);last_report=now\n except Exception as exc:\n  result={'pass':False,'error':repr(exc),'relay_calls':integration['calls'],'relay_snapshot':integration['snapshot'],'dock_phases':dock_phases,'counts':counts,'safe_nonzero_counts':safe_nonzero,'safe_translating_counts':safe_translating,'observed_owner_path_m':owner_path,'motion_audit':{'keepout':n._audit_keepout_result(),'graph':n.motion_graph,'samples':n.motion_samples}}\n finally:\n  # Futures are not serializable; keep their observed responses instead.\n  if 'relay' in result:result['relay']={k:v for k,v in integration.items() if not k.endswith('_future')}\n  if not result.get('pass'):\n   # Reuse the previous dock trial's one-second cleanup window.\n   enable.publish(Bool(data=False))\n   if control.service_is_ready():\n    req=ControlCleaning.Request();req.request_id='joint-stop-'+__import__('uuid').uuid4().hex;req.operation='stop';req.isolated_disposable_sim=True\n    control.call_async(req)\n   until=time.monotonic()+1.\n   while time.monotonic()<until and not stop.is_set():rclpy.spin_once(n,timeout_sec=.03)\n  result['status_observation']={'service_ready':status.service_is_ready(),'future_pending':integration['status_future'] is not None and not integration['status_future'].done(),'pending_age_s':None if integration['status_future'] is None else round(time.monotonic()-integration['last_status_poll'],3)}\n  result['wall_s']=round(time.monotonic()-started,3)\n  print('OOMWOO_JOINT_RESULT '+json.dumps(result),flush=True)\n  try:\n   stopped=subprocess.run(['gz','service','-s','/server_control','--reqtype','gz.msgs.ServerControl','--reptype','gz.msgs.Boolean','--timeout','2000','--req','stop: true'],capture_output=True,text=True,timeout=4)\n   print('JOINT_NATIVE_STOP '+json.dumps({'rc':stopped.returncode,'stdout':stopped.stdout,'stderr':stopped.stderr}),flush=True)\n  except (OSError,subprocess.TimeoutExpired) as exc:print('JOINT_NATIVE_STOP_ERROR '+repr(exc),flush=True)\n  service.shutdown(force_sync=True)\nthread=threading.Thread(target=observe,daemon=True);thread.start()\ntry:\n launch_code=service.run()\nfinally:\n stop.set();thread.join(timeout=5.)\n n.destroy_node()\n if rclpy.ok():rclpy.shutdown()\nprint('OOMWOO_JOINT_CLOSED '+json.dumps({'launch_code':launch_code,'owned_exits':owned_exits,'pass_before_shutdown':result.get('pass',False),'unexpected_process_failure':exit_policy['execution_failed'][0]}),flush=True)\nraise SystemExit(0 if result.get('pass') and launch_code==0 and not exit_policy['execution_failed'][0] else 3)\n\nJOINT\nbank_code=$?\nexport OOMWOO_BANK_CODE=$bank_code\npython3 - <<'INNER'\nimport json,glob,os\nfrom pathlib import Path\nr={'bank_code':int(os.environ['OOMWOO_BANK_CODE']),'reports':{},'logs':{}}\nfor p in glob.glob('/tmp/coverage_runs.*/run*.json'):\n r['reports'][p]=json.loads(Path(p).read_text())\nfor p in glob.glob('/tmp/coverage_regression.log.*'):\n r['logs'][p]=Path(p).read_text(errors='replace')\nr['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/pids.events'),Path('/sys/fs/cgroup/pids.peak'),Path('/sys/fs/cgroup/memory.peak'),Path('/sys/fs/cgroup/memory.events')] if p.exists()}\np=Path('/tmp/oomwoo-owned-motion.json')\nr['motion_journal']=json.loads(p.read_text()) if p.exists() else None\nr['keepout_fixture']={'generated_manifest':json.loads(Path('/tmp/keepout-fusion/manifest.json').read_text()),'legacy_overlay_and_topics_used':False,'active_mask_topic':'/oomwoo/keepout_mask','active_info_topic':'/oomwoo/keepout_filter_info','active_overlay_builder':'/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py'}\nprint('OOMWOO_GAZEBO_BANK '+json.dumps(r))\nraise SystemExit(int(os.environ['OOMWOO_BANK_CODE']))\nINNER"
+  ],
+  "source_sets": {
+    "ROS": "57d23e6e57ab6dd09f8512182771d810bde9e9ed plus explicit supplied-route/scene inputs; actual controller handoffs",
+    "jobs": "50bb1b96fc9465588bf0f4829cab8172c6f33fe5 current production, no status observer fixture",
+    "driver": "consolidated ba5d87e same validated dock source, frozen SHA in input_sha256"
+  },
+  "fixture_patch": {
+    "planner": "Only controlled waypoint test input in _plan_waypoints; all other methods AST identical. Targets(-.2,1),(.2,1),(-.235,-.5) must pass existing free/reachable masks.",
+    "coverage_launch": "Existing max_gapfill set0 for finite supplied route; existing driver receives original detector topic.",
+    "observer": "Fuse actual CoverageRunner meter/auditor and previous dock observer into one node; actual typed services only.",
+    "scene": "Original station in same primitives room; map adds60occupied pixels.",
+    "status_wait": "Bound existing observer status future to1.5s using existing last_status_poll; cancel/requery without authorizing from missing data. Record transport/readiness/pending age.",
+    "station_height": "Existing box rasterizer uses expanded installed robot collision band[0,.097] only for station; overhead core starts.17. Only36false station obstacle pixels freed;24real obstacle pixels retained; original room unchanged.",
+    "lifecycle_response_qos": "Seven exact lifecycle change_stateReply profile names: actual ROS writer max_blocking_time1s; unrelated relay/control/status stay100ms. No service-global or topic default, no QoS_FROM_XML override."
+  },
+  "fixture_changes": {
+    "status": "Actual CoverageRunner status packets use states:[(uuid,code)]; executing2 and terminal4 required.",
+    "geometry": "Require final lateral and yaw capture as well as seating/depth, using existing harness constants.",
+    "movement": "Require translating final commands plus observed ground-truth path>5cm under each observed owner.",
+    "shutdown": "Existing LaunchService thread cleanup uses force_sync=True; bounded native RPC then unconditional framework shutdown.",
+    "production_changed": false,
+    "observer_waiting": "Coalesce claims with existing fresh status responses; exact stopped/not-ready response waits, other refusals remain fatal. No new timer or persistent state.",
+    "status_future": "Cancel pending status after1.5s using existing poll timestamp; no fresh status or permission invented. Observe pending age and service readiness.",
+    "transport": "Set existing FASTDDS_BUILTIN_TRANSPORTS default UDPv4 before observer starts, matching child launch policy; no vendor repair claim.",
+    "station_height": "Existing box rasterizer uses expanded installed robot collision band[0,.097] only for station; overhead core starts.17. Only36false station obstacle pixels freed;24real obstacle pixels retained; original room unchanged.",
+    "lifecycle_response_qos": "Seven exact lifecycle change_stateReply profile names: actual ROS writer max_blocking_time1s; unrelated relay/control/status stay100ms. No service-global or topic default, no QoS_FROM_XML override."
+  },
+  "limits": [
+    "Supplied short route is test input; no full-room planner or90/80 acceptance.",
+    "Battery fraction .92 is synthetic; other sensor/motion data come from Gazebo, not physical hardware.",
+    "18runtime source/data hashes identical731; only lifecycle response QoS XML and its provenance are added.",
+    "Original .75s quiet proof and .30s input age remain actual unchanged mux requirements.",
+    "Nav2 startup discovery failure709 is not repaired by this caller correction.",
+    "Post-sweep meter coverage is not a cleaning grade during this longer manual observation."
+  ],
+  "scope": "All18runtime source/data hashes identical731; additional exact lifecycle-reply QoS XML and root provenance. Same physically correct private station map; safety/motion/age limits unchanged.",
+  "resource_policy": {
+    "cpu": 2,
+    "memory_gib": 3,
+    "observer_wall_s": 180,
+    "host_stop_s": 240,
+    "fifo_duration_s": 300
+  },
+  "joint_acceptance": true
+}

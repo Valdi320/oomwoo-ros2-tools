@@ -1,7 +1,7 @@
 {
-  "observed_utc": "2026-10-30T20:59:34.384411+00:00",
+  "observed_utc": "2026-10-30T21:10:05.304649+00:00",
   "scope": "Private short supplied-route simulation of actual NAV/SWEEP/DOCK handoffs; evidence only, no new production API or fixture installed.",
-  "status": "incomplete; native trial736 queued, not a pass",
+  "status": "private short-cycle integration verified once; full project incomplete",
   "source_delivery_head_before_evidence": "d8b8ea74d1ccd3b3ccd0d99ed6e78dcb4f851e86",
   "demonstrated_utility": [
     {
@@ -21,12 +21,21 @@
     {
       "claim": "Station raster wrongly projects elevated core into docking bay. Actual expanded robot top.097m is below core bottom.17m;36false occupied pixels removed while24real station pixels and original obstacles remain.",
       "evidence": "joint_height_preflight_20261030.json",
-      "limits": "Static map correction only.731 failed during startup before testing approach;725 failure position/cell unrecorded."
+      "limits": "Static bay correction exercised in native736;731 never navigated. No exact725 rejected cell recorded and no native isolated causality claim."
     },
     {
       "claim": "Installed response writers accept per-topic lifecycle discovery-wait budget1s;3unrelated service controls stay100ms and measured QoS fields otherwise unchanged.",
       "evidence": "joint_lifecycle_qos_small_20261030.json",
-      "limits": "Actual rcl services inspected without requests. Does not establish startup reliability; native736 pending."
+      "limits": "Actual named writer configuration verified; one native cold start passes in736. Vendor race and general startup reliability remain unproven."
+    },
+    {
+      "claim": "Actual NAV\u2192SWEEP\u2192DOCK completes, geometric seat and STOP after release confirmed, independent Keepout valid0crossings.",
+      "evidence": "joint_dds_native_20261030.json",
+      "limits": [
+        "One cold native integration, not statistical startup reliability.",
+        "Supplied three-point route, synthetic battery and manually extended observer; not full-room90/80 or physical charging.",
+        "Per-topic QoS and corrected station map are isolated test configuration; no vendor fix or production deployment claim."
+      ]
     }
   ],
   "negative_native_evidence": [
@@ -57,14 +66,10 @@
     }
   ],
   "next_increment": {
-    "ticket": 736,
-    "session": 84767,
-    "use": "Complete the single simulated cycle with corrected station map and targeted lifecycle response QoS.",
-    "acceptance": "Two exact Nav2 UUIDs active then success, real translating output from3owners, claim before dock enable, actual detector+driver DONE/geometric seating, confirmed STOP after release, valid independent Keepout0crossings, clean owned process exits.",
-    "remaining_for_this_milestone": "Native cycle and release not yet accepted.",
-    "expected_benefit": "Resolve integration and recurring startup bottleneck before adding features.",
-    "cost_bound": "2CPU/3GiB/noGPU only after FIFO admission; observer180s, host240s, turn300s. Waiting.05CPU.",
-    "decision": "Advance once with new deterministic transport evidence; no unchanged blind startup retries if same failure persists."
+    "use": "Investigate the preserved full-room first-target excess path before proposing another performance change.",
+    "minimum_pending": "Full-room90/80 still fails; portable simulated proof and small detector-link correction are consolidated first.",
+    "decision": "Consolidate completed short-cycle milestone; do not repeat736 or add scenario variants without new evidence. Analyze preserved full-room traces next.",
+    "expected_benefit_cost": "Offline attribution can identify a worthwhile correction without a blind15minute simulation. Native repeats only after a concrete new hypothesis."
   },
   "remaining_larger_scope": [
     "Full-room90percent coverage/80percent first-target efficiency still not passed.",
@@ -89,6 +94,455 @@
     "joint_status_native_20261030.json": "f38ec92f21cb609ef15ea0b0bfc903b0c4180c95e6c8a645f590ea9ba3befec1",
     "joint_height_preflight_20261030.json": "f63620e493b9c7a21ecaed7f08c076b44b430393c12a415c922b7df629af48ef",
     "joint_height_native_20261030.json": "45b28e390037efdcb4854770d8845dacd10c0bb86b5a63885030a8ef341dc740",
-    "joint_lifecycle_qos_small_20261030.json": "77a1a2c4c3bd8505918533a344f7d7639bb0f7894c989f0145033a8ee0e3a90e"
+    "joint_lifecycle_qos_small_20261030.json": "77a1a2c4c3bd8505918533a344f7d7639bb0f7894c989f0145033a8ee0e3a90e",
+    "joint_dds_native_20261030.json": "52e61c51e942de21d8042b7664cc9665486d4355b0acb150e740533a732fcb65",
+    "dock_pose_link_before_20261030.json": "c4a125315aa3d55bd05cafe0e44168519ea929efeeaf3c123e559ac883c02f0d",
+    "dock_pose_link_after_20261030.json": "9d749aea53463a8a5d350efae53c4e9ccf57f3ff19107a43b85ddbc2e10ef439"
+  },
+  "completed_increment": {
+    "ticket": 736,
+    "session": 84767,
+    "use": "Complete the single simulated cycle with corrected station map and targeted lifecycle response QoS.",
+    "acceptance": "Two exact Nav2 UUIDs active then success, real translating output from3owners, claim before dock enable, actual detector+driver DONE/geometric seating, confirmed STOP after release, valid independent Keepout0crossings, clean owned process exits.",
+    "remaining_for_this_milestone": "Native cycle and release not yet accepted.",
+    "expected_benefit": "Resolve integration and recurring startup bottleneck before adding features.",
+    "cost_bound": "2CPU/3GiB/noGPU only after FIFO admission; observer180s, host240s, turn300s. Waiting.05CPU.",
+    "decision": "Advance once with new deterministic transport evidence; no unchanged blind startup retries if same failure persists.",
+    "outcome": "native736 accepted17checks; see positive_native_evidence"
+  },
+  "positive_native_evidence": {
+    "ticket": 736,
+    "receipt": "joint_dds_native_20261030.json",
+    "rc": 0,
+    "wall_s": 78.221,
+    "checks": {
+      "sweep_completed": true,
+      "real_nav_active_then_success": true,
+      "NAV_SWEEP_DOCK_nonzero_output": true,
+      "dock_claim_before_enable": true,
+      "actual_dock_states": true,
+      "dock_fix_observed": true,
+      "geometric_seated": true,
+      "dock_lateral_capture": true,
+      "dock_yaw_capture": true,
+      "NAV_SWEEP_DOCK_translation": true,
+      "sole_managed_dispatcher": true,
+      "dock_no_overshoot": true,
+      "keepout_valid_no_crossings": true,
+      "exclusive_final_writer": true,
+      "no_direct_motor_publishers": true,
+      "stop_confirmed_after_release": true,
+      "no_lease_revocation": true
+    },
+    "nav_uuids_active_then_succeeded": [
+      "59c60f0039fe480d99fed371a011850e",
+      "e0077e13ffff4ecab7a450f10c0a9de2"
+    ],
+    "observed_owner_path_m": {
+      "stopped": 4.1543307259998664e-09,
+      "reactive_sweep": 0.26845354344857336,
+      "navigation": 2.2002995968980708,
+      "dock_drive": 1.0601434430689778
+    },
+    "final_dock_position": [
+      0.054544585416340156,
+      0.0006725117765274957,
+      3.137523971749828
+    ],
+    "lateral_error_mm": 0.6725117765274957,
+    "yaw_error_deg": 0.2331182976115234,
+    "tail_depth_m": 0.22904458541634015,
+    "stop_after_release": true,
+    "keepout": {
+      "valid": true,
+      "poses": 2725,
+      "segments": 2724,
+      "max_pose_gap_s": 0.02,
+      "footprint_crossings": 0
+    },
+    "owned_children_clean": 21,
+    "input_hashes_unchanged": 19,
+    "container_removed_scope_inactive": true,
+    "limits": [
+      "One cold native integration, not statistical startup reliability.",
+      "Supplied three-point route, synthetic battery and manually extended observer; not full-room90/80 or physical charging.",
+      "Per-topic QoS and corrected station map are isolated test configuration; no vendor fix or production deployment claim."
+    ]
+  },
+  "fixture_reconstruction": {
+    "purpose": "Review/reconstruct tested private fixture in an isolated copy; these are data/patches, not an installed tool or a default deployment change.",
+    "ros_base_commit": "57d23e6e57ab6dd09f8512182771d810bde9e9ed",
+    "jobs_base_commit": "50bb1b96fc9465588bf0f4829cab8172c6f33fe5",
+    "image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "private_source_patches": {
+      "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "--- src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n+++ src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n@@ -643,6 +643,14 @@\n             f'cell decomposition: {len(cells)} cells; {mode} sweep, '\n             f'{len(waypoints)} waypoints')\n \n+        # Disposable integration input, not room-planning acceptance.\n+        waypoints = [(-0.2, 1.0), (0.2, 1.0), (-0.235, -0.5)]\n+        for x, y in waypoints:\n+            col, row = int((x - ox) / res), int((y - oy) / res)\n+            if not (0 <= row < h and 0 <= col < w\n+                    and self.free_mask[row, col] and self.reachable_mask[row, col]):\n+                raise ValueError('joint-cycle fixture waypoint is not admissible')\n+        self.get_logger().info('OOMWOO_JOINT_ROUTE ' + json.dumps(waypoints))\n         poses: List[PoseStamped] = []\n         for (x, y) in waypoints:\n             p = PoseStamped()\n",
+      "src/oomwoo_sim_support/launch/coverage_regression.launch.py": "--- src/oomwoo_sim_support/launch/coverage_regression.launch.py\n+++ src/oomwoo_sim_support/launch/coverage_regression.launch.py\n@@ -139,7 +139,7 @@\n     coverage_planner = Node(\n         package='oomwoo_coverage', executable='coverage_planner', output='screen',\n         parameters=[{'cleaning_radius': cleaning_radius, 'robot_radius': robot_radius,\n-                     'coverage_target': coverage_target, 'row_overlap': 0.0, 'max_retries': 1,\n+                     'coverage_target': coverage_target, 'row_overlap': 0.0, 'max_retries': 1, 'max_gapfill': 0,\n                      'contact_aware_escape': ParameterValue(\n                          LaunchConfiguration('contact_aware'), value_type=bool),\n                      'row_substep_m': ParameterValue(\n@@ -207,7 +207,8 @@\n             Node(package='oomwoo_dock', executable='dock_drive', name='dock_drive',\n                  parameters=[{'use_sim_time': True, 'auto_start': False,\n                               'exit_when_done': False}],\n-                 remappings=[('cmd_vel', '/valdi/dock_drive_cmd_vel')], output='screen'),\n+                 remappings=[('cmd_vel', '/valdi/dock_drive_cmd_vel'),\n+                             ('~/dock_pose', '/dock_detector/dock_pose')], output='screen'),\n         ]\n \n     # No fixed timers: the meter self-gates on /map + /ground_truth, and the\n"
+    },
+    "scene_world_xml": "<?xml version='1.0' encoding='utf-8'?>\n<sdf version=\"1.8\">\n  <world name=\"default\">\n    <physics type=\"ode\">\n      <real_time_update_rate>200</real_time_update_rate>\n      <max_step_size>0.005</max_step_size>\n      <real_time_factor>1</real_time_factor>\n    </physics>\n    <plugin filename=\"gz-sim-physics-system\" name=\"gz::sim::systems::Physics\" />\n    <plugin filename=\"gz-sim-user-commands-system\" name=\"gz::sim::systems::UserCommands\" />\n    <plugin filename=\"gz-sim-scene-broadcaster-system\" name=\"gz::sim::systems::SceneBroadcaster\" />\n    <plugin filename=\"gz-sim-sensors-system\" name=\"gz::sim::systems::Sensors\">\n      <render_engine>ogre2</render_engine>\n    </plugin>\n    <plugin filename=\"gz-sim-contact-system\" name=\"gz::sim::systems::Contact\" />\n    <plugin filename=\"gz-sim-imu-system\" name=\"gz::sim::systems::Imu\" />\n\n    <light type=\"directional\" name=\"sun\">\n      <cast_shadows>false</cast_shadows>\n      <pose>0 0 10 0 0 0</pose>\n      <diffuse>0.9 0.9 0.9 1</diffuse>\n      <direction>-0.5 0.1 -0.9</direction>\n    </light>\n\n    <model name=\"ground_plane\">\n      <static>true</static>\n      <link name=\"link\">\n        <collision name=\"collision\">\n          <geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>\n        </collision>\n        <visual name=\"visual\">\n          <geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>\n        </visual>\n      </link>\n    </model>\n\n    \n    <model name=\"wall_north\">\n      <static>true</static>\n      <pose>1.925 3.845 0.25 0 0 0</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></visual>\n      </link>\n    </model>\n    <model name=\"wall_south\">\n      <static>true</static>\n      <pose>1.925 -2.855 0.25 0 0 0</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></visual>\n      </link>\n    </model>\n    <model name=\"wall_east\">\n      <static>true</static>\n      <pose>5.275 0.495 0.25 0 0 1.5708</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></visual>\n      </link>\n    </model>\n    <model name=\"wall_west\">\n      <static>true</static>\n      <pose>-1.425 0.495 0.25 0 0 1.5708</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>6.9 0.2 0.5</size></box></geometry></visual>\n      </link>\n    </model>\n\n    \n    <model name=\"sofa\">\n      <static>true</static>\n      <pose>4.55 3.0 0.2 0 0 0</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>1.8 0.8 0.4</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>1.8 0.8 0.4</size></box></geometry></visual>\n      </link>\n    </model>\n    <model name=\"coffee_table\">\n      <static>true</static>\n      <pose>3.4 0.5 0.15 0 0 0.0</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>0.9 0.5 0.3</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>0.9 0.5 0.3</size></box></geometry></visual>\n      </link>\n    </model>\n    <model name=\"bookshelf\">\n      <static>true</static>\n      <pose>-1.15 1.4 0.35 0 0 0</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>0.35 1.6 0.7</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>0.35 1.6 0.7</size></box></geometry></visual>\n      </link>\n    </model>\n    <model name=\"tv_stand\">\n      <static>true</static>\n      <pose>0.6 -2.5 0.2 0 0 0</pose>\n      <link name=\"link\">\n        <collision name=\"c\"><geometry><box><size>1.4 0.45 0.4</size></box></geometry></collision>\n        <visual name=\"v\"><geometry><box><size>1.4 0.45 0.4</size></box></geometry></visual>\n      </link>\n    </model>\n  <model name=\"vacuum_dock\"><pose>-1.325 -0.5 0.0 0.0 0.0 1.5708</pose><include><uri>model://vacuum_dock</uri></include></model></world>\n</sdf>",
+    "scene_yaml": "image: dock_test_room.pgm\nmode: trinary\nresolution: 0.05\norigin:\n- -1.6\n- -3.05\n- 0\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.25\n",
+    "station_sdf_source": "Pinned image oomwoo_gazebo/models/vacuum_dock/model.sdf; unmodified copy named scene/vacuum_dock-model.sdf.",
+    "station_sdf_sha256": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+    "pgm_base_path": "src/oomwoo_sim_support/maps/test_room.pgm",
+    "pgm_base_sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+    "pgm_override_indexing": "Zero-based top-to-bottom pixel offset in unchanged P5 payload,140x140; preserve original header.",
+    "pgm_payload_overrides": [
+      [
+        11766,
+        0
+      ],
+      [
+        11767,
+        0
+      ],
+      [
+        11768,
+        0
+      ],
+      [
+        11769,
+        0
+      ],
+      [
+        11770,
+        0
+      ],
+      [
+        11771,
+        0
+      ],
+      [
+        11906,
+        0
+      ],
+      [
+        12046,
+        0
+      ],
+      [
+        12186,
+        0
+      ],
+      [
+        12326,
+        0
+      ],
+      [
+        12466,
+        0
+      ],
+      [
+        12467,
+        0
+      ],
+      [
+        12606,
+        0
+      ],
+      [
+        12607,
+        0
+      ],
+      [
+        12746,
+        0
+      ],
+      [
+        12747,
+        0
+      ],
+      [
+        12886,
+        0
+      ],
+      [
+        12887,
+        0
+      ],
+      [
+        13026,
+        0
+      ],
+      [
+        13027,
+        0
+      ],
+      [
+        13028,
+        0
+      ],
+      [
+        13029,
+        0
+      ],
+      [
+        13030,
+        0
+      ],
+      [
+        13031,
+        0
+      ]
+    ],
+    "pgm_final_sha256": "246af86b428237970fe253d5160240407a05a156403eda4e1f4d95469fa8f3e5",
+    "lifecycle_response_qos_xml": "<?xml version='1.0' encoding='utf-8'?>\n<profiles xmlns=\"http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles\">\n  <data_writer profile_name=\"rr/oomwoo_keepout_mask_server/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n  <data_writer profile_name=\"rr/oomwoo_keepout_info_server/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n  <data_writer profile_name=\"rr/map_server/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n  <data_writer profile_name=\"rr/amcl/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n  <data_writer profile_name=\"rr/controller_server/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n  <data_writer profile_name=\"rr/planner_server/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n  <data_writer profile_name=\"rr/bt_navigator/change_stateReply\">\n    <qos>\n      <reliability>\n        <kind>RELIABLE</kind>\n        <max_blocking_time>\n          <sec>1</sec>\n          <nanosec>0</nanosec>\n        </max_blocking_time>\n      </reliability>\n    </qos>\n  </data_writer>\n</profiles>",
+    "manifest": {
+      "input_sha256": {
+        "planner": "2e68421bf3fa92b299967870d5a4a69352ef93da0cac98cc8704f996feb68b9e",
+        "scorer": "6a6370be14b03ee89ab5d7187f9416644134b606cd068740b5b7794439a50a8f",
+        "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+        "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+        "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+        "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+        "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+        "relay": "9a2e5a5bedb7ded15320cb8b2ab880c7ce030ed7b5a66d226eff6c992a5a75cb",
+        "nav2_config": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45",
+        "sim_launch": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "coverage_launch": "b583bbdf61a7fc31072254232c77256be21a47b1eba716fc8305b2a68f373806",
+        "ground_truth": "b5accc0e850e220db0ec077bbc9fd6465b9339bdd09dee98c5eb8224d1f260ac",
+        "station_model": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+        "station_world": "ed90a44429bc23b2790ecc0adf2806de38a9d0fdcea60c80c76ea7a2fef572d1",
+        "station_map_yaml": "2c010a963f73a9a519b5fcd872439b0d0aa2aa6135bf818e8f7144d8dd6862b3",
+        "station_map_image": "246af86b428237970fe253d5160240407a05a156403eda4e1f4d95469fa8f3e5",
+        "detector": "4eaab4a2499444496378d342526fbf1e05a2f1523c621334f73a260099d1c56e",
+        "beacon": "b463789241a3e969c2a2368dcae8c486e0375c179c2bf4e1e07136019f360083",
+        "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86"
+      },
+      "fixture_sha256": "6ebf615ccf152e457d5d4f62981d512113132b71074e008257d580c84ff0d96d",
+      "limits": [
+        "Supplied short route is test input; no full-room planner or90/80 acceptance.",
+        "Battery fraction .92 is synthetic; other sensor/motion data come from Gazebo, not physical hardware.",
+        "17runtime module/data hashes identical725; station map image corrects overhead projection using actual robot height. Observer identical725.",
+        "Original .75s quiet proof and .30s input age remain actual unchanged mux requirements.",
+        "Nav2 startup discovery failure709 is not repaired by this caller correction.",
+        "Post-sweep meter coverage is not a cleaning grade during this longer manual observation."
+      ],
+      "station_height_preflight": {
+        "pass": true,
+        "checks": {
+          "baseline_reproduces_blocked_bay": true,
+          "corrected_corridor_free": true,
+          "backstop_still_occupied": true,
+          "both_side_walls_occupied": true,
+          "no_original_obstacles_freed": true,
+          "no_changes_outside_station_projection": true,
+          "overhead_core_excluded_by_actual_robot_height": true,
+          "same_world": true
+        },
+        "robot_vertical_band_m": [
+          0.0,
+          0.09699999999999999
+        ],
+        "robot_collision_bounds": [
+          {
+            "link": "base_link",
+            "collision": null,
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_0",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_1",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_2",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_3",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_4",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_5",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_6",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_7",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_8",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_9",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_10",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_left_11",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_0",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_1",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_2",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_3",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_4",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_5",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_6",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_7",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_8",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_9",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_10",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "base_link",
+            "collision": "bumper_right_11",
+            "zmin": 0.012499999999999997,
+            "zmax": 0.079
+          },
+          {
+            "link": "caster_link",
+            "collision": null,
+            "zmin": 0.0,
+            "zmax": 0.025
+          },
+          {
+            "link": "wheel_left_link",
+            "collision": null,
+            "zmin": 0.0,
+            "zmax": 0.068
+          },
+          {
+            "link": "wheel_right_link",
+            "collision": null,
+            "zmin": 0.0,
+            "zmax": 0.068
+          },
+          {
+            "link": "base_scan",
+            "collision": null,
+            "zmin": 0.079,
+            "zmax": 0.09699999999999999
+          }
+        ],
+        "robot_source_sha256": "838e4547227cea447b7c6b65b3de401ef2f2c454e254b255f2d4db47de8bb13c",
+        "old_band_m": [
+          0.02,
+          0.2
+        ],
+        "old_station_boxes": 4,
+        "new_station_boxes": 3,
+        "old_added_pixels": 60,
+        "new_added_pixels": 24,
+        "freed_false_obstacle_pixels": 36,
+        "target_center_world": [
+          -1.0354999999999999,
+          -0.5
+        ],
+        "target_before": 0,
+        "target_after": 254,
+        "old_map_sha256": "4a78d8b0330506ff5e9e300cb2454fdddceb92df1fe682af72649e76d75c7a6a",
+        "limits": [
+          "Static docking center corridor and obstacle projection only; native failure coordinates were not recorded, so exact725 trigger remains inferred.",
+          "No product thresholds or original room map changed."
+        ],
+        "new_map_sha256": "246af86b428237970fe253d5160240407a05a156403eda4e1f4d95469fa8f3e5"
+      }
+    },
+    "native_observer_and_commands": "Exact Python observer, build/setup and Podman command retained in joint_dds_native_20261030.json args; rewrite host freeze paths to the isolated reconstructed fixture.",
+    "limits": "Original public room map and world remain untouched in the delivery tree; supplied route/max_gapfill0 stay private."
+  },
+  "targeted_production_correction": {
+    "path": "src/oomwoo_sim_support/launch/coverage_regression.launch.py",
+    "change": "Connect existing DockDrive private dock_pose input to /dock_detector/dock_pose in opt-in relay mode.",
+    "causal_receipts": [
+      "dock_pose_link_before_20261030.json",
+      "dock_pose_link_after_20261030.json"
+    ],
+    "native_support": "Identical remapping exercised in accepted736; delivered route/gapfill defaults retained. No new native repeat needed for this exact link.",
+    "source_after_sha256": "3a833e510b50d5b7b57bd7b1f7357c84ae3c7ad7bdc7b455913c34ef291d71c3"
   }
 }

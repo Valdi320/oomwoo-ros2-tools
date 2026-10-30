@@ -207,7 +207,8 @@ def generate_launch_description() -> LaunchDescription:
             Node(package='oomwoo_dock', executable='dock_drive', name='dock_drive',
                  parameters=[{'use_sim_time': True, 'auto_start': False,
                               'exit_when_done': False}],
-                 remappings=[('cmd_vel', '/valdi/dock_drive_cmd_vel')], output='screen'),
+                 remappings=[('cmd_vel', '/valdi/dock_drive_cmd_vel'),
+                             ('~/dock_pose', '/dock_detector/dock_pose')], output='screen'),
         ]
 
     # No fixed timers: the meter self-gates on /map + /ground_truth, and the
