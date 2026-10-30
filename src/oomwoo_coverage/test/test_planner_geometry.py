@@ -846,3 +846,30 @@ def test_cancel_already_terminal_response_waits_for_the_actual_result(tmp_path):
     CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=4)))
     assert node._relay_stage == 'release_nav' and node.escape_until is None
     assert sent[-1] == (0.0, 0.0)
+
+
+@pytest.mark.parametrize('occupancy', [100, -1])
+def test_keepout_ordinary_obstacle_corners_respect_the_robot_disk(occupancy):
+    node, faults = keepout_driver()
+    width = node.map_msg.info.width
+    node.map_msg.data[32 * width + 32] = occupancy
+    mask = keepout_grid()
+    mask.data[32 * width + 32] = 0
+    mask.data[8 * width + 8] = 100
+    node._on_keepout(mask)
+    # Cell 35's centre is only .125 m from each edge of obstacle cell 32.
+    # Its disk intersects that corner, although cardinal inflation misses it.
+    assert np.hypot(.125, .125) < node.robot_radius
+    assert not node.free_mask[35, 35]
+    assert node.free_mask[43, 43]
+    assert faults == []
+
+
+def test_unmasked_obstacle_inflation_retains_its_cardinal_contract():
+    node, faults = keepout_driver()
+    node._keepout_required = False
+    node.map_msg.data[32 * node.map_msg.info.width + 32] = 100
+    node._build_masks()
+    assert node.free_mask[35, 35]
+    assert not node.free_mask[32, 35]
+    assert faults == []

@@ -1,0 +1,33 @@
+{
+  "rc": 1,
+  "seconds": 9.207,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n______ test_keepout_ordinary_obstacle_corners_respect_the_robot_disk[100] ______\n\noccupancy = 100\n\n    @pytest.mark.parametrize('occupancy', [100, -1])\n    def test_keepout_ordinary_obstacle_corners_respect_the_robot_disk(occupancy):\n        node, faults = keepout_driver()\n        width = node.map_msg.info.width\n        node.map_msg.data[32 * width + 32] = occupancy\n        mask = keepout_grid()\n        mask.data[32 * width + 32] = 0\n        mask.data[8 * width + 8] = 100\n        node._on_keepout(mask)\n        # Cell 35's centre is only .125 m from each edge of obstacle cell 32.\n        # Its disk intersects that corner, although cardinal inflation misses it.\n        assert np.hypot(.125, .125) < node.robot_radius\n>       assert not node.free_mask[35, 35]\nE       assert not True\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:863: AssertionError\n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_keepout_ordinary_obstacle_corners_respect_the_robot_disk[100]\n1 failed in 2.44s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--memory=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-e",
+    "OPENBLAS_NUM_THREADS=1",
+    "-e",
+    "OMP_NUM_THREADS=1",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_coverage:$PYTHONPATH python3 -m pytest -p no:cacheprovider -q '/work/src/oomwoo_coverage/test/test_planner_geometry.py::test_keepout_ordinary_obstacle_corners_respect_the_robot_disk[100]'"
+  ],
+  "lock": "LIBRE",
+  "base": "63c516bfc7044c465e1cd7eacd7b9ba5ef5d7989",
+  "source_sha256": "68f643e50283ca5f0b10fc8862c06950679b96e164647fa1096af1fc658d46dd"
+}

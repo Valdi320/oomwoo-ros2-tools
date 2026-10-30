@@ -374,13 +374,16 @@ class CoveragePlanner(Node):
         unknown = grid == UNKNOWN
         # inflate obstacles + unknown by robot radius so the center path is safe
         infl = max(1, int(round(self.robot_radius / info.resolution)))
-        blocked = _dilate(obstacle | unknown, infl)
+        # The Keepout overlay also inflates ordinary obstacles in Nav2.
+        # Include their corners here: cardinal-only clearance can admit
+        # a waypoint whose robot disk overlaps furniture at a diagonal.
+        blocked = _dilate(obstacle | unknown, infl, square=self.keepout is not None)
         free = (grid == FREE) & ~blocked
 
         if self.keepout is not None:
             # Match the .18 m lab footprint + .06 m keepout margin at the
-            # final output. Square dilation conservatively covers corners;
-            # retain the legacy cardinal obstacle clearance above.
+            # final output. Square dilation conservatively covers corners
+            # for the virtual zone as well as the ordinary obstacles above.
             keepout_radius = int(math.ceil((self.robot_radius + .06) / info.resolution))
             free &= ~_dilate(self.keepout, keepout_radius, square=True)
 

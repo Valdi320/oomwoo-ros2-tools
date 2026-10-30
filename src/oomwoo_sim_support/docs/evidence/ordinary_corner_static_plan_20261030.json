@@ -1,0 +1,160 @@
+{
+  "rc": 0,
+  "seconds": 7.955,
+  "stdout": "PLAN_CORNER_COMPARISON {\"results\": [{\"variant\": \"before\", \"waypoints\": 329, \"free_cells\": 12456, \"min_sdf_box_clearance_m\": 0.14577379737113239, \"overlapping_waypoints\": [{\"index\": 33, \"xy\": [2.8249999999999997, 0.8250000000000002], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.14577379737113275}, {\"index\": 34, \"xy\": [2.9250000000000003, 0.9250000000000003], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.1767766952966371}, {\"index\": 121, \"xy\": [3.475, 2.575], \"obstacle\": \"sofa\", \"clearance_m\": 0.17677669529663656}, {\"index\": 148, \"xy\": [3.5750000000000006, 3.5250000000000004], \"obstacle\": \"sofa\", \"clearance_m\": 0.14577379737113239}, {\"index\": 165, \"xy\": [2.775, 0.7750000000000004], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.17677669529663692}, {\"index\": 175, \"xy\": [2.9250000000000003, 0.07500000000000018], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.17677669529663664}, {\"index\": 176, \"xy\": [3.8750000000000004, 0.07500000000000018], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.17677669529663678}, {\"index\": 184, \"xy\": [3.9250000000000003, 0.8750000000000004], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.14577379737113308}, {\"index\": 191, \"xy\": [3.8750000000000004, 0.9250000000000003], \"obstacle\": \"coffee_table\", \"clearance_m\": 0.17677669529663723}, {\"index\": 222, \"xy\": [1.3250000000000002, -2.125], \"obstacle\": \"tv_stand\", \"clearance_m\": 0.15206906325745553}, {\"index\": 248, \"xy\": [-0.125, -2.125], \"obstacle\": \"tv_stand\", \"clearance_m\": 0.15206906325745548}]}, {\"variant\": \"after\", \"waypoints\": 326, \"free_cells\": 12360, \"min_sdf_box_clearance_m\": 0.20000000000000026, \"overlapping_waypoints\": []}], \"radius_m\": 0.18, \"scope\": \"production planning on exact static map/seed; all waypoint disks versus conservative box bounds from stock SDF; no motion/trajectory/Gazebo/hardware\", \"mask_cells\": 220, \"world_sha256\": \"a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8\"}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--memory=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-e",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "-e",
+    "OPENBLAS_NUM_THREADS=1",
+    "-e",
+    "OMP_NUM_THREADS=1",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/coverage_planner_node.antes_esquinas.py:/baseline.py:ro",
+    "-i",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONPATH=/work/src/oomwoo_coverage:/work/src/oomwoo_sim_support:$PYTHONPATH python3 -"
+  ],
+  "fixture_python": "\nimport json\nfrom pathlib import Path\nfrom types import SimpleNamespace,MethodType\nimport numpy as np,yaml\nfrom nav_msgs.msg import OccupancyGrid\nfrom oomwoo_coverage.coverage_planner_node import CoveragePlanner\nfrom oomwoo_sim_support.keepout_config import _pgm\nroot=Path('/work/src/oomwoo_sim_support');m=yaml.safe_load((root/'maps/test_room.yaml').read_text())\nw,h,p=_pgm(root/'maps/test_room.pgm')\npix=np.flipud(np.frombuffer(p,dtype=np.uint8).reshape(h,w))\nocc=(255-pix.astype(float))/255\ngrid=np.where(occ>m['occupied_thresh'],100,np.where(occ<m['free_thresh'],0,-1))\ng=OccupancyGrid();g.header.frame_id='map';g.info.width=w;g.info.height=h\ng.info.resolution=m['resolution'];g.info.origin.position.x=m['origin'][0];g.info.origin.position.y=m['origin'][1];g.info.origin.orientation.w=1.\ng.data=grid.reshape(-1).astype(int).tolist()\nmask=OccupancyGrid();mask.header=g.header;mask.info=g.info;mask.data=[0]*(w*h)\nfor row in range(h):\n for col in range(w):\n  x=m['origin'][0]+(col+.5)*m['resolution'];y=m['origin'][1]+(row+.5)*m['resolution']\n  if .67<=x<=1.14 and -.55<=y<=.55:mask.data[row*w+col]=100\n\nimport importlib.util,xml.etree.ElementTree as ET,math,hashlib\nspec=importlib.util.spec_from_file_location('original_planner','/baseline.py')\noriginal=importlib.util.module_from_spec(spec);spec.loader.exec_module(original)\nboxes=[]\nworld=ET.parse(root/'worlds/test_room.world')\nfor model in world.findall('.//world/model'):\n collision=model.find('./link/collision/geometry/box/size')\n if collision is None:continue\n size=[float(v) for v in collision.text.split()]\n pose=[float(v) for v in model.find('pose').text.split()]\n yaw=pose[5];c,s=abs(math.cos(yaw)),abs(math.sin(yaw))\n boxes.append((model.attrib['name'],pose[0],pose[1],(c*size[0]+s*size[1])/2,(s*size[0]+c*size[1])/2))\nresults=[]\nfor label,C in (('before',original.CoveragePlanner),('after',CoveragePlanner)):\n node=SimpleNamespace(map_msg=g,keepout=None,_keepout_geometry_value=None,_keepout_fault=None,_keepout_required=True,_relay_enabled=True,robot_radius=.18,total_free_cells=0,free_mask=None,robot_xy=(0.,0.),cleaning_radius=.20,row_overlap=0.,min_segment_len=.20,row_substep_m=.4,long_axis_sweep=True,global_frame='map',get_logger=lambda:SimpleNamespace(info=lambda s:None,warn=lambda s:None))\n node._keepout_geometry=C._keepout_geometry\n def bad(s):raise ValueError(s)\n node._invalid_keepout=bad\n node._build_masks=MethodType(C._build_masks,node)\n C._on_keepout(node,mask)\n \n points=C._plan_waypoints(node)\n badpoints=[];minimum=float('inf')\n for i,p in enumerate(points):\n  x,y=p.pose.position.x,p.pose.position.y\n  for name,cx,cy,hx,hy in boxes:\n   distance=math.hypot(max(abs(x-cx)-hx,0),max(abs(y-cy)-hy,0))\n   minimum=min(minimum,distance)\n   if distance+1e-5<node.robot_radius:\n    badpoints.append({'index':i,'xy':[x,y],'obstacle':name,'clearance_m':distance})\n results.append({'variant':label,'waypoints':len(points),'free_cells':node.total_free_cells,'min_sdf_box_clearance_m':minimum,'overlapping_waypoints':badpoints})\nprint('PLAN_CORNER_COMPARISON '+json.dumps({'results':results,'radius_m':.18,'scope':'production planning on exact static map/seed; all waypoint disks versus conservative box bounds from stock SDF; no motion/trajectory/Gazebo/hardware','mask_cells':sum(v==100 for v in mask.data),'world_sha256':hashlib.sha256((root/'worlds/test_room.world').read_bytes()).hexdigest()}))\n",
+  "source_sha256": "762047ad3cd6638688c31519af02d65bfc3cf66f6ae43eddcac40f578f94353f",
+  "resource_authorization": "Explicit compatible-resource exception; 12409MiB available, load2.30, .25CPU/512MiB/noGPU/noDDSgraph; fifo648 retained.",
+  "result": {
+    "results": [
+      {
+        "variant": "before",
+        "waypoints": 329,
+        "free_cells": 12456,
+        "min_sdf_box_clearance_m": 0.14577379737113239,
+        "overlapping_waypoints": [
+          {
+            "index": 33,
+            "xy": [
+              2.8249999999999997,
+              0.8250000000000002
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.14577379737113275
+          },
+          {
+            "index": 34,
+            "xy": [
+              2.9250000000000003,
+              0.9250000000000003
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.1767766952966371
+          },
+          {
+            "index": 121,
+            "xy": [
+              3.475,
+              2.575
+            ],
+            "obstacle": "sofa",
+            "clearance_m": 0.17677669529663656
+          },
+          {
+            "index": 148,
+            "xy": [
+              3.5750000000000006,
+              3.5250000000000004
+            ],
+            "obstacle": "sofa",
+            "clearance_m": 0.14577379737113239
+          },
+          {
+            "index": 165,
+            "xy": [
+              2.775,
+              0.7750000000000004
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.17677669529663692
+          },
+          {
+            "index": 175,
+            "xy": [
+              2.9250000000000003,
+              0.07500000000000018
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.17677669529663664
+          },
+          {
+            "index": 176,
+            "xy": [
+              3.8750000000000004,
+              0.07500000000000018
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.17677669529663678
+          },
+          {
+            "index": 184,
+            "xy": [
+              3.9250000000000003,
+              0.8750000000000004
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.14577379737113308
+          },
+          {
+            "index": 191,
+            "xy": [
+              3.8750000000000004,
+              0.9250000000000003
+            ],
+            "obstacle": "coffee_table",
+            "clearance_m": 0.17677669529663723
+          },
+          {
+            "index": 222,
+            "xy": [
+              1.3250000000000002,
+              -2.125
+            ],
+            "obstacle": "tv_stand",
+            "clearance_m": 0.15206906325745553
+          },
+          {
+            "index": 248,
+            "xy": [
+              -0.125,
+              -2.125
+            ],
+            "obstacle": "tv_stand",
+            "clearance_m": 0.15206906325745548
+          }
+        ]
+      },
+      {
+        "variant": "after",
+        "waypoints": 326,
+        "free_cells": 12360,
+        "min_sdf_box_clearance_m": 0.20000000000000026,
+        "overlapping_waypoints": []
+      }
+    ],
+    "radius_m": 0.18,
+    "scope": "production planning on exact static map/seed; all waypoint disks versus conservative box bounds from stock SDF; no motion/trajectory/Gazebo/hardware",
+    "mask_cells": 220,
+    "world_sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+  }
+}

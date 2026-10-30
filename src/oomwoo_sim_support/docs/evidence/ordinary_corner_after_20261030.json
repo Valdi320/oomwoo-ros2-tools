@@ -1,0 +1,32 @@
+{
+  "rc": 0,
+  "seconds": 9.091,
+  "stdout": "................                                                         [100%]\n16 passed, 57 deselected in 2.30s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--memory=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-e",
+    "OPENBLAS_NUM_THREADS=1",
+    "-e",
+    "OMP_NUM_THREADS=1",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_coverage:$PYTHONPATH python3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py -k 'keepout or mask or dilate or unmasked_obstacle'"
+  ],
+  "lock": "LIBRE",
+  "source_sha256": "dac477909fd17b8b22d7680be9ba3843161284db2226c144ef7316d9ea27333c"
+}

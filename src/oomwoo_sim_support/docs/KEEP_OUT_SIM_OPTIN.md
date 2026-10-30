@@ -97,3 +97,30 @@ the previous cases. This extends the existing no-overwrite validation and
 adds no node, timer or runtime control. See
 `evidence/keepout_plugin_names_codex_20261029.json` for the reproduction and
 its host-only limits. ROS2, Gazebo and physical integration remain pending.
+
+
+## Ordinary obstacle corners with a mask (2026-10-30)
+
+Masked planning now reuses the existing square dilation for ordinary occupied
+and unknown cells as well as the virtual mask. The additional Nav2 inflation
+also affects ordinary obstacles; cardinal-only planner clearance admitted
+waypoints whose 0.18 m disk overlapped furniture corners.
+
+On the unchanged stock test_room map/world, fixed seed (0,0), and 220-cell
+mask, the original plan had 11 such targets among 329. The corrected plan has
+326 targets, none intersecting the conservative SDF box bounds, and minimum
+box clearance improves from 0.1458 m to 0.20 m. Eligible planner cells decrease
+from 12,456 to 12,360 (0.24 square metres). The meter's denominator is unchanged.
+This only checks target disks; it does not certify intermediate trajectories,
+localization, physical contacts, or completed room coverage. The 0.18 m
+planning proxy is larger than the simulator's 0.1745 m body radius.
+
+The causal corner case fails on the original source; 16 selected mask and
+dilation cases pass after correction, with 57 unrelated cases deselected.
+The two changed files pass flake8. The no-mask cardinal contract and generic
+helper default remain unchanged. Narrow diagonal passages can be excluded;
+full masked 90%/80% acceptance remains pending. No new mode, subscription,
+node, timer, world edit, reduced filter clearance or ABORTED permission was
+introduced. Detailed source, commands, fixture and limits:
+[ordinary_corner_delivery_20261030.json](evidence/ordinary_corner_delivery_20261030.json),
+[static plan comparison](evidence/ordinary_corner_static_plan_20261030.json).

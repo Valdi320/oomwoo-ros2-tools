@@ -1,0 +1,27 @@
+{
+  "rc": 0,
+  "seconds": 7.337,
+  "stdout": "\n2 files checked\nNo problems found\n\nChecked files:\n\n* /work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n* /work/src/oomwoo_coverage/test/test_planner_geometry.py\nFLAKE8_RC 0\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--memory=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && python3 - <<'STYLE'\nfrom ament_flake8.main import main_with_errors; rc,errors=main_with_errors(argv=['/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py','/work/src/oomwoo_coverage/test/test_planner_geometry.py']); print('FLAKE8_RC',rc); [print(e) for e in errors]; raise SystemExit(rc)\nSTYLE"
+  ],
+  "resource_authorization": "OCUPADA fifo648; explicit compatible-resource exception; .25CPU/512MiB/noGPU/noDDSgraph. Resources observed 12409MiB/load2.30."
+}

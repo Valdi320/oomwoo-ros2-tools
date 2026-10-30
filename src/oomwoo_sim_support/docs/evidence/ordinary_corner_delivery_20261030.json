@@ -1,0 +1,154 @@
+{
+  "date_utc": "2026-10-30T10:36:35.787112+00:00",
+  "base": "63c516bfc7044c465e1cd7eacd7b9ba5ef5d7989",
+  "branch": "apoyo/esquinas-keepout-20261030",
+  "source_sha256": "762047ad3cd6638688c31519af02d65bfc3cf66f6ae43eddcac40f578f94353f",
+  "utility_demonstrated": "Masked planning no longer admits disk-overlapping ordinary obstacle corners; reuses existing square dilation for ordinary obstacles and unknown cells.",
+  "causal": {
+    "before_rc": 1,
+    "before_symptom": "disk intersects ordinary cell corner, but free_mask true",
+    "after_rc": 0,
+    "focused_cases_passed": 16,
+    "deselected": 57,
+    "after_seconds": 9.091,
+    "comment_only_after_tests": "Updated obsolete cardinal-clearance comment; final source exercised by full static plan comparison and style."
+  },
+  "static_plan": {
+    "radius_m": 0.18,
+    "before": {
+      "variant": "before",
+      "waypoints": 329,
+      "free_cells": 12456,
+      "min_sdf_box_clearance_m": 0.14577379737113239,
+      "overlapping_waypoints": [
+        {
+          "index": 33,
+          "xy": [
+            2.8249999999999997,
+            0.8250000000000002
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.14577379737113275
+        },
+        {
+          "index": 34,
+          "xy": [
+            2.9250000000000003,
+            0.9250000000000003
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.1767766952966371
+        },
+        {
+          "index": 121,
+          "xy": [
+            3.475,
+            2.575
+          ],
+          "obstacle": "sofa",
+          "clearance_m": 0.17677669529663656
+        },
+        {
+          "index": 148,
+          "xy": [
+            3.5750000000000006,
+            3.5250000000000004
+          ],
+          "obstacle": "sofa",
+          "clearance_m": 0.14577379737113239
+        },
+        {
+          "index": 165,
+          "xy": [
+            2.775,
+            0.7750000000000004
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.17677669529663692
+        },
+        {
+          "index": 175,
+          "xy": [
+            2.9250000000000003,
+            0.07500000000000018
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.17677669529663664
+        },
+        {
+          "index": 176,
+          "xy": [
+            3.8750000000000004,
+            0.07500000000000018
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.17677669529663678
+        },
+        {
+          "index": 184,
+          "xy": [
+            3.9250000000000003,
+            0.8750000000000004
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.14577379737113308
+        },
+        {
+          "index": 191,
+          "xy": [
+            3.8750000000000004,
+            0.9250000000000003
+          ],
+          "obstacle": "coffee_table",
+          "clearance_m": 0.17677669529663723
+        },
+        {
+          "index": 222,
+          "xy": [
+            1.3250000000000002,
+            -2.125
+          ],
+          "obstacle": "tv_stand",
+          "clearance_m": 0.15206906325745553
+        },
+        {
+          "index": 248,
+          "xy": [
+            -0.125,
+            -2.125
+          ],
+          "obstacle": "tv_stand",
+          "clearance_m": 0.15206906325745548
+        }
+      ]
+    },
+    "after": {
+      "variant": "after",
+      "waypoints": 326,
+      "free_cells": 12360,
+      "min_sdf_box_clearance_m": 0.20000000000000026,
+      "overlapping_waypoints": []
+    },
+    "seconds": 7.955,
+    "source": "stock test_room map and SDF box bounds, seed0,0, mask220; actual planner methods with native ROS messages",
+    "dynamic_motion": false,
+    "excluded_free_cells": 96,
+    "excluded_grid_area_m2": 0.24
+  },
+  "style": {
+    "rc": 0,
+    "files": 2,
+    "seconds": 7.337
+  },
+  "limits": [
+    "These are waypoint disks against conservative axis-aligned SDF box bounds, not whole trajectory collision or physics tests.",
+    "11 targets violate the 0.18m planning reserve; the actual body radius in this simulator is0.1745m, so do not claim11 physical collisions.",
+    "Square clearance can exclude narrow diagonal space; measured full-room coverage/efficiency still pending.",
+    "No mask inflation, 90/80 score criteria, terminal ABORTED policy, map or world asset was weakened or changed.",
+    "No physical robot command was issued."
+  ],
+  "decision": "Advance one bounded native masked integration using fresh pose-phase instrumentation once heavy resources can be reserved.",
+  "minimum_pending": "Native room coverage90%/efficiency80% unchanged; valid Keepout footprint audit; terminal UUID ownership and clean shutdown. Active dock cycle remains a separate unverified scope.",
+  "cost_limits": "Individual process durations measured; total preparation, review, AI and maintenance cost not inferred from test counts.",
+  "resource_policy": "Causal/16 focused cases had LIBRE; static oracle/style used explicit prior compatible-resource exception, .25CPU/512MiB/noGPU/noDDSgraph."
+}
