@@ -894,3 +894,26 @@ native traces show healthy pure rotation without translation. The small
 check does not execute those controllers or establish the cause of the
 original abort105. Keep production and arrival/progress tolerances unchanged
 until the queued native case provides the next discriminating evidence.
+
+
+The [near-end native diagnostic](../src/oomwoo_sim_support/docs/evidence/nav_progress_focal_delivery_20261030.json)
+finished: its single actual Nav2 UUID transitioned ACTIVE to SUCCEEDED in
+2.05 simulated seconds. Ten existing-status samples include nine with that
+UUID active; their navigation input remains nonzero and the output changes
+from pure rotation to translation. Sampled truth travels 0.1162 m during
+TRANSIT. All eight frozen input hashes match; the Keepout audit records
+840 poses, 839 chords and zero sampled disk crossings. All 19 auxiliary
+processes close cleanly and there is no host timeout or motion fault.
+
+The unchanged full-room grader returns exit1 at 0.51% coverage, as expected
+for this deliberate one-goal diagnostic. It is not a 90/80 pass. Fresh
+localization near the previous final position does not reproduce abort105,
+so neither a general controller fix nor a global coverage improvement is
+established. The command path works in this specific context.
+
+A second single-goal case is queued as FIFO668, starting from the original
+segment's initial truth XY (3.04384, 0.07799). Its yaw0 is approximate, since
+the previous starting yaw/history was not retained. It reuses the exact
+private frozen sources, map, mask and controls; only spawn and case identity
+change. This compares the approach path with the successful near-end start.
+No repeat of the complete room or tolerance change is justified yet.

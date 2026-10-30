@@ -1,0 +1,80 @@
+{
+  "completed_utc": "2026-10-30T14:45:50.279832+00:00",
+  "raw_receipt": "nav_progress_focal_20261030.json",
+  "raw_wrapper_rc": 1,
+  "measurement_end_reason": "sweep_complete",
+  "expected_full_room_grade_miss": true,
+  "actual_goal_status": "SUCCEEDED",
+  "uuid": "91116cc132ed455c8d898278d6b72896",
+  "active_to_success_sim_s": 2.05,
+  "command_samples": 10,
+  "active_command_samples": 9,
+  "output_turn_only_samples": 4,
+  "output_translation_samples": 5,
+  "active_nav_input_zero_samples": 0,
+  "focal_feedback_truth_samples": 192,
+  "sampled_truth_transit_distance_m": 0.11619725155124982,
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 840,
+    "segments": 839,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 2.9096328554164885,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 10,
+        "distance_m": 6.975206579158016e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 2.9096907525732134
+      },
+      "IDLE": {
+        "poses": 630,
+        "distance_m": 3.4590314617457226e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 2.9096907533376704
+      },
+      "SWEEP": {
+        "poses": 20,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 2.9096907557581706
+      },
+      "PREPARE_NAV": {
+        "poses": 50,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 2.9096907557581706
+      },
+      "TRANSIT": {
+        "poses": 130,
+        "distance_m": 0.11619725155124982,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 2.9096328554164885
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "aux_clean_exits": 19,
+  "all_inputs_unchanged": true,
+  "host_timeout": false,
+  "limits": [
+    "Fresh localization/physics do not replay prior trajectory/history.",
+    "90/80 grader unchanged and expected to miss on this intentionally single-goal scope; observation completeness is separate from performance success.",
+    "No hardware, electrical charging or active dock."
+  ],
+  "conclusion": "Fresh localization at the prior final truth position can finish this goal; the prior abort105 is not reproduced. No controller/progress/arrival fix justified yet.",
+  "next_action": "One goal from the prior segment start position; approximate yaw0 explicitly, preserve world/map/controls/limits. Compare approach path with this near-end fresh start."
+}
