@@ -195,6 +195,12 @@ def generate_launch_description() -> LaunchDescription:
             SetEnvironmentVariable(
                 'FASTDDS_BUILTIN_TRANSPORTS', EnvironmentVariable(
                     'FASTDDS_BUILTIN_TRANSPORTS', default_value='UDPv4')),
+            # Bound discovery matching only for the lifecycle reply writers.
+            # Retain an explicit parent Fast DDS profile choice.
+            SetEnvironmentVariable(
+                'FASTRTPS_DEFAULT_PROFILES_FILE', EnvironmentVariable(
+                    'FASTRTPS_DEFAULT_PROFILES_FILE', default_value=os.path.join(
+                        pkg_sim, 'config', 'nav2_lifecycle_replies.xml'))),
             SetLaunchConfiguration('nav_goal_pose_topic', '/valdi/disabled_nav2_goal_pose'),
             SetLaunchConfiguration('managed_motion', 'true'),
             ExecuteProcess(cmd=[

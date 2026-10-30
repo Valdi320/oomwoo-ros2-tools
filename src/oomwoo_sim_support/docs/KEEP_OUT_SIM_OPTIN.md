@@ -160,9 +160,32 @@ before its matching efficiency callback. Both values fail the gate. Preserve
 the raw result; neither is a full acceptance pass. The two observations use
 different start-time origins, so their elapsed times must not be conflated.
 
-Next, fuse the existing meter and scorer into one regression process so the
-grade consumes their same atomic calculation. Keep the standalone meter path,
-original 0.1745 m meter footprint, denominator, 90%/80% criteria and native
-shutdown checks. Then assess the small remaining distance-efficiency margin.
-See [full native result](evidence/gazebo_keepout_tf_fixed_20261030.json) and
-[receipt and limits](evidence/gazebo_keepout_tf_fixed_delivery_20261030.json).
+The meter/scorer pairing has since been fused. The later full-room trial
+reached 95.50% coverage with 78.19% efficiency at its first target crossing,
+so the unchanged 90%/80% acceptance still fails. See the
+[current full-room receipt](evidence/costmap_cadence_native_delivery_20261030.json).
+
+### Short NAV/SWEEP/DOCK integration (2026-10-30)
+
+An isolated, supplied three-point route completed two real Nav2 goals,
+reactive sweeping, detector-driven docking and confirmed STOP after release.
+The independent Keepout audit recorded 2,725 poses and 2,724 chords, with
+no forbidden crossings and a 20 ms maximum gap. All 21 owned children exited
+cleanly. This is one integration pass, not full-room planning, statistical
+startup reliability, physical charging or a cleaning grade. The private
+station map uses the actual robot collision-height band; it does not replace
+the ordinary test_room map. The [joint receipt](evidence/joint_cycle_delivery_20261030.json)
+retains reconstruction data, failed attempts and limits.
+
+The opt-in `motion_relay_journal` launch now connects the existing driver's
+private pose input to `/dock_detector/dock_pose`. It also selects
+`config/nav2_lifecycle_replies.xml` only when no parent
+`FASTRTPS_DEFAULT_PROFILES_FILE` was supplied. This exact XML was exercised
+in the accepted integration: seven named lifecycle response writers use a
+one-second discovery-matching budget; unrelated services retain their defaults.
+The ordinary launch does not select this profile. No sensor-age, command-age
+or quiet-proof limit changes, and no `RMW_FASTRTPS_USE_QOS_FROM_XML` override.
+The profile is a bounded configuration mitigation, not a vendor race fix.
+Actual [writer QoS](evidence/joint_lifecycle_qos_small_20261030.json) and
+[launch/packaging selection](evidence/lifecycle_profile_launch_after_20261030.json)
+were checked separately; the latter does not repeat the native trial.

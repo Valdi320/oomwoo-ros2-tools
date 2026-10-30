@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-30T21:10:05.304649+00:00",
+  "observed_utc": "2026-10-30T21:17:35.467039+00:00",
   "scope": "Private short supplied-route simulation of actual NAV/SWEEP/DOCK handoffs; evidence only, no new production API or fixture installed.",
   "status": "private short-cycle integration verified once; full project incomplete",
   "source_delivery_head_before_evidence": "d8b8ea74d1ccd3b3ccd0d99ed6e78dcb4f851e86",
@@ -66,17 +66,18 @@
     }
   ],
   "next_increment": {
-    "use": "Investigate the preserved full-room first-target excess path before proposing another performance change.",
-    "minimum_pending": "Full-room90/80 still fails; portable simulated proof and small detector-link correction are consolidated first.",
-    "decision": "Consolidate completed short-cycle milestone; do not repeat736 or add scenario variants without new evidence. Analyze preserved full-room traces next.",
-    "expected_benefit_cost": "Offline attribution can identify a worthwhile correction without a blind15minute simulation. Native repeats only after a concrete new hypothesis."
+    "use": "Resolve remaining full-room efficiency and near-goal reliability from a falsifiable cause, preserving90/80 and safety requirements.",
+    "current_evidence": "Existing costmap_cadence_native_delivery already ranks pre90 transits with1Hz uncertainty. Static route alternatives saved0 or.325m against about2.48m required in that run; repeating those analyses does not justify a route mutation.",
+    "minimum_pending": "Exact Path endpoint/header and TF used during the stalled near-goal episode are absent; no unmeasured efficiency-saving claim. Normal full-room90/80 remains incomplete.",
+    "decision": "Consolidate short-cycle, connected pose input, targeted opt-in startup profile and precise pose-cell diagnostics; no repeat of accepted736 or new route variant without new discriminating evidence.",
+    "expected_benefit_cost": "Next instrumented native case must answer the missing Path/TF question using existing observer rather than repeat a long failure unchanged; compare this cost with other authorized reliability work first."
   },
   "remaining_larger_scope": [
     "Full-room90percent coverage/80percent first-target efficiency still not passed.",
     "Supplied short route does not validate normal full-room planning.",
     "Post-sweep docking distance in manually extended meter observation is not a cleaning grade.",
     "No S12 movement, physical charging, dirt removal, firmware installation or MCU safety validated here.",
-    "Private transport/map adjustments not adopted into production deployment."
+    "Private station map and observer remain test inputs; lifecycle response XML now available only in existing opt-in simulation relay mode."
   ],
   "delivery_policy": "Own local evidence commit only; no push,PR,merge,remote comment or unrelated service changes.",
   "evidence_sha256": {
@@ -97,7 +98,9 @@
     "joint_lifecycle_qos_small_20261030.json": "77a1a2c4c3bd8505918533a344f7d7639bb0f7894c989f0145033a8ee0e3a90e",
     "joint_dds_native_20261030.json": "52e61c51e942de21d8042b7664cc9665486d4355b0acb150e740533a732fcb65",
     "dock_pose_link_before_20261030.json": "c4a125315aa3d55bd05cafe0e44168519ea929efeeaf3c123e559ac883c02f0d",
-    "dock_pose_link_after_20261030.json": "9d749aea53463a8a5d350efae53c4e9ccf57f3ff19107a43b85ddbc2e10ef439"
+    "dock_pose_link_after_20261030.json": "9d749aea53463a8a5d350efae53c4e9ccf57f3ff19107a43b85ddbc2e10ef439",
+    "lifecycle_profile_launch_20261030.json": "ea2366bb1be81463d6e21c115c7fd4b03ac92d3aa0f9b87d45ca50dc4fe32de5",
+    "lifecycle_profile_launch_after_20261030.json": "0a2f41d217104ea2311595f0ae2167758ba0026f0d4026d9600811fbc4385f84"
   },
   "completed_increment": {
     "ticket": 736,
@@ -166,7 +169,7 @@
     "limits": [
       "One cold native integration, not statistical startup reliability.",
       "Supplied three-point route, synthetic battery and manually extended observer; not full-room90/80 or physical charging.",
-      "Per-topic QoS and corrected station map are isolated test configuration; no vendor fix or production deployment claim."
+      "Exact lifecycle XML exercised in isolated736; subsequent opt-in launch fallback verified separately by focal tests. No vendor repair or physical deployment claim."
     ]
   },
   "fixture_reconstruction": {
@@ -543,6 +546,20 @@
       "dock_pose_link_after_20261030.json"
     ],
     "native_support": "Identical remapping exercised in accepted736; delivered route/gapfill defaults retained. No new native repeat needed for this exact link.",
-    "source_after_sha256": "3a833e510b50d5b7b57bd7b1f7357c84ae3c7ad7bdc7b455913c34ef291d71c3"
+    "source_after_sha256": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+    "also_present": "Opt-in lifecycle-reply XML fallback added after the pose-link-only commit6354255; selection validated separately."
+  },
+  "lifecycle_profile_adoption": {
+    "path": "src/oomwoo_sim_support/config/nav2_lifecycle_replies.xml",
+    "sha256": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+    "selection": "Existing motion_relay_journal opt-in only, via FASTRTPS_DEFAULT_PROFILES_FILE fallback; explicit parent value preserved.",
+    "packaging": "Existing setup.py config/*.xml data_files includes file; no setup.py change.",
+    "evidence": [
+      "joint_lifecycle_qos_small_20261030.json",
+      "joint_dds_native_20261030.json",
+      "lifecycle_profile_launch_after_20261030.json"
+    ],
+    "support_scope": "Same XML bytes as736 and10real response-writer QoS contrasts; actual launch selection, explicit override and package data inclusion checked separately. No new native run of the fallback wiring.",
+    "setup_failure": "lifecycle_profile_launch_20261030.json failed before cases because source-share mount hid package local_setup.bash; process-local actual ament prefix restored. Not a component failure or an install."
   }
 }
