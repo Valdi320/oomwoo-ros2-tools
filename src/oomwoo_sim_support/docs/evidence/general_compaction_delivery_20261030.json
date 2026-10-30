@@ -1,0 +1,112 @@
+{
+  "observed_utc": "2026-10-30T22:56:12.725421+00:00",
+  "scope": "Bounded general narrow-cell compaction fused into existing _plan_waypoints cost choice; no literal route, new API/mode/parameter/node/timer/tool or production Dijkstra/DP.",
+  "source_base_commit": "81728a07896bb6ee64adf9362b06227d1b42012f",
+  "source_sha256": {
+    "before": "f13571866a923a2ed1f8c49f1b4a71ea18de5fba45f88939611b2ea1c1fc7529",
+    "after": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98",
+    "test": "c3c5f65ef6c7d73e712112ee2e2203ad2507d6d2df1926758e5637c217ad3923"
+  },
+  "source_review": {
+    "changed_class_methods": [
+      "_plan_waypoints"
+    ],
+    "class_method_names_unchanged": true,
+    "entire_module_ast_identical_after_removing_two_helpers_and_substituting_original_plan": true,
+    "unchanged_contracts": [
+      "Authority/lease/UUID/control/status flow",
+      "TF age and progress deadlines",
+      "Map/Keepout inflation/validation",
+      "Gapfill selection and default passes",
+      "Reactive reach/covered pruning thresholds",
+      "Nav2 configuration and launch graph"
+    ],
+    "planning_stage": "_start_plan calls geometry only when cached_poses is None, before setting plan_started/cleaning_active; no recurring planning timer was added."
+  },
+  "algorithm": {
+    "eligibility": "Rectangular cells with exactly2original passes and short-axis size<=existing swath step; keep one original pass and opposite endpoint caps.",
+    "footprint": "Union of exact raster-circle disks along admitted intra-cell lines and endpoints, clipped to all original free floor including halo. Use reference-counted per-cell swaths so multiple compactions cannot jointly remove original coverage.",
+    "direction_invariance": "Each line uses canonical endpoint ordering before arithmetic; whole-track reversal therefore produces identical sampling inputs.18prior reversal cases already passed, so no fabricated causal failure is claimed.",
+    "sequence": "Nearest-entry choices plus at most N improving complete-block reversals; preserve every retained internal curve.",
+    "selection": "Existing path+.3perturn cost plus seed-to-first distance must strictly improve; otherwise exact original normal plan remains.",
+    "bounds": {
+      "tracks": 32,
+      "points": 4096,
+      "radius_cells": 16,
+      "stencil_cell_work": 64000000,
+      "sample_count_estimate": 65536
+    },
+    "fallback": "No geometry change when unsupported/nonrectangular, no admissible swath-preserving compact choice, budget exceeded or final cost worsens."
+  },
+  "observed_utility": {
+    "results": [
+      {
+        "variant": "before",
+        "waypoints": 326,
+        "path_m_with_seed": 131.0593145429248,
+        "turns": 65,
+        "seeded_cost_m": 150.5593145429248,
+        "planning_wall_s": 0.05525176104856655,
+        "planning_cpu_s": 0.01611361999999994,
+        "all_targets_admitted": true
+      },
+      {
+        "variant": "after",
+        "waypoints": 318,
+        "path_m_with_seed": 124.69767863020985,
+        "turns": 61,
+        "seeded_cost_m": 142.99767863020986,
+        "planning_wall_s": 0.1018109479919076,
+        "planning_cpu_s": 0.026437489999999952,
+        "all_targets_admitted": true
+      }
+    ],
+    "path_saving_m": 6.361635912714945,
+    "cost_saving_m": 7.561635912714934,
+    "additional_planning_cpu_s": 0.010323870000000013,
+    "lost_free_swath_cells": 0,
+    "added_free_swath_cells": 1,
+    "matches_previously_measured_candidate": true,
+    "source_sha256": {
+      "before": "f13571866a923a2ed1f8c49f1b4a71ea18de5fba45f88939611b2ea1c1fc7529",
+      "after": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98"
+    },
+    "scope": "One before/after actual _plan_waypoints call, no supplied route and no altered plan/gapfill method. Actual mask/map helpers, external meter disk as independent oracle. Timing is local source-method CPU/wall, not native startup reliability or90/80. No ROSNode/Gazebo/physical robot."
+  },
+  "verification": {
+    "causal_before": "1failed/106deselected; original plan exactly equals historical131.0593145m reference.",
+    "initial_after": "1passed, then17selected geometry/caller/oracle cases passed.",
+    "final": "30passed/106deselected on current canonical source, plus6existing decomposition/dilation controls in earlier17case run. No suite.",
+    "style": "ament_flake8 passes both changed Python files; initial errors and later blank-line errors preserved. Old status-test formatting corrected without behavior changes.",
+    "setup_failure": "First timing command lacked Podman-i: rc0/empty output, explicitly rejected as no execution, preserved; corrected transport produced current source fingerprint.",
+    "independent_swath": "Uses actual external CoverageMeter._stamp_disk, separate from planner morphology; checks both axes, halo loss rejection, unchanged other tracks and exact original fallback.",
+    "resources": "Every test checked machine ownership; occupied statuses reported, existing.25CPU512MiB/noGPU compatible exception used."
+  },
+  "known_execution_limit": {
+    "peer_evidence": "control_remates_cortos_20261030.json in peer outputs uses actual reactive tick.10cm caps can be consumed when starting exactly at prior point under12cm reach tolerance; a12cm residual retains target and turns.",
+    "interpretation": "Does not prove inevitable whole-plan loss; no reach tolerance altered. Native observation must cover actual caps and measured floor, not just theoretical endpoints."
+  },
+  "remaining_distance": "Native whole-room90/80 not yet tested for this code. Latest previous full trial96%/77.34 remains failed. This source result does not certify actual travel, charging, startup reliability or physical robot.",
+  "next_increment": {
+    "minimum": "Freeze this exact implementation, normal _plan_waypoints/_gapfill_waypoints, current safety and actual sensors. Reuse existing bounded native fixture/FIFO, add only bounded passive cap/target observations through existing poll; record explicit config differences and clean owned teardown.",
+    "decision": "Consolidate implementation and advance to necessary native validation; no more unchanged static/oracle repetitions.",
+    "benefit_cost": "6.36m ideal path and4fewer turns for roughly.0103CPU s additional preparation observed; obstacle-aware proxy previously retains6.30m. Runtime benefit remains provisional.",
+    "evidence_that_changes_decision": "Native cap execution/pruning loses coverage, Nav2 detours erase savings, invalid Keepout/closure, or preparation exceeds measured useful range."
+  },
+  "evidence": {
+    "general_compaction_after_20261030.json": "c2fe66eef32eb526f0b0a815b2283df4a55d3f76d251d27804c5c88710efb125",
+    "general_compaction_before_20261030.json": "b0cff8cb30e577615080ae96646bb52c6f92866aad2127da40fee4e3c124fb9a",
+    "general_compaction_budget_20261030.json": "203f4309d9618e3d5ad3a37948190a4bc0ff057d0dc9f752a6fa310f579bfbf9",
+    "general_compaction_final_20261030.json": "dc625aff733d7c58307cde592380798a31181e3d08ee1571862abfe410665310",
+    "general_compaction_initial_after_20261030.json": "47932678c156013f8b7dfbc31c192a0935e7922e6882bada51f8f4aa2394aed5",
+    "general_compaction_measurement_20261030.json": "50ee78f8868d94c13333be25aad71f35bed7b53d04eb7a0731dcb049536d664d",
+    "general_compaction_measurement_precanonical_20261030.json": "50b5c71ce6ac3cb42356d6391950220c88ce92b1ee5fcfa1a2c797ca3ddba089",
+    "general_compaction_measurement_setup_failure_20261030.json": "939f97bb095ab21722277383c79a4aea9ac9e256e1b51334e9c26c59c17800a6",
+    "general_compaction_precanonical_20261030.json": "ef167c506380c733690c8dedb397f81bb5cbd899502de544d58a2e79c9b150e2",
+    "general_compaction_reversal_before_20261030.json": "a3186736648be3ce739bc29f5577a0c97ff11d52bb7d899c45bb6d49c01ef4f8",
+    "general_compaction_style_20261030.json": "bce318f791ec9b50d2e58dcd2e5370a55cb4bdae259511c1ac5cc86a8102397b",
+    "general_compaction_style_failure_20261030.json": "9b8da768e187bf909e9c92a7f883be0e538eff19434c414d9c2b1616c1836d5f",
+    "general_compaction_style_reversal_failure_20261030.json": "824e76bc5843bcb9f178b0980473a5acf638f7ce1a583dd00c175875fc0845aa"
+  },
+  "delivery_policy": "Own local commit; no push/PR/merge, remote comments, hardware or new persistent tooling."
+}

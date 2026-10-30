@@ -597,9 +597,11 @@ class CoveragePlanner(Node):
                 flip = not flip
             return pts
 
+        recorded_tracks = []
+
         def build_sweep(cell_data):
             """Chain cells nearest-corner-first into one serpentine list."""
-            wps = []
+            wps, tracks = [], []
             cur = (ox + (seed[1] + 0.5) * res, oy + (seed[0] + 0.5) * res)
             remaining = list(cell_data)
             while remaining:
@@ -616,8 +618,10 @@ class CoveragePlanner(Node):
                 cd = remaining.pop(ci)
                 pts = cell_waypoints(cd, maj_last, min_last)
                 if pts:
+                    tracks.append((cd['m'], cd['vertical'], pts))
                     wps.extend(pts)
                     cur = pts[-1]
+            recorded_tracks.append((wps, tracks))
             return wps
 
         def sweep_cost(wps):
@@ -641,6 +645,17 @@ class CoveragePlanner(Node):
             cand = build_sweep(build_cell_data(True))
             if sweep_cost(cand) < sweep_cost(waypoints):
                 waypoints, mode = cand, 'long-axis'
+        tracks = next(tracks for points, tracks in recorded_tracks if points is waypoints)
+        floor = np.asarray(self.map_msg.data, dtype=np.int16).reshape(h, w)
+        compact = _compact_sweep(
+            tracks, reachable, (floor >= 0) & (floor < OCC_THRESH),
+            (ox, oy), res, max(1, int(round(self.cleaning_radius / res))),
+            step, self.robot_xy)
+        if compact is not None:
+            candidate = [point for track in compact for point in track]
+            if candidate and (sweep_cost(candidate) + math.dist(self.robot_xy, candidate[0])
+                              < sweep_cost(waypoints) + math.dist(self.robot_xy, waypoints[0])):
+                waypoints, mode = candidate, mode + '-compact'
         self.get_logger().info(
             f'cell decomposition: {len(cells)} cells; {mode} sweep, '
             f'{len(waypoints)} waypoints')
@@ -1550,6 +1565,121 @@ def _dilate(mask: np.ndarray, radius: int, *, square=False) -> np.ndarray:
             shifted[:-1, :-1] |= out[1:, 1:]
         out = shifted
     return out
+
+
+def _sweep_swath(points, allowed, floor, origin, resolution, radius):
+    """Raster cleaning disks along admitted intra-cell lines, including their halo."""
+    h, w = allowed.shape
+    ox, oy = origin
+    centers = np.zeros_like(allowed)
+
+    def cell(point):
+        return int((point[1] - oy) / resolution), int((point[0] - ox) / resolution)
+
+    for point in points:
+        y, x = cell(point)
+        if 0 <= y < h and 0 <= x < w:
+            centers[y, x] = True
+    for first, last in zip(points, points[1:]):
+        # Use identical arithmetic when a complete track is reversed.
+        if (last[0], last[1]) < (first[0], first[1]):
+            first, last = last, first
+        count = max(1, int(math.ceil(math.dist(first, last) / (resolution / 4))))
+        samples = [cell((first[0] + (last[0] - first[0]) * i / count,
+                         first[1] + (last[1] - first[1]) * i / count))
+                   for i in range(count + 1)]
+        if all(0 <= y < h and 0 <= x < w and allowed[y, x] for y, x in samples):
+            for y, x in samples:
+                centers[y, x] = True
+    swath = np.zeros_like(allowed)
+    for dy in range(-radius, radius + 1):
+        for dx in range(-radius, radius + 1):
+            if dx * dx + dy * dy > radius * radius:
+                continue
+            y0, y1 = max(0, dy), min(h, h + dy)
+            x0, x1 = max(0, dx), min(w, w + dx)
+            if y0 < y1 and x0 < x1:
+                swath[y0:y1, x0:x1] |= centers[y0 - dy:y1 - dy, x0 - dx:x1 - dx]
+    return swath & floor
+
+
+def _compact_sweep(tracks, allowed, floor, origin, resolution, radius, step, seed):
+    """Try rectangular narrow passes and bounded whole-track reordering."""
+    # Preparation is optional: larger plans retain their original geometry.
+    if (not tracks or len(tracks) > 32 or radius > 16
+            or sum(len(points) for _, _, points in tracks) > 4096
+            or allowed.size * len(tracks) * (2 * radius + 1) ** 2 > 64_000_000
+            or sum(math.ceil(math.dist(a, b) * 4 / resolution) + 1
+                   for _, _, points in tracks for a, b in zip(points, points[1:])) > 65_536):
+        return None
+    choices = []
+    for index, (mask, vertical, points) in enumerate(tracks):
+        major_size = mask.shape[1] if vertical else mask.shape[0]
+        axis = 0 if vertical else 1
+        major = sorted({point[axis] for point in points})
+        if 1 < major_size <= step and bool(mask.all()) and len(major) == 2:
+            choices.append((index, axis, major))
+    if not choices:
+        return None
+    paths = [points for _, _, points in tracks]
+    swaths = [_sweep_swath(points, allowed, floor, origin, resolution, radius)
+              for points in paths]
+    counts = np.zeros(allowed.shape, dtype=np.uint16)
+    for swath in swaths:
+        counts += swath
+    changed = False
+    for index, axis, major in choices:
+        for keep in major:
+            line = [point for point in paths[index] if point[axis] == keep]
+            other = major[1] if keep == major[0] else major[0]
+            entry_cap, exit_cap = list(line[0]), list(line[-1])
+            entry_cap[axis] = exit_cap[axis] = other
+            candidate = [tuple(entry_cap)] + line + [tuple(exit_cap)]
+            swath = _sweep_swath(candidate, allowed, floor, origin, resolution, radius)
+            if np.any((counts == 1) & swaths[index] & ~swath):
+                continue
+            counts -= swaths[index]
+            counts += swath
+            paths[index], swaths[index] = candidate, swath
+            changed = True
+            break
+    if not changed:
+        return None
+
+    def entry(item):
+        index, reverse = item
+        return paths[index][-1 if reverse else 0]
+
+    def end_point(item):
+        index, reverse = item
+        return paths[index][0 if reverse else -1]
+
+    order, remaining, current = [], list(range(len(paths))), seed
+    while remaining:
+        _, index, reverse = min((math.dist(current, entry((i, r))), i, r)
+                                for i in remaining for r in (False, True))
+        order.append((index, reverse))
+        remaining.remove(index)
+        current = end_point(order[-1])
+    # Reversing a complete block preserves every admitted internal curve.
+    # Only its two boundary connections change; at most N improvements.
+    for _ in range(len(order)):
+        best, move = -1e-9, None
+        for first in range(len(order)):
+            previous = seed if first == 0 else end_point(order[first - 1])
+            for stop in range(first + 1, len(order) + 1):
+                start, end = entry(order[first]), end_point(order[stop - 1])
+                delta = math.dist(previous, end) - math.dist(previous, start)
+                if stop < len(order):
+                    following = entry(order[stop])
+                    delta += math.dist(start, following) - math.dist(end, following)
+                if delta < best:
+                    best, move = delta, (first, stop)
+        if move is None:
+            break
+        first, stop = move
+        order[first:stop] = [(i, not r) for i, r in reversed(order[first:stop])]
+    return [list(reversed(paths[i])) if reverse else paths[i] for i, reverse in order]
 
 
 def _pt_in_zones(x: float, y: float, zones) -> bool:

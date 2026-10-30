@@ -19,12 +19,14 @@ from geometry_msgs.msg import PoseStamped, TransformStamped
 from nav_msgs.msg import OccupancyGrid
 import numpy as np
 from oomwoo_coverage.coverage_planner_node import (
+    _compact_sweep,
     _contiguous_runs,
     _decompose_cells,
     _dilate,
     _flood_fill,
     _nearest_true,
     _pt_in_zones,
+    _sweep_swath,
     CoveragePlanner,
 )
 import pytest
@@ -483,6 +485,197 @@ def test_flood_fill_two_chambers_stay_separate():
     assert bool(left[5, 3]) and not left[:, 5:].any()
 
 
+def compact_room_fixture():
+    """Load the real room and pre-change cell tracks as independent reference data."""
+    import json
+    from pathlib import Path
+    import yaml
+    from oomwoo_sim_support.keepout_config import _pgm
+
+    root = Path(__file__).resolve().parents[2] / 'oomwoo_sim_support'
+    meta = yaml.safe_load((root / 'maps/test_room.yaml').read_text())
+    width, height, pixels = _pgm(root / 'maps/test_room.pgm')
+    occupancy = (255 - np.flipud(np.frombuffer(pixels, dtype=np.uint8).reshape(
+        height, width)).astype(float)) / 255
+    grid = np.where(occupancy > meta['occupied_thresh'], 100,
+                    np.where(occupancy < meta['free_thresh'], 0, -1))
+    msg = OccupancyGrid()
+    msg.header.frame_id = 'map'
+    msg.info.width, msg.info.height = width, height
+    msg.info.resolution = meta['resolution']
+    msg.info.origin.position.x, msg.info.origin.position.y = meta['origin'][:2]
+    msg.info.origin.orientation.w = 1.0
+    msg.data = grid.reshape(-1).astype(int).tolist()
+    mask = OccupancyGrid()
+    mask.header, mask.info = msg.header, msg.info
+    mask.data = [0] * (width * height)
+    for row in range(height):
+        for col in range(width):
+            x = meta['origin'][0] + (col + .5) * meta['resolution']
+            y = meta['origin'][1] + (row + .5) * meta['resolution']
+            if .67 <= x <= 1.14 and -.55 <= y <= .55:
+                mask.data[row * width + col] = 100
+    node = SimpleNamespace(
+        map_msg=msg, keepout=None, _keepout_geometry_value=None, _keepout_fault=None,
+        _keepout_required=True, _relay_enabled=True, robot_radius=.18,
+        total_free_cells=0, free_mask=None, robot_xy=(0., 0.), cleaning_radius=.20,
+        row_overlap=0., min_segment_len=.20, row_substep_m=.4, long_axis_sweep=True,
+        global_frame='map', get_logger=lambda: SimpleNamespace(
+            info=lambda message: None, warn=lambda message: None))
+    node._keepout_geometry = CoveragePlanner._keepout_geometry
+    node._invalid_keepout = lambda message: pytest.fail(message)
+    node._build_masks = MethodType(CoveragePlanner._build_masks, node)
+    CoveragePlanner._on_keepout(node, mask)
+    reference_path = root / 'docs/evidence/narrow_local_caps_review_20261030.json'
+    receipt = json.loads(reference_path.read_text())
+    return node, grid == 0, receipt['result']['tracks']['current']
+
+
+def track_plan_cost(tracks):
+    """Count actual complete track lengths and seed-to-first distance."""
+    import math
+    points = [(0., 0.)] + [p for track in tracks for p in track]
+    return sum(math.dist(a, b) for a, b in zip(points, points[1:]))
+
+
+def test_normal_room_plan_reduces_measured_redundancy_without_a_supplied_route(monkeypatch):
+    from oomwoo_coverage import coverage_planner_node as module
+    captured = []
+    original = module._compact_sweep
+
+    def observe(*args):
+        result = original(*args)
+        captured.append((args, result))
+        return result
+
+    monkeypatch.setattr(module, '_compact_sweep', observe)
+    node, _, reference = compact_room_fixture()
+    poses = CoveragePlanner._plan_waypoints(node)
+    points = [(p.pose.position.x, p.pose.position.y) for p in poses]
+    before = track_plan_cost([t['points'] for t in reference])
+    assert before - track_plan_cost([points]) > 5.0
+    info = node.map_msg.info
+    for x, y in points:
+        cx = int((x - info.origin.position.x) / info.resolution)
+        cy = int((y - info.origin.position.y) / info.resolution)
+        assert node.free_mask[cy, cx]
+
+    args, compact = captured[0]
+    tracks, allowed, floor, origin, resolution, radius, _, _ = args
+    old_swath = independent_track_swath(
+        [points for _, _, points in tracks], allowed, floor, origin, resolution, radius)
+    new_swath = independent_track_swath(compact, allowed, floor, origin, resolution, radius)
+    assert not (old_swath & ~new_swath).any()
+    for mask, vertical, original_points in tracks:
+        if (mask.shape[1] if vertical else mask.shape[0]) > 8:
+            assert any(points == original_points or points == original_points[::-1]
+                       for points in compact)
+
+
+def independent_track_swath(tracks, allowed, floor, origin, resolution, radius):
+    """Use the actual external meter's disks, independently of planner morphology."""
+    import math
+    from oomwoo_sim_support.coverage_meter_node import _stamp_disk
+
+    swath = np.zeros_like(allowed)
+    h, w = allowed.shape
+
+    def cell(point):
+        return int((point[0] - origin[0]) / resolution), int((point[1] - origin[1]) / resolution)
+
+    for points in tracks:
+        cells = {cell(point) for point in points}
+        for a, b in zip(points, points[1:]):
+            count = max(1, int(math.ceil(math.dist(a, b) / (resolution / 4))))
+            segment = {cell((a[0] + (b[0] - a[0]) * i / count,
+                             a[1] + (b[1] - a[1]) * i / count)) for i in range(count + 1)}
+            if all(0 <= y < h and 0 <= x < w and allowed[y, x] for x, y in segment):
+                cells |= segment
+        for x, y in cells:
+            _stamp_disk(swath, floor, x, y, radius)
+    return swath
+
+
+@pytest.mark.parametrize('origin', [(0., 0.), (-1.6, -3.), (.03, .07)])
+@pytest.mark.parametrize('resolution', [.05, .05000000074505806])
+@pytest.mark.parametrize('end_cell', [(18, 13), (11, 29), (27, 30)])
+def test_sweep_swath_reversal_preserves_same_geometric_curve(origin, resolution, end_cell):
+    allowed = floor = np.ones((45, 45), dtype=bool)
+    points = [(origin[0] + (x + .5) * resolution,
+               origin[1] + (y + .5) * resolution) for x, y in [(10, 10), end_cell]]
+    before = _sweep_swath(points, allowed, floor, origin, resolution, 4)
+    after = _sweep_swath(points[::-1], allowed, floor, origin, resolution, 4)
+    assert np.array_equal(before, after)
+
+
+def narrow_track_fixture(*, vertical=False, free_halo=False):
+    """Build a two-pass strip with optional free halo that makes deletion unsafe."""
+    allowed = np.zeros((25, 40), dtype=bool)
+    allowed[10:13, 5:31] = True
+    mask = np.ones((3, 26), dtype=bool)
+    xs = [5, 13, 21, 29, 30]
+    points = [((x + .5) * .05, (row + .5) * .05)
+              for row, cols in ((10, xs), (12, xs[::-1])) for x in cols]
+    if vertical:
+        allowed, mask = allowed.T.copy(), mask.T.copy()
+        points = [(y, x) for x, y in points]
+    floor = np.ones_like(allowed) if free_halo else allowed.copy()
+    return [(mask, vertical, points)], allowed, floor
+
+
+@pytest.mark.parametrize('vertical', [False, True])
+def test_compact_sweep_caps_keep_whole_free_swath_and_do_not_mutate_input(vertical):
+    tracks, allowed, floor = narrow_track_fixture(vertical=vertical)
+    before = list(tracks[0][2])
+    result = _compact_sweep(tracks, allowed, floor, (0., 0.), .05, 4, 8, (0., 0.))
+    assert result is not None and sum(map(len, result)) < len(before)
+    assert tracks[0][2] == before
+    old_swath = independent_track_swath([before], allowed, floor, (0., 0.), .05, 4)
+    new_swath = independent_track_swath(result, allowed, floor, (0., 0.), .05, 4)
+    assert not (old_swath & ~new_swath).any()
+
+
+@pytest.mark.parametrize('vertical', [False, True])
+def test_compact_sweep_retains_two_passes_when_free_halo_would_be_lost(vertical):
+    tracks, allowed, floor = narrow_track_fixture(vertical=vertical, free_halo=True)
+    assert _compact_sweep(tracks, allowed, floor, (0., 0.), .05, 4, 8, (0., 0.)) is None
+
+
+def test_compact_sweep_retains_nonrectangular_cell():
+    tracks, allowed, floor = narrow_track_fixture()
+    tracks[0][0][1, 1] = False
+    assert _compact_sweep(tracks, allowed, floor, (0., 0.), .05, 4, 8, (0., 0.)) is None
+
+
+@pytest.mark.parametrize('budget', ['cells', 'points', 'radius', 'grid', 'distance'])
+def test_compact_sweep_retains_original_before_expensive_work(monkeypatch, budget):
+    from oomwoo_coverage import coverage_planner_node as module
+    tracks, allowed, floor = narrow_track_fixture()
+    radius = 4
+    if budget == 'cells':
+        tracks *= 33
+    elif budget == 'points':
+        tracks = [(tracks[0][0], False, [tracks[0][2][0]] * 4097)]
+    elif budget == 'radius':
+        radius = 17
+    elif budget == 'distance':
+        tracks = [(tracks[0][0], False, [(0., 0.), (1000., 1000.)])]
+    else:
+        allowed = floor = np.ones((1024, 1024), dtype=bool)
+    monkeypatch.setattr(module, '_sweep_swath', lambda *args: pytest.fail('budget ignored'))
+    assert _compact_sweep(tracks, allowed, floor, (0., 0.), .05, radius, 8, (0., 0.)) is None
+
+
+def test_normal_room_plan_retains_exact_original_when_candidate_cost_is_worse(monkeypatch):
+    from oomwoo_coverage import coverage_planner_node as module
+    monkeypatch.setattr(module, '_compact_sweep', lambda tracks, *args:
+                        [points for _, _, points in tracks] + [tracks[0][2]])
+    node, _, reference = compact_room_fixture()
+    poses = CoveragePlanner._plan_waypoints(node)
+    points = [(p.pose.position.x, p.pose.position.y) for p in poses]
+    assert points == [tuple(p) for track in reference for p in track['points']]
+
+
 def test_decompose_open_room_is_one_cell():
     free = np.zeros((20, 20), dtype=bool)
     free[1:19, 1:19] = True
@@ -700,7 +893,6 @@ def test_preclaim_status_reply_cannot_overwrite_new_navigation_owner(tmp_path):
     assert node._relay_owner == 'navigation' and len(sends) == 1
 
 
-
 def status_relay_planner(tmp_path, monkeypatch):
     """Use real rclpy futures with the planner's existing status poll/tick."""
     node, sent, sends = private_relay_planner(tmp_path)
@@ -799,7 +991,8 @@ def test_relay_status_retries_preserve_active_stale_stop(tmp_path, monkeypatch):
     assert node._relay_stage == 'fault' and sent[-1] == (0.0, 0.0)
 
 
-def test_relay_status_unavailable_server_does_not_accumulate_pending_requests(tmp_path, monkeypatch):
+def test_relay_status_unavailable_server_does_not_accumulate_pending_requests(
+        tmp_path, monkeypatch):
     node, now, requests, removed, _, _ = status_relay_planner(tmp_path, monkeypatch)
     node._relay_poll()
     node._relay_status_client.service_is_ready = lambda: False

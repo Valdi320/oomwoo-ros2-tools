@@ -20,6 +20,17 @@ replaces a lost read-only reply through the existing poll without renewing
 health proof or relaxing active-owner STOP. Neither result proves the cause
 of an uninstrumented historical failure or certifies combined HEAD in Gazebo.
 
+The [general compaction increment](../src/oomwoo_sim_support/docs/evidence/general_compaction_delivery_20261030.json)
+now runs inside normal plan generation. In the same masked room it produces
+318 rather than 326 targets, saves 6.36 m of ideal path and retains every
+reference free-floor swath cell. It tries rectangular narrow passes with
+endpoint caps, reverses whole cell tracks and keeps the original plan if
+swath, cost or preparation limits do not permit the change. Thirty focal
+cases and style checks pass; the source-method contrast adds about 10 ms of
+CPU in this observation. This remains geometric/source evidence. Short caps
+can be consumed by the unchanged reach tolerance; their actual tracking and
+coverage must be observed in the next native test.
+
 Masked full-room acceptance remains open: the [latest peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged
 80% requirement. The default local costmap frame remains `odom`; the private
