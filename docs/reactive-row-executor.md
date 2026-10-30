@@ -876,3 +876,21 @@ once. Fresh localization does not replay the prior trajectory. The unchanged
 90/80 grader is expected to miss its target in this intentionally short
 diagnostic; command/pose observations and actual action outcome must be
 assessed separately. No second full-room run is justified before that contrast.
+
+
+A complementary temporal-frame check, retained in the same fixture receipt,
+uses the installed tf2 library with synthetic map-to-odom transforms. A
+0.4 m frame correction makes the same map goal appear 0.4 m from the robot
+at the original goal stamp and coincident at the current stamp; the 0.2 m
+arrival decisions disagree. A stable-frame control agrees at both stamps.
+The original 10/20-second input stamps are retained. The first harness
+attempt failed on NumPy boolean identity; explicit boolean conversion fixes
+that representation issue without changing transforms or thresholds.
+
+The installed Nav2 packages identify as 1.3.13. That tag's ControllerServer
+transforms the stored endpoint stamp, while RPP's PathHandler uses the
+current robot stamp. This is a candidate mechanism to investigate if the
+native traces show healthy pure rotation without translation. The small
+check does not execute those controllers or establish the cause of the
+original abort105. Keep production and arrival/progress tolerances unchanged
+until the queued native case provides the next discriminating evidence.

@@ -56,7 +56,122 @@
       "fixture_sha256": "001f415152a86b14e382780c05dfed3ca4be17432cf578cffa48ced04755c268"
     }
   },
-  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-665: Bateria local qwen3.5-9b micro\u00bb desde hace 0 min (pid 3270069). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-665\u00bb.\n",
+  "machine_lock": "OCUPADA: la maquina la tiene «fifo-665: Bateria local qwen3.5-9b micro» desde hace 0 min (pid 3270069). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno «fifo-665».\n",
   "scope": "Three focused cases on actual private copied methods and ROS messages, including192 limits and retained original timestamps; no ROS nodes/Gazebo/hardware.",
-  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU exception."
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU exception.",
+  "temporal_frame_contract": {
+    "installed_nav2_version": "1.3.13-1noble.20260921 (controller, RPP and Navfn packages)",
+    "before": {
+      "completed_utc": "2026-10-30T14:41:31.178027+00:00",
+      "rc": 1,
+      "seconds": 6.999,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 30, in <module>\nAssertionError\n",
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-nav-frame-contract-20261030",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=128",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/ros:/work:ro",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/jobs:/contrib:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "docker.io/makerspet/oomwoo:jazzy-dev",
+        "-lc",
+        "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'CONTRACT'\nimport json,math\nfrom geometry_msgs.msg import TransformStamped,PoseStamped\nfrom rclpy.duration import Duration\nfrom tf2_ros import Buffer\nimport tf2_geometry_msgs\n\ndef compare(latest_translation):\n    buf=Buffer(cache_time=Duration(seconds=30))\n    for stamp,translation in [(10,0.),(20,latest_translation)]:\n        tf=TransformStamped();tf.header.frame_id='odom';tf.child_frame_id='map'\n        tf.header.stamp.sec=stamp;tf.transform.translation.x=translation\n        tf.transform.rotation.w=1.\n        buf.set_transform(tf,'ephemeral-contract-fixture')\n    goal=PoseStamped();goal.header.frame_id='map';goal.header.stamp.sec=10\n    goal.pose.position.x=1.;goal.pose.orientation.w=1.\n    historical=buf.transform(goal,'odom')\n    current=PoseStamped();current.header.frame_id='map';current.header.stamp.sec=20\n    current.pose=goal.pose\n    live=buf.transform(current,'odom')\n    robot_x=1.+latest_translation\n    old_dist=abs(historical.pose.position.x-robot_x)\n    live_dist=abs(live.pose.position.x-robot_x)\n    assert goal.header.stamp.sec==10 and current.header.stamp.sec==20\n    return dict(original_goal_stamp=goal.header.stamp.sec,current_stamp=current.header.stamp.sec,\n                robot_odom_x=robot_x,historical_goal_odom_x=historical.pose.position.x,\n                current_goal_odom_x=live.pose.position.x,historical_distance=old_dist,\n                current_distance=live_dist,historical_within=old_dist<.2,current_within=live_dist<.2)\nshifted=compare(.4);stable=compare(0.)\nassert math.isclose(shifted['historical_distance'],.4,abs_tol=1e-12)\nassert shifted['historical_within'] is False and shifted['current_within'] is True\nassert stable['historical_within'] is True and stable['current_within'] is True\nassert stable['historical_distance']==stable['current_distance']==0.\nprint(json.dumps({'shifted':shifted,'stable':stable,'assertions':'PASS','ros_nodes_created':0}))\n\nCONTRACT"
+      ],
+      "scope": "Actual installed tf2 with synthetic temporal frame shift plus stable-frame control. Does not execute RPP/controller and does not prove the native fault cause.",
+      "resource_policy": ".25CPU/512MiB/noGPU, occupied lock permitted by explicit goal exception."
+    },
+    "after": {
+      "completed_utc": "2026-10-30T14:42:25.619430+00:00",
+      "rc": 0,
+      "seconds": 6.611,
+      "stdout": "{\"shifted\": {\"original_goal_stamp\": 10, \"current_stamp\": 20, \"robot_odom_x\": 1.4, \"historical_goal_odom_x\": 1.0, \"current_goal_odom_x\": 1.4, \"historical_distance\": 0.3999999999999999, \"current_distance\": 0.0, \"historical_within\": false, \"current_within\": true, \"comparison_scalar_type\": \"bool_\"}, \"stable\": {\"original_goal_stamp\": 10, \"current_stamp\": 20, \"robot_odom_x\": 1.0, \"historical_goal_odom_x\": 1.0, \"current_goal_odom_x\": 1.0, \"historical_distance\": 0.0, \"current_distance\": 0.0, \"historical_within\": true, \"current_within\": true, \"comparison_scalar_type\": \"bool_\"}, \"assertions\": \"PASS\", \"ros_nodes_created\": 0}\n",
+      "stderr": "",
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-nav-frame-contract-after-20261030",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=128",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/ros:/work:ro",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-progress-0e24d49f77/jobs:/contrib:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "docker.io/makerspet/oomwoo:jazzy-dev",
+        "-lc",
+        "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'CONTRACT'\nimport json,math\nfrom geometry_msgs.msg import TransformStamped,PoseStamped\nfrom rclpy.duration import Duration\nfrom tf2_ros import Buffer\nimport tf2_geometry_msgs\n\ndef compare(latest_translation):\n    buf=Buffer(cache_time=Duration(seconds=30))\n    for stamp,translation in [(10,0.),(20,latest_translation)]:\n        tf=TransformStamped();tf.header.frame_id='odom';tf.child_frame_id='map'\n        tf.header.stamp.sec=stamp;tf.transform.translation.x=translation\n        tf.transform.rotation.w=1.\n        buf.set_transform(tf,'ephemeral-contract-fixture')\n    goal=PoseStamped();goal.header.frame_id='map';goal.header.stamp.sec=10\n    goal.pose.position.x=1.;goal.pose.orientation.w=1.\n    historical=buf.transform(goal,'odom')\n    current=PoseStamped();current.header.frame_id='map';current.header.stamp.sec=20\n    current.pose=goal.pose\n    live=buf.transform(current,'odom')\n    robot_x=1.+latest_translation\n    old_dist=abs(historical.pose.position.x-robot_x)\n    live_dist=abs(live.pose.position.x-robot_x)\n    assert goal.header.stamp.sec==10 and current.header.stamp.sec==20\n    return dict(original_goal_stamp=goal.header.stamp.sec,current_stamp=current.header.stamp.sec,\n                robot_odom_x=robot_x,historical_goal_odom_x=historical.pose.position.x,\n                current_goal_odom_x=live.pose.position.x,historical_distance=old_dist,\n                current_distance=live_dist,historical_within=bool(old_dist<.2),current_within=bool(live_dist<.2),comparison_scalar_type=type(old_dist<.2).__name__)\nshifted=compare(.4);stable=compare(0.)\nassert math.isclose(shifted['historical_distance'],.4,abs_tol=1e-12)\nassert shifted['historical_within'] is False and shifted['current_within'] is True\nassert stable['historical_within'] is True and stable['current_within'] is True\nassert stable['historical_distance']==stable['current_distance']==0.\nprint(json.dumps({'shifted':shifted,'stable':stable,'assertions':'PASS','ros_nodes_created':0}))\n\nCONTRACT"
+      ],
+      "scope": "Actual installed tf2 with synthetic temporal frame shift plus stable-frame control. Does not execute RPP/controller and does not prove the native fault cause.",
+      "resource_policy": ".25CPU/512MiB/noGPU, occupied lock permitted by explicit goal exception.",
+      "new_evidence": "Installed do_transform_pose returns NumPy coordinates from np.matmul; compare scalars via explicit bool conversion before identity assertions. First attempt failed at boolean identity, after distance .4 assertion passed. No transform parameters or thresholds changed."
+    },
+    "result": {
+      "shifted": {
+        "original_goal_stamp": 10,
+        "current_stamp": 20,
+        "robot_odom_x": 1.4,
+        "historical_goal_odom_x": 1.0,
+        "current_goal_odom_x": 1.4,
+        "historical_distance": 0.3999999999999999,
+        "current_distance": 0.0,
+        "historical_within": false,
+        "current_within": true,
+        "comparison_scalar_type": "bool_"
+      },
+      "stable": {
+        "original_goal_stamp": 10,
+        "current_stamp": 20,
+        "robot_odom_x": 1.0,
+        "historical_goal_odom_x": 1.0,
+        "current_goal_odom_x": 1.0,
+        "historical_distance": 0.0,
+        "current_distance": 0.0,
+        "historical_within": true,
+        "current_within": true,
+        "comparison_scalar_type": "bool_"
+      },
+      "assertions": "PASS",
+      "ros_nodes_created": 0
+    },
+    "limits": [
+      "Synthetic frame shift, real installed tf2; no RPP/controller execution.",
+      "Does not establish the cause of the recorded native Nav2 abort105.",
+      "No production/configuration change, tolerance loosening or new ROS nodes."
+    ],
+    "reference_sources": [
+      "https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_controller/src/controller_server.cpp",
+      "https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_regulated_pure_pursuit_controller/src/path_handler.cpp"
+    ]
+  }
 }
