@@ -65,7 +65,7 @@
       "outcome": "AMCL/change_state loses response; BOOT30s expires, localization manager Launch escalation-9 retained"
     }
   ],
-  "next_increment": "One natural-cache whole-room run of current watchdog plus existing private map-frame hypothesis, normal plan/gapfill, passively recording cache+watchdog values. Verify no coworker duplicate before FIFO submission.",
+  "next_increment": "Investigate existing prefix/sequence data for a worthwhile earlier-distance correction before a new long performance trial; coordinate with peer21ac4cd and do not duplicate its analysis. Controlled watchdog robustness milestone is complete; full-room90/80 remains open.",
   "remaining_larger_scope": [
     "Full-room90percent coverage/80percent first-target efficiency still not passed.",
     "Supplied short route does not validate normal full-room planning.",
@@ -98,10 +98,10 @@
     "nav_frame_peer_review_20261030.json": "813133ab378a48e89316751b15f0492d4ea6b380f207628750f8bd509ff3b697",
     "fresh_tf_watchdog_before_20261030.json": "9f72c0ea95751e5ea0713d15a9ca9231025cb79e64db69cf759b7aaed6fce596",
     "fresh_tf_watchdog_after_20261030.json": "b1cdd5f4352b39b087ad4c7b1aa218133bb5c5cbdef34341ca8c2939499a58c6",
-    "fresh_tf_watchdog_delivery_20261030.json": "6f21db217de5344deb04e8f12b0b4863fcb24dc9774ed288fcfeac6d17080011",
+    "fresh_tf_watchdog_delivery_20261030.json": "69aa9066274e137601c1f31d5fb139e1db3c20198e00b425700305c50aea9d88",
     "watchdog_cache_before_native_20261030.json": "1694f5bf42a4fef1b7971067e0d49956c49793fec3c015f502b0d77ccad171e8",
     "watchdog_cache_after_native_20261030.json": "9a1a0a44628917739d524fe7bb795db788268835e1d4bd6b7841556efb0c9d8d",
-    "watchdog_cache_native_delivery_20261030.json": "23eee47b0e08680d09d1aeafd85a18a6c76b5f6035b4cf269cc05324cfc732e7"
+    "watchdog_cache_native_delivery_20261030.json": "3dab3b60fc56852fa8174d9f8518fb09b13c01865902b27f20d0e510b03ee6bd"
   },
   "completed_increment": {
     "ticket": 736,
@@ -578,5 +578,16 @@
     "status": "Source review complete; terminal peer run96%/77.34%, requirement not met.",
     "finding": "Normal plan/gapfill and non-observation logic preserved. Full-room target290 canceled after6.02s while far and moving, distinct from earlier30s arrival stall."
   },
-  "native_watchdog_validation": "watchdog_cache_native_delivery_20261030.json"
+  "native_watchdog_validation": "watchdog_cache_native_delivery_20261030.json",
+  "watchdog_peer_adoption": {
+    "repo": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools",
+    "commit": "21ac4cd",
+    "source_commit": "be2820399b4bb8124b0453c7a33abd7de8e3ef85",
+    "evidence": "docs/evidence/adopcion_vigilante_tf_20261030.json",
+    "files_byte_identical_to_our_delivery": {
+      "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": true,
+      "src/oomwoo_coverage/test/test_planner_geometry.py": true
+    },
+    "scope": "Coworker independently consolidated code and existing tests into grouped local delivery; no duplicate tests or external publication by this agent."
+  }
 }

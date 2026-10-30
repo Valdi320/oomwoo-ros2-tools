@@ -130,7 +130,28 @@
   ],
   "utility_demonstrated": "Current pose prevents false cancel with sparse cache without removing genuine stall/absolute deadline behavior already tested in17focal cases.",
   "distance_to_useful_milestone": "Watchdog source now has controlled native validation. Normal full-room90/80 remains unfulfilled.",
-  "next_increment": "One natural-cache whole-room run of current watchdog plus existing private map-frame hypothesis, normal plan/gapfill, passively recording cache+watchdog values. Verify no coworker duplicate before FIFO submission.",
-  "decision": "Consolidate controlled validation; any next long run must add natural-cache evidence and actual90/80 validation, not repeat this green.",
-  "cost_evidence": "41.184s baseline+58.389s corrected runtime, individually admitted FIFO756 and758,2CPU/3GiB/noGPU; no host timeout orOOM."
+  "next_increment": "Investigate existing prefix/sequence data for a worthwhile earlier-distance correction before a new long performance trial; coordinate with peer21ac4cd and do not duplicate its analysis. Controlled watchdog robustness milestone is complete; full-room90/80 remains open.",
+  "decision": "Consolidate native-verified watchdog and its peer adoption. Defer another full run without evidence of a plausible prefix improvement; do not repeat the controlled green.",
+  "cost_evidence": "41.184s baseline+58.389s corrected runtime, individually admitted FIFO756 and758,2CPU/3GiB/noGPU; no host timeout orOOM.",
+  "peer_adoption": {
+    "repo": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools",
+    "commit": "21ac4cd",
+    "source_commit": "be2820399b4bb8124b0453c7a33abd7de8e3ef85",
+    "evidence": "docs/evidence/adopcion_vigilante_tf_20261030.json",
+    "files_byte_identical_to_our_delivery": {
+      "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": true,
+      "src/oomwoo_coverage/test/test_planner_geometry.py": true
+    },
+    "scope": "Coworker independently consolidated code and existing tests into grouped local delivery; no duplicate tests or external publication by this agent."
+  },
+  "new_return_evidence": {
+    "source": "Peer docs/evidence/presupuesto_recorrido_90_80_20261030.json, commit514f68a",
+    "observed_first90_path_m": 110.69,
+    "path_limit_for80_m": 107.0,
+    "required_observed_saving_m": 3.69,
+    "prefix_before_canceled_goal_coverage": 0.8932,
+    "prefix_before_canceled_goal_path_m": 107.07,
+    "interpretation": "A repair confined to the canceled suffix cannot reach80for that recorded prefix, even at zero additional distance. Our general watchdog change may affect earlier decisions, but no prefix saving has been demonstrated; do not claim a global impossibility or predict its next metric."
+  },
+  "updated_utc": "2026-10-30T22:07:40.779066+00:00"
 }

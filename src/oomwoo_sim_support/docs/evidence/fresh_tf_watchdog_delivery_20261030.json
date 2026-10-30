@@ -14,10 +14,21 @@
   "unchanged": "Same500ms source-age helper,6s no-progress window,5cm progress threshold,30s/configured travel backstop and2xcap; planning, gapfill, action authority and configuration unchanged.",
   "native_trigger": "Peer full room96%/77.34%: waypoint290 canceled6.02s after activation while observed map TF distance decreases2.48770->2.22750m and final command remains.14m/s.",
   "attribution_limit": "Historical robot_xy cache was not recorded. Tests deliberately hold it to expose the confirmed mechanism; they do not prove this cache caused that recorded cancellation.",
-  "distance_to_useful_milestone": "Watchdog source now has controlled native validation. Normal full-room90/80 remains unfulfilled.",
-  "next_increment": "One natural-cache whole-room run of current watchdog plus existing private map-frame hypothesis, normal plan/gapfill, passively recording cache+watchdog values. Verify no coworker duplicate before FIFO submission.",
+  "distance_to_useful_milestone": "Watchdog controlled native validation and grouped local peer adoption complete. Normal full-room90/80 remains incomplete; latest measured77.34% requires earlier savings, not another identical suffix case.",
+  "next_increment": "Investigate existing prefix/sequence data for a worthwhile earlier-distance correction before a new long performance trial; coordinate with peer21ac4cd and do not duplicate its analysis. Controlled watchdog robustness milestone is complete; full-room90/80 remains open.",
   "acceptance": "Actual UUID succeeds without early false-progress cancellation, independent Keepout valid0crossings, quiet authority/ownership and normal closure; retain the short scorer90/80 failure. No physical claim.",
-  "decision": "Consolidate controlled validation; any next long run must add natural-cache evidence and actual90/80 validation, not repeat this green.",
+  "decision": "Consolidate native-verified watchdog and its peer adoption. Defer another full run without evidence of a plausible prefix improvement; do not repeat the controlled green.",
   "expected_cost": "About one minute plus existing FIFO wait,2CPU/3GiB/noGPU after admission; no new tool,node,timer,parameter or relaxed tolerance.",
-  "native_validation": "watchdog_cache_native_delivery_20261030.json"
+  "native_validation": "watchdog_cache_native_delivery_20261030.json",
+  "peer_adoption": {
+    "repo": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools",
+    "commit": "21ac4cd",
+    "source_commit": "be2820399b4bb8124b0453c7a33abd7de8e3ef85",
+    "evidence": "docs/evidence/adopcion_vigilante_tf_20261030.json",
+    "files_byte_identical_to_our_delivery": {
+      "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": true,
+      "src/oomwoo_coverage/test/test_planner_geometry.py": true
+    },
+    "scope": "Coworker independently consolidated code and existing tests into grouped local delivery; no duplicate tests or external publication by this agent."
+  }
 }
