@@ -1,0 +1,106 @@
+{
+  "completed_utc": "2026-10-30T15:40:41.131516+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 9.309,
+  "stdout": "...                                                                      [100%]\n3 passed in 2.29s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-history-trace-fixture-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-history-c313110cfe/ros:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-nav-history-c313110cfe/jobs:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 ROS_LOG_DIR=/tmp/roslogs\ncat > /tmp/test_history_trace.py <<'HISTORY'\nimport ast,json\nfrom pathlib import Path\nfrom types import SimpleNamespace as NS\nfrom geometry_msgs.msg import PoseStamped,TransformStamped\nfrom nav2_msgs.action import NavigateToPose\nfrom oomwoo_coverage.coverage_planner_node import CoveragePlanner\nfrom oomwoo_sim_support.coverage_regression_runner import CoverageRunner\nfrom oomwoo_cleaning_jobs.dock_handoff import Velocity\n\ndef test_status_trace_selects_only_target_and_never_blocks_later_status_updates():\n    logs=[];packet={'owner':'navigation','motion_inputs':{'navigation':{'zero':False,'age':.02}},\n        'last_output':[.14,0.],'motion_health':{},'nav_uuid_evidence':{},\n        'motion_pose_source':{'stamp_ns':100},'motion_health_source':{'pose_age_ns':20}}\n    goal=PoseStamped();goal.pose.orientation.w=1.\n    node=NS(_relay_rpc=None,_relay_status_future=None,_relay_status_epoch=1,_relay_epoch=1,\n        _relay_status_client=NS(service_is_ready=lambda:False),_relay_stage='nav',\n        _relay_uuid='01'*16,_relay_goal_pose=goal,robot_xy=(4.,-.2),robot_yaw=0.,\n        get_clock=lambda:NS(now=lambda:NS(nanoseconds=2000000000)),\n        get_logger=lambda:NS(info=lambda msg:logs.append(msg)))\n    def reply(serial):\n        packet['serial']=serial\n        response=NS(ok=True,status_json=json.dumps(packet))\n        node._relay_status_future=NS(done=lambda:True,result=lambda:response)\n        CoveragePlanner._relay_poll(node)\n    for i in range(400):reply(i)\n    assert not logs\n    goal.pose.position.x=4.225;goal.pose.position.y=.025\n    for i in range(400,600):reply(i)\n    assert len(logs)==192 and node._focal_trace_count==192\n    sample=json.loads(logs[-1].split(' ',1)[1])\n    assert sample['goal_xy']==[4.225,.025]\n    assert sample['relay_pose_source']=={'stamp_ns':100}\n    assert sample['relay_health_source']=={'pose_age_ns':20}\n    goal.pose.position.y=.075\n    for i in range(600,610):reply(i)\n    assert len(logs)==192 and node._relay_snapshot['serial']==609\n    assert node._relay_status_future is None\n\ndef test_first_pairs_and_final_ring_keep_original_sources_with_bounded_memory():\n    node=NS(info=None,motion_audit=True,_audit_keepout_truth=lambda msg:None,\n        motion_samples={'feedback':[]},_sim_now=lambda:2.)\n    truth=PoseStamped();truth.header.frame_id='map';truth.header.stamp.sec=1\n    truth.pose.orientation.w=1.\n    feedback=NavigateToPose.Impl.FeedbackMessage()\n    for goal in range(35):\n        feedback.goal_id.uuid=[goal+1]*16\n        for step in range(8):\n            index=goal*8+step;truth.header.stamp.nanosec=index*1000000\n            truth.pose.position.x=float(index)\n            CoverageRunner._on_pose(node,truth)\n            feedback.feedback.current_pose=truth\n            CoverageRunner._audit_feedback(node,feedback)\n    ring=node.motion_samples['focal_motion'];initial=node.motion_samples['focal_initial']\n    assert len(ring)==192 and ring[0]['truth']['position'][0]==88.\n    assert len(initial)==32\n    assert initial[0]['truth']['position'][0]==24.\n    assert initial[0]['truth']['stamp_ns']==1024000000\n    assert initial[-1]['truth']['position'][0]==272.\n    truth.pose.position.x=999.\n    CoverageRunner._on_pose(node,truth)\n    feedback.feedback.current_pose=truth\n    CoverageRunner._audit_feedback(node,feedback)\n    assert len(initial)==32 and initial[-1]['truth']['position'][0]==272.\n    assert len(ring)==192 and ring[-1]['truth']['position'][0]==999.\n    truth.pose.position.x=-999.\n    assert ring[-1]['truth']['position'][0]==999.\n    assert node.motion_samples['feedback'][0]['count']==281\n\ndef test_existing_relay_status_returns_cached_sources_without_extra_health_or_tf_queries():\n    source=Path('/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py')\n    klass=next(n for n in ast.parse(source.read_text()).body if isinstance(n,ast.ClassDef)\n        and n.name=='ExperimentalDockVelocityRelay')\n    method=next(n for n in klass.body if isinstance(n,ast.FunctionDef) and n.name=='_status')\n    scope={'json':json,'Velocity':Velocity}\n    exec(compile(ast.fix_missing_locations(ast.Module(body=[method],type_ignores=[])),\n        str(source),'exec'),scope)\n    calls=[]\n    pose=TransformStamped();pose.header.frame_id='map';pose.child_frame_id='base_link'\n    pose.header.stamp.sec=5;pose.header.stamp.nanosec=123\n    pose.transform.translation.x=4.;pose.transform.rotation.w=1.\n    node=NS(mux=NS(owner='reactive_sweep',stop_reason=''),_three_way=True,\n        _managed_nav2=True,_nav_backend_active=True,_nav_single_dispatcher=True,\n        _nav_client_inventory=[],_nav_backend_query=None,\n        _nav_lifecycle=NS(service_is_ready=lambda:True),_nav_backend_last=1.,\n        _motion_health=lambda:calls.append('health') or NS(nav2_idle=True),\n        _motion_now=lambda:10.,_commands={'navigation':(9.9,Velocity())},\n        _fresh=lambda *args:True,_last_status=1.,_odom_last=1.,_battery_last=1.,\n        _nav_idle=lambda:True,_dock_state='IDLE',_docked=False,\n        _latest_output=Velocity(.1,0.),_goal_witness=None,_motion_pose_cache=pose,\n        _motion_health_detail={'pose_stamp_ns':5000000123,'pose_age_ns':0})\n    response=NS(ok=False,status_json='')\n    assert scope['_status'](node,None,response) is response\n    packet=json.loads(response.status_json)\n    assert calls==['health'] and response.ok\n    assert packet['motion_pose_source']['stamp_ns']==5000000123\n    assert packet['motion_pose_source']['frame']=='map'\n    assert packet['motion_pose_source']['child_frame']=='base_link'\n    assert packet['motion_pose_source']['position']==[4.,0.,0.]\n    assert packet['motion_health_source']['pose_stamp_ns']==5000000123\n    assert packet['last_output']==[.1,0.]\n    assert pose.header.stamp.sec==5 and pose.header.stamp.nanosec==123\n\nHISTORY\npython3 -m pytest -p no:cacheprovider -q /tmp/test_history_trace.py\n"
+  ],
+  "input_sha256": {
+    "planner": "dbba70140e68ff1c84cc03e275188ac4f86fc099819eb911a831d6b737011d2c",
+    "scorer": "967ce55974493b71e14550190e80a6331c4f726c3791344a67786edaff854b36",
+    "meter": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "wrapper": "66e706c709a9b8d0a42eddebf49d5f8dba0e251e9396883fe77961b3da37322f",
+    "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+    "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+    "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+    "relay": "d3b42f88551c181b30e429b3ffe993a8bd5d7eaf5caa2fbdd743234fe120bb20"
+  },
+  "inputs_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true
+  },
+  "fixture_changes": {
+    "planner": {
+      "changed_methods": [
+        "_on_amcl",
+        "_relay_poll"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "cf8c9939cf882d9441a992e71a1feb780a37a30d758bebf66f1f70f64eafc05c",
+      "fixture_sha256": "dbba70140e68ff1c84cc03e275188ac4f86fc099819eb911a831d6b737011d2c"
+    },
+    "scorer": {
+      "changed_methods": [
+        "_on_pose",
+        "_audit_feedback"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "adc9349f2485d5cc6321af7d81853ff5243ff0024ec554b4b4b58f52e59d413f",
+      "fixture_sha256": "967ce55974493b71e14550190e80a6331c4f726c3791344a67786edaff854b36"
+    },
+    "relay": {
+      "changed_methods": [
+        "_status"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "9a2e5a5bedb7ded15320cb8b2ab880c7ce030ed7b5a66d226eff6c992a5a75cb",
+      "fixture_sha256": "d3b42f88551c181b30e429b3ffe993a8bd5d7eaf5caa2fbdd743234fe120bb20"
+    }
+  },
+  "scope": "Three small cases on private copied actual methods, ROS message types and existing status serialization. No new nodes/spin/Gazebo/TF queries; original full planning untouched.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU compatible test exception.",
+  "fixture_patch": {
+    "planner": {
+      "base_commit": "7896286173f1fc007cfa55a52ab9adfd97daeaf1",
+      "relative_path": "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+      "patch": "--- a/ros/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n+++ b/ros/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n@@ -455,6 +455,8 @@\n     def _on_amcl(self, msg: PoseWithCovarianceStamped) -> None:\n         self.robot_xy = (msg.pose.pose.position.x, msg.pose.pose.position.y)\n         self.robot_yaw = _yaw_from_quat(msg.pose.pose.orientation)\n+        self._focal_amcl_source = (msg.header.frame_id,\n+            msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec)\n \n     def _robot_pose(self):\n         \"\"\"Return a map-frame TF pose no more than 500 ms old, otherwise None.\"\"\"\n@@ -1318,6 +1320,28 @@\n                 self._relay_snapshot = json.loads(response.status_json)\n                 self._relay_owner = self._relay_snapshot['owner']\n                 self._relay_status_last = time.monotonic()\n+                target = getattr(self, '_relay_goal_pose', None)\n+                selected = (target is not None\n+                    and abs(target.pose.position.x - 4.225) <= 1e-6\n+                    and abs(target.pose.position.y - 0.025) <= 1e-6)\n+                if (self._relay_stage == 'nav' and selected\n+                        and getattr(self, '_focal_trace_count', 0) < 192):\n+                    self._focal_trace_count = getattr(self, '_focal_trace_count', 0) + 1\n+                    self.get_logger().info('FOCAL_MOTION ' + json.dumps({\n+                        'received_wall': self._relay_status_last,\n+                        'received_sim_ns': self.get_clock().now().nanoseconds,\n+                        'uuid': self._relay_uuid, 'stage': self._relay_stage,\n+                        'goal_xy': [target.pose.position.x, target.pose.position.y],\n+                        'relay_pose_source': self._relay_snapshot.get('motion_pose_source'),\n+                        'relay_health_source': self._relay_snapshot.get('motion_health_source'),\n+                        'amcl_xy': self.robot_xy, 'amcl_yaw': self.robot_yaw,\n+                        'amcl_source': getattr(self, '_focal_amcl_source', None),\n+                        'owner': self._relay_snapshot.get('owner'),\n+                        'nav_input': (self._relay_snapshot.get('motion_inputs') or {}).get('navigation'),\n+                        'output': self._relay_snapshot.get('last_output'),\n+                        'health': self._relay_snapshot.get('motion_health'),\n+                        'nav_uuid_evidence': self._relay_snapshot.get('nav_uuid_evidence')},\n+                        sort_keys=True))\n         if self._relay_status_future is None and self._relay_status_client.service_is_ready():\n             self._relay_status_epoch = self._relay_epoch\n             self._relay_status_future = self._relay_status_client.call_async(\n"
+    },
+    "scorer": {
+      "base_commit": "7896286173f1fc007cfa55a52ab9adfd97daeaf1",
+      "relative_path": "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+      "patch": "--- a/ros/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n+++ b/ros/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n@@ -153,6 +153,11 @@\n         CoverageMeter._on_pose(self, msg)\n         if getattr(self, 'motion_audit', False):\n             self._audit_keepout_truth(msg)\n+            p, q = msg.pose.position, msg.pose.orientation\n+            self._focal_truth_message = {\n+                'frame': msg.header.frame_id,\n+                'stamp_ns': msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec,\n+                'position': [p.x, p.y, p.z], 'orientation': [q.x, q.y, q.z, q.w]}\n \n     def _audit_phase(self, msg):\n         if msg.data == 'FAULT':\n@@ -284,6 +289,21 @@\n             'stamp_ns': pose.header.stamp.sec * 1_000_000_000 + pose.header.stamp.nanosec,\n             'position': [p.x, p.y, p.z], 'orientation': [q.x, q.y, q.z, q.w],\n             'received_wall': now, 'received_sim': self._sim_now()}\n+        self._last_nav_feedback['distance_remaining'] = float(msg.feedback.distance_remaining)\n+        self._last_nav_feedback['navigation_time_ns'] = (\n+            msg.feedback.navigation_time.sec * 1_000_000_000 + msg.feedback.navigation_time.nanosec)\n+        samples_trace = self.motion_samples.setdefault('focal_motion', [])\n+        if len(samples_trace) >= 192:\n+            samples_trace.pop(0)\n+        samples_trace.append({'feedback': self._last_nav_feedback,\n+            'truth': getattr(self, '_focal_truth_message', None)})\n+        initial = self.motion_samples.setdefault('focal_initial', [])\n+        if not any(item['feedback']['uuid'] == self._last_nav_feedback['uuid']\n+                   for item in initial):\n+            if len(initial) >= 32:\n+                initial.pop(0)\n+            initial.append({'feedback': self._last_nav_feedback,\n+                'truth': getattr(self, '_focal_truth_message', None)})\n         if not samples:\n             samples.append({'first_wall': now, 'last_wall': now, 'count': 1,\n                             'max_gap_wall': 0.0})\n"
+    },
+    "relay": {
+      "base_commit": "b9ae33e011c27191748bb1043a3a383618e68ae0",
+      "relative_path": "src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+      "patch": "--- a/jobs/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py\n+++ b/jobs/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py\n@@ -428,7 +428,7 @@\n \n     def _status(self,request,response):\n         response.ok=True\n-        response.status_json=json.dumps({\n+        status={\n             \"mode\":\"ISOLATED ROS2 SIMULATION ONLY\",\n             \"owner\":self.mux.owner,\"reason\":self.mux.stop_reason,\n             \"last_lease_revocation\":getattr(self,\"_last_lease_revocation\",None),\n@@ -458,7 +458,17 @@\n                  \"saw_current_goal_active\":self._goal_witness.saw_active,\n                  \"terminal_journal_matched\":self._goal_witness.can_release_for_dock(),\n                  \"fault\":self._goal_witness.fault}\n-                if self._goal_witness else None)},sort_keys=True)\n+                if self._goal_witness else None)}\n+        pose=getattr(self,\"_motion_pose_cache\",None)\n+        status[\"motion_pose_source\"]=(None if pose is None else {\n+            \"frame\":pose.header.frame_id,\"child_frame\":pose.child_frame_id,\n+            \"stamp_ns\":pose.header.stamp.sec*1_000_000_000+pose.header.stamp.nanosec,\n+            \"position\":[pose.transform.translation.x,pose.transform.translation.y,\n+                        pose.transform.translation.z],\n+            \"orientation\":[pose.transform.rotation.x,pose.transform.rotation.y,\n+                           pose.transform.rotation.z,pose.transform.rotation.w]})\n+        status[\"motion_health_source\"]=getattr(self,\"_motion_health_detail\",None)\n+        response.status_json=json.dumps(status,sort_keys=True)\n         return response\n \n     def _tick(self):\n"
+    }
+  },
+  "original_plan_and_gapfill_methods_unchanged": true,
+  "preparation_only_not_native_result": true,
+  "pending_native": "full-history673/session73016 now queued; initialescape671 terminal with escape continuity and noNav2"
+}

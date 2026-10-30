@@ -1,0 +1,93 @@
+{
+  "completed_utc": "2026-10-30T15:48:25.757219+00:00",
+  "raw_receipt": "initial_escape_20261030.json",
+  "baseline_native": "nav_progress_approach_20261030.json",
+  "jobs_fix_commit": "b9ae33e011c27191748bb1043a3a383618e68ae0",
+  "rc": 1,
+  "bank_code": 1,
+  "seconds": 34.072,
+  "host_timeout": false,
+  "source_contrast": {
+    "baseline_native": "nav_progress_approach_20261030.json",
+    "changed_inputs": [
+      "relay"
+    ],
+    "all_other_seven_source_fingerprints_identical": true,
+    "relay_diff": "Only addESCAPE to empty-journal managed-idle phases."
+  },
+  "all_inputs_unchanged": true,
+  "initial_escape": {
+    "entered_sim_s": 8.0,
+    "returned_to_sweep_sim_s": 10.6,
+    "truth_path_m": 0.21634084657949498,
+    "truth_poses": 130,
+    "lease_revocations": 0,
+    "motion_fault": false
+  },
+  "nav2_status_packets": 0,
+  "nav2_goals_observed": 0,
+  "end_reason": "sweep_complete",
+  "full_grade_pass": false,
+  "coverage": 0.0046,
+  "full_grade_miss_expected_single_goal": true,
+  "aux_clean_exits": 19,
+  "gazebo_stop_ack": true,
+  "unexpected_process_failures": [],
+  "keepout": {
+    "poses_before_mask": 4,
+    "poses": 676,
+    "segments": 675,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 1.6876895134678112,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 35,
+        "distance_m": 0.0006774113665135289,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.893836327917385
+      },
+      "IDLE": {
+        "poses": 491,
+        "distance_m": 0.001737074205364079,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6876895134678112
+      },
+      "SWEEP": {
+        "poses": 20,
+        "distance_m": 2.023711630750191e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.687689573637262
+      },
+      "ESCAPE": {
+        "poses": 130,
+        "distance_m": 0.21634084657949498,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6876895972124126
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "utility_demonstrated": "Initial contact escape now keeps the sweep lease, moves0.21634m and returns to sweep withoutFAULT in actualGazebo. Only relay initialESCAPE phase consistency changed.",
+  "limits": [
+    "No actual Nav2 goal: existing contact escape marks the single target as a wedge pocket and the fixture completes after pruning. Not a successful approach test and not an abort105 diagnosis.",
+    "The unchanged90/80 grader fails this deliberate single-goal fixture. No full-room performance gain.",
+    "Clean shutdown in this run does not fix the separately observed Gazebo shutdown race. No physical robot/active dock/electrical charging proof."
+  ],
+  "remaining_to_useful_milestone": "Original abort105 and full masked90/80 room acceptance.",
+  "next_increment": "Already queued full-history contrast673/session73016 with original full plan, current functional fixes and bounded existing-channel observations.",
+  "decision": "Consolidate validated initialescape fix; advance real full-history integration instead of another fresh-start variant.",
+  "evidence_that_changes_decision": "Full-history trace identifies a different source of missing progress or any safety/lease failure."
+}

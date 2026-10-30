@@ -966,3 +966,38 @@ changes. Waiting is capped at .05 CPU, automatically restoring 2 CPU after
 verified own admission. Collect that case before claiming native escape
 continuity or preparing a complete-room replay. Original abort105 and the
 90/80 masked-room acceptance remain unresolved.
+
+
+A [private full-history observer fixture](../src/oomwoo_sim_support/docs/evidence/history_trace_fixture_20261030.json)
+is prepared and passes three focused cases. Original full-room planning,
+gap-fill and all non-observer methods remain AST-identical to ROS7896286
+and jobsb9ae33e. Existing status replies log at most 192 samples for the
+selected target (4.225, 0.025); other targets do not consume that budget.
+The scorer retains one initial feedback/truth pair for up to 32 recent
+UUIDs plus its final 192-pair ring. The existing status RPC also returns
+pose and source ages already in cache, without another TF lookup.
+
+Checks cover selection, bounded immutable original sources, continued status
+updates after the cap, and exactly one existing health evaluation per status
+reply. Source patches are retained with the receipt for review. No new
+ROS nodes, subscriptions, clients or timers were added. This is preparation
+in frozen private copies, with no native result or production interface
+change. The fixture is now queued as673 after initial-escape671 supplied the
+next decision. Original abort105 and full90/80 acceptance remain pending.
+
+
+The [native initial-escape contrast](../src/oomwoo_sim_support/docs/evidence/initial_escape_delivery_20261030.json)
+now validates b9ae33e in Gazebo: the escape traverses 0.21634 m over
+130 truth poses and returns to SWEEP without revoking its lease or entering
+FAULT. Seven other source fingerprints match the previous failing case.
+All eight stay unchanged during this run. Nineteen auxiliary exits are
+clean and native-stop acknowledges. The scorer's unchanged90/80 gate
+returns its expected exit1 for this intentionally one-goal fixture.
+
+No Nav2 UUID is sent: existing contact recovery marks the sole target as
+a wedge pocket and the plan completes after pruning. Thus this is escape
+continuity evidence, not a successful approach, an abort105 fix or a
+full-room gain. A clean close here does not resolve the separate Gazebo
+shutdown race. Consolidate the phase correction. Full-history673 now
+reuses the original room plan, current functional fixes and tested bounded
+observations to obtain the next integration evidence.
