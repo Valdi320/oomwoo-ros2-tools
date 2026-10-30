@@ -660,3 +660,25 @@ that protected production source remains unchanged. Full masked acceptance
 remains open. Gazebo also exited139 after its positive native ACK in this full
 attempt;19 other auxiliary processes closed cleanly. This is distinct from the
 previous FastDDS bridge issue and has no established repair. No hardware exists.
+
+
+Offline inspection of the existing Gazebo core now localizes the shutdown
+failure to iteration of the `events::Stop` callback map. RTTI confirms the
+StopTag event; the main thread is in `std::thread::join` under `Server::~Server`.
+Both owned failures have the same relative library offsets. The installed
+Event.hh cleans pending connections under its mutex and then iterates the map
+without that mutex. [Gazebo8.15.0 ServerPrivate](https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/ServerPrivate.cc)
+creates a Stop RPC thread and also calls Stop from destruction. This supports a
+concurrent event-cleanup/lifetime hypothesis; the exact invalidating operation
+and a repair remain unproven. No new simulation or runtime change was needed.
+
+The first offline GDB trace could not unwind the Ubuntu libraries until its
+analysis-only `/lib -> usr/lib` mapping was corrected. The final selected
+frames and event RTTI are available, although219 other library inputs and
+libthread_db remain absent. Nearest-export addr2line labels are misleading here:
+SimulationRunner::Stop is only13bytes; the two failure offsets lie elsewhere.
+The old CET-bounded metadata query also missed the UTC event; both core records
+exist. Fingerprints, raw traces, limits and the existing sparse offline core are
+referenced in the evidence. This is independent of the prior FastDDS bridge
+workaround and does not establish a fix. Protected persistence remains unchanged
+while the owner's explicit authorization is pending.

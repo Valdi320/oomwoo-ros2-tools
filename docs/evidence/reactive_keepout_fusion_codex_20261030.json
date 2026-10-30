@@ -1,5 +1,5 @@
 {
-  "date_utc": "2026-10-30T00:47:23.264782+00:00",
+  "date_utc": "2026-10-30T01:04:17.219885+00:00",
   "status": "Full masked acceptance attempted and FAILED on journal witness; bounded observation remains valid, persistence proposal awaits explicit owner approval",
   "scope": "Design/software/simulation only. Native mask/filter, actual Nav2 and coverage software under the existing sole relay; no hardware or physical validation.",
   "parents": [
@@ -849,5 +849,103 @@
     "authorization": "Required by user AGENTS rule7; async approval requested, unanswered at preparation.",
     "proposal_functional_tests_run": false,
     "apply_check_only_rc": 0
+  },
+  "Gazebo_stop_core_diagnosis": {
+    "scope": "Offline analysis of existing owned core; no new Gazebo run, source/runtime/persistence modification, tool installation or public message.",
+    "metadata": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_native_stop_core_metadata_20261030.json",
+      "sha256": "5e053a1da8f62d3d4bdb799f486d68904846f1a66b55cec6d557ec333a9795e6"
+    },
+    "matching_core_events": [
+      {
+        "host_pid": 2595435,
+        "UTC": "2026-10-30T00:17:21Z",
+        "inner_thread": 1099
+      },
+      {
+        "host_pid": 2617209,
+        "UTC": "2026-10-30T00:40:25Z",
+        "inner_thread": 1118
+      }
+    ],
+    "timezone_correction": "Earlier bounded coredumpctl query interpreted timestamps as CET and missed the owned UTC event. Explicit TZ=UTC metadata confirms both cores exist; no missing-core claim.",
+    "image_id": "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "library": "/opt/ros/jazzy/opt/gz_sim_vendor/lib/libgz-sim8.so.8.15.0",
+    "library_sha256": "a348e4d28376de4e59ba58402142d0ce9e2abd7852ab76e721a34bafa569ef19",
+    "library_build_id": "c4fd265f6e6d5668723cfb95481de2d44dc03085",
+    "matching_relative_offsets": [
+      "0x1608f1",
+      "0x16aaa0/0x16aaa1"
+    ],
+    "binary_inspection": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_native_stop_binary_symbols_20261030.json",
+      "sha256": "40c70d3f54c35cfe43e58a0bcf81f171b8be8d22aa9b0eedef923db95486bc44"
+    },
+    "installed_header_and_symbol_ranges": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo_native_stop_header_inspection_20261030.json",
+      "sha256": "8d973eccf4e17ca973f00c4b6995182bbe895258d7775fb2d307f63a7dbfd97d"
+    },
+    "offline_all_thread_trace": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo-core-2617209/gdb-backtraces-mapped.json",
+      "sha256": "744c109e27afd43b035ea632039adef0de89ff4577c066ec782f0705801b6e28"
+    },
+    "event_context": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo-core-2617209/gdb-stop-event-context.json",
+      "sha256": "324d0a8f0827734d044a9a258dfa6b1cde7cf31d72b429f9ee58c3c91fd4d6b2"
+    },
+    "event_RTTI": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/gazebo-core-2617209/gdb-event-rtti.json",
+      "sha256": "ad35c1404a92e46806848ab086181eb67d2dde2eea8077fb14ead02832cee2cd"
+    },
+    "facts": [
+      "Both owned native-stop failures have the same library-relative stack locations and SIGSEGV11.",
+      "Full-run core LWP1118 failed in std::_Rb_tree_increment while iterating an event callback map. RTTI is exactly gz::common::EventT<void(), gz::sim::v8::events::StopTag>.",
+      "At that snapshot the main LWP710 is in std::thread::join under Server::~Server().",
+      "Installed Event.hh runs Cleanup under its mutex, then iterates connections without that mutex. Source8.15.0 creates a stop thread on stop RPC; its destructor also calls Stop before joins.",
+      "Exported SimulationRunner::Stop is only13bytes. addr2line nearest-export labels at0x1608f1/0x16aaa0 are outside that symbol and must not be treated as exact function identities."
+    ],
+    "inference": "Consistent with concurrent Stop-event emission/cleanup during server teardown. The object/iterator lifetime and two Stop paths are now a falsifiable lead; the exact erasing/freeing operation and an upstream repair are not proven by this snapshot.",
+    "not_claimed": [
+      "No proven cause of the journal witness rejection.",
+      "No repair of Gazebo SIGSEGV or proof of reliability.",
+      "No attribution to the old FastDDS SHM bridge teardown.",
+      "No matching published upstream fix established by the limited search."
+    ],
+    "primary_sources": [
+      {
+        "url": "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/ServerPrivate.cc",
+        "used_for": "Stop RPC thread and destructor/Stop ordering"
+      },
+      {
+        "url": "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/SimulationRunner.cc",
+        "used_for": "Stop emits events::Stop"
+      },
+      {
+        "path": "/opt/ros/jazzy/opt/gz_common_vendor/include/gz/common5/gz/common/Event.hh",
+        "used_for": "Installed event callback cleanup and iteration; saved by header inspection"
+      }
+    ],
+    "analysis_limits": [
+      "Only necessary ELF inputs were copied from the existing image. GDB still reports219 other missing libraries and no matching libthread_db; the selected libc/libstdc++/libgz frames and RTTI are present, broader frames are incomplete.",
+      "The first GDB trace lacked Ubuntu /lib→usr/lib in the analysis-only sysroot; it could not unwind essential libraries. Correcting that mapping is recorded; no runtime was changed.",
+      "Copied ELF mtimes cause a newer-than-core warning; content fingerprints and image identity are recorded. No downloaded symbols or debugger installation."
+    ],
+    "cost_observed": {
+      "core_logical_bytes": 457691136,
+      "core_allocated_bytes": 278384640,
+      "ELF_data_inputs_bytes": 24903832,
+      "offline_GDB_seconds": [
+        0.19,
+        0.18
+      ],
+      "cost_total": "Preparation, source reading, review and AI cost not separately measured. One existing core analyzed instead of another423s scene."
+    },
+    "decision": "Consolidate the diagnostic lead. Do not repeat full masked coverage or claim a local shutdown workaround without a new discriminating hypothesis. Journal authorization remains pending; protected file is unchanged.",
+    "core_sha256": "46ae930494ad52582505d3bc88e2e3981d3f4628293e2cd5964058da1d6f20d1",
+    "delivery_audit": {
+      "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_stop_core_delivery_audit_20261030.json",
+      "sha256": "b89c287ee75b79daef4aed69998075b93580140af2507185b48b2aaa075f20b5",
+      "rc": 0
+    }
   }
 }
