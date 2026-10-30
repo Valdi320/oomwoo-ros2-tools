@@ -1,0 +1,59 @@
+{
+  "completed_utc": "2026-10-30T18:54:27.161871+00:00",
+  "rc": 0,
+  "seconds": 9.401,
+  "stdout": ".....................                                                    [100%]\n21 passed in 2.60s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome PYTHONPATH=/work/src/oomwoo_dock:${PYTHONPATH:-} python3 -m pytest -q -p no:cacheprovider /work/src/oomwoo_dock/test/test_dock_pose_freshness.py"
+  ],
+  "guard": "OCUPADA: la maquina la tiene \u00abfifo-704: Bateria local qwen3.8-27b micro\u00bb desde hace 0 min (pid 3534813). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-704\u00bb.\n",
+  "scope": "Single existing DockDrive freshness test file imported with its exact reviewed driver into current delivery branch. Actual ROS nodes/messages/DDS, no simulator or physical robot.",
+  "resource_authorization": "Compatible .25CPU/512MiB/noGPU small tests exception.",
+  "source_branch_commit": "93c49e104df614a1ecee0ade76fc59979d59c8ad",
+  "source_runtime_commits": [
+    "b7149ed",
+    "3779d83",
+    "e0c423a"
+  ],
+  "driver_sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+  "runtime_source_identical_to_previous_native": true,
+  "prior_native_evidence": {
+    "dock_native_nominal_maneuver_20261030.json": "46bad8dc50227325bd34b6d18d86a82bca7c3b4f",
+    "dock_gazebo_feedback_loss_20261030.json": "84bbe4188e07b781ac98ebd8c3bce54f65815d68",
+    "dock_gazebo_feedback_loss_delivery_20261030.json": "79ce3e8e43e7c3d5fdb77f7742228ab59f81d73d"
+  },
+  "utility_demonstrated": "Delivery branch now contains the exact driver used in existing nominal/feedback-loss native evidence; stale/replayed/wrong-frame detector and wheel messages no longer renew movement permission. The single regression file passes with this branch imports.",
+  "limits": [
+    "Historical native results retained by original immutable git blobs; no new simulator maneuver executed for this consolidation.",
+    "No physical charging proof or combined NAV/SWEEP/DOCK cycle.",
+    "Current native705 shutdown-only candidate remains frozen and independent."
+  ],
+  "distance_to_useful_milestone": "Driver integration complete; combined active ownership cycle and masked90/80 acceptance remain.",
+  "decision": "Consolidate exact proven driver; postpone more standalone docking variants until combined integration.",
+  "next_increment": "Finish native705 shutdown-only contrast before further native integrated work.",
+  "decision_changing_evidence": "A regression under combined ownership or an incompatible sensor frame/source contract requires targeted diagnosis."
+}

@@ -105,7 +105,8 @@ DEFAULTS = {
     'k_lateral': 2.5,
     'k_heading': 1.8,
     'omega_max': 0.8,
-    'pose_timeout_s': 3.0,        # no fix for this long: go back to searching
+    'scan_frame': 'base_scan',    # detector pose frame before the fixed body offset
+    'pose_timeout_s': 3.0,        # maximum age of the detector's SOURCE stamp
     'search_omega': 0.5,          # rad/s, spinning to look for the dock
     'search_omega_beacon': 0.0,   # beacon in view: stop and let the LiDAR fit
     'search_max_turns': 2.0,      # give up after this much spinning
@@ -130,6 +131,7 @@ class DockDrive(Node):
         self.attempts = 0
         self.est = None               # dock pose in the BODY frame
         self.t_fix = None
+        self.t_est = None             # source time represented by the carried estimate
         self.searched = 0.0           # radians spun while looking
         self.confirms = 0             # accepted fixes in a row
         self.beacon_visible = False
@@ -176,24 +178,59 @@ class DockDrive(Node):
 
     def _on_pose(self, msg: PoseStamped) -> None:
         """Dock pose in the SCAN frame; shift it to the body frame."""
+        now = self.get_clock().now()
+        stamp_ns = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
+        age = (now.nanoseconds - stamp_ns) * 1e-9
+        # Receipt is not a new observation: delayed or repeated detector poses
+        # must neither refresh the timeout nor provide another confirmation.
+        if (msg.header.frame_id != self._p('scan_frame') or stamp_ns <= 0
+                or not 0.0 <= age <= self._p('pose_timeout_s')
+                or (self.t_fix is not None and stamp_ns <= self.t_fix.nanoseconds)):
+            return
         q = msg.pose.orientation
+        position = msg.pose.position
+        if not all(math.isfinite(v) for v in
+                   (position.x, position.y, position.z, q.x, q.y, q.z, q.w)):
+            return
+        norm = math.sqrt(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w)
+        if not .995 <= norm <= 1.005 or abs(q.x) > .03 or abs(q.y) > .03:
+            return
         yaw = math.atan2(2.0 * (q.w * q.z + q.x * q.y),
                          1.0 - 2.0 * (q.y * q.y + q.z * q.z))
-        t_l_d = (msg.pose.position.x, msg.pose.position.y, yaw)
+        t_l_d = (position.x, position.y, yaw)
         self.est = mul((self._p('lidar_offset_m'), 0.0, 0.0), t_l_d)
-        self.t_fix = self.get_clock().now()
+        self.t_fix = rclpy.time.Time.from_msg(msg.header.stamp, clock_type=now.clock_type)
+        self.t_est = self.t_fix
         self.confirms += 1
 
     def _on_odom(self, msg: Odometry) -> None:
         """Carry the estimate between fixes using the robot's own motion."""
         now = self.get_clock().now()
-        if self.odom is not None and self.est is not None:
-            dt = (now - self.odom).nanoseconds * 1e-9
+        stamp_ns = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
+        age = (now.nanoseconds - stamp_ns) * 1e-9
+        velocity = msg.twist.twist
+        if (msg.header.frame_id != 'odom' or msg.child_frame_id != 'base_footprint'
+                or stamp_ns <= 0 or not 0.0 <= age < 0.5
+                or not all(math.isfinite(v) for v in (velocity.linear.x, velocity.angular.z))
+                or (self.odom is not None and stamp_ns <= self.odom.nanoseconds)):
+            return
+        sample = rclpy.time.Time.from_msg(msg.header.stamp, clock_type=now.clock_type)
+        if self.est is not None and self.t_est is not None:
+            # A delayed fix replaces the estimate at its OWN source time, even
+            # if newer odometry arrived earlier. Keep estimate time separate
+            # from packet-order evidence; retain the existing Euler approximation.
+            dt = (stamp_ns - self.t_est.nanoseconds) * 1e-9
             if 0.0 < dt < 0.5:
-                ds = msg.twist.twist.linear.x * dt
-                dth = msg.twist.twist.angular.z * dt
-                self.est = mul(inv((ds, 0.0, dth)), self.est)
-        self.odom = now
+                ds = velocity.linear.x * dt
+                dth = velocity.angular.z * dt
+                estimate = mul(inv((ds, 0.0, dth)), self.est)
+                self.est = estimate if all(math.isfinite(v) for v in estimate) else None
+                self.t_est = sample if self.est is not None else None
+            elif dt >= 0.5:
+                self.est = None  # unobserved motion; wait for a fresh detector fix
+                self.t_est = None
+                self.confirms = 0
+        self.odom = sample
 
     def _tick(self) -> None:
         """Run the state machine and publish a command."""
@@ -203,17 +240,29 @@ class DockDrive(Node):
         if not self.enabled or self.state in ('IDLE', 'DONE'):
             self._send(0.0, 0.0)
             return
-        age = (None if self.t_fix is None
-               else (self.get_clock().now() - self.t_fix).nanoseconds * 1e-9)
-        lost = self.est is None or age is None or age > self._p('pose_timeout_s')
-        if lost and self.state not in ('SEARCH', 'DONE'):
+        now = self.get_clock().now()
+        age = None if self.t_fix is None else (now - self.t_fix).nanoseconds * 1e-9
+        odom_age = None if self.odom is None else (now - self.odom).nanoseconds * 1e-9
+        odom_budget = 0.5  # same source-age/propagation bound as _on_odom
+        if self.state == 'BACK':
+            # Reserve one command period inside the existing seating margin.
+            # This is a kinematic lab budget, not measured physical braking.
+            odom_budget = min(odom_budget, self._p('seat_margin_m')
+                              / max(abs(self._p('v_back')), 1e-9)
+                              - 1.0 / max(self._p('pub_hz'), 1.0))
+        odom_lost = (odom_age is None or odom_budget <= 0.0
+                     or not 0.0 <= odom_age <= odom_budget)
+        lost = (self.est is None or age is None
+                or not 0.0 <= age <= self._p('pose_timeout_s') or odom_lost)
+        if lost and (self.state not in ('SEARCH', 'DONE') or odom_lost):
             # Hold, do not spin. Searching is for starting: re-entering it every
             # time a fit is missed makes the robot bounce between driving and
             # spinning and never arrive (4 of 12 docked with that rule, 10
             # without). Fits are intermittent and odometry covers the gaps. Near
             # the mouth spinning would also sweep the robot through the dock.
             self.get_logger().warn(
-                'no dock fix for %.1f s; holding' % (age or 0.0),
+                'dock feedback expired (fix %.1f s, odom %.1f s); holding'
+                % (age or 0.0, odom_age if odom_age is not None else -1.0),
                 throttle_duration_sec=2.0)
             self._send(0.0, 0.0)
             return

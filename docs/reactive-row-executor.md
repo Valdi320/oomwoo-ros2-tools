@@ -1273,3 +1273,21 @@ stays live. A small real-callback causal check should determine whether
 that bypass can be removed while retaining owned-process failure
 reporting, before any further native shutdown contrast. Reuse the
 existing shutdown path; do not add a timer or process supervisor.
+
+
+### Deliver the DockDrive source used by the native checks
+
+The delivery branch now contains the exact DockDrive previously mounted by
+the native nominal and feedback-loss fixtures: SHA256
+`d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577`.
+It retains measurement timestamps, rejects stale/repeated or incompatible
+pose and wheel samples, and holds movement when wheel feedback expires.
+This closes a real gap between the branch source and the tested runtime.
+The [consolidation receipt](../src/oomwoo_sim_support/docs/evidence/dock_consolidation_after_20261030.json)
+records 21 cases from the existing freshness file passing on this branch,
+source commits and immutable blobs for the previous native evidence.
+The native maneuver was not repeated: its driver source is unchanged.
+
+Decision: consolidate the reviewed driver and avoid more standalone docking
+variants. Active NAV/SWEEP/DOCK ownership in one run and masked90/80 acceptance
+still remain; neither electrical charging nor physical S12 operation is proved.
