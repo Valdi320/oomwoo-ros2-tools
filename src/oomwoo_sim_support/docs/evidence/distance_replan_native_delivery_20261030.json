@@ -1,0 +1,238 @@
+{
+  "completed_utc": "2026-10-30T17:59:50.920704+00:00",
+  "native_controller_receipt": "distance_replan_native_20261030.json",
+  "preserved_completed_scorer_snapshot": "distance_replan_shutdown_snapshot_20261030.json",
+  "controller_rc": 137,
+  "controller_seconds": 1267.136,
+  "controller_bank": null,
+  "host_timeout": false,
+  "owned_stop": {
+    "rc": 0,
+    "stdout": "oomwoo-distance-replan-d3e250cf79\n",
+    "stderr": "time=\"2026-10-30T18:53:57+01:00\" level=warning msg=\"StopSignal SIGTERM failed to stop container oomwoo-distance-replan-d3e250cf79 in 15 seconds, resorting to SIGKILL\"\n"
+  },
+  "shutdown_clean": false,
+  "shutdown_observation": "Native stop ACK0/data:true, Gazebo remained live waiting on futex; complete scorer/logs saved before exact owned container stop. Podman escalated after15s; rc137 is explained by that recorded stop, not inferred OOM/quota. FIFO and scope now terminal.",
+  "report": {
+    "coverage": 0.9541,
+    "coverage_target": 0.9,
+    "target_crossed": true,
+    "efficiency_at_target": 0.7836,
+    "efficiency_final": 0.6691,
+    "revisit_ratio": 0.3029,
+    "efficiency_target": 0.8,
+    "time_to_target_s": 770.0,
+    "end_reason": "sweep_complete",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true,
+    "nav2_config": true,
+    "sim_launch": true
+  },
+  "terminal_goals": {
+    "f63cd1ab8ee145ae9ac858c1037e51cf": {
+      "status": 4,
+      "sim": 16.25
+    },
+    "43bf765039c04caaaf009d0e03697d37": {
+      "status": 4,
+      "sim": 41.64
+    },
+    "997215d8b079470aae2eb3eebe8e4123": {
+      "status": 4,
+      "sim": 89.84
+    },
+    "ad6d0f0946724c2ab07ffc4511899b2b": {
+      "status": 4,
+      "sim": 129.45000000000002
+    },
+    "c1b99f3a98cf46bebec952d313326349": {
+      "status": 4,
+      "sim": 160.45000000000002
+    },
+    "14f2a565e63c450f93cc1cd36659afca": {
+      "status": 4,
+      "sim": 363.64000000000004
+    },
+    "cd365af2c467486d980705077824e4d2": {
+      "status": 4,
+      "sim": 383.24
+    },
+    "f4d2a6dbb89d481b807bb25ba43c97ec": {
+      "status": 4,
+      "sim": 423.25
+    },
+    "ce21f7d5a1cb4c509f107a905685e5b4": {
+      "status": 4,
+      "sim": 462.44000000000005
+    },
+    "816846d687bc4b989c8f6345d1272ac1": {
+      "status": 4,
+      "sim": 486.04
+    },
+    "04236adcc39a4f4e8828eea5800a28ef": {
+      "status": 4,
+      "sim": 547.0500000000001
+    },
+    "d79c7b749c7a459aad788994a6766741": {
+      "status": 4,
+      "sim": 564.25
+    },
+    "1f8f1fb011614f4e988ff6db39c9b701": {
+      "status": 4,
+      "sim": 611.85
+    },
+    "0a37770d24bc4dbda1f2ad2db0351292": {
+      "status": 5,
+      "sim": 763.22
+    },
+    "3e89a03f2eff4e2288952b410c293013": {
+      "status": 4,
+      "sim": 804.23
+    },
+    "3e016da7bd374c338b4b6f52a8c351d5": {
+      "status": 4,
+      "sim": 813.24
+    },
+    "08f67a627a0643ccaaba5ff687032922": {
+      "status": 4,
+      "sim": 835.3950000000001
+    },
+    "f52f55a506bb428c8366299e4e8620d8": {
+      "status": 4,
+      "sim": 848.6400000000001
+    },
+    "858ffe5d342d45c4bf32bfe2243a714d": {
+      "status": 4,
+      "sim": 866.6500000000001
+    },
+    "c281a71b82794da988e95542a7858d37": {
+      "status": 4,
+      "sim": 889.6400000000001
+    },
+    "0784f35167a14c2f8094c20af537dd8e": {
+      "status": 4,
+      "sim": 921.0500000000001
+    },
+    "d749d8c44595481dae41bf6c15febae1": {
+      "status": 4,
+      "sim": 938.85
+    }
+  },
+  "terminal_status_counts": {
+    "4": 21,
+    "5": 1
+  },
+  "controller_new_path_messages": 35,
+  "baseline_new_path_messages": 0,
+  "lease_revocations": [],
+  "motion_fault_messages": [],
+  "focal_goal": {
+    "uuid": "0a37770d24bc4dbda1f2ad2db0351292",
+    "samples": 150,
+    "start_sim": 733.2,
+    "terminal": {
+      "status": 5,
+      "sim": 763.22
+    },
+    "duration_s": 30.019999999999982,
+    "all_map_current": true,
+    "last_output": [
+      0.0,
+      0.02762930122758045
+    ],
+    "zero_translation_tail_samples": 33,
+    "zero_translation_tail_sim_s": 6.4,
+    "last_map_pose_source": {
+      "child_frame": "base_link",
+      "frame": "map",
+      "orientation": [
+        5.716985647892646e-08,
+        -6.177059686798638e-09,
+        -0.03320388022732697,
+        0.999448599147473
+      ],
+      "position": [
+        1.4752486874329935,
+        -2.2829285384228024,
+        0.012500001146524008
+      ],
+      "stamp_ns": 763000000000
+    },
+    "scope": "Observed relay output and map-frame pose; exact controller goal-frame/transform cause is unproven."
+  },
+  "keepout": {
+    "poses_before_mask": 24,
+    "poses": 47178,
+    "segments": 47177,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [
+      "ground-truth stamp/frame/position invalid or stale"
+    ],
+    "min_sampled_center_to_mask_bbox_m": 0.21389717129244862,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 21,
+        "distance_m": 8.773788445962977e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.650000030593655
+      },
+      "IDLE": {
+        "poses": 1417,
+        "distance_m": 1.2203730743742246e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2640221129035554
+      },
+      "SWEEP": {
+        "poses": 24499,
+        "distance_m": 81.58365417328174,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.21389717129244862
+      },
+      "PREPARE_NAV": {
+        "poses": 1131,
+        "distance_m": 1.0435729033866717e-05,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2654989186693076
+      },
+      "TRANSIT": {
+        "poses": 19981,
+        "distance_m": 46.12685358810858,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2607701794878537
+      },
+      "ESCAPE": {
+        "poses": 129,
+        "distance_m": 0.21723240673432206,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.7540636288339497
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": false
+  },
+  "keepout_limitation": "Audit valid:false due invalid/stale truth stamp/frame/position. Zero counted crossings does not validate the complete keepout trace. Original top-level measurement_valid:true is preserved as emitted; do not conflate it with audit validity.",
+  "decision": "Reject adopting distance tree: canceled target remains,90/80 still fails, extra replans show no demonstrated required benefit; normal closure also not proven. Production BT unchanged.",
+  "next_increment": "Small causal positive-grade case using actual audit and scorer methods: can audit invalidity or a detected crossing coexist with a passing result? Fold existing safety proof into existing invalid/fault handling only if causal evidence supports the correction. No new gate/node/timer/knob and no further full-room rerun without new evidence."
+}

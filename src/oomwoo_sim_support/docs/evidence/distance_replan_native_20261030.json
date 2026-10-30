@@ -1,0 +1,284 @@
+{
+  "completed_utc": "2026-10-30T17:53:57.462877+00:00",
+  "rc": 137,
+  "seconds": 1267.136,
+  "host_timeout": false,
+  "container": "oomwoo-distance-replan-d3e250cf79",
+  "fifo": {
+    "admitted_utc": "2026-10-30T17:32:50.327498+00:00",
+    "controller_pid": 3459681,
+    "podman_pid": 3459691,
+    "ticket": 688,
+    "fifo_pid": 3457089,
+    "container": "oomwoo-distance-replan-d3e250cf79",
+    "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-688: Contraste Oomwoo replanteo por distancia\u00bb desde hace 0 min (pid 3457089). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14856 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/distance_replan_native_prepared_20261030.json"
+  },
+  "input_sha256": {
+    "planner": "0e6010f7314d5de0cd0f9123ba0af4f5c666581b1c0890311ca667573b3c2dc0",
+    "scorer": "967ce55974493b71e14550190e80a6331c4f726c3791344a67786edaff854b36",
+    "meter": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "wrapper": "66e706c709a9b8d0a42eddebf49d5f8dba0e251e9396883fe77961b3da37322f",
+    "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+    "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+    "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+    "relay": "d3b42f88551c181b30e429b3ffe993a8bd5d7eaf5caa2fbdd743234fe120bb20",
+    "nav2_config": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45",
+    "sim_launch": "d8ef6bc44e23eb3a60f8e41159ceb590a32dad537239fc6b390d11a5b08825ba"
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true,
+    "nav2_config": true,
+    "sim_launch": true
+  },
+  "provenance": {
+    "planner": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+    "scorer": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+    "keepout_config": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py",
+    "files": {
+      "launch/coverage_regression.launch.py": {
+        "match": true,
+        "sha256": "9c24a2e1de7373662d33257b1fd9632e3b438076b4157bf44b2a783a23c7c675"
+      },
+      "launch/sim_bringup.launch.py": {
+        "match": true,
+        "sha256": "d8ef6bc44e23eb3a60f8e41159ceb590a32dad537239fc6b390d11a5b08825ba"
+      },
+      "worlds/test_room.world": {
+        "match": true,
+        "sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+      },
+      "config/nav2_params.yaml": {
+        "match": true,
+        "sha256": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45"
+      },
+      "maps/test_room.yaml": {
+        "match": true,
+        "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+      },
+      "maps/test_room.pgm": {
+        "match": true,
+        "sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+      }
+    },
+    "reviewed_inputs": {
+      "oomwoo_dock.dock_drive_node": {
+        "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+        "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+      },
+      "oomwoo_cleaning_jobs.goal_journal": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/goal_journal.py",
+        "sha256": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c"
+      },
+      "oomwoo_cleaning_jobs.nav_lease_witness": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/nav_lease_witness.py",
+        "sha256": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721"
+      },
+      "oomwoo_cleaning_jobs.ros_dock_velocity_relay": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+        "sha256": "d3b42f88551c181b30e429b3ffe993a8bd5d7eaf5caa2fbdd743234fe120bb20"
+      }
+    },
+    "planner_sha256": "0e6010f7314d5de0cd0f9123ba0af4f5c666581b1c0890311ca667573b3c2dc0",
+    "scorer_sha256": "967ce55974493b71e14550190e80a6331c4f726c3791344a67786edaff854b36",
+    "meter_sha256": "cd6941c278a30a081b32360338a4399d0f3040b1a002954419c7ab6f57000a65",
+    "wrapper_sha256": "66e706c709a9b8d0a42eddebf49d5f8dba0e251e9396883fe77961b3da37322f",
+    "costmap_cadence_parameters": {
+      "update_frequency": 2.0,
+      "publish_frequency": 4.0,
+      "global_frame": "map",
+      "robot_base_frame": "base_link",
+      "transform_tolerance": 5.0,
+      "robot_radius": 0.1745,
+      "resolution": 0.05,
+      "track_unknown_space": true,
+      "plugins": [
+        "static_layer",
+        "obstacle_layer",
+        "voxel_layer",
+        "inflation_layer"
+      ],
+      "obstacle_layer": {
+        "plugin": "nav2_costmap_2d::ObstacleLayer",
+        "enabled": true,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "voxel_layer": {
+        "plugin": "nav2_costmap_2d::VoxelLayer",
+        "enabled": true,
+        "publish_voxel_map": true,
+        "origin_z": 0.0,
+        "z_resolution": 0.05,
+        "z_voxels": 16,
+        "max_obstacle_height": 2.0,
+        "mark_threshold": 0,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "static_layer": {
+        "plugin": "nav2_costmap_2d::StaticLayer",
+        "map_subscribe_transient_local": true,
+        "transform_tolerance": 5.0
+      },
+      "inflation_layer": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "inflation_radius": 0.1,
+        "cost_scaling_factor": 10.0
+      },
+      "always_send_full_costmap": true
+    }
+  },
+  "bank": null,
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/distance_replan_native_20261030.log",
+  "raw_sha256": "ae15f692c822025569defb100e6fb6c5cd0ff78c03aa73618d40cdef936e8412",
+  "args": [
+    "podman",
+    "run",
+    "--memory-swap=3584m",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--tmpfs",
+    "/tmp:rw,exec,size=1024m,mode=1777",
+    "--memory=3g",
+    "--cpus=2",
+    "--pids-limit=512",
+    "-e",
+    "ROS_LOG_DIR=/tmp/roslogs",
+    "-e",
+    "ROS_DOMAIN_ID=88",
+    "-e",
+    "ROS_LOCALHOST_ONLY=1",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313/ros:/work:ro",
+    "--name",
+    "oomwoo-distance-replan-d3e250cf79",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313/ros/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313/jobs:/contrib:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313/ros/src/oomwoo_sim_support/launch/coverage_regression.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/coverage_regression.launch.py:ro",
+    "--ulimit",
+    "core=0",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313/driver.py:/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py:ro",
+    "--cpu-shares",
+    "2",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-distance-replan-f72aa19313/ros/src/oomwoo_sim_support/config/nav2_params.yaml:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/config/nav2_params.yaml:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OOMWOO_MOTION_AUDIT=1 OOMWOO_SIM_BATTERY_FRACTION=0.92\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/work/src/oomwoo_dock:/contrib/src:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2\nexport MAX_WALL_TIME_S=1800 CLOCK_DEAD_WALL_S=45 RUNS=1\nmkdir -p /tmp/valdi_ros_ws/src && cp -r /contrib/ros2_lab_interfaces /tmp/valdi_ros_ws/src/oomwoo_cleaning_jobs_lab_interfaces && cd /tmp/valdi_ros_ws && colcon build --packages-select oomwoo_cleaning_jobs_lab_interfaces --parallel-workers 2 --event-handlers console_direct+ > /tmp/rosidl_build.log 2>&1 && source /tmp/valdi_ros_ws/install/setup.bash || { tail -n 40 /tmp/rosidl_build.log; exit 3; }\npython3 /contrib/integration/generate_keepout_lab.py --out /tmp/keepout-fusion --test-room /work/src/oomwoo_sim_support/maps/test_room.yaml --nav-params /work/src/oomwoo_sim_support/config/nav2_params.yaml || exit 3\npython3 - <<'PROVENANCE'\nfrom pathlib import Path\nfrom ament_index_python.packages import get_package_share_directory\nimport hashlib,json\nfrom oomwoo_coverage import coverage_planner_node as planner\nfrom oomwoo_sim_support import coverage_regression_runner as scorer\nfrom oomwoo_sim_support import keepout_config\nfrom oomwoo_sim_support import coverage_meter_node as meter\nshare=Path(get_package_share_directory('oomwoo_sim_support'));r={'planner':planner.__file__,'scorer':scorer.__file__,'keepout_config':keepout_config.__file__,'files':{}}\nfor name in ['launch/coverage_regression.launch.py','launch/sim_bringup.launch.py','worlds/test_room.world','config/nav2_params.yaml','maps/test_room.yaml','maps/test_room.pgm']:\n a=(share/name).read_bytes();b=(Path('/work/src/oomwoo_sim_support')/name).read_bytes();r['files'][name]={'match':a==b,'sha256':hashlib.sha256(a).hexdigest()}\n assert a==b,name\nassert all(p.startswith('/work/') for p in (planner.__file__,scorer.__file__,keepout_config.__file__))\nfrom oomwoo_dock import dock_drive_node\nfrom oomwoo_cleaning_jobs import goal_journal,nav_lease_witness,ros_dock_velocity_relay\nr['reviewed_inputs']={}\nfor module in (dock_drive_node,goal_journal,nav_lease_witness,ros_dock_velocity_relay):\n path=Path(module.__file__);r['reviewed_inputs'][module.__name__]={'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}\n assert str(path).startswith(('/work/','/contrib/'))\nr['planner_sha256']=hashlib.sha256(Path(planner.__file__).read_bytes()).hexdigest()\nr['scorer_sha256']=hashlib.sha256(Path(scorer.__file__).read_bytes()).hexdigest()\nr['meter_sha256']=hashlib.sha256(Path(meter.__file__).read_bytes()).hexdigest()\nassert meter.__file__.startswith('/work/')\nr['wrapper_sha256']=hashlib.sha256(Path('/work/deploy/run_coverage_regression.sh').read_bytes()).hexdigest()\nimport yaml\nparams=yaml.safe_load((share/'config/nav2_params.yaml').read_text())\nr['costmap_cadence_parameters']=params['global_costmap']['global_costmap']['ros__parameters']\nassert r['costmap_cadence_parameters']['update_frequency']==2.0\nassert r['costmap_cadence_parameters']['publish_frequency']==4.0\nprint('OOMWOO_SOURCE_PROVENANCE '+json.dumps(r),flush=True)\nPROVENANCE\nif [ $? -ne 0 ]; then exit 3; fi\nbash -n /work/deploy/run_coverage_regression.sh || exit 3\nbash /work/deploy/run_coverage_regression.sh executor:=reactive v_cruise:=0.25 rotate_speed:=0.8 motion_relay_journal:=/tmp/oomwoo-owned-motion.json sweep_cmd_topic:=/valdi/sweep_cmd_vel nav_cmd_topic:=/valdi/nav2_cmd_vel motor_cmd_topic:=/valdi/lab_safe_cmd_vel_output nav_linear_speed:=0.14 nav_angular_speed:=0.7 nav_lookahead:=0.5 keepout_mask:=/tmp/keepout-fusion/keepout_test_room.yaml\nbank_code=$?\nexport OOMWOO_BANK_CODE=$bank_code\npython3 - <<'INNER'\nimport json,glob,os\nfrom pathlib import Path\nr={'bank_code':int(os.environ['OOMWOO_BANK_CODE']),'reports':{},'logs':{}}\nfor p in glob.glob('/tmp/coverage_runs.*/run*.json'):\n r['reports'][p]=json.loads(Path(p).read_text())\nfor p in glob.glob('/tmp/coverage_regression.log.*'):\n r['logs'][p]=Path(p).read_text(errors='replace')\nr['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/pids.events'),Path('/sys/fs/cgroup/pids.peak'),Path('/sys/fs/cgroup/memory.peak')] if p.exists()}\np=Path('/tmp/oomwoo-owned-motion.json')\nr['motion_journal']=json.loads(p.read_text()) if p.exists() else None\nr['keepout_fixture']={'generated_manifest':json.loads(Path('/tmp/keepout-fusion/manifest.json').read_text()),'legacy_overlay_and_topics_used':False,'active_mask_topic':'/oomwoo/keepout_mask','active_info_topic':'/oomwoo/keepout_filter_info','active_overlay_builder':'/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py'}\nprint('OOMWOO_GAZEBO_BANK '+json.dumps(r))\nraise SystemExit(int(os.environ['OOMWOO_BANK_CODE']))\nINNER"
+  ],
+  "source_sets": {
+    "ROS": "7896286173f1fc007cfa55a52ab9adfd97daeaf1 +679 cadence4 and bounded passive trace at1.525,-2.525; only managed installed BT distance1m differs functionally",
+    "jobs": "b9ae33e011c27191748bb1043a3a383618e68ae0 + cached-source status fixture",
+    "driver": "validated93c49e1 dock source, frozen SHA in input_sha256"
+  },
+  "fixture_patch": {
+    "planner": {
+      "base_commit": "7896286173f1fc007cfa55a52ab9adfd97daeaf1",
+      "relative_path": "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+      "patch": "--- a/ros/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n+++ b/ros/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n@@ -455,6 +455,8 @@\n     def _on_amcl(self, msg: PoseWithCovarianceStamped) -> None:\n         self.robot_xy = (msg.pose.pose.position.x, msg.pose.pose.position.y)\n         self.robot_yaw = _yaw_from_quat(msg.pose.pose.orientation)\n+        self._focal_amcl_source = (msg.header.frame_id,\n+            msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec)\n \n     def _robot_pose(self):\n         \"\"\"Return a map-frame TF pose no more than 500 ms old, otherwise None.\"\"\"\n@@ -1318,6 +1320,28 @@\n                 self._relay_snapshot = json.loads(response.status_json)\n                 self._relay_owner = self._relay_snapshot['owner']\n                 self._relay_status_last = time.monotonic()\n+                target = getattr(self, '_relay_goal_pose', None)\n+                selected = (target is not None\n+                    and abs(target.pose.position.x - 4.225) <= 1e-6\n+                    and abs(target.pose.position.y - 0.025) <= 1e-6)\n+                if (self._relay_stage == 'nav' and selected\n+                        and getattr(self, '_focal_trace_count', 0) < 192):\n+                    self._focal_trace_count = getattr(self, '_focal_trace_count', 0) + 1\n+                    self.get_logger().info('FOCAL_MOTION ' + json.dumps({\n+                        'received_wall': self._relay_status_last,\n+                        'received_sim_ns': self.get_clock().now().nanoseconds,\n+                        'uuid': self._relay_uuid, 'stage': self._relay_stage,\n+                        'goal_xy': [target.pose.position.x, target.pose.position.y],\n+                        'relay_pose_source': self._relay_snapshot.get('motion_pose_source'),\n+                        'relay_health_source': self._relay_snapshot.get('motion_health_source'),\n+                        'amcl_xy': self.robot_xy, 'amcl_yaw': self.robot_yaw,\n+                        'amcl_source': getattr(self, '_focal_amcl_source', None),\n+                        'owner': self._relay_snapshot.get('owner'),\n+                        'nav_input': (self._relay_snapshot.get('motion_inputs') or {}).get('navigation'),\n+                        'output': self._relay_snapshot.get('last_output'),\n+                        'health': self._relay_snapshot.get('motion_health'),\n+                        'nav_uuid_evidence': self._relay_snapshot.get('nav_uuid_evidence')},\n+                        sort_keys=True))\n         if self._relay_status_future is None and self._relay_status_client.service_is_ready():\n             self._relay_status_epoch = self._relay_epoch\n             self._relay_status_future = self._relay_status_client.call_async(\n"
+    },
+    "scorer": {
+      "base_commit": "7896286173f1fc007cfa55a52ab9adfd97daeaf1",
+      "relative_path": "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+      "patch": "--- a/ros/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n+++ b/ros/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n@@ -153,6 +153,11 @@\n         CoverageMeter._on_pose(self, msg)\n         if getattr(self, 'motion_audit', False):\n             self._audit_keepout_truth(msg)\n+            p, q = msg.pose.position, msg.pose.orientation\n+            self._focal_truth_message = {\n+                'frame': msg.header.frame_id,\n+                'stamp_ns': msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec,\n+                'position': [p.x, p.y, p.z], 'orientation': [q.x, q.y, q.z, q.w]}\n \n     def _audit_phase(self, msg):\n         if msg.data == 'FAULT':\n@@ -284,6 +289,21 @@\n             'stamp_ns': pose.header.stamp.sec * 1_000_000_000 + pose.header.stamp.nanosec,\n             'position': [p.x, p.y, p.z], 'orientation': [q.x, q.y, q.z, q.w],\n             'received_wall': now, 'received_sim': self._sim_now()}\n+        self._last_nav_feedback['distance_remaining'] = float(msg.feedback.distance_remaining)\n+        self._last_nav_feedback['navigation_time_ns'] = (\n+            msg.feedback.navigation_time.sec * 1_000_000_000 + msg.feedback.navigation_time.nanosec)\n+        samples_trace = self.motion_samples.setdefault('focal_motion', [])\n+        if len(samples_trace) >= 192:\n+            samples_trace.pop(0)\n+        samples_trace.append({'feedback': self._last_nav_feedback,\n+            'truth': getattr(self, '_focal_truth_message', None)})\n+        initial = self.motion_samples.setdefault('focal_initial', [])\n+        if not any(item['feedback']['uuid'] == self._last_nav_feedback['uuid']\n+                   for item in initial):\n+            if len(initial) >= 32:\n+                initial.pop(0)\n+            initial.append({'feedback': self._last_nav_feedback,\n+                'truth': getattr(self, '_focal_truth_message', None)})\n         if not samples:\n             samples.append({'first_wall': now, 'last_wall': now, 'count': 1,\n                             'max_gap_wall': 0.0})\n"
+    },
+    "relay": {
+      "base_commit": "b9ae33e011c27191748bb1043a3a383618e68ae0",
+      "relative_path": "src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+      "patch": "--- a/jobs/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py\n+++ b/jobs/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py\n@@ -428,7 +428,7 @@\n \n     def _status(self,request,response):\n         response.ok=True\n-        response.status_json=json.dumps({\n+        status={\n             \"mode\":\"ISOLATED ROS2 SIMULATION ONLY\",\n             \"owner\":self.mux.owner,\"reason\":self.mux.stop_reason,\n             \"last_lease_revocation\":getattr(self,\"_last_lease_revocation\",None),\n@@ -458,7 +458,17 @@\n                  \"saw_current_goal_active\":self._goal_witness.saw_active,\n                  \"terminal_journal_matched\":self._goal_witness.can_release_for_dock(),\n                  \"fault\":self._goal_witness.fault}\n-                if self._goal_witness else None)},sort_keys=True)\n+                if self._goal_witness else None)}\n+        pose=getattr(self,\"_motion_pose_cache\",None)\n+        status[\"motion_pose_source\"]=(None if pose is None else {\n+            \"frame\":pose.header.frame_id,\"child_frame\":pose.child_frame_id,\n+            \"stamp_ns\":pose.header.stamp.sec*1_000_000_000+pose.header.stamp.nanosec,\n+            \"position\":[pose.transform.translation.x,pose.transform.translation.y,\n+                        pose.transform.translation.z],\n+            \"orientation\":[pose.transform.rotation.x,pose.transform.rotation.y,\n+                           pose.transform.rotation.z,pose.transform.rotation.w]})\n+        status[\"motion_health_source\"]=getattr(self,\"_motion_health_detail\",None)\n+        response.status_json=json.dumps(status,sort_keys=True)\n         return response\n \n     def _tick(self):\n"
+    },
+    "distance_replanning": "--- 679/sim_bringup.launch.py\n+++ distance/sim_bringup.launch.py\n@@ -349,7 +349,7 @@\n         bt_params = {\n             'default_nav_to_pose_bt_xml': os.path.join(\n                 bt_dir,\n-                'navigate_w_replanning_only_if_goal_is_updated.xml' if managed else\n+                'navigate_w_replanning_distance.xml' if managed else\n                 'navigate_to_pose_w_replanning_and_recovery.xml'),\n             'default_nav_through_poses_bt_xml': os.path.join(\n                 bt_dir,\n",
+    "retarget_observer": "--- 679/planner.py\n+++ distance/planner.py\n@@ -1322,8 +1322,8 @@\n                 self._relay_status_last = time.monotonic()\n                 target = getattr(self, '_relay_goal_pose', None)\n                 selected = (target is not None\n-                    and abs(target.pose.position.x - 4.225) <= 1e-6\n-                    and abs(target.pose.position.y - 0.025) <= 1e-6)\n+                    and abs(target.pose.position.x - 1.525) <= 1e-6\n+                    and abs(target.pose.position.y - (-2.525)) <= 1e-6)\n                 if (self._relay_stage == 'nav' and selected\n                         and getattr(self, '_focal_trace_count', 0) < 192):\n                     self._focal_trace_count = getattr(self, '_focal_trace_count', 0) + 1\n"
+  },
+  "fixture_changes": {
+    "planner": {
+      "changed_methods": [
+        "_on_amcl",
+        "_relay_poll"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "cf8c9939cf882d9441a992e71a1feb780a37a30d758bebf66f1f70f64eafc05c",
+      "fixture_sha256": "dbba70140e68ff1c84cc03e275188ac4f86fc099819eb911a831d6b737011d2c"
+    },
+    "scorer": {
+      "changed_methods": [
+        "_on_pose",
+        "_audit_feedback"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "adc9349f2485d5cc6321af7d81853ff5243ff0024ec554b4b4b58f52e59d413f",
+      "fixture_sha256": "967ce55974493b71e14550190e80a6331c4f726c3791344a67786edaff854b36"
+    },
+    "relay": {
+      "changed_methods": [
+        "_status"
+      ],
+      "all_other_class_methods_ast_identical": true,
+      "baseline_sha256": "9a2e5a5bedb7ded15320cb8b2ab880c7ce030ed7b5a66d226eff6c992a5a75cb",
+      "fixture_sha256": "d3b42f88551c181b30e429b3ffe993a8bd5d7eaf5caa2fbdd743234fe120bb20"
+    },
+    "nav2_config": {
+      "only_semantic_change": "global_costmap.global_costmap.ros__parameters.publish_frequency2->4",
+      "baseline_sha256": "5478b8f007f1ae301091efb3fc38b6cda63eadd8790f000e8dec871b6dcaf0c8",
+      "candidate_sha256": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45"
+    },
+    "distance_replanning": {
+      "functional_source": "sim_bringup.launch.py: stock tree filename only",
+      "baseline_sha256": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+      "candidate_sha256": "d8ef6bc44e23eb3a60f8e41159ceb590a32dad537239fc6b390d11a5b08825ba",
+      "observer_source": "_relay_poll target constants only; all other planner methods AST-identical",
+      "source8_except_planner_identical": true
+    }
+  },
+  "limits": [
+    "Preparation only; do not enqueue until initial-escape671 is terminal and its data justify full-history contrast.",
+    "Same90/80 grader and ABORTED/STOP policies. Includes fatal-progress bookkeeping correction and initialESCAPE phase consistency fix.",
+    "Private status/observer edits not production changes. No hardware, active docking or electrical charge claim."
+  ],
+  "scope": "Full original room and original90/80, same679 functional sources except installed stock distance replanning. Bounded existing observer retargeted to1.525,-2.525. Production repositories untouched; latest9d pocket remains excluded to isolate this contrast.",
+  "resource_policy": {
+    "cpu": 2,
+    "memory_gib": 3,
+    "max_wall_s": 1800,
+    "host_stop_s": 1900,
+    "fifo_duration_s": 2100
+  }
+}

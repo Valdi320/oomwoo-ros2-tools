@@ -1154,3 +1154,34 @@ match679. sim_bringup is a tenth immutable input. Production still uses
 the previously validated configuration. Collect the same native handle;
 this graph result proves neither renewed runtime paths nor a stall fix,
 efficiency gain or complete90/80 acceptance.
+
+
+The [private distance-replanning result](../src/oomwoo_sim_support/docs/evidence/distance_replan_native_delivery_20261030.json)
+is rejected for adoption. The scorer finishes at95.41% coverage and
+78.36% efficiency at the first90% crossing, still below80%. Twenty-one
+goals succeed and one is canceled. Thirty-five controller path updates
+confirm the installed distance tree actually executes, versus0 in679,
+but the same focal target still times out after30.02simsec. Its150
+status observations retain map_current; the last33 observations span
+6.4s with zero translational relay output and a small angular output.
+The exact goal-frame/controller cause is unproven. All ten input hashes
+stay unchanged. Production still uses its original managed tree.
+
+The final bank is NOT a clean exit. Gazebo acknowledges native stop but
+remains live; scorer/report/logs are preserved in a separate snapshot
+before stopping the exact owned container. Podman escalates after15s,
+explaining controller rc137. No OOM or quota cause is inferred. Only two
+early auxiliary exits are clean before that intervention, not nineteen.
+FIFO688 and its scope are terminal. The independent Keepout audit also
+has valid:false because of an invalid/stale truth sample. Its0 counted
+crossings must not be presented as complete Keepout validation, despite
+the separate coverage meter emitting measurement_valid:true.
+
+Prioritize a small causal grading check before another physics run:
+can an invalid independent audit, or a detected forbidden crossing,
+coexist with a positive coverage/efficiency result? Reuse the existing
+audit/scorer file and real methods. If confirmed, fuse that existing
+proof into the existing invalid/fault outcome, preserving unmasked
+behavior and existing thresholds. No new policy switch or validation
+process is proposed. Shutdown-ACK liveness and exact near-goal behavior
+remain separate unresolved issues.
