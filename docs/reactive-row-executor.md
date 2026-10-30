@@ -1110,3 +1110,22 @@ can be removed. The earlier actual-entry-only static candidate saved0
 and should not be repeated unchanged. Assess a distinct entry/exit
 ordering hypothesis against the same map and waypoint set before any
 production route edit or another native room.
+
+
+Two bounded static alternatives are rejected without changing production:
+[fixed-order entry/exit optimization](../src/oomwoo_sim_support/docs/evidence/cell_entry_exit_comparison_20261030.json)
+saves only0.325m of a130.198m plan;
+[a single pass of whole-cell reversals](../src/oomwoo_sim_support/docs/evidence/cell_reversal_comparison_20261030.json)
+saves0. Both retain the same326 free targets. These benefits do not justify
+extra planner code or another room simulation. Do not repeat static
+ordering variants without new evidence.
+
+Native679's remaining goal290 cancellation is not proven to need more
+time: its final feedback reports0.285m remaining, but path length is
+almost constant in the last seconds. Extending its budget could hide
+a different problem. The managed scene selects the installed Nav2 tree
+that plans only when the goal is updated. A private follow-up may instead
+reuse installed navigate_w_replanning_distance.xml, whose DistanceController
+recomputes after1m on the existing tree tick. It adds neither recovery
+actions nor a RateController, and retains the same planner/controller
+writers. This is a hypothesis to check, not a proven stall repair.
