@@ -124,3 +124,18 @@ node, timer, world edit, reduced filter clearance or ABORTED permission was
 introduced. Detailed source, commands, fixture and limits:
 [ordinary_corner_delivery_20261030.json](evidence/ordinary_corner_delivery_20261030.json),
 [static plan comparison](evidence/ordinary_corner_static_plan_20261030.json).
+
+
+The subsequent native masked room run ended after 185.201 s with valid
+13.02% coverage and a motion fault, not a pass. Its first failure was a
+pose arriving 5 ms ahead of the received simulation clock; the relay
+revoked ownership and Nav2 confirmed cancellation. It did not reach the
+previous sofa/contact episode, so this is not a controlled comparison of
+room coverage before/after the corner correction. The seven read-only
+inputs were unchanged. The sampled Keepout audit remained valid with
+8,003 poses, 8,002 segments, no forbidden crossings and 0.10 s maximum gap.
+Gazebo and 19 auxiliaries exited cleanly; only the scorer returned 1.
+The phase audit now includes actual original pose stamps and action UUIDs.
+See [full native result](evidence/gazebo_keepout_corner_fixed_20261030.json).
+Clock/TF arrival ordering must be handled without accepting future poses or
+extending their freshness budgets before another full-room attempt.
