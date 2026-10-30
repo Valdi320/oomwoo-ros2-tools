@@ -1,0 +1,37 @@
+{
+  "completed_utc": "2026-10-30T14:55:28.696995+00:00",
+  "problem": "Managed Nav2 abort latched STOP/FAULT but still advanced legacy retry/skip bookkeeping; late terminal success/cancel could replace fault stage with release_nav.",
+  "change": "Retain journal terminal outcome and clear completed action transport state. Preserve fault stage and current waypoint/retries/skips/cooldown until explicit reconciliation whenever a relay fault is latched.",
+  "causal_evidence": "Original native657 log skipped waypoint181 after abort105; strengthened existing contact case reproduces retry/cooldown mutation before fix. Initial fixture attempt only lacked next_send and is separately recorded.",
+  "verification": {
+    "existing_planner_file_cases": 85,
+    "planner_receipt": "fault_progress_after_20261030.json",
+    "changed_file_lint_count": 2,
+    "style_receipt": "fault_progress_style_after_20261030.json",
+    "test_line_wrap_ast_identical_to_pass": true,
+    "late_terminal_cases": [
+      "succeeded",
+      "canceled",
+      "aborted"
+    ],
+    "journal_terminal_preserved": true,
+    "terminal_handle_cleared": true,
+    "legacy_and_nonfatal_controls_pass": true,
+    "planner_fault_phase_and_zero_command_retained": true
+  },
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "cf8c9939cf882d9441a992e71a1feb780a37a30d758bebf66f1f70f64eafc05c",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "3f54e431ae90e2b9d74475e3a4210d9a67e9802b5845e98961ec783197cadd7d"
+  },
+  "observed_utility": "Failed waypoint and first fault remain available for reconciliation; late action callbacks preserve the stopped dispatcher state.",
+  "remaining_to_useful_milestone": "Resolve native Nav2 abort105 and complete coherent masked 90/80 coverage; joint docking/native scene integration remains outside this small fix.",
+  "next_increment": "Collect already queued native668/session6932 from prior segment start. Its immutable c67+diagnostic source does not include this bookkeeping fix.",
+  "decision": "Consolidate this bounded correction; do not expand recovery behavior or repeat passing tests.",
+  "evidence_that_changes_decision": "A terminal callback that still changes progress/stage under an existing fault, or native traces identifying the actual abort105 cause.",
+  "limits": [
+    "Focused actual Python methods and ROS message fixtures; no new native acceptance for this fix.",
+    "Preserves actual ABORTED fail-closed policy and legacy non-relay retry/skip behavior.",
+    "No coverage improvement, physical robot or charging claim."
+  ],
+  "resource_policy": ".25CPU/512MiB/noGPU focused tests under explicit goal exception. No new tools/nodes/timers/hooks/services; no external writes."
+}

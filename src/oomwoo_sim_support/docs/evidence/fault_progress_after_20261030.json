@@ -1,0 +1,43 @@
+{
+  "completed_utc": "2026-10-30T14:52:46.877388+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 9.617,
+  "stdout": "........................................................................ [ 84%]\n.............                                                            [100%]\n85 passed in 2.89s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-fault-progress-after-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py\n"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "cf8c9939cf882d9441a992e71a1feb780a37a30d758bebf66f1f70f64eafc05c",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "9346d80dc188c265ac31a87da5972e1caf7c43548e93a8de7dcb07642f2b7131"
+  },
+  "inputs_unchanged": true,
+  "scope": "One existing planner test file, including fatal-abort preservation and late success/cancel/abort after fault. Legacy/nonfatal transitions and transit budget controls retained.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU exception during occupied FIFO667."
+}

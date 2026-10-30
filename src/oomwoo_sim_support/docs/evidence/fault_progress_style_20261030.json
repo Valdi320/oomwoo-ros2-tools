@@ -1,0 +1,41 @@
+{
+  "completed_utc": "2026-10-30T14:53:11.844379+00:00",
+  "rc": 1,
+  "host_timeout": false,
+  "seconds": 8.897,
+  "stdout": "    CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=status)))\n                                                                                                   ^\n1     E501 line too long (100 > 99 characters)\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:853:100: E501 line too long (100 > 99 characters)\n\n\n2 files checked\n1 errors\n\n'E'-type errors: 1\n\nChecked files:\n\n* /work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n* /work/src/oomwoo_coverage/test/test_planner_geometry.py\nFILES 2 RC 1\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:853:100: E501 line too long (100 > 99 characters)\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-fault-progress-style-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=96m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'STYLE'\nfrom ament_flake8.main import main_with_errors\nfiles=['/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py', '/work/src/oomwoo_coverage/test/test_planner_geometry.py']\nrc,errors=main_with_errors(argv=files)\nprint('FILES',len(files),'RC',rc)\nprint('\\n'.join(errors))\nraise SystemExit(rc)\nSTYLE\n"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "cf8c9939cf882d9441a992e71a1feb780a37a30d758bebf66f1f70f64eafc05c",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "9346d80dc188c265ac31a87da5972e1caf7c43548e93a8de7dcb07642f2b7131"
+  },
+  "inputs_unchanged": true,
+  "scope": "Existing ament_flake8 check on exactly the two changed Python files.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU exception during occupied FIFO667."
+}

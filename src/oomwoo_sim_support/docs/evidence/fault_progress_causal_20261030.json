@@ -1,0 +1,43 @@
+{
+  "completed_utc": "2026-10-30T14:51:52.359017+00:00",
+  "rc": 1,
+  "host_timeout": false,
+  "seconds": 9.145,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__ test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission __\n\ntmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_contact_does_not_turn_an_0')\n\n    def test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission(tmp_path):\n        node, sent, _, _, _, _, _, _ = contact_relay_planner(tmp_path)\n        node._relay_nav_contact()\n        node.next_send = node.get_clock().now()\n        progress = (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send)\n        CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=6)))\n        assert node._relay_journal.read()['outcome'] == 'aborted'\n        assert node._relay_stage == 'fault' and node.escape_until is None\n        assert sent[-1] == (0.0, 0.0)\n>       assert (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send) == progress\nE       assert (0, 1, 0, Tim...=SYSTEM_TIME)) == (0, 0, 0, Tim...=SYSTEM_TIME))\nE         At index 1 diff: 1 != 0\nE         Use -v to get more diff\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:841: AssertionError\n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission\n1 failed, 81 deselected in 2.42s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-fault-progress-causal-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py -k contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission\n"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "a552054576df9b32160ef4c6db90963419f4d8a8f8104af7a3f492eb0bbec0ab",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "e98ea9e25b3c60b08f705e47c70ec5a92d62b2f329039890320cc2b27e617c9e"
+  },
+  "inputs_unchanged": true,
+  "scope": "Same causal assertion with next_send initialized, matching constructor line196; previous attempt failed at missing fixture attribute before exercising production. Production remains unchanged.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU exception, other FIFO task occupied."
+}

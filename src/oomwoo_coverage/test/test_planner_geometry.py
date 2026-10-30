@@ -832,10 +832,34 @@ def test_relay_contact_before_acceptance_cancels_the_accepted_exact_goal(tmp_pat
 def test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission(tmp_path):
     node, sent, _, _, _, _, _, _ = contact_relay_planner(tmp_path)
     node._relay_nav_contact()
+    node.next_send = node.get_clock().now()
+    progress = (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send)
     CoveragePlanner._on_result(node, SimpleNamespace(result=lambda: SimpleNamespace(status=6)))
     assert node._relay_journal.read()['outcome'] == 'aborted'
     assert node._relay_stage == 'fault' and node.escape_until is None
     assert sent[-1] == (0.0, 0.0)
+    assert (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send) == progress
+    assert node.goal_handle is None and not node.awaiting and node.goal_deadline is None
+
+
+@pytest.mark.parametrize('status,outcome', [(4, 'succeeded'), (5, 'canceled'), (6, 'aborted')])
+def test_faulted_nav_terminal_preserves_progress_and_fault_until_reconciliation(
+        tmp_path, status, outcome):
+    node, sent, canceled, phases, _, _, _, _ = contact_relay_planner(tmp_path)
+    node.next_send = node.get_clock().now()
+    progress = (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send)
+    node._relay_fail('original lease failure')
+    epoch = node._relay_epoch
+    CoveragePlanner._on_result(node, SimpleNamespace(
+        result=lambda: SimpleNamespace(status=status)))
+    assert node._relay_journal.read()['outcome'] == outcome
+    assert node._relay_fault == 'original lease failure' and node._relay_epoch == epoch
+    assert node._relay_stage == 'fault'
+    assert (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send) == progress
+    assert node.goal_handle is None and not node.awaiting and node.goal_deadline is None
+    assert CoveragePlanner._relay_tick(node) is True
+    assert phases[-1] == 'FAULT' and sent[-1] == (0.0, 0.0)
+    assert len(canceled) == 1
 
 
 def test_cancel_already_terminal_response_waits_for_the_actual_result(tmp_path):

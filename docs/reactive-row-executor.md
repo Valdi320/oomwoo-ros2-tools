@@ -917,3 +917,26 @@ the previous starting yaw/history was not retained. It reuses the exact
 private frozen sources, map, mask and controls; only spawn and case identity
 change. This compares the approach path with the successful near-end start.
 No repeat of the complete room or tolerance change is justified yet.
+
+
+The [fault-progress correction](../src/oomwoo_sim_support/docs/evidence/fault_progress_delivery_20261030.json)
+resolves a bookkeeping defect visible in the abort105 native log: after
+latching a relay fault, the result callback still ran legacy retry/skip
+updates. A later success/cancel callback could also replace the fault stage
+with release_nav. The actual terminal outcome remains in the journal and
+the completed handle/deadline are cleared, while the current waypoint,
+retry/skip counters, cooldown and fault stage remain pending reconciliation.
+
+The strengthened existing abort case fails on the original retry update.
+The initial harness attempt lacked next_send and failed before exercising
+that behavior; both attempts are retained. After the correction, all 85
+cases in the existing planner test file pass, including late success, cancel
+and abort after an earlier fault, plus legacy/nonfatal transition controls.
+Lint passes on the two changed Python files. A line-length correction after
+the functional run has identical test AST; no functional retest was needed.
+
+This preserves actual ABORTED/STOP policy and accurate failed-work state;
+it does not fix the source of Nav2's missing progress or establish improved
+coverage. Consolidate it and collect the already-queued approach case668.
+That case uses its earlier immutable sources and does not include this
+bookkeeping change. Further recovery expansion awaits causal native data.

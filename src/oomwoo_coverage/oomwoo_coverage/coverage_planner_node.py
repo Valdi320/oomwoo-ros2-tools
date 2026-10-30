@@ -884,7 +884,8 @@ class CoveragePlanner(Node):
             self._relay_journal.terminal(
                 token=self._relay_token,
                 uuid_hex=self._relay_uuid, outcome=outcome)
-            self._relay_stage = 'release_nav'
+            if self._relay_fault is None:
+                self._relay_stage = 'release_nav'
             if status == 6:
                 detail = getattr(result, 'result', None)
                 contacts = tuple(self._bumper_fresh(getattr(self, name, None))
@@ -895,7 +896,8 @@ class CoveragePlanner(Node):
         self.goal_handle = None
         self.awaiting = False
         self.goal_deadline = None
-        if self.finished:
+        if self.finished or (getattr(self, '_relay_enabled', False)
+                             and self._relay_fault is not None):
             return
         if status == 4:                 # reached the waypoint
             self.wp_index += 1

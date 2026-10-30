@@ -1,0 +1,43 @@
+{
+  "completed_utc": "2026-10-30T14:51:02.192627+00:00",
+  "rc": 1,
+  "host_timeout": false,
+  "seconds": 9.506,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__ test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission __\n\ntmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_contact_does_not_turn_an_0')\n\n    def test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission(tmp_path):\n        node, sent, _, _, _, _, _, _ = contact_relay_planner(tmp_path)\n        node._relay_nav_contact()\n>       progress = (node.wp_index, node.wp_retries, node.consecutive_skips, node.next_send)\nE       AttributeError: 'types.SimpleNamespace' object has no attribute 'next_send'\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:835: AttributeError\n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission\n1 failed, 81 deselected in 2.60s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-fault-progress-before-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=128",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/contrib/src:${PYTHONPATH:-}\nexport ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/roshome ROS_DOMAIN_ID=95 ROS_LOCALHOST_ONLY=1\nexport FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 -m pytest -p no:cacheprovider -q /work/src/oomwoo_coverage/test/test_planner_geometry.py -k contact_does_not_turn_an_actual_aborted_goal_into_recovery_permission\n"
+  ],
+  "source_sha256": {
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "a552054576df9b32160ef4c6db90963419f4d8a8f8104af7a3f492eb0bbec0ab",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento/src/oomwoo_coverage/test/test_planner_geometry.py": "8cd0aec3a4019428998bd4a10748f7f6330486d1b883f67b5ab55ffb78f2aafd"
+  },
+  "inputs_unchanged": true,
+  "scope": "Existing aborted-goal case strengthened to preserve failed waypoint/progress and clear terminal transport state. Production unmodified causal check.",
+  "resource_authorization": "Explicit .25CPU/512MiB/noGPU exception, other FIFO task occupied."
+}
