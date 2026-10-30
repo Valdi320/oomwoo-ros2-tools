@@ -1,0 +1,21 @@
+{
+  "completed_utc": "2026-10-30T18:06:58.341042+00:00",
+  "causal_before": "keepout_verdict_before_20261030.json",
+  "after": "keepout_verdict_after_20261030.json",
+  "style": "keepout_verdict_style_20261030.json",
+  "before": "Actual audit detects one swept-disk crossing between two clear endpoints; actual scorer still returns0/pass:true at coverage.95/efficiency.85.",
+  "after_result": "39 existing-file cases PASS, including nine new audit/verdict cases; two changed Python files lint PASS.",
+  "demonstrated_utility": "Measured forbidden crossing prevents positive grading; untrusted observed mask/pose audit uses existing invalid-measurement result. Existing clean, unmasked, clock, late-grace and owned-process contracts pass.",
+  "implementation": "Read the existing audit snapshot once after completion grace, fuse crossings into existing motion-fault state and invalid data into existing measurement-invalid state; reuse same snapshot in report. No timer, node, subscription, interface knob or separate validator.",
+  "limits": [
+    "Synthetic inputs through actual ROS message geometry/audit/scorer methods; not another Gazebo acceptance.",
+    "The prior native67990/80 failure remains; native688 Keepout trace is invalid and closure failed.",
+    "Future/stale truth sample cause in688 is unknown; preserve original thresholds and do not repeat room without discriminating evidence."
+  ],
+  "next_increment": "Inspect or expose original bad truth stamp versus clock in the existing bounded audit error, then distinguish DDS clock/pose ordering from invalid input without another full-room run. Shutdown ACK liveness and exact near-goal control remain separate pending work.",
+  "decision": "Consolidate this reliability fix; defer further BT/route variants and full simulations until source-specific evidence warrants them.",
+  "source_sha256": {
+    "src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py": "cbcf727d40f291d8da99d41afa288850319d8d8e94b6d7713ece14377b59afdd",
+    "src/oomwoo_sim_support/test/test_coverage_runner_bounds.py": "e065611098caea8e6b7e3b602a157a3ca097031e8acf448360a2d0106afbac7e"
+  }
+}

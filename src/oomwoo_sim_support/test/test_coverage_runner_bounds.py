@@ -490,3 +490,71 @@ def test_regression_launch_passes_the_configured_nav_speed_to_planner(monkeypatc
     context = LaunchContext()
     context.launch_configurations['nav_linear_speed'] = '0.14'
     assert planner_parameters[0]['nav_linear_speed'].evaluate(context) == .14
+
+
+@pytest.mark.parametrize('mode,expected_code,measurement_valid', [
+    ('crossing', 1, True),
+    ('late_crossing', 1, True),
+    ('late_stale', 2, False),
+    ('stale', 2, False),
+    ('gap', 2, False),
+    ('bad_mask', 2, False),
+    ('empty_trace', 2, False),
+    ('clear', 0, True),
+    ('no_mask', 0, True),
+])
+def test_masked_safety_audit_participates_in_existing_verdict(
+        score, mode, expected_code, measurement_valid):
+    """Positive coverage cannot conceal a measured crossing or untrusted audit."""
+    audit, mask, now = truth_audit()
+
+    def update(node, tick):
+        node.sweep_started = True
+        node.sweep_complete = True
+        node.coverage = 0.95
+        node.efficiency = 0.85
+        if tick == 2 and mode in ('late_crossing', 'late_stale'):
+            node._audit_keepout_truth(truth_pose(
+                1.4 if mode == 'late_crossing' else -.25,
+                10_150_000_000 if mode == 'late_crossing' else 8_000_000_000))
+        if tick != 1:
+            return
+        node.motion_audit = True
+        node.motion_graph = {}
+        node.motion_samples = {'phase': [], 'status': [], 'feedback': []}
+        node._motion_status_count = 0
+        node._audit_graph = lambda: None
+        node.get_clock = audit.get_clock
+        node._keepout_audit = audit._keepout_audit
+        node._keepout_audit_mask = None
+        node._keepout_audit_previous = None
+        node._keepout_audit_bbox = None
+        for name in ('_audit_keepout_mask', '_audit_keepout_truth',
+                     '_audit_keepout_error', '_audit_keepout_result'):
+            setattr(node, name, MethodType(
+                getattr(runner.CoverageRunner, name), node))
+        if mode == 'no_mask':
+            return
+        if mode == 'bad_mask':
+            mask.data[0] = 50
+        node._audit_keepout_mask(mask)
+        if mode == 'empty_trace' or mode == 'bad_mask':
+            return
+        if mode == 'stale':
+            node._audit_keepout_truth(truth_pose(-.3, 8_000_000_000))
+        elif mode == 'gap':
+            now[0] = 10_500_000_000
+            node._audit_keepout_truth(truth_pose(-.3, 10_000_000_000))
+            node._audit_keepout_truth(truth_pose(-.2, 10_400_000_000))
+        else:
+            node._audit_keepout_truth(truth_pose(
+                .2 if mode == 'crossing' else -.3, 10_000_000_000))
+            node._audit_keepout_truth(truth_pose(
+                1.4 if mode == 'crossing' else -.25, 10_100_000_000))
+
+    code, report, _ = score(wall=10.0, update=update)
+    if mode in ('crossing', 'late_crossing'):
+        assert report['motion_audit']['keepout']['footprint_crossings'] == 1
+    assert code == expected_code, report
+    assert report['measurement_valid'] is measurement_valid
+    assert report['pass'] is (expected_code == 0)

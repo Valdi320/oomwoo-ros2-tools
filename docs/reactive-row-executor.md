@@ -1185,3 +1185,30 @@ proof into the existing invalid/fault outcome, preserving unmasked
 behavior and existing thresholds. No new policy switch or validation
 process is proposed. Shutdown-ACK liveness and exact near-goal behavior
 remain separate unresolved issues.
+
+
+The [audit/verdict correction](../src/oomwoo_sim_support/docs/evidence/keepout_verdict_delivery_20261030.json)
+closes a demonstrated false positive: the actual swept-footprint audit
+detects a forbidden crossing between two clear endpoints, yet the prior
+scorer returns pass at95% coverage/85% efficiency. The existing audit
+snapshot is now read once after completion grace. A recorded crossing
+feeds the existing motion-fault result; invalid observed mask/pose proof
+feeds the existing measurement-invalid result. The report uses the same
+snapshot, retaining its source errors and original thresholds.
+
+All39 cases in the existing scorer file pass, including nine new cases
+covering crossings, stale poses, insufficient cadence, invalid masks,
+empty traces, late-grace crossing/staleness, clean data and unmasked
+control. Both changed Python files pass lint. An invalid mask/trace
+returns2, a reliably observed crossing returns1, and valid controls
+retain their original outcomes. Invalid-input logging no longer blames
+the host or clock when the independent audit is the actual reason.
+No node, timer, subscription, policy switch or separate validator is added.
+
+This is real-method validation with synthetic inputs, not a new native
+90/80 acceptance. Consolidate the reliability fix. Next distinguish
+the original bad truth stamp from its original clock in the already
+bounded audit diagnostic before repeating a full room. Do not relax
+source deadlines or declare Keepout proof from zero counted crossings
+when the audit says invalid. Shutdown-ACK liveness and near-goal
+controller behavior remain separate unresolved issues.

@@ -414,6 +414,16 @@ class CoverageRunner(CoverageMeter):
                 reason = 'max_time'
                 break
 
+        keepout_audit = (self._audit_keepout_result()
+                         if getattr(self, 'motion_audit', False) else None)
+        keepout_invalid = bool(
+            keepout_audit is not None
+            and (keepout_audit['mask_seen'] or keepout_audit['errors'])
+            and not keepout_audit['valid'])
+        if keepout_invalid:
+            self.measurement_invalid = True
+        if keepout_audit is not None and keepout_audit['footprint_crossings']:
+            self._motion_fault = True
         if getattr(self, '_motion_fault', False):
             reason = 'motion_fault'
         if self.sim_unstable:
@@ -448,7 +458,7 @@ class CoverageRunner(CoverageMeter):
             result['motion_audit'] = {
                 'graph': self.motion_graph, 'samples': self.motion_samples,
                 'status_packets_total': self._motion_status_count,
-                'keepout': self._audit_keepout_result(),
+                'keepout': keepout_audit,
                 'dds_builtin_transports': os.environ.get(
                     'FASTDDS_BUILTIN_TRANSPORTS', 'DEFAULT')}
         try:
@@ -457,14 +467,14 @@ class CoverageRunner(CoverageMeter):
         except OSError as e:
             self.get_logger().warn(f'could not write report: {e}')
         if invalid:
-            # Invalid measurement, NOT a behavior failure: distinct exit code
-            # so CI/users don't read a physics glitch as a coverage regression.
+            # Untrusted measurement inputs are distinct from behavior failures.
+            # Keep the existing invalid-measurement exit code for CI/users.
             why = ('sim unstable: ground-truth pose teleported'
-                   if self.sim_unstable else f'sim clock stalled ({reason})')
+                   if self.sim_unstable else 'keepout audit invalid'
+                   if keepout_invalid else f'sim clock stalled ({reason})')
             self.get_logger().error(
-                f'COVERAGE_SUMMARY MEASUREMENT INVALID ({why}). This host '
-                'cannot run the sim faithfully — use a native x86-64 Linux '
-                'machine or CI runner. '
+                f'COVERAGE_SUMMARY MEASUREMENT INVALID ({why}). '
+                'The measurement inputs could not be validated. '
                 f'coverage={result["coverage"]:.4f} (informational only)')
             return 2
         eat = result['efficiency_at_target']
