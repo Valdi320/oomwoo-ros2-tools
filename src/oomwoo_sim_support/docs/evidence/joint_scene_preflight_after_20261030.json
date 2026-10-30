@@ -1,0 +1,113 @@
+{
+  "completed_utc": "2026-10-30T19:03:00.487978+00:00",
+  "rc": 0,
+  "seconds": 5.884,
+  "stdout": "OOMWOO_JOINT_SCENE_PREFLIGHT {\"world_base_sha256\": \"a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8\", \"map_base_sha256\": \"11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f\", \"model_sha256\": \"d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92\", \"generator_sha256\": \"da298c8ed1a8c5b2dd8fcb5e44fd8967239574a0d3298a5b2da56d4366102bce\", \"added_model_pose\": [-1.325, -0.5, 0.0, 0.0, 0.0, 1.5708], \"original_world_children_unchanged\": true, \"collision_shapes\": [\"box\", \"box\", \"box\", \"box\"], \"rasterized_boxes\": 4, \"mesh_triangles\": 0, \"map_shape\": [140, 140], \"resolution\": 0.05, \"origin\": [-1.6, -3.05, 0], \"new_occupied_pixels\": 60, \"changed_outside_station\": 0, \"new_free_pixels\": 0, \"initial_disk_clear\": true, \"staging_disk_clear\": true, \"dock_mouth_world\": [-0.985, -0.5, 3.141592653589793], \"nominal_staging_world\": [-0.235, -0.5, 0.0], \"files\": {\"dock_test_room.world\": \"ed90a44429bc23b2790ecc0adf2806de38a9d0fdcea60c80c76ea7a2fef572d1\", \"vacuum_dock-model.sdf\": \"d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92\", \"dock_test_room.pgm\": \"4a78d8b0330506ff5e9e300cb2454fdddceb92df1fe682af72649e76d75c7a6a\", \"dock_test_room.yaml\": \"2c010a963f73a9a519b5fcd872439b0d0aa2aa6135bf818e8f7144d8dd6862b3\"}, \"limits\": [\"Static world/map preparation only; not AMCL,Nav2,detector or full-cycle acceptance.\", \"Station copied from existing original model; no new hardware design.\", \"Original room acceptance fixture unchanged.\"]}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=96m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/joint-scene-95828caf10:/out:rw",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'SCENE'\n\nfrom pathlib import Path\nimport hashlib,importlib.util,json,math,xml.etree.ElementTree as ET\nimport numpy as np,yaml\nfrom PIL import Image\nfrom ament_index_python.packages import get_package_share_directory\nout=Path('/out');pkg=Path(get_package_share_directory('oomwoo_gazebo'))\nmodel_path=pkg/'models/vacuum_dock/model.sdf';model_bytes=model_path.read_bytes()\nassert hashlib.sha256(model_bytes).hexdigest()=='d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92'\n\nmodel=ET.fromstring(model_bytes).find('model')\nshapes=[shape.tag for geom in model.findall('.//collision/geometry') for shape in geom]\nassert shapes==['box']*4,shapes\nworld_path=Path('/work/src/oomwoo_sim_support/worlds/test_room.world')\ntree=ET.parse(world_path);world=tree.getroot().find('world')\nbefore=[ET.tostring(elem) for elem in world]\nstation=ET.SubElement(world,'model',{'name':'vacuum_dock'})\npose=[-1.325,-.5,0.,0.,0.,1.5708]\nET.SubElement(station,'pose').text=' '.join(map(str,pose))\nET.SubElement(ET.SubElement(station,'include'),'uri').text='model://vacuum_dock'\nassert [ET.tostring(elem) for elem in world][:-1]==before\ntree.write(out/'dock_test_room.world',encoding='utf-8',xml_declaration=True)\n(out/'vacuum_dock-model.sdf').write_bytes(model_bytes)\nmeta=yaml.safe_load(Path('/work/src/oomwoo_sim_support/maps/test_room.yaml').read_text())\nbase_path=Path('/work/src/oomwoo_sim_support/maps')/meta['image']\nbase=np.flipud(np.asarray(Image.open(base_path).convert('L'))).copy()\nspec=importlib.util.spec_from_file_location('existing_box_generator','/work/tools/gen_livingroom_map.py')\ng=importlib.util.module_from_spec(spec);spec.loader.exec_module(g)\ng.RES=float(meta['resolution']);g.OX,g.OY=meta['origin'][:2];g.H,g.W=base.shape\nextra=np.zeros(base.shape,dtype=bool)\nnb,nt=g.collisions_of(model,g.T_of(pose),str(model_path.parent),extra)\nassert nb==4 and nt==0,(nb,nt)\nresult=base.copy();result[extra]=0\nchanged=result!=base\nassert changed.any() and np.all(result[changed]==0)\nassert not np.any(changed & ~extra)\nassert np.array_equal(result[~extra],base[~extra])\nImage.fromarray(np.flipud(result),'L').save(out/'dock_test_room.pgm')\nmeta['image']='dock_test_room.pgm';(out/'dock_test_room.yaml').write_text(yaml.safe_dump(meta,sort_keys=False))\n# Existing nominal Gazebo placement translated 1.125m east, with identical yaw.\nmouth=[-.985,-.5,math.pi];staging=[-.235,-.5,0.]\ndef disk_clear(p):\n yy,xx=np.meshgrid(np.arange(g.H),np.arange(g.W),indexing='ij')\n wx=g.OX+(xx+.5)*g.RES;wy=g.OY+(yy+.5)*g.RES\n close=np.hypot(wx-p[0],wy-p[1])<=.1745+g.RES/math.sqrt(2)\n return bool(np.all(result[close]==254))\nassert disk_clear([0.,0.]) and disk_clear(staging)\nr={'world_base_sha256':hashlib.sha256(world_path.read_bytes()).hexdigest(),\n 'map_base_sha256':hashlib.sha256(base_path.read_bytes()).hexdigest(),\n 'model_sha256':hashlib.sha256(model_bytes).hexdigest(),\n 'generator_sha256':hashlib.sha256(Path('/work/tools/gen_livingroom_map.py').read_bytes()).hexdigest(),\n 'added_model_pose':pose,'original_world_children_unchanged':True,\n 'collision_shapes':shapes,'rasterized_boxes':nb,'mesh_triangles':nt,\n 'map_shape':list(base.shape),'resolution':g.RES,'origin':meta['origin'],\n 'new_occupied_pixels':int(changed.sum()),'changed_outside_station':0,\n 'new_free_pixels':int(np.sum((result==254)&(base!=254))),\n 'initial_disk_clear':disk_clear([0.,0.]),'staging_disk_clear':disk_clear(staging),\n 'dock_mouth_world':mouth,'nominal_staging_world':staging,\n 'files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.iterdir()},\n 'limits':['Static world/map preparation only; not AMCL,Nav2,detector or full-cycle acceptance.','Station copied from existing original model; no new hardware design.','Original room acceptance fixture unchanged.']}\nprint('OOMWOO_JOINT_SCENE_PREFLIGHT '+json.dumps(r),flush=True)\n\nSCENE\n"
+  ],
+  "fixture_directory": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/joint-scene-95828caf10",
+  "guard": "OCUPADA: la maquina la tiene \u00abfifo-704: Bateria local qwen3.8-27b micro\u00bb desde hace 0 min (pid 3534813). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-704\u00bb.\n",
+  "resource_authorization": "Compatible .25CPU/512MB/noGPU small-test exception.",
+  "scope": "Static preparation using unchanged original station model and existing box rasterizer; no ROS node, Gazebo or hardware.",
+  "setup_before": "joint_scene_preflight_20261030.json",
+  "setup_correction": "Expected source hash taken directly from preserved original inventory, eliminating manual transcription.",
+  "result": {
+    "world_base_sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+    "map_base_sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+    "model_sha256": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+    "generator_sha256": "da298c8ed1a8c5b2dd8fcb5e44fd8967239574a0d3298a5b2da56d4366102bce",
+    "added_model_pose": [
+      -1.325,
+      -0.5,
+      0.0,
+      0.0,
+      0.0,
+      1.5708
+    ],
+    "original_world_children_unchanged": true,
+    "collision_shapes": [
+      "box",
+      "box",
+      "box",
+      "box"
+    ],
+    "rasterized_boxes": 4,
+    "mesh_triangles": 0,
+    "map_shape": [
+      140,
+      140
+    ],
+    "resolution": 0.05,
+    "origin": [
+      -1.6,
+      -3.05,
+      0
+    ],
+    "new_occupied_pixels": 60,
+    "changed_outside_station": 0,
+    "new_free_pixels": 0,
+    "initial_disk_clear": true,
+    "staging_disk_clear": true,
+    "dock_mouth_world": [
+      -0.985,
+      -0.5,
+      3.141592653589793
+    ],
+    "nominal_staging_world": [
+      -0.235,
+      -0.5,
+      0.0
+    ],
+    "files": {
+      "dock_test_room.world": "ed90a44429bc23b2790ecc0adf2806de38a9d0fdcea60c80c76ea7a2fef572d1",
+      "vacuum_dock-model.sdf": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+      "dock_test_room.pgm": "4a78d8b0330506ff5e9e300cb2454fdddceb92df1fe682af72649e76d75c7a6a",
+      "dock_test_room.yaml": "2c010a963f73a9a519b5fcd872439b0d0aa2aa6135bf818e8f7144d8dd6862b3"
+    },
+    "limits": [
+      "Static world/map preparation only; not AMCL,Nav2,detector or full-cycle acceptance.",
+      "Station copied from existing original model; no new hardware design.",
+      "Original room acceptance fixture unchanged."
+    ]
+  },
+  "utility_demonstrated": "The existing station can be represented in the primitives room and its static map with existing geometry code and no mesh dependency; only60additional occupied pixels, no original room geometry or unrelated pixels changed.",
+  "distance_to_useful_milestone": "Static scene/map support prepared; actual AMCL/Nav2/detector and joint lifecycle not yet executed.",
+  "interpretation": {
+    "nominal_staging_world": "This observation names the nominal startup/approach pose0.75m outside the mouth, translated from the original trial. It is not the internal DockDrive staging target.",
+    "driver_stage_x_m": -0.35,
+    "derived_driver_stage_world": [
+      -0.635,
+      -0.5,
+      0.0
+    ],
+    "internal_driver_stage_clearance_tested": false,
+    "setup_before": "Initial expected hash was transcribed incorrectly. The original failure is preserved; corrected expected hash is read directly from the earlier independent inventory. No functional scene checks executed before that correction."
+  },
+  "decision": "Keep the prepared scene private until native geometry/localization and actual controller handoffs are checked. No room-acceptance map changed.",
+  "next_increment": "After the existing705shutdown contrast, prepare one short integrated NAV/SWEEP/DOCK smoke case in this scene, using existing typed control services and one final velocity writer. Any supplied short route is a test input and cannot establish full-room planning/90/80 performance."
+}

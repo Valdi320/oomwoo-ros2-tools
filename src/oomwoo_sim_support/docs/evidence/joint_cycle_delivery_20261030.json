@@ -1,0 +1,94 @@
+{
+  "observed_utc": "2026-10-30T20:59:34.384411+00:00",
+  "scope": "Private short supplied-route simulation of actual NAV/SWEEP/DOCK handoffs; evidence only, no new production API or fixture installed.",
+  "status": "incomplete; native trial736 queued, not a pass",
+  "source_delivery_head_before_evidence": "d8b8ea74d1ccd3b3ccd0d99ed6e78dcb4f851e86",
+  "demonstrated_utility": [
+    {
+      "claim": "Real Nav2 goals and reactive sweep complete, quiet permission waiting reaches real DOCK motion.",
+      "evidence": "joint_status_native_20261030.json",
+      "limits": "Stops during BACK on real health rejection; no DONE or release acceptance."
+    },
+    {
+      "claim": "A lost observer status response no longer suppresses later queries indefinitely; missing or invalid evidence never enables dock.",
+      "evidence": [
+        "joint_status_before_20261030.json",
+        "joint_status_after_20261030.json",
+        "joint_height_native_20261030.json"
+      ],
+      "limits": "Five synthetic-transport cases use real rclpy Futures and real mux;731 additionally records real DDS response loss followed by retry and recovery. Not a vendor race repair."
+    },
+    {
+      "claim": "Station raster wrongly projects elevated core into docking bay. Actual expanded robot top.097m is below core bottom.17m;36false occupied pixels removed while24real station pixels and original obstacles remain.",
+      "evidence": "joint_height_preflight_20261030.json",
+      "limits": "Static map correction only.731 failed during startup before testing approach;725 failure position/cell unrecorded."
+    },
+    {
+      "claim": "Installed response writers accept per-topic lifecycle discovery-wait budget1s;3unrelated service controls stay100ms and measured QoS fields otherwise unchanged.",
+      "evidence": "joint_lifecycle_qos_small_20261030.json",
+      "limits": "Actual rcl services inspected without requests. Does not establish startup reliability; native736 pending."
+    }
+  ],
+  "negative_native_evidence": [
+    {
+      "ticket": 709,
+      "receipt": "joint_cycle_native_20261030.json",
+      "outcome": "controller lifecycle response lost; no NAV"
+    },
+    {
+      "ticket": 713,
+      "receipt": "joint_cycle_retry_native_20261030.json",
+      "outcome": "NAV/SWEEP complete; observer aborts on first quiet-not-ready rejection"
+    },
+    {
+      "ticket": 717,
+      "receipt": "joint_handoff_native_20261030.json",
+      "outcome": "Observer status future pending until180s deadline; no claim_dock request"
+    },
+    {
+      "ticket": 725,
+      "receipt": "joint_status_native_20261030.json",
+      "outcome": "Actual claim/handoff and BACK; pose-health revocation retained with STOP"
+    },
+    {
+      "ticket": 731,
+      "receipt": "joint_height_native_20261030.json",
+      "outcome": "AMCL/change_state loses response; BOOT30s expires, localization manager Launch escalation-9 retained"
+    }
+  ],
+  "next_increment": {
+    "ticket": 736,
+    "session": 84767,
+    "use": "Complete the single simulated cycle with corrected station map and targeted lifecycle response QoS.",
+    "acceptance": "Two exact Nav2 UUIDs active then success, real translating output from3owners, claim before dock enable, actual detector+driver DONE/geometric seating, confirmed STOP after release, valid independent Keepout0crossings, clean owned process exits.",
+    "remaining_for_this_milestone": "Native cycle and release not yet accepted.",
+    "expected_benefit": "Resolve integration and recurring startup bottleneck before adding features.",
+    "cost_bound": "2CPU/3GiB/noGPU only after FIFO admission; observer180s, host240s, turn300s. Waiting.05CPU.",
+    "decision": "Advance once with new deterministic transport evidence; no unchanged blind startup retries if same failure persists."
+  },
+  "remaining_larger_scope": [
+    "Full-room90percent coverage/80percent first-target efficiency still not passed.",
+    "Supplied short route does not validate normal full-room planning.",
+    "Post-sweep docking distance in manually extended meter observation is not a cleaning grade.",
+    "No S12 movement, physical charging, dirt removal, firmware installation or MCU safety validated here.",
+    "Private transport/map adjustments not adopted into production deployment."
+  ],
+  "delivery_policy": "Own local evidence commit only; no push,PR,merge,remote comment or unrelated service changes.",
+  "evidence_sha256": {
+    "joint_scene_preflight_20261030.json": "03195f329bfedb8b62b92b8e690c67dc3a63401388f42b1215a2123220ae5fb0",
+    "joint_scene_preflight_after_20261030.json": "ff1da936e9f6e6a7e13cb4cc2c09cdc52ce4d94639830ecdf17d0487dc182ae7",
+    "joint_cycle_graph_status_20261030.json": "11d9b4f5d717bbd9495607d3911bfd2163fff1adf8dedc7863bc2576a97f6aa0",
+    "joint_cycle_graph_status_after_20261030.json": "0ee2314fb7b8b6f2de7925b06e93d7d173630d44417027be25913cca3dfbea0d",
+    "joint_cycle_native_20261030.json": "c53928beb10e2075e801b4070b329528f88fa6f43dd2b0dcc8ee4c677acfa5b2",
+    "joint_cycle_retry_native_20261030.json": "8e03b07fd55cd2256b3ff2bfcb554e218fab48b57e45c65da65149e62c8ae58d",
+    "joint_handoff_before_20261030.json": "d9491fcbdb3ac962f29eed35693fcbbbcdf478f422e4799f1794cfca34b5ad53",
+    "joint_handoff_after_20261030.json": "3597316ff71d59d52e609698cbbc07ee1a7e2e55bb3a1c185d2c4fe594b135b8",
+    "joint_handoff_native_20261030.json": "1b5618d8294d232ebc6dced3b00f30faa9361521d210c4a1833bea51951a530a",
+    "joint_status_before_20261030.json": "7481fd057da16c8208fe2c59171d6213d3294a17d0843b1f98afff3430396c93",
+    "joint_status_after_20261030.json": "b6f128ad7a20ff7c9a9e8fb7c03fc8d9763b567d442f32d0a182415c09b706d0",
+    "joint_status_native_20261030.json": "f38ec92f21cb609ef15ea0b0bfc903b0c4180c95e6c8a645f590ea9ba3befec1",
+    "joint_height_preflight_20261030.json": "f63620e493b9c7a21ecaed7f08c076b44b430393c12a415c922b7df629af48ef",
+    "joint_height_native_20261030.json": "45b28e390037efdcb4854770d8845dacd10c0bb86b5a63885030a8ef341dc740",
+    "joint_lifecycle_qos_small_20261030.json": "77a1a2c4c3bd8505918533a344f7d7639bb0f7894c989f0145033a8ee0e3a90e"
+  }
+}
