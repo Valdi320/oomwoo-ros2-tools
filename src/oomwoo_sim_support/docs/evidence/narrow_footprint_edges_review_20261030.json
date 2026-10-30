@@ -1,0 +1,462 @@
+{
+  "completed_utc": "2026-10-30T22:23:15.438683+00:00",
+  "source_commit": "c468eed0f8500be6ffa8477b8330b7eadf2e691d",
+  "rc": 0,
+  "seconds": 8.588,
+  "stdout": "NARROW_FOOTPRINT_COMPARISON {\"results\": [{\"variant\": \"current\", \"waypoints\": 326, \"cells\": 9, \"path_m_including_straight_connectors\": 130.19835577503864, \"within_cell_polyline_length_m\": 119.01301458127404, \"turns\": 65, \"cost_m\": 149.69835577503864, \"targets_all_in_free_mask\": true, \"endpoint_footprint_raw_free_cells\": 11270, \"within_cell_safe_chord_footprint_raw_free_cells\": 14668, \"within_cell_safe_chord_footprint_meter_cleanable_cells\": 13291, \"invalid_within_cell_chords\": [{\"a\": [-0.7250000000000001, 2.1750000000000007], \"b\": [-1.0750000000000002, 2.575], \"length_m\": 0.5315072906367321}], \"narrow_cells\": 1}, {\"variant\": \"keep_lower_original_pass\", \"waypoints\": 316, \"cells\": 9, \"path_m_including_straight_connectors\": 123.55325690236884, \"within_cell_polyline_length_m\": 116.48392476026322, \"turns\": 62, \"cost_m\": 142.15325690236884, \"targets_all_in_free_mask\": true, \"endpoint_footprint_raw_free_cells\": 11262, \"within_cell_safe_chord_footprint_raw_free_cells\": 14659, \"within_cell_safe_chord_footprint_meter_cleanable_cells\": 13282, \"invalid_within_cell_chords\": [{\"a\": [4.925000000000001, 2.1750000000000007], \"b\": [3.4250000000000003, 2.575], \"length_m\": 1.5524174696260027}], \"narrow_cells\": 1}, {\"variant\": \"keep_upper_original_pass\", \"waypoints\": 316, \"cells\": 9, \"path_m_including_straight_connectors\": 123.75325690236883, \"within_cell_polyline_length_m\": 116.48392476026322, \"turns\": 62, \"cost_m\": 142.35325690236883, \"targets_all_in_free_mask\": true, \"endpoint_footprint_raw_free_cells\": 11231, \"within_cell_safe_chord_footprint_raw_free_cells\": 14635, \"within_cell_safe_chord_footprint_meter_cleanable_cells\": 13258, \"invalid_within_cell_chords\": [{\"a\": [4.925000000000001, 2.1750000000000007], \"b\": [3.4250000000000003, 2.575], \"length_m\": 1.5524174696260027}], \"narrow_cells\": 1}], \"comparison\": {\"keep_lower_original_pass\": {\"waypoint_disks\": {\"lost_raw_free_cells\": 8, \"added_raw_free_cells\": 0, \"lost_meter_cleanable_cells\": 7, \"added_meter_cleanable_cells\": 0, \"lost_xy_first20\": [[-0.925, 0.9250000000000003], [-0.5250000000000001, 0.9250000000000003], [-0.125, 0.9250000000000003], [0.6749999999999998, 0.9250000000000003], [1.0750000000000002, 0.9250000000000003], [2.6750000000000003, 1.0250000000000004], [2.6750000000000003, 1.0750000000000002], [2.725, 1.125]]}, \"within_cell_safe_chords_and_waypoint_disks\": {\"lost_raw_free_cells\": 81, \"added_raw_free_cells\": 72, \"lost_meter_cleanable_cells\": 17, \"added_meter_cleanable_cells\": 8, \"lost_xy_first20\": [[1.225, 0.12500000000000044], [1.225, 0.17500000000000027], [1.225, 0.22500000000000053], [1.275, 0.22500000000000053], [1.225, 0.27500000000000036], [1.275, 0.27500000000000036], [1.3250000000000002, 0.27500000000000036], [1.375, 0.27500000000000036], [1.225, 0.3250000000000002], [1.275, 0.3250000000000002], [1.225, 0.37500000000000044], [1.225, 0.42500000000000027], [2.9250000000000003, 0.5250000000000004], [2.9250000000000003, 0.5750000000000002], [2.8750000000000004, 0.6250000000000004], [2.9250000000000003, 0.6250000000000004], [2.9250000000000003, 0.6750000000000003], [2.9250000000000003, 0.7250000000000005], [-0.925, 0.9250000000000003], [5.125, 1.0250000000000004]]}, \"path_saving_m\": 6.6450988726697915}, \"keep_upper_original_pass\": {\"waypoint_disks\": {\"lost_raw_free_cells\": 39, \"added_raw_free_cells\": 0, \"lost_meter_cleanable_cells\": 38, \"added_meter_cleanable_cells\": 0, \"lost_xy_first20\": [[0.875, 0.6250000000000004], [1.275, 0.6250000000000004], [1.6750000000000003, 0.6250000000000004], [2.075, 0.6250000000000004], [2.475, 0.6250000000000004], [0.5750000000000002, 0.6750000000000003], [0.7749999999999999, 0.6750000000000003], [0.8250000000000002, 0.6750000000000003], [0.875, 0.6750000000000003], [0.9250000000000003, 0.6750000000000003], [0.9750000000000001, 0.6750000000000003], [1.1750000000000003, 0.6750000000000003], [1.225, 0.6750000000000003], [1.625, 0.6750000000000003], [2.025, 0.6750000000000003], [2.4250000000000003, 0.6750000000000003], [0.5750000000000002, 0.7250000000000005], [0.625, 0.7250000000000005], [0.7250000000000001, 0.7250000000000005], [0.7749999999999999, 0.7250000000000005]]}, \"within_cell_safe_chords_and_waypoint_disks\": {\"lost_raw_free_cells\": 105, \"added_raw_free_cells\": 72, \"lost_meter_cleanable_cells\": 41, \"added_meter_cleanable_cells\": 8, \"lost_xy_first20\": [[1.225, 0.12500000000000044], [1.225, 0.17500000000000027], [1.225, 0.22500000000000053], [1.275, 0.22500000000000053], [1.225, 0.27500000000000036], [1.275, 0.27500000000000036], [1.3250000000000002, 0.27500000000000036], [1.375, 0.27500000000000036], [1.225, 0.3250000000000002], [1.275, 0.3250000000000002], [1.225, 0.37500000000000044], [1.225, 0.42500000000000027], [2.9250000000000003, 0.5250000000000004], [2.9250000000000003, 0.5750000000000002], [0.625, 0.6250000000000004], [0.6749999999999998, 0.6250000000000004], [0.7250000000000001, 0.6250000000000004], [0.7749999999999999, 0.6250000000000004], [0.8250000000000002, 0.6250000000000004], [0.875, 0.6250000000000004]]}, \"path_saving_m\": 6.445098872669803}}, \"source_sha256\": \"f13571866a923a2ed1f8c49f1b4a71ea18de5fba45f88939611b2ea1c1fc7529\", \"candidate_source_sha256\": {\"lower\": \"e3ce605826c56a53fe54bdec26fb708139c8634675ccac0c3d22f4e50e75b7ca\", \"upper\": \"c193049ee49924608dcdc2da6fa57ffc311bb949348c4df0643ddc0e2886c11c\"}, \"meter_source_sha256\": \"3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5\", \"mask_cells\": 220, \"meter_cleanable_cells\": 13696, \"map_sha256\": \"11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f\", \"scope\": \"Static same fixture review of the two original edge passes, motivated by lost lower halo in the central-row case. No geometry threshold change, no production edit. Exact raster disk and within-cell admitted chords; inter-cell paths unknown, no execution/Gazebo/hardware.\"}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=128m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_coverage:/work/src/oomwoo_sim_support:$PYTHONPATH python3 -"
+  ],
+  "fixture_python": "\nimport json\nfrom pathlib import Path\nfrom types import SimpleNamespace,MethodType\nimport numpy as np,yaml\nfrom nav_msgs.msg import OccupancyGrid\nfrom oomwoo_coverage.coverage_planner_node import CoveragePlanner\nfrom oomwoo_sim_support.keepout_config import _pgm\nroot=Path('/work/src/oomwoo_sim_support');m=yaml.safe_load((root/'maps/test_room.yaml').read_text())\nw,h,p=_pgm(root/'maps/test_room.pgm')\npix=np.flipud(np.frombuffer(p,dtype=np.uint8).reshape(h,w))\nocc=(255-pix.astype(float))/255\ngrid=np.where(occ>m['occupied_thresh'],100,np.where(occ<m['free_thresh'],0,-1))\ng=OccupancyGrid();g.header.frame_id='map';g.info.width=w;g.info.height=h\ng.info.resolution=m['resolution'];g.info.origin.position.x=m['origin'][0];g.info.origin.position.y=m['origin'][1];g.info.origin.orientation.w=1.\ng.data=grid.reshape(-1).astype(int).tolist()\nmask=OccupancyGrid();mask.header=g.header;mask.info=g.info;mask.data=[0]*(w*h)\nfor row in range(h):\n for col in range(w):\n  x=m['origin'][0]+(col+.5)*m['resolution'];y=m['origin'][1]+(row+.5)*m['resolution']\n  if .67<=x<=1.14 and -.55<=y<=.55:mask.data[row*w+col]=100\n\nimport math,hashlib\nfrom oomwoo_coverage import coverage_planner_node as module\nfrom oomwoo_sim_support.coverage_meter_node import _stamp_disk,CoverageMeter\nsource=Path(module.__file__).read_text()\nstart=source.index('        def build_sweep(cell_data):')\nend=source.index('        def sweep_cost(wps):',start)\nblock=source[start:end]\nblock=block.replace('            wps = []','            wps = []\\n            tracks = []',1)\nblock=block.replace('                    wps.extend(pts)',\"                    tracks.append({'points': pts, 'shape': cd['m'].shape, 'vertical': cd['vertical']})\\n                    wps.extend(pts)\",1)\nblock=block.replace('            return wps','            self._review_sweeps.append(tracks)\\n            return wps',1)\n# replace literal escapes only in the injected source snippets\nblock=block.replace('\\\\n','\\n')\nobserved_source=source[:start]+block+source[end:]\nold_major=\"\"\"            major = list(range(0, n_major, step))\n            if major[-1] != n_major - 1:\n                major.append(n_major - 1)\n\"\"\"\nnew_major=\"\"\"            if 1 < n_major <= step:\n                major = [(n_major - 1) // 2]\n            else:\n                major = list(range(0, n_major, step))\n                if major[-1] != n_major - 1:\n                    major.append(n_major - 1)\n\"\"\"\nif observed_source.count(old_major)!=1:raise RuntimeError('source major anchor changed')\ncandidate_source=observed_source.replace(old_major,new_major,1)\nlower_source=candidate_source.replace('major = [(n_major - 1) // 2]', 'major = [0]',1)\nupper_source=candidate_source.replace('major = [(n_major - 1) // 2]', 'major = [n_major - 1]',1)\nclasses=[]\nfor label,text in [('current',observed_source),('keep_lower_original_pass',lower_source),('keep_upper_original_pass',upper_source)]:\n ns={'__name__':label,'__file__':module.__file__}\n exec(compile(text,module.__file__+':review-'+label,'exec'),ns)\n classes.append((label,ns['CoveragePlanner']))\nraw_free=grid==0\nmeter=SimpleNamespace(info=g.info,free=raw_free,reachable=None,robot_radius=.1745,cleaning_radius=.20,edge_margin=.15,get_logger=lambda:SimpleNamespace(info=lambda s:None))\nres=g.info.resolution;ox=g.info.origin.position.x;oy=g.info.origin.position.y\nCoverageMeter._ensure_reachable(meter,int((0-ox)/res),int((0-oy)/res))\nrad=max(1,int(round(.20/res)))\nresults=[];footprints=[]\nfor label,C in classes:\n node=SimpleNamespace(map_msg=g,keepout=None,_keepout_geometry_value=None,_keepout_fault=None,_keepout_required=True,_relay_enabled=True,robot_radius=.18,total_free_cells=0,free_mask=None,robot_xy=(0.,0.),cleaning_radius=.20,row_overlap=0.,min_segment_len=.20,row_substep_m=.4,long_axis_sweep=True,global_frame='map',get_logger=lambda:SimpleNamespace(info=lambda s:None,warn=lambda s:None),_review_sweeps=[])\n node._keepout_geometry=C._keepout_geometry\n def bad(message):raise ValueError(message)\n node._invalid_keepout=bad;node._build_masks=MethodType(C._build_masks,node)\n C._on_keepout(node,mask)\n poses=C._plan_waypoints(node)\n points=[(p.pose.position.x,p.pose.position.y) for p in poses]\n tracks=next(tr for tr in node._review_sweeps if [p for t in tr for p in t['points']]==points)\n p=np.asarray(points);delta=np.diff(p,axis=0);dist=np.linalg.norm(delta,axis=1)\n heading=np.arctan2(delta[:,1],delta[:,0]);turns=int((np.abs((np.diff(heading)+np.pi)%(2*np.pi)-np.pi)>.52).sum())\n def cell(xy):return int((xy[0]-ox)/res),int((xy[1]-oy)/res)\n def valid(c):return 0<=c[0]<w and 0<=c[1]<h and node.free_mask[c[1],c[0]]\n endpoint=np.zeros((h,w),dtype=bool);swept=endpoint.copy();unsafe=[];within_length=0.\n for track in tracks:\n  ps=track['points']\n  for xy in ps:\n   cx,cy=cell(xy);_stamp_disk(endpoint,raw_free,cx,cy,rad);_stamp_disk(swept,raw_free,cx,cy,rad)\n  for a,b in zip(ps,ps[1:]):\n   length=math.dist(a,b);within_length+=length\n   n=max(1,int(math.ceil(length/(res/4))))\n   cells={cell((a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n)) for i in range(n+1)}\n   if not all(valid(c) for c in cells):\n    unsafe.append({'a':a,'b':b,'length_m':length});continue\n   for cx,cy in cells:_stamp_disk(swept,raw_free,cx,cy,rad)\n footprints.append((endpoint,swept))\n results.append({'variant':label,'waypoints':len(points),'cells':len(tracks),'path_m_including_straight_connectors':float(dist.sum()),'within_cell_polyline_length_m':within_length,'turns':turns,'cost_m':float(dist.sum())+.3*turns,'targets_all_in_free_mask':all(valid(cell(xy)) for xy in points),'endpoint_footprint_raw_free_cells':int(endpoint.sum()),'within_cell_safe_chord_footprint_raw_free_cells':int(swept.sum()),'within_cell_safe_chord_footprint_meter_cleanable_cells':int((swept&meter.reachable).sum()),'invalid_within_cell_chords':unsafe,'narrow_cells':sum(1 for t in tracks if 1<(t['shape'][1] if t['vertical'] else t['shape'][0])<=8)})\ncomparison={}\nfor variant_index in range(1,len(results)):\n pair={}\n for idx,kind in enumerate(['waypoint_disks','within_cell_safe_chords_and_waypoint_disks']):\n  before,after=footprints[0][idx],footprints[variant_index][idx]\n  lost=before&~after;added=after&~before\n  ys,xs=np.where(lost)\n  pair[kind]={'lost_raw_free_cells':int(lost.sum()),'added_raw_free_cells':int(added.sum()),'lost_meter_cleanable_cells':int((lost&meter.reachable).sum()),'added_meter_cleanable_cells':int((added&meter.reachable).sum()),'lost_xy_first20':[(ox+(int(x)+.5)*res,oy+(int(y)+.5)*res) for y,x in zip(ys[:20],xs[:20])]}\n pair['path_saving_m']=results[0]['path_m_including_straight_connectors']-results[variant_index]['path_m_including_straight_connectors']\n comparison[results[variant_index]['variant']]=pair\nout={'results':results,'comparison':comparison,'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'candidate_source_sha256':{'lower':hashlib.sha256(lower_source.encode()).hexdigest(),'upper':hashlib.sha256(upper_source.encode()).hexdigest()},'meter_source_sha256':hashlib.sha256(Path(__import__('oomwoo_sim_support.coverage_meter_node',fromlist=['']).__file__).read_bytes()).hexdigest(),'mask_cells':sum(v==100 for v in mask.data),'meter_cleanable_cells':meter.total_reachable,'map_sha256':hashlib.sha256((root/'maps/test_room.pgm').read_bytes()).hexdigest(),'scope':'Static same fixture review of the two original edge passes, motivated by lost lower halo in the central-row case. No geometry threshold change, no production edit. Exact raster disk and within-cell admitted chords; inter-cell paths unknown, no execution/Gazebo/hardware.'}\nprint('NARROW_FOOTPRINT_COMPARISON '+json.dumps(out))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene «fifo-780: Examen focal equipo ejecutar» desde hace 0 min (pid 3919004). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno «fifo-780».\n",
+  "new_evidence": "Central pass saves6.545m but loses29cleanable cells, first loss XY near lower swath halo; test keeping each original edge to discriminate halo preservation.",
+  "resource_authorization": "Existing compatible .25CPU/512MiB/noGPU authorization; read-only mounted source, in-memory variants, no native simulation.",
+  "result": {
+    "results": [
+      {
+        "variant": "current",
+        "waypoints": 326,
+        "cells": 9,
+        "path_m_including_straight_connectors": 130.19835577503864,
+        "within_cell_polyline_length_m": 119.01301458127404,
+        "turns": 65,
+        "cost_m": 149.69835577503864,
+        "targets_all_in_free_mask": true,
+        "endpoint_footprint_raw_free_cells": 11270,
+        "within_cell_safe_chord_footprint_raw_free_cells": 14668,
+        "within_cell_safe_chord_footprint_meter_cleanable_cells": 13291,
+        "invalid_within_cell_chords": [
+          {
+            "a": [
+              -0.7250000000000001,
+              2.1750000000000007
+            ],
+            "b": [
+              -1.0750000000000002,
+              2.575
+            ],
+            "length_m": 0.5315072906367321
+          }
+        ],
+        "narrow_cells": 1
+      },
+      {
+        "variant": "keep_lower_original_pass",
+        "waypoints": 316,
+        "cells": 9,
+        "path_m_including_straight_connectors": 123.55325690236884,
+        "within_cell_polyline_length_m": 116.48392476026322,
+        "turns": 62,
+        "cost_m": 142.15325690236884,
+        "targets_all_in_free_mask": true,
+        "endpoint_footprint_raw_free_cells": 11262,
+        "within_cell_safe_chord_footprint_raw_free_cells": 14659,
+        "within_cell_safe_chord_footprint_meter_cleanable_cells": 13282,
+        "invalid_within_cell_chords": [
+          {
+            "a": [
+              4.925000000000001,
+              2.1750000000000007
+            ],
+            "b": [
+              3.4250000000000003,
+              2.575
+            ],
+            "length_m": 1.5524174696260027
+          }
+        ],
+        "narrow_cells": 1
+      },
+      {
+        "variant": "keep_upper_original_pass",
+        "waypoints": 316,
+        "cells": 9,
+        "path_m_including_straight_connectors": 123.75325690236883,
+        "within_cell_polyline_length_m": 116.48392476026322,
+        "turns": 62,
+        "cost_m": 142.35325690236883,
+        "targets_all_in_free_mask": true,
+        "endpoint_footprint_raw_free_cells": 11231,
+        "within_cell_safe_chord_footprint_raw_free_cells": 14635,
+        "within_cell_safe_chord_footprint_meter_cleanable_cells": 13258,
+        "invalid_within_cell_chords": [
+          {
+            "a": [
+              4.925000000000001,
+              2.1750000000000007
+            ],
+            "b": [
+              3.4250000000000003,
+              2.575
+            ],
+            "length_m": 1.5524174696260027
+          }
+        ],
+        "narrow_cells": 1
+      }
+    ],
+    "comparison": {
+      "keep_lower_original_pass": {
+        "waypoint_disks": {
+          "lost_raw_free_cells": 8,
+          "added_raw_free_cells": 0,
+          "lost_meter_cleanable_cells": 7,
+          "added_meter_cleanable_cells": 0,
+          "lost_xy_first20": [
+            [
+              -0.925,
+              0.9250000000000003
+            ],
+            [
+              -0.5250000000000001,
+              0.9250000000000003
+            ],
+            [
+              -0.125,
+              0.9250000000000003
+            ],
+            [
+              0.6749999999999998,
+              0.9250000000000003
+            ],
+            [
+              1.0750000000000002,
+              0.9250000000000003
+            ],
+            [
+              2.6750000000000003,
+              1.0250000000000004
+            ],
+            [
+              2.6750000000000003,
+              1.0750000000000002
+            ],
+            [
+              2.725,
+              1.125
+            ]
+          ]
+        },
+        "within_cell_safe_chords_and_waypoint_disks": {
+          "lost_raw_free_cells": 81,
+          "added_raw_free_cells": 72,
+          "lost_meter_cleanable_cells": 17,
+          "added_meter_cleanable_cells": 8,
+          "lost_xy_first20": [
+            [
+              1.225,
+              0.12500000000000044
+            ],
+            [
+              1.225,
+              0.17500000000000027
+            ],
+            [
+              1.225,
+              0.22500000000000053
+            ],
+            [
+              1.275,
+              0.22500000000000053
+            ],
+            [
+              1.225,
+              0.27500000000000036
+            ],
+            [
+              1.275,
+              0.27500000000000036
+            ],
+            [
+              1.3250000000000002,
+              0.27500000000000036
+            ],
+            [
+              1.375,
+              0.27500000000000036
+            ],
+            [
+              1.225,
+              0.3250000000000002
+            ],
+            [
+              1.275,
+              0.3250000000000002
+            ],
+            [
+              1.225,
+              0.37500000000000044
+            ],
+            [
+              1.225,
+              0.42500000000000027
+            ],
+            [
+              2.9250000000000003,
+              0.5250000000000004
+            ],
+            [
+              2.9250000000000003,
+              0.5750000000000002
+            ],
+            [
+              2.8750000000000004,
+              0.6250000000000004
+            ],
+            [
+              2.9250000000000003,
+              0.6250000000000004
+            ],
+            [
+              2.9250000000000003,
+              0.6750000000000003
+            ],
+            [
+              2.9250000000000003,
+              0.7250000000000005
+            ],
+            [
+              -0.925,
+              0.9250000000000003
+            ],
+            [
+              5.125,
+              1.0250000000000004
+            ]
+          ]
+        },
+        "path_saving_m": 6.6450988726697915
+      },
+      "keep_upper_original_pass": {
+        "waypoint_disks": {
+          "lost_raw_free_cells": 39,
+          "added_raw_free_cells": 0,
+          "lost_meter_cleanable_cells": 38,
+          "added_meter_cleanable_cells": 0,
+          "lost_xy_first20": [
+            [
+              0.875,
+              0.6250000000000004
+            ],
+            [
+              1.275,
+              0.6250000000000004
+            ],
+            [
+              1.6750000000000003,
+              0.6250000000000004
+            ],
+            [
+              2.075,
+              0.6250000000000004
+            ],
+            [
+              2.475,
+              0.6250000000000004
+            ],
+            [
+              0.5750000000000002,
+              0.6750000000000003
+            ],
+            [
+              0.7749999999999999,
+              0.6750000000000003
+            ],
+            [
+              0.8250000000000002,
+              0.6750000000000003
+            ],
+            [
+              0.875,
+              0.6750000000000003
+            ],
+            [
+              0.9250000000000003,
+              0.6750000000000003
+            ],
+            [
+              0.9750000000000001,
+              0.6750000000000003
+            ],
+            [
+              1.1750000000000003,
+              0.6750000000000003
+            ],
+            [
+              1.225,
+              0.6750000000000003
+            ],
+            [
+              1.625,
+              0.6750000000000003
+            ],
+            [
+              2.025,
+              0.6750000000000003
+            ],
+            [
+              2.4250000000000003,
+              0.6750000000000003
+            ],
+            [
+              0.5750000000000002,
+              0.7250000000000005
+            ],
+            [
+              0.625,
+              0.7250000000000005
+            ],
+            [
+              0.7250000000000001,
+              0.7250000000000005
+            ],
+            [
+              0.7749999999999999,
+              0.7250000000000005
+            ]
+          ]
+        },
+        "within_cell_safe_chords_and_waypoint_disks": {
+          "lost_raw_free_cells": 105,
+          "added_raw_free_cells": 72,
+          "lost_meter_cleanable_cells": 41,
+          "added_meter_cleanable_cells": 8,
+          "lost_xy_first20": [
+            [
+              1.225,
+              0.12500000000000044
+            ],
+            [
+              1.225,
+              0.17500000000000027
+            ],
+            [
+              1.225,
+              0.22500000000000053
+            ],
+            [
+              1.275,
+              0.22500000000000053
+            ],
+            [
+              1.225,
+              0.27500000000000036
+            ],
+            [
+              1.275,
+              0.27500000000000036
+            ],
+            [
+              1.3250000000000002,
+              0.27500000000000036
+            ],
+            [
+              1.375,
+              0.27500000000000036
+            ],
+            [
+              1.225,
+              0.3250000000000002
+            ],
+            [
+              1.275,
+              0.3250000000000002
+            ],
+            [
+              1.225,
+              0.37500000000000044
+            ],
+            [
+              1.225,
+              0.42500000000000027
+            ],
+            [
+              2.9250000000000003,
+              0.5250000000000004
+            ],
+            [
+              2.9250000000000003,
+              0.5750000000000002
+            ],
+            [
+              0.625,
+              0.6250000000000004
+            ],
+            [
+              0.6749999999999998,
+              0.6250000000000004
+            ],
+            [
+              0.7250000000000001,
+              0.6250000000000004
+            ],
+            [
+              0.7749999999999999,
+              0.6250000000000004
+            ],
+            [
+              0.8250000000000002,
+              0.6250000000000004
+            ],
+            [
+              0.875,
+              0.6250000000000004
+            ]
+          ]
+        },
+        "path_saving_m": 6.445098872669803
+      }
+    },
+    "source_sha256": "f13571866a923a2ed1f8c49f1b4a71ea18de5fba45f88939611b2ea1c1fc7529",
+    "candidate_source_sha256": {
+      "lower": "e3ce605826c56a53fe54bdec26fb708139c8634675ccac0c3d22f4e50e75b7ca",
+      "upper": "c193049ee49924608dcdc2da6fa57ffc311bb949348c4df0643ddc0e2886c11c"
+    },
+    "meter_source_sha256": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+    "mask_cells": 220,
+    "meter_cleanable_cells": 13696,
+    "map_sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+    "scope": "Static same fixture review of the two original edge passes, motivated by lost lower halo in the central-row case. No geometry threshold change, no production edit. Exact raster disk and within-cell admitted chords; inter-cell paths unknown, no execution/Gazebo/hardware."
+  },
+  "acceptance": {
+    "required": "Positive static path saving plus no loss of the original footprint over all free floor, including halo; this is a screening requirement, not the full-room90/80 oracle.",
+    "result": "Not met by any tested variant; production source remains unchanged.",
+    "demonstrated_utility": "Quantifies real cost/footprint tradeoff and rules out treating a shorter static plan as equivalent cleaning coverage.",
+    "remaining_distance": "Global90/80 still open. Last observed normal-plan map-frame trial96%coverage/77.34%first90; the needed observed prefix saving3.69m cannot be inferred from6.45–6.65m static whole-plan savings.",
+    "next_increment": "Peer retains geometry ownership. Inspect exact lost swath/end-cell regions and preserve them before proposing adoption; alternatively produce native coverage/efficiency evidence for an explicitly justified tradeoff rather than claiming footprint equivalence. No unchanged full-room rerun.",
+    "decision": "Consolidate independent review; reject unconditional single-pass simplification under stated zero-loss criterion. This does not prove all narrow-cell optimizations fail.",
+    "benefit_cost": "Two focal measurements9.198s/8.588s with.25CPU512MiB/noGPU, no full simulator or production edit. Avoids accepting an apparent path improvement with unmeasured coverage loss.",
+    "evidence_that_changes_decision": "A candidate whose complete safe planned swath preserves baseline with worthwhile savings, or a bounded native test establishing the explicitly agreed cleaning tradeoff."
+  },
+  "limits": [
+    "Static waypoint discs and ideal intra-cell centerlines, not actual robot trajectory or runtime dynamic pruning.",
+    "Exact current meter _stamp_disk and same raster radius; free-floor comparison includes halo. Meter cleanable subset uses current actual helper/body radius.",
+    "Intra-cell chords sampled at<=quarter raster cell; any chord leaving planner free_mask is excluded from footprint stamping in both variants.",
+    "Inter-cell transits are included as straight-line lengths in the cost proxy but not assumed for footprint. Their actual Nav2 detours are unknown.",
+    "Global orientation/corner/order selection remains original planner behavior and can change when cell internal geometry changes; aggregate savings are not isolated row-length savings.",
+    "No production file, map, physical device, maintainer comment or coworker prototype changed."
+  ]
+}
