@@ -15,11 +15,13 @@
 """
 Boustrophedon coverage planner for the OOMWOO robot vacuum.
 
-Behavior "regular / auto cleaning": given a saved occupancy map, plan a
-back-and-forth (boustrophedon) sweep that covers the entire reachable floor,
-respecting keep-out zones, and execute it through Nav2's
-``NavigateThroughPoses`` action. Nav2 handles obstacle-aware routing between the
-sweep waypoints; this node owns the *what and where to clean* decision.
+Given a saved occupancy map, plan a back-and-forth (boustrophedon) sweep of
+reachable floor while respecting keep-out zones. Execution has two modes:
+``nav2`` (the default) sends one ``NavigateToPose`` goal per waypoint;
+``reactive`` drives the sweep passes on cmd_vel and uses Nav2 for longer
+transits between them. This node owns the sweep plan and its execution state.
+The opt-in simulation relay coordinates exclusive ownership of the isolated
+Nav2 and reactive command inputs; it does not establish physical motor safety.
 
 Interfaces (as actually wired):
   subscribes  map               nav_msgs/OccupancyGrid   (transient_local)
