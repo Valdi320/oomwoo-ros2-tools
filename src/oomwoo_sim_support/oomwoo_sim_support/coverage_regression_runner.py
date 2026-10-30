@@ -15,7 +15,7 @@
 """
 Autonomous coverage-cleaning regression runner (headless CLI).
 
-Observes the coverage_meter while the coverage_planner sweeps the map, then
+Uses the coverage meter directly while the planner sweeps the map, then
 scores the run against the cleaning-jobs acceptance metrics:
 
     * coverage   >= COVERAGE_TARGET   (default 0.90)
@@ -33,7 +33,9 @@ Exit codes: 0 = pass, 1 = target missed (a real coverage result), 2 = the
 measurement is invalid (sim_unstable = ground-truth pose teleported, or
 clock_dead = the sim clock stalled). A wall_timeout is exit 1 with
 measurement_valid=true: the coverage so far is real, the host was just slow.
-Intended to be launched alongside coverage_regression.launch.py.
+The regression wrapper launches this fused meter/scorer with
+coverage_regression.launch.py with_meter:=false; direct launches must also
+disable the separate meter and supply the intended meter geometry.
 """
 
 import json
@@ -44,7 +46,6 @@ import time
 
 import rclpy
 from rclpy.executors import ExternalShutdownException
-from rclpy.node import Node
 from rclpy.qos import (
     QoSDurabilityPolicy,
     QoSHistoryPolicy,
@@ -52,13 +53,12 @@ from rclpy.qos import (
     QoSReliabilityPolicy,
 )
 
-from std_msgs.msg import Bool, Float32
+from oomwoo_sim_support.coverage_meter_node import CoverageMeter
 
 
-class CoverageRunner(Node):
+class CoverageRunner(CoverageMeter):
     def __init__(self) -> None:
-        super().__init__('coverage_regression_runner')
-        self.declare_parameter('coverage_target', 0.90)
+        super().__init__(cleaning_active_topic='/coverage_planner/cleaning_active')
         self.declare_parameter('efficiency_target', 0.80)
         # generous: run-to-completion sweeps outlast the old stop-at-90% runs
         self.declare_parameter('max_sim_time_s', 3600.0)
@@ -103,7 +103,6 @@ class CoverageRunner(Node):
             self._sim_battery_pub = self.create_publisher(BatteryState, '/battery_state', 10)
         if self.motion_audit:
             from action_msgs.msg import GoalStatusArray
-            from geometry_msgs.msg import PoseStamped
             from nav_msgs.msg import OccupancyGrid
             from nav2_msgs.action import NavigateToPose
             from std_msgs.msg import String
@@ -120,8 +119,6 @@ class CoverageRunner(Node):
                 QoSProfile(depth=1, history=QoSHistoryPolicy.KEEP_LAST,
                            reliability=QoSReliabilityPolicy.RELIABLE,
                            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL))
-            self.create_subscription(
-                PoseStamped, '/ground_truth/pose', self._audit_keepout_truth, 10)
         self.cov_target = self.get_parameter('coverage_target').value
         self.eff_target = self.get_parameter('efficiency_target').value
         self.max_t = self.get_parameter('max_sim_time_s').value
@@ -142,25 +139,20 @@ class CoverageRunner(Node):
         self.eff_at_target = 0.0
         self.t_to_target = 0.0
 
-        # sim_unstable is published latched; a latched sub can't miss it even if
-        # the flag was raised before this runner finished starting up.
-        latched = QoSProfile(
-            depth=1, history=QoSHistoryPolicy.KEEP_LAST,
-            reliability=QoSReliabilityPolicy.RELIABLE,
-            durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
-        self.create_subscription(Float32, '/coverage_meter/ratio', self._on_cov, 10)
-        self.create_subscription(
-            Float32, '/coverage_meter/efficiency', self._on_eff, 10)
-        self.create_subscription(
-            Float32, '/coverage_meter/revisit_ratio', self._on_revisit, 10)
-        self.create_subscription(
-            Bool, '/coverage_meter/sim_unstable', self._on_unstable, latched)
-        # planner publishes cleaning_active False when the sweep + gap-fill
-        # passes are exhausted — the honest end-of-job signal (latched)
+        # The meter's active callback also supplies the completion signal.
         self.sweep_started = False
         self.sweep_complete = False
-        self.create_subscription(
-            Bool, '/coverage_planner/cleaning_active', self._on_active, latched)
+
+    def _report(self):
+        snapshot = CoverageMeter._report(self)
+        if snapshot is not None:
+            self.coverage, self.efficiency, self.revisit_ratio = snapshot
+        return snapshot
+
+    def _on_pose(self, msg):
+        CoverageMeter._on_pose(self, msg)
+        if getattr(self, 'motion_audit', False):
+            self._audit_keepout_truth(msg)
 
     def _audit_phase(self, msg):
         if msg.data == 'FAULT':
@@ -169,7 +161,17 @@ class CoverageRunner(Node):
         if not phases or phases[-1]['phase'] != msg.data:
             if len(phases) >= 128:
                 phases.pop(0)
-            phases.append({'phase': msg.data, 'wall': time.monotonic(), 'sim': self._sim_now()})
+            sample = {'phase': msg.data, 'wall': time.monotonic(), 'sim': self._sim_now()}
+            # Diagnostic snapshots retain their own source times. They need
+            # not be simultaneous and never authorize a motion handoff.
+            truth = getattr(self, '_keepout_audit_previous', None)
+            if truth is not None:
+                sample['truth_position'] = {
+                    'frame': 'map', 'position': list(truth[:2]), 'stamp_ns': truth[2]}
+            feedback = getattr(self, '_last_nav_feedback', None)
+            if feedback is not None:
+                sample['nav_feedback'] = feedback
+            phases.append(sample)
 
     def _audit_keepout_error(self, message):
         errors = self._keepout_audit['errors']
@@ -275,6 +277,13 @@ class CoverageRunner(Node):
         # Retain bounded aggregate cadence, not an unbounded pose trace.
         samples = self.motion_samples['feedback']
         now = time.monotonic()
+        pose = msg.feedback.current_pose
+        p, q = pose.pose.position, pose.pose.orientation
+        self._last_nav_feedback = {
+            'uuid': bytes(msg.goal_id.uuid).hex(), 'frame': pose.header.frame_id,
+            'stamp_ns': pose.header.stamp.sec * 1_000_000_000 + pose.header.stamp.nanosec,
+            'position': [p.x, p.y, p.z], 'orientation': [q.x, q.y, q.z, q.w],
+            'received_wall': now, 'received_sim': self._sim_now()}
         if not samples:
             samples.append({'first_wall': now, 'last_wall': now, 'count': 1,
                             'max_gap_wall': 0.0})
@@ -303,22 +312,11 @@ class CoverageRunner(Node):
             for p in self.get_subscriptions_info_by_topic('/valdi/lab_safe_cmd_vel_output'))
 
     def _on_active(self, msg):
+        CoverageMeter._on_active(self, msg)
         if msg.data:
             self.sweep_started = True
         elif self.sweep_started:
             self.sweep_complete = True
-
-    def _on_cov(self, msg):
-        self.coverage = float(msg.data)
-
-    def _on_eff(self, msg):
-        self.efficiency = float(msg.data)
-
-    def _on_revisit(self, msg):
-        self.revisit_ratio = float(msg.data)
-
-    def _on_unstable(self, msg):
-        self.sim_unstable = self.sim_unstable or bool(msg.data)
 
     def _sim_now(self) -> float:
         return self.get_clock().now().nanoseconds * 1e-9
@@ -402,12 +400,12 @@ class CoverageRunner(Node):
                                 wall_start + self.max_wall)
                 while rclpy.ok() and time.monotonic() < grace_end:
                     rclpy.spin_once(self, timeout_sec=0.2)
-                # a late coverage update during the grace can cross the target;
-                # re-evaluate so eff_at_target isn't left null on a passing run
-                if not self.target_crossed and self.coverage >= self.cov_target:
-                    self.target_crossed = True
-                    self.eff_at_target = self.efficiency
-                    self.t_to_target = self._sim_now() - start_sim
+                    # Retain the first paired crossing during grace too;
+                    # later stopping samples must not replace its efficiency.
+                    if not self.target_crossed and self.coverage >= self.cov_target:
+                        self.target_crossed = True
+                        self.eff_at_target = self.efficiency
+                        self.t_to_target = self._sim_now() - start_sim
                 break
             if self._sim_now() - self.last_gain_sim_t >= self.plateau_s:
                 reason = 'plateau'

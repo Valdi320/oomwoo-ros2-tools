@@ -28,6 +28,7 @@ from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction,
     SetEnvironmentVariable, SetLaunchConfiguration)
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import EnvironmentVariable, LaunchConfiguration
 
@@ -47,6 +48,7 @@ def generate_launch_description() -> LaunchDescription:
     default_map = os.path.join(pkg_sim, 'maps', 'test_room.yaml')
     reg_args = [
         DeclareLaunchArgument('world', default_value=default_world),
+        DeclareLaunchArgument('with_meter', default_value='true'),
         DeclareLaunchArgument('map', default_value=default_map),
         DeclareLaunchArgument('x_pose', default_value='0.0'),
         DeclareLaunchArgument('y_pose', default_value='0.0'),
@@ -121,6 +123,7 @@ def generate_launch_description() -> LaunchDescription:
 
     coverage_meter = Node(
         package='oomwoo_sim_support', executable='coverage_meter', output='screen',
+        condition=IfCondition(LaunchConfiguration('with_meter')),
         parameters=[{'cleaning_radius': cleaning_radius,
                      'robot_radius': true_robot_radius,
                      'coverage_target': coverage_target, 'use_sim_time': True}],

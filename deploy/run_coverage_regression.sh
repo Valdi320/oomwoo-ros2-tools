@@ -2,12 +2,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # Headless coverage-cleaning regression, CLI, CI-friendly.
 # Launches the sim + Nav2 + coverage planner/meter, runs the scoring node, and
-# exits 0 iff coverage >= 90% and efficiency >= 80%. No GUI/display required.
+# exits 0 iff coverage >= 90%, efficiency >= 80%, and owned processes exit cleanly.
+# No GUI/display required.
 #
 #   RUNS=3 ./run_coverage_regression.sh    # repeat 3x and report the spread
 #
 # Exit codes: 0 = all runs pass, 1 = a run missed its targets,
-#             2 = measurement invalid (sim unstable on this host).
+#             2 = measurement invalid (sim unstable on this host),
+#             3 = launch or owned-process failure (score remains separate).
 set -eo pipefail
 
 source /opt/ros/jazzy/setup.bash
@@ -57,6 +59,9 @@ for argument in shlex.split(sys.argv[2]):
         raise ValueError(f'expected name:=value launch argument: {argument!r}')
     arguments[name] = value
 
+# The scorer owns one meter; do not launch a competing measurement node.
+arguments['with_meter'] = 'false'
+
 # A private Gazebo transport partition makes the native server-stop RPC belong
 # to this launch, even when another simulation is running on the same host.
 os.environ['GZ_PARTITION'] = 'oomwoo-coverage-' + uuid.uuid4().hex
@@ -65,14 +70,25 @@ scorer = Node(
     package='oomwoo_sim_support', executable='coverage_regression_runner',
     output='screen', parameters=[{
         'use_sim_time': True, 'report_path': sys.argv[1],
+        'cleaning_radius': 0.20, 'robot_radius': 0.1745,
         'max_wall_time_s': float(os.environ.get('MAX_WALL_TIME_S', '5400')),
         'clock_dead_wall_s': float(os.environ.get('CLOCK_DEAD_WALL_S', '120')),
     }])
-result = [2]  # interrupted/failed launch without a scorer result is invalid
+result = [3]  # no completed scorer result is an execution failure
+execution_failed = [False]
 
 
 def scored(event, context):
-    result[0] = event.returncode if event.returncode in (0, 1, 2) else 2
+    # The existing exit observer also retains failures from the owned stack.
+    # A required-server Shutdown may leave LaunchService returning zero even
+    # when Gazebo exits139 after a positive stop ACK. Never hide that failure.
+    if event.action is not scorer:
+        if event.returncode != 0:
+            execution_failed[0] = True
+            print('COVERAGE_PROCESS_FAILURE', event.process_name,
+                  event.returncode, flush=True)
+        return []
+    result[0] = event.returncode if event.returncode in (0, 1, 2) else 3
     # Stop the owned server through Gazebo before Launch signals its children.
     # The CLI bounds discovery/request time; this callback has a final bound too.
     # Failure keeps the existing Launch shutdown path and the scored result.
@@ -101,11 +117,11 @@ stack = IncludeLaunchDescription(
     launch_arguments=arguments.items())
 service = LaunchService()
 service.include_launch_description(LaunchDescription([
-    RegisterEventHandler(OnProcessExit(target_action=scorer, on_exit=scored)),
+    RegisterEventHandler(OnProcessExit(on_exit=scored)),
     stack, scorer,
 ]))
 launch_code = service.run()
-sys.exit(result[0] if launch_code == 0 else 2)
+sys.exit(3 if launch_code != 0 or execution_failed[0] else result[0])
 PY
   CODE=$?
   set -e
@@ -134,11 +150,11 @@ for k in ('coverage', 'efficiency_at_target', 'efficiency_final'):
         continue
     print(f"  {k:11}: min={min(v):.4f} max={max(v):.4f} mean={st.mean(v):.4f}"
           + (f" stdev={st.stdev(v):.4f}" if len(v) > 1 else ""))
-print(f"  passes     : {sum(r['pass'] for r in allr)}/{len(allr)}"
+print(f"  score passes: {sum(r['pass'] for r in allr)}/{len(allr)}"
       f"  invalid(unstable/clock): {invalid}")
 PY
 fi
 echo "[run] overall exit: $WORST  (0=PASS, 1=target missed — check end_reason:" \
      "wall_timeout means the host ran out of real time, coverage is still valid;" \
-     "2=measurement invalid, sim unstable/clock stalled on this host)"
+     "2=measurement invalid, sim unstable/clock stalled; 3=launch/process failure)"
 exit $WORST

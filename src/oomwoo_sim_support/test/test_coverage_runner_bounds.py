@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Clock and startup bounds of the real coverage scorer, with deterministic input."""
+"""Coverage scorer input coherence, launch wiring and bounded termination."""
 
 import json
 from types import MethodType, SimpleNamespace
@@ -226,3 +226,228 @@ def test_ground_truth_audit_reports_insufficient_sample_cadence():
     result = node._audit_keepout_result()
     assert result['max_pose_gap_s'] == .4
     assert not result['valid']
+
+
+@pytest.mark.parametrize('score_code,child_code,child_delay,expected', [
+    (0, 139, 0.4, 3),
+    (0, 0, 0.4, 0),
+    (1, 0, 0.4, 1),
+    (2, 0, 0.4, 2),
+    (0, 139, 0.01, 3),
+    (139, 0, 0.4, 3),
+])
+def test_wrapper_retains_owned_process_failures(
+        tmp_path, monkeypatch, score_code, child_code, child_delay, expected):
+    """Exercise the embedded launcher with real child exits and Launch events."""
+    from pathlib import Path
+    import subprocess
+    import sys
+
+    import ament_index_python.packages
+    import launch.actions
+    from launch.actions import EmitEvent, ExecuteProcess, GroupAction, RegisterEventHandler
+    from launch.event_handlers import OnProcessExit
+    from launch.events import Shutdown
+    import launch_ros.actions
+
+    root = Path(__file__).resolve().parents[3]
+    wrapper = (root / 'deploy/run_coverage_regression.sh').read_text()
+    embedded = wrapper.split("<<'PY'\n", 1)[1].split('\nPY\n', 1)[0]
+    scorer = ExecuteProcess(
+        cmd=[sys.executable, '-c',
+             f'import time; time.sleep(.05); raise SystemExit({score_code})'],
+        name='fixture_scorer', output='screen')
+    child = ExecuteProcess(
+        cmd=[sys.executable, '-c',
+             f'import time; time.sleep({child_delay}); raise SystemExit({child_code})'],
+        name='fixture_required_server', output='screen')
+    stack = GroupAction(actions=[
+        RegisterEventHandler(OnProcessExit(target_action=child, on_exit=[
+            EmitEvent(event=Shutdown(reason='owned required server exited'))])),
+        child,
+    ])
+    monkeypatch.setattr(ament_index_python.packages, 'get_package_share_directory',
+                        lambda _: str(tmp_path))
+
+    def scorer_node(**kwargs):
+        params = kwargs['parameters'][0]
+        assert params['robot_radius'] == 0.1745
+        assert params['cleaning_radius'] == 0.20
+        return scorer
+
+    def included_stack(*args, **kwargs):
+        arguments = dict(kwargs['launch_arguments'])
+        assert arguments['with_meter'] == 'false'
+        assert arguments['robot_radius'] == '0.30'
+        return stack
+
+    monkeypatch.setattr(launch_ros.actions, 'Node', scorer_node)
+    monkeypatch.setattr(launch.actions, 'IncludeLaunchDescription', included_stack)
+    monkeypatch.setattr(subprocess, 'run', lambda *a, **k: SimpleNamespace(
+        returncode=0, stdout='data: true\n', stderr=''))
+    monkeypatch.setattr(sys, 'argv', ['coverage-wrapper', str(tmp_path / 'report.json'),
+                                     'with_meter:=true robot_radius:=0.30'])
+    with pytest.raises(SystemExit) as outcome:
+        exec(compile(embedded, 'run_coverage_regression.sh:embedded', 'exec'), {})
+    assert outcome.value.code == expected
+
+
+def test_phase_trace_preserves_original_pose_sources_across_contact_escape():
+    from nav2_msgs.action import NavigateToPose
+
+    node = SimpleNamespace(
+        motion_samples={'status': [], 'phase': [], 'feedback': []},
+        _motion_fault=False, _sim_now=lambda: 12.0)
+    feedback = NavigateToPose.Impl.FeedbackMessage()
+    feedback.goal_id.uuid = list(bytes.fromhex('01' * 16))
+    pose = feedback.feedback.current_pose
+    pose.header.frame_id = 'map'
+    pose.header.stamp.sec = 11
+    pose.header.stamp.nanosec = 500000000
+    pose.pose.position.x = 3.56
+    pose.pose.orientation.w = 1.0
+    runner.CoverageRunner._audit_feedback(node, feedback)
+    node._keepout_audit_previous = (3.40, 3.18, 11980000000)
+    runner.CoverageRunner._audit_phase(node, SimpleNamespace(data='ESCAPE'))
+    escape = node.motion_samples['phase'][-1]
+    assert escape['truth_position'] == {
+        'frame': 'map', 'position': [3.40, 3.18], 'stamp_ns': 11980000000}
+    assert escape['nav_feedback']['uuid'] == '01' * 16
+    assert escape['nav_feedback']['stamp_ns'] == 11500000000
+    assert escape['nav_feedback']['position'][0] == 3.56
+    assert escape['nav_feedback']['frame'] == 'map'
+    pose.pose.position.x = 3.20
+    pose.header.stamp.sec = 12
+    runner.CoverageRunner._audit_feedback(node, feedback)
+    node._keepout_audit_previous = (3.16, 3.18, 12980000000)
+    runner.CoverageRunner._audit_phase(node, SimpleNamespace(data='TRANSIT'))
+    assert escape['nav_feedback']['position'][0] == 3.56
+    assert escape['truth_position']['position'][0] == 3.40
+    assert node.motion_samples['phase'][-1]['nav_feedback']['position'][0] == 3.20
+    for i in range(130):
+        runner.CoverageRunner._audit_phase(node, SimpleNamespace(data=f'phase{i}'))
+    assert len(node.motion_samples['phase']) == 128
+
+
+def test_phase_trace_does_not_invent_missing_pose_evidence():
+    node = SimpleNamespace(
+        motion_samples={'phase': []}, _motion_fault=False, _sim_now=lambda: 1.0)
+    runner.CoverageRunner._audit_phase(node, SimpleNamespace(data='FAULT'))
+    assert node._motion_fault
+    entry = node.motion_samples['phase'][0]
+    assert 'truth_position' not in entry and 'nav_feedback' not in entry
+
+
+@pytest.fixture
+def fused_meter():
+    runner.rclpy.init(args=[])
+    node = None
+    try:
+        node = runner.CoverageRunner()
+        yield node
+    finally:
+        if node is not None:
+            node.destroy_node()
+        runner.rclpy.shutdown()
+
+
+def measured_frame(node, covered_cells, efficiency):
+    import numpy as np
+    from nav_msgs.msg import MapMetaData
+
+    node.info = MapMetaData()
+    node.info.width, node.info.height, node.info.resolution = 50, 20, 0.05
+    node.total_reachable = 1000
+    node.reachable = np.ones((20, 50), dtype=bool)
+    node.covered = np.zeros((20, 50), dtype=bool)
+    node.covered.flat[:covered_cells] = True
+    node.path_len = node._ideal_path_len() / efficiency
+    node.revisit_len = 0.0
+
+
+@pytest.mark.parametrize('previous,current,expected', [(.805, .799, 1), (.90, .81, 0)])
+def test_grade_uses_the_same_measured_frame(fused_meter, score, previous, current, expected):
+    measured_frame(fused_meter, 901, current)
+    fused_meter.coverage = .898
+    fused_meter.efficiency = previous
+    snapshot = fused_meter._report()
+    assert snapshot == pytest.approx((.901, current, 0.0))
+    assert fused_meter.coverage == pytest.approx(snapshot[0])
+    assert fused_meter.efficiency == pytest.approx(snapshot[1])
+
+    def update(node, tick):
+        node.sweep_started = True
+        node.coverage, node.efficiency, node.revisit_ratio = snapshot
+        node.sweep_complete = tick >= 4
+
+    code, report, _ = score(wall=10.0, update=update)
+    assert code == expected
+    assert report['efficiency_at_target'] == current
+
+
+def test_fused_runner_has_one_truth_and_active_input_and_no_scalar_metric_inputs(fused_meter):
+    topics = [subscription.topic_name for subscription in fused_meter.subscriptions]
+    assert topics.count('/ground_truth/pose') == 1
+    assert topics.count('/coverage_planner/cleaning_active') == 1
+    assert not set(topics) & {
+        '/coverage_meter/ratio', '/coverage_meter/efficiency',
+        '/coverage_meter/revisit_ratio', '/coverage_meter/sim_unstable'}
+    assert fused_meter.get_name() == 'coverage_meter'
+    pubs = [publisher.topic_name for publisher in fused_meter.publishers]
+    assert pubs.count('/coverage_meter/ratio') == 1
+    assert pubs.count('/coverage_meter/efficiency') == 1
+
+
+def test_active_callback_drives_both_existing_meter_and_scorer_states(fused_meter):
+    from std_msgs.msg import Bool
+
+    assert not fused_meter.job_active and not fused_meter.sweep_started
+    fused_meter._on_active(Bool(data=True))
+    assert fused_meter.job_active and fused_meter.sweep_started
+    fused_meter._on_active(Bool(data=False))
+    assert fused_meter.sweep_complete
+    # The original meter keeps accounting through the stopping/grace interval.
+    assert fused_meter.job_active
+
+
+@pytest.mark.parametrize('crossing,later,expected', [(.801, .799, 0), (.799, .801, 1)])
+def test_completion_grace_keeps_first_paired_target_crossing(score, crossing, later, expected):
+    def update(node, tick):
+        node.sweep_started = True
+        node.sweep_complete = True
+        node.coverage = .899 if tick == 1 else .901
+        node.efficiency = .805 if tick == 1 else crossing if tick == 2 else later
+
+    code, report, _ = score(wall=10.0, update=update)
+    assert code == expected
+    assert report['efficiency_at_target'] == crossing
+    assert report['efficiency_final'] == later
+    assert report['end_reason'] == 'sweep_complete'
+
+
+def test_regression_launch_can_disable_the_separate_meter():
+    import importlib.util
+    from pathlib import Path
+
+    from launch import LaunchContext
+    from launch.actions import DeclareLaunchArgument
+    from launch.conditions import IfCondition
+    from launch.utilities import perform_substitutions
+    from launch_ros.actions import Node
+
+    path = Path(__file__).resolve().parents[1] / 'launch/coverage_regression.launch.py'
+    spec = importlib.util.spec_from_file_location('coverage_regression_launch', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    description = module.generate_launch_description()
+    argument = next(action for action in description.entities
+                    if isinstance(action, DeclareLaunchArgument) and action.name == 'with_meter')
+    context = LaunchContext()
+    assert perform_substitutions(context, argument.default_value) == 'true'
+    meters = [action for action in description.entities
+              if isinstance(action, Node) and isinstance(action.condition, IfCondition)]
+    assert len(meters) == 1
+    context.launch_configurations['with_meter'] = 'false'
+    assert not meters[0].condition.evaluate(context)
+    context.launch_configurations['with_meter'] = 'true'
+    assert meters[0].condition.evaluate(context)

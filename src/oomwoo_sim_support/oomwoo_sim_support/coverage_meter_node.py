@@ -82,7 +82,7 @@ def latched_qos() -> QoSProfile:
 
 
 class CoverageMeter(Node):
-    def __init__(self) -> None:
+    def __init__(self, *, cleaning_active_topic='cleaning_active') -> None:
         super().__init__('coverage_meter')
         self.declare_parameter('cleaning_radius', 0.16)
         self.declare_parameter('robot_radius', 0.175)
@@ -121,7 +121,7 @@ class CoverageMeter(Node):
         # planner reports the sweep goal accepted, not during bringup/settling
         self.job_active = False
         self.create_subscription(
-            Bool, 'cleaning_active', self._on_active, latched_qos())
+            Bool, cleaning_active_topic, self._on_active, latched_qos())
         self.ratio_pub = self.create_publisher(Float32, '~/ratio', 10)
         self.eff_pub = self.create_publisher(Float32, '~/efficiency', 10)
         self.revisit_pub = self.create_publisher(
@@ -278,7 +278,7 @@ class CoverageMeter(Node):
             return 0.0
         return self._ideal_path_len() / self.path_len
 
-    def _report(self) -> None:
+    def _report(self) -> Optional[tuple[float, float, float]]:
         if self.info is None or self.total_reachable == 0:
             return
         ratio = self._ratio()
@@ -315,6 +315,7 @@ class CoverageMeter(Node):
             f'reachable_cells={self.total_reachable} sim_t={sim_t:.1f} '
             f'target_hit={self.target_hit} t_target={self.t_target} '
             f'pose_jumps={self.pose_jumps} sim_unstable={self.sim_unstable}')
+        return ratio, min(eff, 1.0), revisit
 
 
 # ------------------------------------------------------------ numpy helpers

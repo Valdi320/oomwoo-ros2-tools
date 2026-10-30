@@ -697,3 +697,65 @@ not a tested fix or a successful native Keepout acceptance. The race is proven
 independently; its identity with the native generic journal error is still
 unproven. The next work is the listed focal modules, individually after LIBRE,
 then a discriminating integration. No simulation or new scheduler was started.
+
+
+### Owned follow-up, 30 October: completed masked sweep and grading WIP
+
+This update supersedes the verification-pending journal status above. In the
+owned contribution copy, the bounded journal reopen and the subsequent missing
+path refusal have focused POSIX/UUID and DDS evidence. The later relay change
+retains at most one admitted and one pending original TF: a future-dated sample
+cannot authorize motion, and a pending sample becomes usable only after the
+clock reaches its stamp. The final focused module passes 52 cases; the existing
+ROS DDS probe passes 18 checks, including repeated 5 ms TF lead. These are
+synthetic inputs through actual ROS interfaces, not physical validation. The
+contribution source used by the native run is pinned to fa8b7af in its receipt.
+
+The [completed native masked-room receipt](../src/oomwoo_sim_support/docs/evidence/gazebo_keepout_tf_fixed_delivery_20261030.json)
+records 95.60% coverage with sweep_complete, zero sampled disk/chord Keepout
+crossings, all 20 auxiliary processes exiting cleanly, and 24 actual Nav2 UUIDs
+(20 SUCCEEDED, four CANCELED). The scorer exits 1: the efficiency criterion
+still fails. The first meter report above 90% has 78.72% efficiency; the old
+scorer captured 78.88% from the preceding report. Both values fail the unchanged
+80% criterion. This single successful sweep observation does not establish
+shutdown reliability, active docking, a physical footprint certificate, or
+performance across homes. DockDrive stayed IDLE.
+
+The [focused pre-change reproduction](../src/oomwoo_sim_support/docs/evidence/metric_pairing_false_pass_before_20261030.json)
+also demonstrates a false pass: new 90.1% coverage paired with previous 80.5%
+efficiency, when the matching efficiency is 79.9%. The current **unverified WIP**
+fuses the existing meter and scorer into one process and takes their three
+metrics from one calculation. It removes the scalar metric inputs and duplicate
+truth/active subscriptions. The regression wrapper disables the separate meter;
+the standalone launch keeps its original default. Measurement geometry remains
+0.1745 m robot radius and 0.20 m cleaning radius, independent of planner margin.
+The first target crossing is retained during the existing completion grace too.
+Own previously validated phase snapshots and child-failure exit code 3 are
+carried forward; a positive score must not hide a failed owned process.
+
+Prepared focal cases cover actual ROS construction, coherent report values,
+completion-grace crossings in both directions, real launch-condition evaluation,
+and the existing clock/wall/child-exit contracts. **None of the new fusion or
+grace cases has run yet**: the machine guard reports an active FIFO benchmark,
+and the current machine rules prohibit tests unless it reports LIBRE. These
+source edits are a local WIP, not a tested delivery or a new acceptance result.
+The smallest next check is test_coverage_runner_bounds.py in the existing Jazzy
+image with bounded CPU/RAM, followed by relevant measurement/style checks. Do
+not rerun the full 16-minute scene before those focal checks establish coherence.
+
+The [existing-run transit analysis](../src/oomwoo_sim_support/docs/evidence/transit_timeout_review_20261030.json)
+identifies the next candidate bottleneck without another simulation. Even after
+subtracting the 0.20 m Nav2 goal tolerance and 0.02 m log-rounding allowance,
+three of four canceled routes need nominal straight-line times of 31.84, 40.64
+and 37.14 seconds at the configured 0.14 m/s, exceeding the 30-second budget.
+All four recorded net ground-truth motion; the shorter case is not proven stuck.
+No timeout or route was changed. Increasing all timeouts would also change
+handoff waiting and is not justified by this evidence.
+
+Decision: validate coherent grading first, then assess a narrowly scoped transit
+change against actual distance and acceptance results. Its benefit remains
+unproven; the global useful milestone still needs masked efficiency acceptance
+and an active NAV/SWEEP/DOCK integration. Further variants before this evidence
+would add review and maintenance cost without demonstrated utility. The goal
+is not complete and its overall sweet spot has not been established. Everything
+here is local; no upstream push, PR, merge or comment was made.

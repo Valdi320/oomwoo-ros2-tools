@@ -1,0 +1,376 @@
+{
+  "created_utc": "2026-10-30T12:25:37.868715+00:00",
+  "kind": "postprocessing_of_existing_native_run_no_execution_of_project_code",
+  "source_receipt": "gazebo_keepout_tf_fixed_20261030.json",
+  "source_sha256": "778726d86091a5ac1ca34b664031daa1846d33b285b4236b0f7197ced47d391b",
+  "configured_nav_linear_speed_m_s": 0.14,
+  "existing_goal_timeout_sim_s": 30,
+  "nav2_xy_goal_tolerance_m": 0.2,
+  "additional_coordinate_rounding_allowance_m": 0.02,
+  "rows": [
+    {
+      "log_time": 1793359297.316034,
+      "start_xy": [
+        -0.9,
+        3.43
+      ],
+      "goal_xy": [
+        2.73,
+        0.48
+      ],
+      "dispatch_log": "[bt_navigator-20] [INFO] [1793359297.316034131] [bt_navigator]: Begin navigating from current location (-0.90, 3.43) to (2.73, 0.48)",
+      "dispatch_ordinal": 7,
+      "waypoint": 164,
+      "cancel_log": "[coverage_planner-12] [WARN] [1793359327.315819445] [coverage_planner]: waypoint 164 timed out; skipping",
+      "elapsed_wall_s": 29.99978542327881,
+      "straight_distance_to_exact_goal_m": 4.677542089602188,
+      "minimum_nominal_straight_motion_s_to_tolerance": 31.83958635430134,
+      "exceeds_existing_30s_sim_budget": true,
+      "phase_start": {
+        "phase": "TRANSIT",
+        "wall": 376702.874222089,
+        "sim": 382.0,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            -0.8729204188921686,
+            3.4220032669172324
+          ],
+          "stamp_ns": 382000000000
+        },
+        "nav_feedback": {
+          "uuid": "e8429af60c4947f19c3a5e71c856a3a1",
+          "frame": "map",
+          "stamp_ns": 379420000000,
+          "position": [
+            -0.87938922125319,
+            3.4425320697588613,
+            0.012499339293945347
+          ],
+          "orientation": [
+            1.0107545428469613e-09,
+            -1.5139457466414734e-07,
+            0.9875364277040325,
+            0.1573906094960413
+          ],
+          "received_wall": 376700.302158872,
+          "received_sim": 379.43
+        }
+      },
+      "phase_after_cancel": {
+        "phase": "IDLE",
+        "wall": 376733.471673874,
+        "sim": 412.6,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            2.0084920742843737,
+            1.0816875572396687
+          ],
+          "stamp_ns": 412600000000
+        },
+        "nav_feedback": {
+          "uuid": "3b91519b00844245aa451723f4ac7989",
+          "frame": "map",
+          "stamp_ns": 411980000000,
+          "position": [
+            1.9224847047784959,
+            1.0964905141091406,
+            0.012499233606062397
+          ],
+          "orientation": [
+            2.2922331579871888e-08,
+            -8.318060743986775e-09,
+            -0.3147208754480592,
+            0.949184265860537
+          ],
+          "received_wall": 376732.864513901,
+          "received_sim": 411.99
+        }
+      },
+      "terminal_uuid": "3b91519b00844245aa451723f4ac7989",
+      "terminal_status": 5,
+      "truth_endpoint_displacement_m": 3.71209045913451,
+      "last_feedback_distance_to_goal_m": 1.0159436529666521,
+      "last_feedback_age_at_end_phase_s": 0.6200000000000045,
+      "last_feedback_goal_within_tolerance": false
+    },
+    {
+      "log_time": 1793359478.8887022,
+      "start_xy": [
+        -0.98,
+        -0.83
+      ],
+      "goal_xy": [
+        4.93,
+        -0.87
+      ],
+      "dispatch_log": "[bt_navigator-20] [INFO] [1793359478.888702130] [bt_navigator]: Begin navigating from current location (-0.98, -0.83) to (4.93, -0.87)",
+      "dispatch_ordinal": 13,
+      "waypoint": 235,
+      "cancel_log": "[coverage_planner-12] [WARN] [1793359508.916072355] [coverage_planner]: waypoint 235 timed out; skipping",
+      "elapsed_wall_s": 30.02737021446228,
+      "straight_distance_to_exact_goal_m": 5.910135362240022,
+      "minimum_nominal_straight_motion_s_to_tolerance": 40.64382401600016,
+      "exceeds_existing_30s_sim_budget": true,
+      "phase_start": {
+        "phase": "TRANSIT",
+        "wall": 376884.4465503,
+        "sim": 563.4000000000001,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            -0.9386982282482776,
+            -0.7929189852929791
+          ],
+          "stamp_ns": 563400000000
+        },
+        "nav_feedback": {
+          "uuid": "798f7c5480a24adebcfba2ba8a66445f",
+          "frame": "map",
+          "stamp_ns": 559620000000,
+          "position": [
+            -0.9018751973706981,
+            -0.8181538427335179,
+            0.012499279151708101
+          ],
+          "orientation": [
+            2.2256262614707947e-11,
+            1.1013400279558697e-08,
+            0.9998955009428955,
+            -0.014456389388637454
+          ],
+          "received_wall": 376880.667214773,
+          "received_sim": 559.62
+        }
+      },
+      "phase_after_cancel": {
+        "phase": "IDLE",
+        "wall": 376915.077256289,
+        "sim": 594.0,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            2.7782980019189174,
+            -0.7769088133537485
+          ],
+          "stamp_ns": 594000000000
+        },
+        "nav_feedback": {
+          "uuid": "1d0da7a9423a459f86bc0388b6248a99",
+          "frame": "map",
+          "stamp_ns": 593380000000,
+          "position": [
+            2.713139675586568,
+            -0.851495201628556,
+            0.012499309993800306
+          ],
+          "orientation": [
+            -2.322601731294879e-08,
+            -5.181842825347019e-10,
+            -0.002222227704935346,
+            0.999997530848965
+          ],
+          "received_wall": 376914.467166504,
+          "received_sim": 593.39
+        }
+      },
+      "terminal_uuid": "1d0da7a9423a459f86bc0388b6248a99",
+      "terminal_status": 5,
+      "truth_endpoint_displacement_m": 3.717030710215166,
+      "last_feedback_distance_to_goal_m": 2.2169375556206345,
+      "last_feedback_age_at_end_phase_s": 0.6200000000000045,
+      "last_feedback_goal_within_tolerance": false
+    },
+    {
+      "log_time": 1793359642.7222779,
+      "start_xy": [
+        -0.95,
+        -2.55
+      ],
+      "goal_xy": [
+        1.53,
+        -2.52
+      ],
+      "dispatch_log": "[bt_navigator-20] [INFO] [1793359642.722277831] [bt_navigator]: Begin navigating from current location (-0.95, -2.55) to (1.53, -2.52)",
+      "dispatch_ordinal": 15,
+      "waypoint": 290,
+      "cancel_log": "[coverage_planner-12] [WARN] [1793359672.768705830] [coverage_planner]: waypoint 290 timed out; skipping",
+      "elapsed_wall_s": 30.046427965164185,
+      "straight_distance_to_exact_goal_m": 2.4801814449753468,
+      "minimum_nominal_straight_motion_s_to_tolerance": 16.14415317839533,
+      "exceeds_existing_30s_sim_budget": false,
+      "phase_start": {
+        "phase": "TRANSIT",
+        "wall": 377048.281054178,
+        "sim": 727.2,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            -0.9657629414420312,
+            -2.4270705317471237
+          ],
+          "stamp_ns": 727200000000
+        },
+        "nav_feedback": {
+          "uuid": "bccf982e10184869bb556a5be9b737b2",
+          "frame": "map",
+          "stamp_ns": 610420000000,
+          "position": [
+            4.709899466668261,
+            -1.1873635630982675,
+            0.01249930857986321
+          ],
+          "orientation": [
+            -9.921592204567148e-08,
+            1.2220701430756406e-08,
+            -0.23044607206648968,
+            0.9730850979586093
+          ],
+          "received_wall": 376931.506047811,
+          "received_sim": 610.4300000000001
+        }
+      },
+      "phase_after_cancel": {
+        "phase": "IDLE",
+        "wall": 377078.926812503,
+        "sim": 757.8000000000001,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            1.5638051861720546,
+            -2.2050872444566654
+          ],
+          "stamp_ns": 757800000000
+        },
+        "nav_feedback": {
+          "uuid": "0cda2fbfb45a4e1dbc254effd94c0435",
+          "frame": "map",
+          "stamp_ns": 757180000000,
+          "position": [
+            1.5042394897007032,
+            -2.2804338673266855,
+            0.012500001245674486
+          ],
+          "orientation": [
+            1.9212771933861108e-07,
+            -5.039557480819212e-08,
+            -0.032710546098435864,
+            0.9994648669032358
+          ],
+          "received_wall": 377078.321025275,
+          "received_sim": 757.195
+        }
+      },
+      "terminal_uuid": "0cda2fbfb45a4e1dbc254effd94c0435",
+      "terminal_status": 5,
+      "truth_endpoint_displacement_m": 2.5392895644406743,
+      "last_feedback_distance_to_goal_m": 0.24094716394871368,
+      "last_feedback_age_at_end_phase_s": 0.6200000000001182,
+      "last_feedback_goal_within_tolerance": false
+    },
+    {
+      "log_time": 1793359796.3783832,
+      "start_xy": [
+        4.62,
+        2.36
+      ],
+      "goal_xy": [
+        -0.67,
+        1.18
+      ],
+      "dispatch_log": "[bt_navigator-20] [INFO] [1793359796.378383208] [bt_navigator]: Begin navigating from current location (4.62, 2.36) to (-0.67, 1.18)",
+      "dispatch_ordinal": 22,
+      "waypoint": 6,
+      "cancel_log": "[coverage_planner-12] [WARN] [1793359826.553740503] [coverage_planner]: waypoint 6 timed out; skipping",
+      "elapsed_wall_s": 30.175357341766357,
+      "straight_distance_to_exact_goal_m": 5.4200092250844,
+      "minimum_nominal_straight_motion_s_to_tolerance": 37.14292303631714,
+      "exceeds_existing_30s_sim_budget": true,
+      "phase_start": {
+        "phase": "TRANSIT",
+        "wall": 377201.937414664,
+        "sim": 880.6,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            4.648653119767481,
+            2.3106886833307834
+          ],
+          "stamp_ns": 880580000000
+        },
+        "nav_feedback": {
+          "uuid": "1e165a41c7214a06880b429a05ba5865",
+          "frame": "map",
+          "stamp_ns": 875420000000,
+          "position": [
+            4.271803719194825,
+            2.2550947413525577,
+            0.012499530320569253
+          ],
+          "orientation": [
+            4.987546593423532e-07,
+            -2.2822090308070234e-07,
+            0.21010641190412807,
+            0.9776785236858136
+          ],
+          "received_wall": 377196.756850368,
+          "received_sim": 875.4200000000001
+        }
+      },
+      "phase_after_cancel": {
+        "phase": "IDLE",
+        "wall": 377232.711663316,
+        "sim": 911.2,
+        "truth_position": {
+          "frame": "map",
+          "position": [
+            1.0769460878360506,
+            1.680853266318489
+          ],
+          "stamp_ns": 911200000000
+        },
+        "nav_feedback": {
+          "uuid": "bf3f808c357c4e798607288d1aab5640",
+          "frame": "map",
+          "stamp_ns": 910580000000,
+          "position": [
+            1.0844807448438822,
+            1.686361041745818,
+            0.012499338099942007
+          ],
+          "orientation": [
+            -4.790737567022441e-09,
+            4.479602979485661e-08,
+            0.9879930070974194,
+            -0.15449860169786842
+          ],
+          "received_wall": 377232.107636464,
+          "received_sim": 910.595
+        }
+      },
+      "terminal_uuid": "bf3f808c357c4e798607288d1aab5640",
+      "terminal_status": 5,
+      "truth_endpoint_displacement_m": 3.626814549225184,
+      "last_feedback_distance_to_goal_m": 1.8260898632394447,
+      "last_feedback_age_at_end_phase_s": 0.6200000000000045,
+      "last_feedback_goal_within_tolerance": false
+    }
+  ],
+  "findings": {
+    "timed_out_goals": 4,
+    "nominal_lower_bound_to_tolerance_exceeds_timeout": 3,
+    "all_four_have_nonzero_sampled_truth_displacement": true,
+    "shorter_goal_last_feedback_within_xy_tolerance": false,
+    "shorter_goal_stall_proven": false
+  },
+  "limits": [
+    "Logged coordinates have two decimal places; distances are approximate. The bound subtracts goal tolerance plus an extra 2 cm rounding allowance.",
+    "Nominal straight-line motion excludes acceleration, turns, detours and stops. It is not a predicted completion time or a measured hardware speed guarantee.",
+    "Log timestamps are wall time; source phase and feedback stamps retain simulation time independently.",
+    "Endpoints prove net motion during each transit, not uninterrupted progress. Last feedback does not prove the terminal pose or that a goal was reached.",
+    "Phase transitions are matched to dispatch order (24 each); endpoint UUIDs must have observed terminal status CANCELED.",
+    "No claim that increasing a timeout saves distance or resolves the shorter canceled goal."
+  ],
+  "decision": "Finish validating coherent grading first. Then consider a narrowly scoped transit-budget change preserving no-progress detection, only if native evidence justifies its total cost. No timeout or route source changed."
+}

@@ -1,0 +1,32 @@
+{
+  "rc": 1,
+  "seconds": 8.414,
+  "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_________ test_new_coverage_cannot_pass_with_the_preceding_efficiency __________\n\nscore = <function score.<locals>.run at 0x7f2374523240>\n\n    def test_new_coverage_cannot_pass_with_the_preceding_efficiency(score):\n        def update(node, tick):\n            node.sweep_started = True\n            if tick == 1:\n                runner.CoverageRunner._on_eff(node, Float32(data=.805))\n            elif tick == 2:\n                runner.CoverageRunner._on_cov(node, Float32(data=.901))\n            elif tick == 3:\n                runner.CoverageRunner._on_eff(node, Float32(data=.799))\n            node.sweep_complete = tick >= 4\n        code, report, _ = score(wall=10.0, update=update)\n>       assert code == 1, report\nE       AssertionError: {'coverage': 0.901, 'coverage_target': 0.9, 'efficiency_at_target': 0.805, 'efficiency_final': 0.799, ...}\nE       assert 0 == 1\n\n/tmp/test_metric_pair.py:16: AssertionError\n=========================== short test summary info ============================\nFAILED ../tmp/test_metric_pair.py::test_new_coverage_cannot_pass_with_the_preceding_efficiency\n1 failed in 1.36s\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=96m,mode=1777",
+    "--memory=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && cat > /tmp/test_metric_pair.py <<'CASE'\nfrom test_coverage_runner_bounds import score\nfrom oomwoo_sim_support import coverage_regression_runner as runner\nfrom std_msgs.msg import Float32\n\ndef test_new_coverage_cannot_pass_with_the_preceding_efficiency(score):\n    def update(node, tick):\n        node.sweep_started = True\n        if tick == 1:\n            runner.CoverageRunner._on_eff(node, Float32(data=.805))\n        elif tick == 2:\n            runner.CoverageRunner._on_cov(node, Float32(data=.901))\n        elif tick == 3:\n            runner.CoverageRunner._on_eff(node, Float32(data=.799))\n        node.sweep_complete = tick >= 4\n    code, report, _ = score(wall=10.0, update=update)\n    assert code == 1, report\n\nCASE\nPYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_sim_support/test:$PYTHONPATH python3 -m pytest -p no:cacheprovider -q /tmp/test_metric_pair.py"
+  ],
+  "ephemeral_test": "from test_coverage_runner_bounds import score\nfrom oomwoo_sim_support import coverage_regression_runner as runner\nfrom std_msgs.msg import Float32\n\ndef test_new_coverage_cannot_pass_with_the_preceding_efficiency(score):\n    def update(node, tick):\n        node.sweep_started = True\n        if tick == 1:\n            runner.CoverageRunner._on_eff(node, Float32(data=.805))\n        elif tick == 2:\n            runner.CoverageRunner._on_cov(node, Float32(data=.901))\n        elif tick == 3:\n            runner.CoverageRunner._on_eff(node, Float32(data=.799))\n        node.sweep_complete = tick >= 4\n    code, report, _ = score(wall=10.0, update=update)\n    assert code == 1, report\n",
+  "source_sha256": "4b69ba794a043ae4b78e96452471cddfaa90e312015298733cc44de176401131",
+  "resource_authorization": "OCUPADA fifo653; explicit compatible-resource exception,11987MiB/load1.43; .25CPU/512MiB/noGPU/noROSgraph."
+}
