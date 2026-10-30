@@ -1251,3 +1251,25 @@ files pass after correction. These cases include prestart motion,
 normal active motion and final-tail controls. One short same passive
 scene, changing only the meter source, remains to verify the actual
 producer/caller path. This is not a full-room efficiency improvement.
+
+
+The [same passive simulator contrast](../src/oomwoo_sim_support/docs/evidence/prestart_credit_native_20261030.json)
+confirms prestart credit falls from0.36% to0 while the robot remains
+IDLE with no NAV publishers or action statuses. Only the meter source
+hash differs; the other eleven match694, and all twelve stay immutable
+during the run. The independent audit accepts902 poses/901 chords,
+20ms maximum spacing, no errors and no counted forbidden crossings.
+All fifteen auxiliary processes exit cleanly in38.778s. The scorer
+correctly returns1 for its deliberately passive20s wall-time limit,
+not a room-performance pass. No timeout snapshot fallback is exercised.
+
+Consolidate this correction. Both short idle observations have valid
+pose clocks, so688's rejected-source cause remains unproven; do not
+repeat idle variants to manufacture a diagnosis. Actual full-room
+efficiency and exact near-goal behavior remain open. The next measured
+reliability issue is the shutdown callback: a positive native-stop ACK
+currently bypasses the existing bounded Launch shutdown even if Gazebo
+stays live. A small real-callback causal check should determine whether
+that bypass can be removed while retaining owned-process failure
+reporting, before any further native shutdown contrast. Reuse the
+existing shutdown path; do not add a timer or process supervisor.

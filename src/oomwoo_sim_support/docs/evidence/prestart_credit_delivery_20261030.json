@@ -3,9 +3,75 @@
   "tests_after": "prestart_credit_after_20261030.json:44PASS",
   "style": "prestart_credit_style_20261030.json:two changed files PASS",
   "native_before": "keepout_passive_native_delivery_20261030.json",
-  "native_after": "pending same-scene single-source contrast",
+  "native_after": "prestart_credit_native_20261030.json",
   "demonstrated_utility": "Actual meter cannot stamp floor or start job time before the first active signal. Prestart motion is not carried into credited cells; active driving and original completion tail remain counted, and independent Keepout still observes inactive poses.",
   "change": "One existing reachable-state guard additionally uses the existing job_active flag; no new state, reset, timer, source or policy setting.",
-  "scope": "Real ROS callbacks with synthetic poses; passive Gazebo before records.36% credited with no goal/motion. Normal full-room efficiency not revalidated.",
-  "decision": "Consolidate component correction; one short passive contrast is justified to verify the real producer/caller path, not another full room."
+  "scope": "Actual passive before/after simulator and real ROS callbacks with controlled poses. Normal full-room efficiency remains unvalidated after this measurement correction.",
+  "decision": "Consolidate prestart-credit correction: real-method44cases and same passive Gazebo contrast confirm usefulness. No more idle or ordering variants without new evidence. Overall90/80 and shutdown liveness remain open.",
+  "native_after_summary": {
+    "rc": 1,
+    "seconds": 38.778,
+    "end_reason": "wall_timeout",
+    "coverage_before": 0.0036,
+    "coverage_after": 0.0,
+    "intentional_motion": false,
+    "NAV_publishers_empty": true,
+    "status_samples": [],
+    "keepout": {
+      "poses_before_mask": 0,
+      "poses": 902,
+      "segments": 901,
+      "footprint_crossings": 0,
+      "max_pose_gap_s": 0.02,
+      "errors": [],
+      "min_sampled_center_to_mask_bbox_m": 0.6500000298588342,
+      "motion_by_phase": {
+        "UNSEEN": {
+          "poses": 3,
+          "distance_m": 2.3592239273284572e-20,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000335276126
+        },
+        "IDLE": {
+          "poses": 899,
+          "distance_m": 4.154330725976274e-09,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+        }
+      },
+      "footprint_radius_m": 0.18,
+      "source": "/ground_truth/pose",
+      "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+      "forbidden_cells": 220,
+      "forbidden_bbox_xyxy": [
+        0.6500000335276126,
+        -0.5499999627470968,
+        1.1500000409781932,
+        0.5500000536441805
+      ],
+      "mask_seen": true,
+      "valid": true
+    },
+    "aux_clean_exits": 15,
+    "unexpected_process_failures": [],
+    "changed_source_keys": [
+      "meter"
+    ],
+    "other11_code_hashes_identical": true,
+    "input_unchanged": {
+      "planner": true,
+      "scorer": true,
+      "meter": true,
+      "wrapper": true,
+      "driver": true,
+      "journal": true,
+      "witness": true,
+      "relay": true,
+      "nav2_config": true,
+      "sim_launch": true,
+      "coverage_launch": true,
+      "ground_truth": true
+    },
+    "scope": "Expected passive wall-time exit1, not90/80 acceptance. Meter source alone differs; actual producer/audit remain active with no NAV goal."
+  }
 }
