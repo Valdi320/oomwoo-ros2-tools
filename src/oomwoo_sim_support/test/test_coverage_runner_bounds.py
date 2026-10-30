@@ -209,12 +209,24 @@ def test_ground_truth_audit_never_certifies_missing_or_empty_mask():
     assert not node._audit_keepout_result()['valid']
 
 
-def test_ground_truth_audit_preserves_stale_stamp_instead_of_refreshing_receipt():
-    node, mask, _ = truth_audit()
+@pytest.mark.parametrize('stamp,age', [
+    (8_000_000_000, 2_200_000_000),
+    (10_220_000_000, -20_000_000),
+], ids=['stale', 'future'])
+def test_ground_truth_audit_preserves_rejected_source_and_clock_stamps(stamp, age):
+    node, mask, now = truth_audit()
     node._audit_keepout_mask(mask)
-    node._audit_keepout_truth(truth_pose(0., 8_000_000_000))
+    pose = truth_pose(0., stamp)
+    node._audit_keepout_truth(pose)
+    now[0] += 1_000_000_000
     result = node._audit_keepout_result()
     assert not result['valid'] and result['errors'] and result['poses'] == 0
+    error = result['errors'][0]
+    assert "frame_prefix='map'" in error
+    assert f'stamp_ns={stamp}' in error
+    assert 'now_ns=10200000000' in error
+    assert f'age_ns={age}' in error
+    assert pose.header.stamp.sec * 1_000_000_000 + pose.header.stamp.nanosec == stamp
 
 
 def test_ground_truth_audit_reports_insufficient_sample_cadence():

@@ -1212,3 +1212,22 @@ bounded audit diagnostic before repeating a full room. Do not relax
 source deadlines or declare Keepout proof from zero counted crossings
 when the audit says invalid. Shutdown-ACK liveness and near-goal
 controller behavior remain separate unresolved issues.
+
+
+The [original-source diagnostic](../src/oomwoo_sim_support/docs/evidence/keepout_source_times_delivery_20261030.json)
+records the rejected pose stamp, one original receiving clock value,
+signed age, bounded frame prefix and XY in the existing eight-error list.
+A2.2s stale sample and a20ms future sample remain distinguishable after
+the receiving clock advances. All admission predicates and the bounded
+collector are AST-identical; no timestamp is refreshed. All40 cases in
+the existing scorer file and lint on both changed files pass. The first
+style check's quoted test literal is retained and corrected with the
+same tested AST. These controlled cases do not establish688's cause.
+
+Next collect one short passive simulator observation with navigation
+disabled,20s scorer budget and unchanged audit thresholds. Use the
+existing FIFO/2CPU3GiB scope and shorter existing host/FIFO limits
+110/150s. Check absence of NAV publishers/goals and original pose/clock
+values; do not claim room performance. Reuse the existing stop deadline
+to preserve a partial report before container stop if teardown hangs,
+rather than adding a timer or losing the scorer evidence.

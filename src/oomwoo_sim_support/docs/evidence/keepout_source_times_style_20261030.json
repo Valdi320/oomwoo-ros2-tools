@@ -1,0 +1,39 @@
+{
+  "completed_utc": "2026-10-30T18:16:08.578126+00:00",
+  "rc": 1,
+  "seconds": 7.499,
+  "stdout": "    assert 'frame_prefix=\\'map\\'' in error\n           ^\n1     Q003 Change outer quotes to avoid escaping inner quotes\n\n/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py:225:12: Q003 Change outer quotes to avoid escaping inner quotes\n\n\n2 files checked\n1 errors\n\n'Q'-type errors: 1\n\nChecked files:\n\n* /work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py\n* /work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py\nFILES 2 RC 1\n/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py:225:12: Q003 Change outer quotes to avoid escaping inner quotes\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--name",
+    "oomwoo-keepout-source-times-style-20261030",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=96m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'STYLE'\nfrom ament_flake8.main import main_with_errors\nfiles=['/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py', '/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py']\nrc,errors=main_with_errors(argv=files)\nprint('FILES',len(files),'RC',rc)\nprint('\\n'.join(errors))\nraise SystemExit(rc)\nSTYLE\n"
+  ],
+  "changed_methods": [
+    "_audit_keepout_truth"
+  ],
+  "all_acceptance_predicates_ast_identical": true,
+  "error_collector_ast_identical": true,
+  "resource_authorization": "Explicit compatible .25CPU/512MiB/noGPU small test exception."
+}

@@ -1,0 +1,11 @@
+{
+  "completed_utc": "2026-10-30T18:19:57.581398+00:00",
+  "tests": "keepout_source_times_20261030.json:40PASS",
+  "style": "keepout_source_times_style_final_20261030.json:two files PASS",
+  "retained_initial_style_error": "keepout_source_times_style_20261030.json:Q003 in test literal, corrected with identical AST",
+  "demonstrated_utility": "Rejected pose diagnostics retain original stamp_ns, a single original now_ns, signed age_ns, bounded frame prefix and XY. Known stale2.2s versus future20ms cases remain distinguishable after the receiving clock advances.",
+  "policy": "All admission if-predicates and bounded error collector AST unchanged; other class methods identical. Same source deadlines, no retiming or new source listener.",
+  "limits": "Synthetic original-clock cases; actual cause of688 remains unknown.",
+  "next_increment": "One short passive real-simulator observation with navigation disabled and20s scorer budget. Existing large-test FIFO and2CPU3GiB, host110s/FIFO150s. Verify absent NAV publishers, no goal/motion and actual source age errors; no90/80 performance claim.",
+  "decision": "Consolidate diagnostic; collect small discriminating original-source observation, no complete-room replay."
+}

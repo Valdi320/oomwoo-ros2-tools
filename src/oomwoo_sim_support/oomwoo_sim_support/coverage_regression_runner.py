@@ -210,11 +210,16 @@ class CoverageRunner(CoverageMeter):
         try:
             from oomwoo_cleaning_jobs.swept_footprint import swept_disk_clear
             stamp = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
-            age = self.get_clock().now().nanoseconds - stamp
+            now_ns = self.get_clock().now().nanoseconds
+            age = now_ns - stamp
             x, y = msg.pose.position.x, msg.pose.position.y
             if (msg.header.frame_id != 'map' or stamp <= 0 or not 0 <= age <= 500_000_000
                     or not math.isfinite(x) or not math.isfinite(y)):
-                raise ValueError('ground-truth stamp/frame/position invalid or stale')
+                raise ValueError(
+                    'ground-truth stamp/frame/position invalid or stale: '
+                    f'frame_prefix={msg.header.frame_id[:64]!r} '
+                    f'stamp_ns={stamp} now_ns={now_ns} age_ns={age} '
+                    f'x={x!r} y={y!r}')
             previous = self._keepout_audit_previous
             if previous is not None:
                 if stamp == previous[2] and (x, y) == previous[:2]:
