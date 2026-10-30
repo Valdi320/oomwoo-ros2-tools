@@ -1,0 +1,11 @@
+{
+  "causal_before": "prestart_credit_before_20261030.json",
+  "tests_after": "prestart_credit_after_20261030.json:44PASS",
+  "style": "prestart_credit_style_20261030.json:two changed files PASS",
+  "native_before": "keepout_passive_native_delivery_20261030.json",
+  "native_after": "pending same-scene single-source contrast",
+  "demonstrated_utility": "Actual meter cannot stamp floor or start job time before the first active signal. Prestart motion is not carried into credited cells; active driving and original completion tail remain counted, and independent Keepout still observes inactive poses.",
+  "change": "One existing reachable-state guard additionally uses the existing job_active flag; no new state, reset, timer, source or policy setting.",
+  "scope": "Real ROS callbacks with synthetic poses; passive Gazebo before records.36% credited with no goal/motion. Normal full-room efficiency not revalidated.",
+  "decision": "Consolidate component correction; one short passive contrast is justified to verify the real producer/caller path, not another full room."
+}

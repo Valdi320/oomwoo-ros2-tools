@@ -196,7 +196,7 @@ class CoverageMeter(Node):
         cx = int((msg.pose.position.x - self.info.origin.position.x) / res)
         cy = int((msg.pose.position.y - self.info.origin.position.y) / res)
         self._ensure_reachable(cx, cy)
-        if self.reachable is None:
+        if self.reachable is None or not self.job_active:
             return
         if self.t_start is None:
             self.t_start = self.get_clock().now()

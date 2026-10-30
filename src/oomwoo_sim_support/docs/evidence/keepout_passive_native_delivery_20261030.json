@@ -1,0 +1,80 @@
+{
+  "raw_receipt": "keepout_passive_native_20261030.json",
+  "rc": 1,
+  "seconds": 38.228,
+  "host_timeout": false,
+  "report": {
+    "coverage": 0.0036,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 0.0,
+    "revisit_ratio": 0.0,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "wall_timeout",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "aux_clean_exits": 15,
+  "NAV_publishers": {
+    "/navigate_to_pose/_action/status": [],
+    "/valdi/nav2_cmd_vel": [],
+    "/global_costmap/costmap": []
+  },
+  "actual_nav2_status_samples": [],
+  "phases": [
+    {
+      "phase": "IDLE",
+      "wall": 401975.767783847,
+      "sim": 0.36000000000000004
+    }
+  ],
+  "keepout": {
+    "poses_before_mask": 2,
+    "poses": 879,
+    "segments": 878,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 0.6500000298588342,
+    "motion_by_phase": {
+      "IDLE": {
+        "poses": 879,
+        "distance_m": 4.154330725976274e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true,
+    "nav2_config": true,
+    "sim_launch": true,
+    "coverage_launch": true,
+    "ground_truth": true
+  },
+  "interpretation": "Expected wall-time exit for passive observation; no NAV goal, soleIDLE phase, near-zero truth motion.879 valid poses and no rejected sample:688 cause not reproduced. Initial.0036 geometric coverage is unearned pre-job credit, not cleaning evidence.",
+  "timeout_capture_exercised": false,
+  "next_increment": "One-line existing active-state fusion; causal real-method test before,44 focused cases after, then one same passive scene contrast."
+}

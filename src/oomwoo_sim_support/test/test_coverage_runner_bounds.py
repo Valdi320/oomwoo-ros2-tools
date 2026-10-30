@@ -570,3 +570,63 @@ def test_masked_safety_audit_participates_in_existing_verdict(
     assert code == expected_code, report
     assert report['measurement_valid'] is measurement_valid
     assert report['pass'] is (expected_code == 0)
+
+
+def meter_pose(node, x, y=.25):
+    """Build a fresh real pose for the existing meter callbacks."""
+    pose = PoseStamped()
+    pose.header.frame_id = 'map'
+    pose.header.stamp = node.get_clock().now().to_msg()
+    pose.pose.position.x, pose.pose.position.y = x, y
+    return pose
+
+
+def test_inactive_meter_does_not_credit_floor_before_first_job(fused_meter):
+    measured_frame(fused_meter, 0, .85)
+    fused_meter.path_len = 0.0
+    fused_meter._on_pose(meter_pose(fused_meter, .25))
+    assert not fused_meter.covered.any()
+    assert fused_meter.path_len == 0.0 and fused_meter.t_start is None
+
+
+def test_prestart_motion_is_not_carried_into_new_cleaning_credit(fused_meter):
+    from std_msgs.msg import Bool
+
+    measured_frame(fused_meter, 0, .85)
+    fused_meter.path_len = 0.0
+    fused_meter._on_pose(meter_pose(fused_meter, .25))
+    fused_meter._on_pose(meter_pose(fused_meter, .75))
+    fused_meter._on_active(Bool(data=True))
+    fused_meter._on_pose(meter_pose(fused_meter, 1.25))
+    assert fused_meter.covered.any()
+    assert not fused_meter.covered[:, :15].any()
+    assert fused_meter.path_len == 0.0
+    fused_meter._on_pose(meter_pose(fused_meter, 1.35))
+    assert fused_meter.path_len == pytest.approx(.1)
+
+
+def test_completion_tail_keeps_original_active_meter_accounting(fused_meter):
+    from std_msgs.msg import Bool
+
+    measured_frame(fused_meter, 0, .85)
+    fused_meter._on_active(Bool(data=True))
+    fused_meter._on_pose(meter_pose(fused_meter, .5))
+    before = int(fused_meter.covered.sum())
+    fused_meter._on_active(Bool(data=False))
+    fused_meter._on_pose(meter_pose(fused_meter, .6))
+    assert fused_meter.sweep_complete and fused_meter.job_active
+    assert fused_meter.path_len == pytest.approx(.1)
+    assert int(fused_meter.covered.sum()) > before
+
+
+def test_inactive_meter_still_observes_independent_keepout_truth(fused_meter):
+    measured_frame(fused_meter, 0, .85)
+    fused_meter.path_len = 0.0
+    _, mask, _ = truth_audit()
+    fused_meter.motion_audit = True
+    fused_meter._audit_keepout_mask(mask)
+    fused_meter._on_pose(meter_pose(fused_meter, .25, .125))
+    fused_meter._on_pose(meter_pose(fused_meter, .26, .125))
+    assert not fused_meter.covered.any()
+    audit = fused_meter._audit_keepout_result()
+    assert audit['poses'] == 2 and audit['valid']

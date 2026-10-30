@@ -1231,3 +1231,23 @@ existing FIFO/2CPU3GiB scope and shorter existing host/FIFO limits
 values; do not claim room performance. Reuse the existing stop deadline
 to preserve a partial report before container stop if teardown hangs,
 rather than adding a timer or losing the scorer evidence.
+
+
+The [passive simulator observation](../src/oomwoo_sim_support/docs/evidence/keepout_passive_native_delivery_20261030.json)
+closes naturally in38.228s, with15 clean auxiliary exits and the scorer's
+expected wall-time exit1. NAV publishers/status/UUIDs are absent, the
+only phase isIDLE, and sampled truth moves4.15e-9m. All879 poses are
+valid with20ms maximum spacing, so688's rejected-source cause remains
+unreproduced. No timeout snapshot fallback is exercised.
+
+It exposes a separate measured error: the meter credits0.36% of floor
+before any cleaning activation. The [prestart-credit correction](../src/oomwoo_sim_support/docs/evidence/prestart_credit_delivery_20261030.json)
+fuses stamping/time with the existing active-job state in one guard.
+It still prepares reachability while waiting and preserves the original
+latched accounting during completion grace. The independent audit still
+receives inactive poses. The original callback fails a causal real-Node
+case; all44 cases in the existing scorer file and lint on both changed
+files pass after correction. These cases include prestart motion,
+normal active motion and final-tail controls. One short same passive
+scene, changing only the meter source, remains to verify the actual
+producer/caller path. This is not a full-room efficiency improvement.
