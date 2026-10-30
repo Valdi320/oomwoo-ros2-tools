@@ -1,0 +1,136 @@
+{
+  "completed_utc": "2026-10-30T22:00:56.218730+00:00",
+  "use": "Validate real-TF/Nav2 robustness of be28203 against an intentionally retained AMCL planning cache.",
+  "pair": {
+    "before": {
+      "receipt": "watchdog_cache_before_native_20261030.json",
+      "ticket": 756,
+      "seconds": 41.184,
+      "raw_rc": 1,
+      "grader_pass": false,
+      "uuid": "268f7d5013ca4e9e8ea46847973c55b2",
+      "states": [
+        {
+          "code": 2,
+          "sim": 10.200000000000001
+        },
+        {
+          "code": 3,
+          "sim": 16.2
+        },
+        {
+          "code": 5,
+          "sim": 16.220000000000002
+        }
+      ],
+      "duration_sim_s": 6.020000000000001,
+      "diagnostic_packets": 30,
+      "held_amcl_messages": 19,
+      "cached_xy": [
+        -0.9845859276933602,
+        -2.3753715105221977
+      ],
+      "cache_stamp_ns": 200000000,
+      "latest_seen_amcl_stamp_ns": 15200000000,
+      "first_tf_goal_distance_m": 2.514132641068524,
+      "last_tf_goal_distance_m": 2.2608680957243807,
+      "final_progress_age_s": 6.0,
+      "absolute_budget_s": 30.0,
+      "keepout": {
+        "valid": true,
+        "poses": 1030,
+        "segments": 1029,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02
+      },
+      "auxiliary_clean_exits": 18,
+      "gazebo_requested_interrupt_classified": true,
+      "host_timeout": false,
+      "input_unchanged": {
+        "planner": true,
+        "scorer": true,
+        "meter": true,
+        "wrapper": true,
+        "driver": true,
+        "journal": true,
+        "witness": true,
+        "relay": true,
+        "nav2_config": true,
+        "lifecycle_response_qos": true
+      },
+      "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "raw_sha256": "2daac04182a6e777a6337bf00e26456a83a4898de4191b6e3cf144a8042c3f0e"
+    },
+    "after": {
+      "receipt": "watchdog_cache_after_native_20261030.json",
+      "ticket": 758,
+      "seconds": 58.389,
+      "raw_rc": 1,
+      "grader_pass": false,
+      "uuid": "5a39bf7640564bdd98c3077e389f4b16",
+      "states": [
+        {
+          "code": 2,
+          "sim": 10.600000000000001
+        },
+        {
+          "code": 4,
+          "sim": 33.85
+        }
+      ],
+      "duration_sim_s": 23.25,
+      "diagnostic_packets": 116,
+      "held_amcl_messages": 37,
+      "cached_xy": [
+        -0.9845859276933602,
+        -2.3753715105221977
+      ],
+      "cache_stamp_ns": 1200000000,
+      "latest_seen_amcl_stamp_ns": 33200000000,
+      "first_tf_goal_distance_m": 2.5141276782266315,
+      "last_tf_goal_distance_m": 0.18843685378224592,
+      "final_progress_age_s": 0.2,
+      "absolute_budget_s": 30.0,
+      "keepout": {
+        "valid": true,
+        "poses": 1891,
+        "segments": 1890,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02
+      },
+      "auxiliary_clean_exits": 18,
+      "gazebo_requested_interrupt_classified": true,
+      "host_timeout": false,
+      "input_unchanged": {
+        "planner": true,
+        "scorer": true,
+        "meter": true,
+        "wrapper": true,
+        "driver": true,
+        "journal": true,
+        "witness": true,
+        "relay": true,
+        "nav2_config": true,
+        "lifecycle_response_qos": true
+      },
+      "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "raw_sha256": "adf6acd6b5dd8d74e3fbc32d183714d7e3f1999e9acf50ba2642a10cc9e768fe"
+    }
+  },
+  "controlled_source_difference": "Only _goal_watchdog differs between the two planner modules.9other frozen input hashes identical, including exact lifecycle reply profile. Same target/spawn/map/config and explicit cache-retention input.",
+  "result": "Confirmed controlled mechanism: old watchdog cancels after6.02s despiteTFprogress; updated watchdog completes actual action in23.25s within unchanged30s backstop.",
+  "source_fix_commit": "be2820399b4bb8124b0453c7a33abd7de8e3ef85",
+  "fixture_note": "_on_amcl deliberately retains only this planner cache while awaiting; real AMCL node/TF,odom,scan,Nav2 and authority are untouched. New incoming AMCL source stamps and withheld counts are observed. This is a robustness test, not proof of the historical cache state.",
+  "private_input_method": "def _on_amcl(self, msg: PoseWithCovarianceStamped) -> None:\n        stamp = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec\n        self._focal_amcl_seen_stamp_ns = stamp\n        # Isolated robustness input: retain only this node's AMCL planning cache.\n        # The actual AMCL node and its TF publications are unchanged.\n        if self.awaiting:\n            self._focal_amcl_held_count = getattr(self, '_focal_amcl_held_count', 0) + 1\n            return\n        self._focal_amcl_cache_stamp_ns = stamp\n        self.robot_xy = (msg.pose.pose.position.x, msg.pose.pose.position.y)\n        self.robot_yaw = _yaw_from_quat(msg.pose.pose.orientation)",
+  "limits": [
+    "Single supplied target,private local-costmap-map configuration,synthetic battery; not normal full-room planning or hardware.",
+    "Both raw short scorers correctly return1/90-80FAIL; action-level contrast does not change that result.",
+    "Historical full-room cache input was not captured; no definitive historical causal attribution.",
+    "Unchanged500ms pose,6s stall,5cm progress,30s absolute budget and all authority/keepout checks."
+  ],
+  "utility_demonstrated": "Current pose prevents false cancel with sparse cache without removing genuine stall/absolute deadline behavior already tested in17focal cases.",
+  "distance_to_useful_milestone": "Watchdog source now has controlled native validation. Normal full-room90/80 remains unfulfilled.",
+  "next_increment": "One natural-cache whole-room run of current watchdog plus existing private map-frame hypothesis, normal plan/gapfill, passively recording cache+watchdog values. Verify no coworker duplicate before FIFO submission.",
+  "decision": "Consolidate controlled validation; any next long run must add natural-cache evidence and actual90/80 validation, not repeat this green.",
+  "cost_evidence": "41.184s baseline+58.389s corrected runtime, individually admitted FIFO756 and758,2CPU/3GiB/noGPU; no host timeout orOOM."
+}

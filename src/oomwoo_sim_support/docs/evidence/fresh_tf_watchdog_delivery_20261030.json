@@ -14,9 +14,10 @@
   "unchanged": "Same500ms source-age helper,6s no-progress window,5cm progress threshold,30s/configured travel backstop and2xcap; planning, gapfill, action authority and configuration unchanged.",
   "native_trigger": "Peer full room96%/77.34%: waypoint290 canceled6.02s after activation while observed map TF distance decreases2.48770->2.22750m and final command remains.14m/s.",
   "attribution_limit": "Historical robot_xy cache was not recorded. Tests deliberately hold it to expose the confirmed mechanism; they do not prove this cache caused that recorded cancellation.",
-  "distance_to_useful_milestone": "Code and focused regression ready for review; updated watchdog not yet validated by a native action. Full-room90/80 remains incomplete.",
-  "next_increment": "One bounded single-target native contrast using the existing passive diagnostic fixture, current watchdog and private map-frame candidate; record cached AMCL and watchdog state alongside TF to discriminate actual cancellation. No unchanged full-room rerun.",
+  "distance_to_useful_milestone": "Watchdog source now has controlled native validation. Normal full-room90/80 remains unfulfilled.",
+  "next_increment": "One natural-cache whole-room run of current watchdog plus existing private map-frame hypothesis, normal plan/gapfill, passively recording cache+watchdog values. Verify no coworker duplicate before FIFO submission.",
   "acceptance": "Actual UUID succeeds without early false-progress cancellation, independent Keepout valid0crossings, quiet authority/ownership and normal closure; retain the short scorer90/80 failure. No physical claim.",
-  "decision": "Advance to one short instrumented native case, then decide whether a whole-room repeat has new evidence.",
-  "expected_cost": "About one minute plus existing FIFO wait,2CPU/3GiB/noGPU after admission; no new tool,node,timer,parameter or relaxed tolerance."
+  "decision": "Consolidate controlled validation; any next long run must add natural-cache evidence and actual90/80 validation, not repeat this green.",
+  "expected_cost": "About one minute plus existing FIFO wait,2CPU/3GiB/noGPU after admission; no new tool,node,timer,parameter or relaxed tolerance.",
+  "native_validation": "watchdog_cache_native_delivery_20261030.json"
 }
