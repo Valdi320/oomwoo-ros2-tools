@@ -85,9 +85,48 @@
     "remaining_efficiency_requirement": 0.8,
     "interpretation": "Provisional independent observation is below80%; no final pass or adoption claim."
   },
-  "decision": "Source/contract review supports collecting this experiment; candidate remains private. Full-room result, independent audit, exact UUID outcomes and closure must be collected before adoption. No second simulation, worker edit, threshold relaxation, push or remote comment.",
+  "decision": "Full-room96%/77.34% remains a failure. Arrival-frame hypothesis was not exercised near the goal in this full run: the planner canceled at6.02s while still over2m away. Record a sparse-AMCL-cache watchdog hypothesis, confirmed as a source-selection mechanism by separate focused tests; exact historical attribution remains unproven. No production frame change adopted.",
   "utility_demonstrated": "Rules out substituted short route, changed grading and hidden authority edits as explanations of the peer full-room trial; preserves difference between navigation reliability and efficiency.",
-  "distance_to_useful_milestone": "Static review complete; current full-room trial remains active and efficiency requirement is not yet satisfied.",
-  "next_increment": "Read the same peer terminal receipt when present; distinguish corrected target arrival from unchanged90/80 failure and do not repeat the full run unchanged.",
-  "review_completed_utc": "2026-10-30T21:33:40.346647+00:00"
+  "distance_to_useful_milestone": "Peer full room is terminal, source review complete,90/80 still incomplete.",
+  "next_increment": "Bounded updated-watchdog native case with both AMCL-cache and TF/progress observations before another whole-room run.",
+  "review_completed_utc": "2026-10-30T21:33:40.346647+00:00",
+  "terminal_full_room_observation": {
+    "receipt": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/full_mapframe_native_20261030.json",
+    "rc": 1,
+    "seconds": 988.136,
+    "coverage": 0.96,
+    "efficiency_at_target": 0.7734,
+    "pass": false,
+    "keepout_valid": true,
+    "crossings": 0,
+    "poses": 48390,
+    "focal_uuid": "4c115f08d6b9443aaa4ff2e228f15752",
+    "focal_transition_sim_s": [
+      [
+        2,
+        740.8
+      ],
+      [
+        3,
+        746.8
+      ],
+      [
+        5,
+        746.82
+      ]
+    ],
+    "focal_failure": "watchdog no progress, not30s near-endpoint timeout",
+    "tf_goal_distances_m": [
+      [
+        741.0,
+        2.4877026431692117
+      ],
+      [
+        746.8,
+        2.2275026954131816
+      ]
+    ],
+    "final_linear_command_mps": 0.14,
+    "attribution_limit": "Actual cached AMCL robot_xy is not in this trace; a sparse-cache false-cancellation mechanism is now a falsifiable hypothesis, not a proven historical cause."
+  }
 }

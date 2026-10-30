@@ -1064,11 +1064,13 @@ class CoveragePlanner(Node):
         Handoff deadlines and the no-progress window are not extended.
         """
         stuck = False
-        if self.robot_xy is not None \
-                and self.wp_index < len(self.cached_poses):
+        # AMCL's cached planning seed can be sparse even while odometry moves.
+        # Use the same age-checked map TF as row motion; unavailable TF must
+        # not refresh progress or remove the independent absolute deadline.
+        pose = self._robot_pose()
+        if pose is not None and self.wp_index < len(self.cached_poses):
             g = self.cached_poses[self.wp_index].pose.position
-            dist = ((g.x - self.robot_xy[0]) ** 2
-                    + (g.y - self.robot_xy[1]) ** 2) ** 0.5
+            dist = ((g.x - pose[0]) ** 2 + (g.y - pose[1]) ** 2) ** 0.5
             if dist <= 0.3:                     # basically arrived; let Nav2 finish
                 self._goal_progress_t = self.get_clock().now()
             elif self._goal_best_dist is None \

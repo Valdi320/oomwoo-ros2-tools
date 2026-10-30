@@ -65,13 +65,7 @@
       "outcome": "AMCL/change_state loses response; BOOT30s expires, localization manager Launch escalation-9 retained"
     }
   ],
-  "next_increment": {
-    "use": "Resolve remaining full-room efficiency and near-goal reliability from a falsifiable cause, preserving90/80 and safety requirements.",
-    "current_evidence": "Existing costmap_cadence_native_delivery already ranks pre90 transits with1Hz uncertainty. Static route alternatives saved0 or.325m against about2.48m required in that run; repeating those analyses does not justify a route mutation.",
-    "minimum_pending": "Exact Path endpoint/header and TF used during the stalled near-goal episode are absent; no unmeasured efficiency-saving claim. Normal full-room90/80 remains incomplete.",
-    "decision": "Consolidate short-cycle, connected pose input, targeted opt-in startup profile and precise pose-cell diagnostics; no repeat of accepted736 or new route variant without new discriminating evidence.",
-    "expected_benefit_cost": "Next instrumented native case must answer the missing Path/TF question using existing observer rather than repeat a long failure unchanged; compare this cost with other authorized reliability work first."
-  },
+  "next_increment": "One bounded single-target native contrast using the existing passive diagnostic fixture, current watchdog and private map-frame candidate; record cached AMCL and watchdog state alongside TF to discriminate actual cancellation. No unchanged full-room rerun.",
   "remaining_larger_scope": [
     "Full-room90percent coverage/80percent first-target efficiency still not passed.",
     "Supplied short route does not validate normal full-room planning.",
@@ -101,7 +95,10 @@
     "dock_pose_link_after_20261030.json": "9d749aea53463a8a5d350efae53c4e9ccf57f3ff19107a43b85ddbc2e10ef439",
     "lifecycle_profile_launch_20261030.json": "ea2366bb1be81463d6e21c115c7fd4b03ac92d3aa0f9b87d45ca50dc4fe32de5",
     "lifecycle_profile_launch_after_20261030.json": "0a2f41d217104ea2311595f0ae2167758ba0026f0d4026d9600811fbc4385f84",
-    "nav_frame_peer_review_20261030.json": "b363f15b609ce18ea1cb6074dfab15de585f841b8e73bdc65cadc1606a22a043"
+    "nav_frame_peer_review_20261030.json": "813133ab378a48e89316751b15f0492d4ea6b380f207628750f8bd509ff3b697",
+    "fresh_tf_watchdog_before_20261030.json": "9f72c0ea95751e5ea0713d15a9ca9231025cb79e64db69cf759b7aaed6fce596",
+    "fresh_tf_watchdog_after_20261030.json": "b1cdd5f4352b39b087ad4c7b1aa218133bb5c5cbdef34341ca8c2939499a58c6",
+    "fresh_tf_watchdog_delivery_20261030.json": "f2a9c13cd070b8700b0d0fbd5102d883a70ba291bbb7f246b117c538f2a440c1"
   },
   "completed_increment": {
     "ticket": 736,
@@ -575,7 +572,7 @@
     "minimum_delivery": "One focused static review record on our branch; no edits to coworker repo or active freeze and no additional simulation.",
     "afterward": "Collect authoritative terminal result when available; do not adopt the candidate or predict efficiency from focal success.",
     "benefit_cost": "A lightweight source/contract review can prevent accepting a test-only route or weakened controls as a full-room result; it avoids another simulator run.",
-    "status": "Static review completed and recorded in nav_frame_peer_review_20261030.json; peer full-room terminal result pending.",
-    "finding": "Normal plan/gapfill and all non-observation code preserved;9frozen source hashes unchanged; sole YAML change local frame. First live target observation77.34% remains below80%."
+    "status": "Source review complete; terminal peer run96%/77.34%, requirement not met.",
+    "finding": "Normal plan/gapfill and non-observation logic preserved. Full-room target290 canceled after6.02s while far and moving, distinct from earlier30s arrival stall."
   }
 }

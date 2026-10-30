@@ -957,11 +957,84 @@ def transit_budget_driver(speed=.14):
     node, _, now = timed_reactive_driver()
     node.nav_linear_speed = speed
     node.robot_xy = (0.0, 0.0)
+    node._robot_pose = lambda: (*node.robot_xy, 0.0)
     node.cached_poses = [row_target(6.0)]
     node._dispatch_goal(node.cached_poses[0])
     canceled = []
     node.goal_handle = SimpleNamespace(cancel_goal_async=lambda: canceled.append(True))
     return node, now, canceled
+
+
+def test_goal_watchdog_uses_fresh_tf_when_amcl_cache_stays_unchanged():
+    node, now, canceled = transit_budget_driver()
+    target = row_target(1.5250000465661286)
+    target.pose.position.y = -2.52499999217689
+    node.cached_poses = [target]
+    # These fresh TF positions were observed in the full-room canceled goal.
+    # Hold the separate AMCL cache to discriminate the source-selection bug;
+    # the historical cache value itself was not retained in that recording.
+    current = [(-0.9626235757767924, -2.5448281134335393, 0.0)]
+    node.robot_xy = current[0][:2]
+    node._robot_pose = lambda: current[0]
+    node._dispatch_goal(target)
+    CoveragePlanner._goal_watchdog(node)
+    now[0] = 7.0
+    current[0] = (-0.6879962285218605, -2.271197422214184, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert not canceled
+    assert node._goal_best_dist == pytest.approx(2.2275026954131816)
+    assert node._elapsed(node._goal_progress_t) == pytest.approx(0.0)
+
+
+def test_goal_watchdog_does_not_credit_amcl_changes_when_tf_is_stationary():
+    node, now, canceled = transit_budget_driver()
+    node._robot_pose = lambda: (0.0, 0.0, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    now[0] = 7.1
+    node.robot_xy = (0.2, 0.0)
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+
+
+def test_goal_watchdog_missing_tf_does_not_renew_progress_or_remove_deadline():
+    node, now, canceled = transit_budget_driver()
+    node._robot_pose = lambda: None
+    node.robot_xy = (5.9, 0.0)  # A cached near-goal pose is not current evidence.
+    original_progress = node._goal_progress_t
+    now[0] = 2.0
+    CoveragePlanner._goal_watchdog(node)
+    assert node._goal_progress_t == original_progress
+    assert not canceled
+    now[0] = node.goal_deadline.nanoseconds * 1e-9 + node._nav_goal_budget_s + 0.1
+    CoveragePlanner._goal_watchdog(node)
+    assert canceled == [True]
+
+
+@pytest.mark.parametrize('stamp_s, progress_expected', [
+    (1.5, True),       # inclusive 500 ms source-age limit
+    (1.499, False),    # outside that same existing limit
+    (2.1, False),      # future TF cannot justify progress
+    (0.0, False),
+    (None, False),
+])
+def test_goal_watchdog_uses_actual_tf_age_admission(stamp_s, progress_expected):
+    node, now, canceled = transit_budget_driver()
+    node.global_frame, node.base_frame = 'map', 'base_link'
+    node.tf_buffer = Buffer()
+    node._robot_pose = MethodType(CoveragePlanner._robot_pose, node)
+    node.robot_xy = (5.9, 0.0)
+    if stamp_s is not None:
+        transform = TransformStamped()
+        transform.header.frame_id, transform.child_frame_id = 'map', 'base_link'
+        transform.header.stamp = Time(seconds=stamp_s).to_msg()
+        transform.transform.translation.x = 5.9
+        transform.transform.rotation.w = 1.0
+        node.tf_buffer.set_transform(transform, 'watchdog_source_age_test')
+    original_progress = node._goal_progress_t
+    now[0] = 2.0
+    CoveragePlanner._goal_watchdog(node)
+    assert (node._goal_progress_t != original_progress) is progress_expected
+    assert not canceled
 
 
 def test_transit_budget_allows_long_trip_that_is_still_progressing():

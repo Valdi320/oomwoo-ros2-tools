@@ -1,0 +1,22 @@
+{
+  "completed_utc": "2026-10-30T21:45:08.650265+00:00",
+  "use": "Judge Nav2 transit progress from current age-checked TF rather than sparse AMCL planning cache.",
+  "source_before_sha256": "a73a7412450429fe5e97083a07b959a4cb29a9fe748f8690b4532ac5abecb2e9",
+  "source_after_sha256": "5282caadfc76f692992f17d4f1729e5048cd7b0268004f1975d69511bd6d3a30",
+  "changed_methods": [
+    "_goal_watchdog"
+  ],
+  "causal_before": "fresh_tf_watchdog_before_20261030.json",
+  "focal_after": "fresh_tf_watchdog_after_20261030.json",
+  "before": "3new causal source-selection failures;9existing transit budget/configuration cases pass.",
+  "after": "All17selected cases pass: original12 plus5real TF Buffer admission cases.82unrelated deselected.",
+  "utility_demonstrated": "Fresh TF progress survives a held AMCL cache; changing AMCL cache cannot conceal a fresh-TF stall; missing/future/stale TF does not renew progress, and absolute timeout still cancels.",
+  "unchanged": "Same500ms source-age helper,6s no-progress window,5cm progress threshold,30s/configured travel backstop and2xcap; planning, gapfill, action authority and configuration unchanged.",
+  "native_trigger": "Peer full room96%/77.34%: waypoint290 canceled6.02s after activation while observed map TF distance decreases2.48770->2.22750m and final command remains.14m/s.",
+  "attribution_limit": "Historical robot_xy cache was not recorded. Tests deliberately hold it to expose the confirmed mechanism; they do not prove this cache caused that recorded cancellation.",
+  "distance_to_useful_milestone": "Code and focused regression ready for review; updated watchdog not yet validated by a native action. Full-room90/80 remains incomplete.",
+  "next_increment": "One bounded single-target native contrast using the existing passive diagnostic fixture, current watchdog and private map-frame candidate; record cached AMCL and watchdog state alongside TF to discriminate actual cancellation. No unchanged full-room rerun.",
+  "acceptance": "Actual UUID succeeds without early false-progress cancellation, independent Keepout valid0crossings, quiet authority/ownership and normal closure; retain the short scorer90/80 failure. No physical claim.",
+  "decision": "Advance to one short instrumented native case, then decide whether a whole-room repeat has new evidence.",
+  "expected_cost": "About one minute plus existing FIFO wait,2CPU/3GiB/noGPU after admission; no new tool,node,timer,parameter or relaxed tolerance."
+}
