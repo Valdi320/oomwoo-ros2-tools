@@ -1,0 +1,93 @@
+{
+  "completed_utc": "2026-10-30T21:29:14.448499+00:00",
+  "rc": 0,
+  "seconds": 0.685,
+  "stdout": "OOMWOO_NAV_FRAME_PEER_REVIEW {\"pass\": true, \"checks\": {\"only_two_original_methods_have_observation_additions\": true, \"only_two_new_diagnostic_methods\": true, \"original_plan_and_gapfill_restored\": true, \"__init___original_logic_preserved\": true, \"_relay_poll_original_logic_preserved\": true, \"exact_passive_sections_removed\": true, \"new_methods_have_no_authority_operation\": true, \"four_expected_observation_topics\": true, \"logging_bound_192\": true, \"only_yaml_change_is_local_frame\": true, \"all_nine_frozen_inputs_unchanged\": true, \"entire_module_preserves_all_other_code\": true}, \"changed_original_methods\": [\"__init__\", \"_relay_poll\"], \"new_methods\": [\"_focal_observe_nav\", \"_focal_nav_diagnostic\"], \"removed_passive_sections\": [\"diagnostic_import\", \"diagnostic_import\", \"diagnostic_import\", \"latest_data_dict\", \"four_passive_subscriptions\", \"diagnostic_target_reference\", \"bounded_diagnostic_log\"], \"topics\": [\"/plan\", \"/received_global_plan\", \"/lookahead_point\", \"/is_rotating_to_heading\"], \"authority_operations_found\": [], \"input_unchanged\": {\"planner\": true, \"scorer\": true, \"meter\": true, \"wrapper\": true, \"driver\": true, \"journal\": true, \"witness\": true, \"relay\": true, \"nav2_config\": true}, \"yaml_diff\": \"--- \\n+++ \\n@@ -166,7 +166,7 @@\\n     ros__parameters:\\n       update_frequency: 5.0\\n       publish_frequency: 2.0\\n-      global_frame: odom\\n+      global_frame: map  # private frame-consistency counterfactual\\n       robot_base_frame: base_link\\n       rolling_window: true\\n       width: 3\\n\", \"base_sources\": {\"ros\": \"2cd58d73a3dc3c5b88defa23b28e80c13dfdd6aa\", \"jobs\": \"ea35734457a7cbd5711d24300883c6df67092d76\"}, \"candidate_planner_sha256\": \"6a93f549c1a4f75f2d7717e7830fcab210da7de74d1d5b221ae8684fa5f2d422\", \"candidate_yaml_sha256\": \"c16b7f77f36a2e0c284aa7758594b1bce491db3b97e65b17f0dfa3659f6d2696\", \"candidate_metadata_caveat\": \"Prepared changed_planner_methods lists plan/gapfill from earlier focal preparation, but actual full-room AST now equals its fixed base for both. Review relies on actual frozen files.\"}\n",
+  "stderr": "",
+  "args": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "-p",
+    "MemoryMax=512M",
+    "-p",
+    "MemorySwapMax=0",
+    "-p",
+    "CPUQuota=25%",
+    "python3",
+    "-B",
+    "-c",
+    "\nfrom pathlib import Path\nimport ast,copy,json,subprocess,hashlib,difflib\nr=Path('/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo');repo=r/'work/ros2-tools';c=json.loads((r/'outputs/full_mapframe_candidate_20261030.json').read_text());rel='src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py';base=subprocess.run(['git','show',c['base_sources']['ros']+':'+rel],cwd=repo,capture_output=True,text=True,check=True).stdout;source=Path(c['inputs']['planner']).read_text()\ndef methods(text):return {n.name:n for cls in ast.parse(text).body if isinstance(cls,ast.ClassDef) for n in cls.body if isinstance(n,ast.FunctionDef)}\na,z=methods(base),methods(source);changed=[k for k in a if ast.dump(a[k],include_attributes=False)!=ast.dump(z.get(k),include_attributes=False)];new=[k for k in z if k not in a];checks={'only_two_original_methods_have_observation_additions':changed==['__init__','_relay_poll'],'only_two_new_diagnostic_methods':set(new)=={'_focal_observe_nav','_focal_nav_diagnostic'},'original_plan_and_gapfill_restored':all(ast.dump(a[k],include_attributes=False)==ast.dump(z[k],include_attributes=False) for k in ['_plan_waypoints','_gapfill_waypoints'])}\nremoved=[]\nclass RemovePassive(ast.NodeTransformer):\n def visit_ImportFrom(self,n):\n  if n.names and all(alias.asname in {'FocalPoint','FocalPath','FocalBool'} for alias in n.names):removed.append('diagnostic_import');return None\n  return n\n def visit_Assign(self,n):\n  if any(isinstance(t,ast.Attribute) and t.attr=='_focal_nav_latest' for t in n.targets):removed.append('latest_data_dict');return None\n  if any(isinstance(t,ast.Name) and t.id=='target' for t in n.targets):removed.append('diagnostic_target_reference');return None\n  return self.generic_visit(n)\n def visit_For(self,n):\n  if any(isinstance(x,ast.Attribute) and x.attr=='_focal_observe_nav' for x in ast.walk(n)):\n   removed.append('four_passive_subscriptions');return None\n  return self.generic_visit(n)\n def visit_If(self,n):\n  if any(isinstance(x,ast.Constant) and x.value=='_focal_trace_count' for x in ast.walk(n.test)):\n   removed.append('bounded_diagnostic_log');return None\n  return self.generic_visit(n)\nfor name in ['__init__','_relay_poll']:\n stripped=RemovePassive().visit(copy.deepcopy(z[name]));checks[name+'_original_logic_preserved']=ast.dump(a[name],include_attributes=False)==ast.dump(stripped,include_attributes=False)\nchecks['exact_passive_sections_removed']=sorted(removed)==sorted(['diagnostic_import']*3+['latest_data_dict','diagnostic_target_reference','four_passive_subscriptions','bounded_diagnostic_log'])\nauthority={'publish','create_publisher','call_async','cancel_goal_async','send_goal_async','_relay_request','_relay_fail','_dispatch_goal','_send_goal_to','_reset'};bad=[]\nfor name in new:\n for node in ast.walk(z[name]):\n  if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and node.func.attr in authority:bad.append((name,node.func.attr))\nchecks['new_methods_have_no_authority_operation']=not bad\nloop=next(n for n in ast.walk(z['__init__']) if isinstance(n,ast.For) and any(isinstance(x,ast.Attribute) and x.attr=='_focal_observe_nav' for x in ast.walk(n)))\ntopics=[row.elts[2].value for row in loop.iter.elts];checks['four_expected_observation_topics']=topics==['/plan','/received_global_plan','/lookahead_point','/is_rotating_to_heading']\nchecks['logging_bound_192']=any(isinstance(n,ast.Compare) and isinstance(n.comparators[0],ast.Constant) and n.comparators[0].value==192 and isinstance(n.ops[0],ast.Lt) for n in ast.walk(z['_relay_poll']))\nconfigrel='src/oomwoo_sim_support/config/nav2_params.yaml';old=subprocess.run(['git','show',c['base_sources']['ros']+':'+configrel],cwd=repo,capture_output=True,text=True,check=True).stdout;config=Path(c['inputs']['nav2_config']).read_text();checks['only_yaml_change_is_local_frame']=old.replace('      global_frame: odom\\n','      global_frame: map  # private frame-consistency counterfactual\\n',1)==config\nhashes={k:hashlib.sha256(Path(v).read_bytes()).hexdigest()==c['input_sha256'][k] for k,v in c['inputs'].items()};checks['all_nine_frozen_inputs_unchanged']=len(hashes)==9 and all(hashes.values())\nnormalized=ast.parse(source)\nfor cls in normalized.body:\n if isinstance(cls,ast.ClassDef) and cls.name=='CoveragePlanner':\n  pass\nfor cls in normalized.body:\n if isinstance(cls,ast.ClassDef):\n  retained=[]\n  for method in cls.body:\n   if isinstance(method,ast.FunctionDef) and method.name in new:continue\n   if isinstance(method,ast.FunctionDef) and method.name in ('__init__','_relay_poll'):\n    previous_removed=list(removed);method=RemovePassive().visit(copy.deepcopy(method));removed[:]=previous_removed\n   retained.append(method)\n  cls.body=retained\nchecks['entire_module_preserves_all_other_code']=ast.dump(normalized,include_attributes=False)==ast.dump(ast.parse(base),include_attributes=False)\nprint('OOMWOO_NAV_FRAME_PEER_REVIEW '+json.dumps({'pass':all(checks.values()),'checks':checks,'changed_original_methods':changed,'new_methods':new,'removed_passive_sections':removed,'topics':topics,'authority_operations_found':bad,'input_unchanged':hashes,'yaml_diff':''.join(difflib.unified_diff(old.splitlines(True),config.splitlines(True))),'base_sources':c['base_sources'],'candidate_planner_sha256':hashlib.sha256(source.encode()).hexdigest(),'candidate_yaml_sha256':hashlib.sha256(config.encode()).hexdigest(),'candidate_metadata_caveat':'Prepared changed_planner_methods lists plan/gapfill from earlier focal preparation, but actual full-room AST now equals its fixed base for both. Review relies on actual frozen files.'}),flush=True);assert all(checks.values())\n"
+  ],
+  "guard": "LIBRE: carga 2.46, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14855 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+  "resource_authorization": "Compatible .25CPU/512MiB/noGPU static review under existing goal exception.",
+  "scope": "Independent frozen-source and control-flow review only; no ROS node, DDS requests, motion or simulation.",
+  "additional_review_reason": "Initial method-level comparison did not exclude edits to global helpers/imports. Extend once to whole-module AST equivalence after removing only identified passive additions.",
+  "independent_delivery_comparison": {
+    "rc": 0,
+    "seconds": 0.417,
+    "stdout": "{\"pass\": true, \"checks\": {\"_plan_waypoints\": true, \"_gapfill_waypoints\": true, \"scorer_matches_our_current_delivery\": true, \"meter_matches_our_current_delivery\": true, \"wrapper_matches_our_current_delivery\": true, \"driver_matches_our_current_delivery\": true}, \"purpose\": \"Compare actual frozen plan/gapfill and grading/closure/driver sources with this independently reviewed delivery tree, not just peer metadata.\"}\n",
+    "stderr": "",
+    "args": [
+      "systemd-run",
+      "--user",
+      "--scope",
+      "--quiet",
+      "-p",
+      "MemoryMax=512M",
+      "-p",
+      "MemorySwapMax=0",
+      "-p",
+      "CPUQuota=25%",
+      "python3",
+      "-B",
+      "-c",
+      "\nfrom pathlib import Path\nimport json,ast,hashlib\nours=Path('/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento');peer=Path('/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo');c=json.loads((peer/'outputs/full_mapframe_candidate_20261030.json').read_text())\ndef methods(p):return {n.name:ast.dump(n,include_attributes=False) for n in ast.walk(ast.parse(p.read_text())) if isinstance(n,ast.FunctionDef)}\na=methods(ours/'src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py');z=methods(Path(c['inputs']['planner']));checks={name:a[name]==z[name] for name in ['_plan_waypoints','_gapfill_waypoints']}\nfiles={'scorer':ours/'src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py','meter':ours/'src/oomwoo_sim_support/oomwoo_sim_support/coverage_meter_node.py','wrapper':ours/'deploy/run_coverage_regression.sh','driver':ours/'src/oomwoo_dock/oomwoo_dock/dock_drive_node.py'}\nfor key,source in files.items():checks[key+'_matches_our_current_delivery']=hashlib.sha256(source.read_bytes()).hexdigest()==c['input_sha256'][key]\nprint(json.dumps({'pass':all(checks.values()),'checks':checks,'purpose':'Compare actual frozen plan/gapfill and grading/closure/driver sources with this independently reviewed delivery tree, not just peer metadata.'}),flush=True);assert all(checks.values())\n"
+    ],
+    "guard": "OCUPADA: la maquina la tiene \u00abfifo-749: Examen focal equipo ejecutar\u00bb desde hace 0 min (pid 3850642). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-749\u00bb.\n",
+    "completed_utc": "2026-10-30T21:30:41.717774+00:00",
+    "reason": "Whole-module equivalence to peer base does not establish that base used the normal planning functions; verify against our separately consolidated delivery and known grading code."
+  },
+  "reviewed_peer_evidence": {
+    "path": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/docs/evidence/nav_endpoint_frames_codex_20261030.json",
+    "sha256": "38c1f10613f9e4c9eb441381a0954a154c883d35471cc26641c7fcf3aa771204",
+    "commit": "a2d4fc18c1f70e4ffeac6a1b7c4a053f741ff0f7"
+  },
+  "source_contracts": [
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_controller/src/controller_server.cpp",
+      "review": "Controller endpoint keeps original last-pose stamp; goal checking transforms it into local-costmap frame."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_regulated_pure_pursuit_controller/src/path_handler.cpp",
+      "review": "RPP transforms plan geometry at current robot-pose stamp."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_dwb_controller/nav_2d_utils/src/tf_help.cpp",
+      "review": "An unavailable historical transform may fall back to latest; this contract supports the temporal mismatch hypothesis but does not expose private checker state."
+    }
+  ],
+  "review_findings": [
+    "Original full-room plan and gapfill equal our independently consolidated delivery, not only the peer base.",
+    "After removing only four passive subscriptions, their imports/latest dictionary and bounded logging, entire planner module AST equals peer production base.",
+    "Single YAML behavior change is local_costmap.global_frame odom->map; goal/health/age thresholds are unchanged.",
+    "Focal map-frame UUID success is distinct from its expected short scorer failure; all focal scorers still report failure of full-room90/80.",
+    "Prepared changed_planner_methods metadata retains plan/gapfill names from prior focal preparation; actual frozen full-room methods are restored. Treat actual source as authoritative."
+  ],
+  "live_first_target_observation": {
+    "source": "Read-only live /tmp/coverage_regression.log.1 from peer owned container; first1Hz target_hit=True line. Final result/closure not yet available when recorded.",
+    "coverage": 0.9024,
+    "efficiency": 0.7734,
+    "path_m": 110.69,
+    "ideal_m": 85.6,
+    "sim_s": 766.8,
+    "remaining_efficiency_requirement": 0.8,
+    "interpretation": "Provisional independent observation is below80%; no final pass or adoption claim."
+  },
+  "decision": "Source/contract review supports collecting this experiment; candidate remains private. Full-room result, independent audit, exact UUID outcomes and closure must be collected before adoption. No second simulation, worker edit, threshold relaxation, push or remote comment.",
+  "utility_demonstrated": "Rules out substituted short route, changed grading and hidden authority edits as explanations of the peer full-room trial; preserves difference between navigation reliability and efficiency.",
+  "distance_to_useful_milestone": "Static review complete; current full-room trial remains active and efficiency requirement is not yet satisfied.",
+  "next_increment": "Read the same peer terminal receipt when present; distinguish corrected target arrival from unchanged90/80 failure and do not repeat the full run unchanged.",
+  "review_completed_utc": "2026-10-30T21:33:40.346647+00:00"
+}

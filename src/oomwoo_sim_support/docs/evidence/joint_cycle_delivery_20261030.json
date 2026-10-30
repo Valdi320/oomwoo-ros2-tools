@@ -100,7 +100,8 @@
     "dock_pose_link_before_20261030.json": "c4a125315aa3d55bd05cafe0e44168519ea929efeeaf3c123e559ac883c02f0d",
     "dock_pose_link_after_20261030.json": "9d749aea53463a8a5d350efae53c4e9ccf57f3ff19107a43b85ddbc2e10ef439",
     "lifecycle_profile_launch_20261030.json": "ea2366bb1be81463d6e21c115c7fd4b03ac92d3aa0f9b87d45ca50dc4fe32de5",
-    "lifecycle_profile_launch_after_20261030.json": "0a2f41d217104ea2311595f0ae2167758ba0026f0d4026d9600811fbc4385f84"
+    "lifecycle_profile_launch_after_20261030.json": "0a2f41d217104ea2311595f0ae2167758ba0026f0d4026d9600811fbc4385f84",
+    "nav_frame_peer_review_20261030.json": "b363f15b609ce18ea1cb6074dfab15de585f841b8e73bdc65cadc1606a22a043"
   },
   "completed_increment": {
     "ticket": 736,
@@ -561,5 +562,20 @@
     ],
     "support_scope": "Same XML bytes as736 and10real response-writer QoS contrasts; actual launch selection, explicit override and package data inclusion checked separately. No new native run of the fallback wiring.",
     "setup_failure": "lifecycle_profile_launch_20261030.json failed before cases because source-share mount hid package local_setup.bash; process-local actual ament prefix restored. Not a component failure or an install."
+  },
+  "peer_review_plan": {
+    "use": "Support the already-running coworker full-room map-frame hypothesis without duplicating or altering its trial.",
+    "authoritative_active_handle": "PID3836945 with container oomwoo-full-mapframe-0b9fd8b0f3, verified live; caller session70749 belongs to the other worker and is not consumed here.",
+    "acceptance": [
+      "Original _plan_waypoints/_gapfill_waypoints and all original authority logic remain AST-equivalent after removing only identified passive observation additions.",
+      "Only local_costmap.global_frame changes in candidate YAML; safety thresholds remain identical.",
+      "Four observation topics, bounded192logs, no authority operations in diagnostic methods.",
+      "Frozen source hashes match prepared manifest; independent review does not claim completion of active full-room90/80."
+    ],
+    "minimum_delivery": "One focused static review record on our branch; no edits to coworker repo or active freeze and no additional simulation.",
+    "afterward": "Collect authoritative terminal result when available; do not adopt the candidate or predict efficiency from focal success.",
+    "benefit_cost": "A lightweight source/contract review can prevent accepting a test-only route or weakened controls as a full-room result; it avoids another simulator run.",
+    "status": "Static review completed and recorded in nav_frame_peer_review_20261030.json; peer full-room terminal result pending.",
+    "finding": "Normal plan/gapfill and all non-observation code preserved;9frozen source hashes unchanged; sole YAML change local frame. First live target observation77.34% remains below80%."
   }
 }
