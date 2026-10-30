@@ -214,13 +214,7 @@
       "seconds": 423.92
     }
   },
-  "next_required": [
-    "Obtain explicit owner authorization before modifying protected journal persistence. Prepared proposal only: one bounded reopen for detached old regular fd, keeping all original validation; three focal cases proposed, not executed against that proposal.",
-    "Diagnose the native journal failure without claiming the reproduced inode race is its proven cause; preserve the original exception detail when necessary. No blind full-room repeats.",
-    "A full masked acceptance remains required. Current full attempt stopped at53.84% with motion_fault despite a valid19975-pose zero-crossing proxy audit.",
-    "Keep recurrent Gazebo SIGSEGV139 after native ACK open; this is distinct from the old FastDDS bridge teardown. Two later clean closes did not establish reliability.",
-    "Actual docking under common output, managed real-controller faults and broader scenes remain open. An independent committed nominal docking scene exists; reuse its evidence instead of duplicating it. Physical validation0%."
-  ],
+  "next_required": "Authorized journal proposal now applied but untested: machine guard reserved for owner game. Run focal modules only after LIBRE; then discriminating integration. Full Keepout acceptance and Gazebo Stop crash remain open.",
   "limits": [
     "The first DDS rearm failure lacks preserved first-cause evidence. The queued-zero race is independently reproduced/fixed; final17-check success does not prove that original failure cause or reliability.",
     "The second DDS failure assumed the common0.5s pose witness had expired immediately after the new0.2s output check stopped motion; its diagnostic assertion now waits for that original witness. No watchdog budget was relaxed.",
@@ -848,7 +842,8 @@
     "protected_source_sha256": "b20eabed765b5eb3c2bc7bc7ba2fb173c948fac96e2f843001b484e9f9fa823f",
     "authorization": "Required by user AGENTS rule7; async approval requested, unanswered at preparation.",
     "proposal_functional_tests_run": false,
-    "apply_check_only_rc": 0
+    "apply_check_only_rc": 0,
+    "historical_at_preparation": true
   },
   "Gazebo_stop_core_diagnosis": {
     "scope": "Offline analysis of existing owned core; no new Gazebo run, source/runtime/persistence modification, tool installation or public message.",
@@ -947,5 +942,38 @@
       "sha256": "b89c287ee75b79daef4aed69998075b93580140af2507185b48b2aaa075f20b5",
       "rc": 0
     }
+  },
+  "journal_authorized_application": {
+    "date_utc": "2026-10-30T01:15:50.503865+00:00",
+    "status": "applied; functional verification NOT RUN: machine reserved for owner game",
+    "authorization": {
+      "human_message": "Autorizo",
+      "scope": "Prepared bounded-reopen journal proposal in own copy, with verification"
+    },
+    "patch_sha256": "308eb9870161428eef491f257d9bd0b66548b92e847d56f7d28fedb2a3dc778c",
+    "applied": true,
+    "source_sha256": "bdb78b5d76ed6c565f2ce9e4fe845d0bccd5ff5cf8867e48125857f5f60dca31",
+    "test_sha256": "28e5cde298dad414d17ef3f0c86a68e8bde4af51a304b55cafc37deb92b75a32",
+    "verification_attempt": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/outputs/keepout_journal_authorized_inode_20261030.json",
+    "verification_attempt_sha256": "6ba556e750425b4403fc57c69dafd460dea3ff370657dd3c8a003486c157cef6",
+    "tests_executed": 0,
+    "functional_result": null,
+    "static_review": "Single reopen closes detached fd through context-manager exit; original flags, inode/mode checks, byte cap, schema, UUID/outcome checks and writer flock unchanged. Review only, not execution evidence.",
+    "expected_new_test_cases": 3,
+    "expected_inode_module_total": 10,
+    "native_root_cause_proven": false,
+    "next_focused_modules": [
+      "test_goal_journal_inode_20261028.py",
+      "test_goal_journal_special_files_20261028.py",
+      "test_goal_journal.py",
+      "test_goal_journal_writer_lock.py",
+      "test_goal_journal_lock_identity_20261028.py",
+      "test_nav_lease_witness.py",
+      "test_sequenced_motion_ingress_20261029.py"
+    ],
+    "next_condition": "Fresh LIBRE result before each test; no automatic worker or timer created",
+    "full_Keepout_acceptance": "still failed/open; unchanged historical 53.84% result",
+    "Gazebo_stop_SIGSEGV": "open, no repair claimed",
+    "physical_validation": false
   }
 }

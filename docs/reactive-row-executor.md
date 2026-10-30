@@ -654,9 +654,9 @@ race: after opening the old file but before fstat, accepted() replaces it; the
 old descriptor has nlink0 and is rejected while the new named record is valid.
 The native witness discards its exact read exception, so this remains a
 reproduced candidate cause, not a proven explanation of the native failure.
-An unapplied bounded-reopen proposal and three proposed focal cases are ready.
-User machine rule7 requires explicit authorization before changing persistence;
-that protected production source remains unchanged. Full masked acceptance
+At preparation, the bounded-reopen proposal and three focal cases were unapplied
+pending explicit owner authorization under machine rule7. The subsequent
+authorized application and its verification status are recorded below. Full masked acceptance
 remains open. Gazebo also exited139 after its positive native ACK in this full
 attempt;19 other auxiliary processes closed cleanly. This is distinct from the
 previous FastDDS bridge issue and has no established repair. No hardware exists.
@@ -680,5 +680,20 @@ SimulationRunner::Stop is only13bytes; the two failure offsets lie elsewhere.
 The old CET-bounded metadata query also missed the UTC event; both core records
 exist. Fingerprints, raw traces, limits and the existing sparse offline core are
 referenced in the evidence. This is independent of the prior FastDDS bridge
-workaround and does not establish a fix. Protected persistence remains unchanged
-while the owner's explicit authorization is pending.
+workaround and does not establish a fix. Persistence was unchanged at that offline diagnosis. See the subsequent
+authorized application below.
+
+
+The owner subsequently answered "Autorizo" for the prepared journal patch.
+It is now applied in the owned contribution copy. A read of a detached regular
+inode closes that descriptor and reopens the named path once; a second detached
+inode is refused. All original file, permission, size, schema and UUID checks
+and the serialized writer remain in place. Three causal/security cases were
+added to the existing inode module; they have NOT executed yet.
+
+The first verification attempt did not launch Python unittest: the machine
+guard reported that the owner was playing. This is an applied, unverified WIP,
+not a tested fix or a successful native Keepout acceptance. The race is proven
+independently; its identity with the native generic journal error is still
+unproven. The next work is the listed focal modules, individually after LIBRE,
+then a discriminating integration. No simulation or new scheduler was started.
