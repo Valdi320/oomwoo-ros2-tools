@@ -1,0 +1,166 @@
+{
+  "date_utc": "2026-10-30T14:09:17.648129+00:00",
+  "source_sets": {
+    "ROS": "c67a7fca2105388eb5cf0aea5fca6fb61a3956b2",
+    "jobs": "fa8b7af945ad557675dce1180cfac25cb1384a5b",
+    "driver": "own validated93c49e1/e0c423a overlay"
+  },
+  "rc": 1,
+  "bank_code": 1,
+  "native_seconds": 483.676,
+  "queue_wait_seconds": 2468.132,
+  "host_timeout": false,
+  "report": {
+    "coverage": 0.5625,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 1.0,
+    "revisit_ratio": 0.2125,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "motion_fault",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "input_unchanged": {
+    "planner": true,
+    "scorer": true,
+    "meter": true,
+    "wrapper": true,
+    "driver": true,
+    "journal": true,
+    "witness": true,
+    "relay": true
+  },
+  "long_transit_observation": {
+    "uuid": "cc0191337cb6458b998b344523f59cd7",
+    "first_observed_active_sim_s": 378.6,
+    "first_observed_succeeded_sim_s": 414.05,
+    "observed_active_to_success_sim_s": 35.44999999999999,
+    "scope": "Observed typed goal-status span; request/acceptance instants differ. Exceeds original30s budget; no global causal A/B claim."
+  },
+  "terminal_counts": {
+    "4": 8,
+    "6": 1
+  },
+  "keepout": {
+    "poses_before_mask": 39,
+    "poses": 23056,
+    "segments": 23055,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "min_sampled_center_to_mask_bbox_m": 0.2229499822017155,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 6,
+        "distance_m": 2.033994420739849e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000307071906
+      },
+      "IDLE": {
+        "poses": 690,
+        "distance_m": 1.3339087559841143e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.30021832283726074
+      },
+      "SWEEP": {
+        "poses": 13837,
+        "distance_m": 47.191655195714326,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2229499822017155
+      },
+      "PREPARE_NAV": {
+        "poses": 473,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+      },
+      "TRANSIT": {
+        "poses": 7921,
+        "distance_m": 17.79297448711321,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.28762610663773613
+      },
+      "ESCAPE": {
+        "poses": 129,
+        "distance_m": 0.2146377644040274,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.8938363286728923
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "first_fault": "[coverage_planner-11] [ERROR] [1793368733.276957776] [coverage_planner]: motion relay fault: actual Nav2 goal aborted; lab reconciliation required; code=105 bumper_fresh=(False, False)",
+  "controller_error": [
+    "[controller_server-17] [ERROR] [1793368733.246376493] [controller_server]: Failed to make progress"
+  ],
+  "last_phase": {
+    "phase": "FAULT",
+    "wall": 386138.993898605,
+    "sim": 462.00000000000006,
+    "truth_position": {
+      "frame": "map",
+      "position": [
+        4.059690793551407,
+        -0.20615187250360925
+      ],
+      "stamp_ns": 462000000000
+    },
+    "nav_feedback": {
+      "uuid": "095e5d99d1a34f3bb3afb3b1ddd934a7",
+      "frame": "map",
+      "stamp_ns": 461820000000,
+      "position": [
+        4.043753603524392,
+        -0.2061247103726996,
+        0.012500000561034884
+      ],
+      "orientation": [
+        -2.3203964157658225e-08,
+        -1.439128987072809e-09,
+        -0.026646018946706092,
+        0.9996449318004325
+      ],
+      "received_wall": 386138.813973045,
+      "received_sim": 461.82000000000005
+    }
+  },
+  "clean_processes": 19,
+  "failed_process_lines": [
+    "[ERROR] [coverage_regression_runner-12]: process has died [pid 718, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_hcz7dyjd']."
+  ],
+  "native_stop_lines": [
+    "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix."
+  ],
+  "cgroup": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "325\n",
+    "/sys/fs/cgroup/memory.peak": "1569452032\n"
+  },
+  "utility_demonstrated": "One actual long transit reaches SUCCEEDED after more than30s of observed ACTIVE, and the coherent grader fails the incomplete run after the actual Nav2 abort. Sampled Keepout disk/chord audit remains valid.",
+  "limitations": [
+    "Full native acceptance FAILED at56.25%; target90% not reached, so no efficiency-at-target comparison. Clipped final efficiency1.0 is not an achieved80% gate.",
+    "Abort105 corresponds to the controller log Failed to make progress; underlying command/pose cause is unproven.",
+    "Single simulation; no hardware, electrical charge or active docking integration.",
+    "39 truth poses before mask arrival are excluded from the Keepout audit. No physical-footprint or0.06m-margin guarantee.",
+    "No controlled A/B performance conclusion; source ordering and runtime trajectory can differ between runs.",
+    "Waiting scope was capped25%, restored200% after ownFIFO admission; initial startup before restoration was not fully profiled.",
+    "Generator correction72a2e96 is separate and was not part of the immutablec67a7fc native inputs."
+  ],
+  "next_minimum": "Read existing Nav2 progress/controller and relay command-projection/status paths. Use a focused observation near this single goal to distinguish Nav2 input zero, relay-clamped output and motion without progress. Preserve ABORTED fail-closed policy and thresholds; no blind whole-room rerun.",
+  "decision": "Retain the bounded transit fix with component/native long-goal evidence; diagnose the newly observed controller progress abort before another full acceptance. Goal and global sweet spot remain incomplete."
+}

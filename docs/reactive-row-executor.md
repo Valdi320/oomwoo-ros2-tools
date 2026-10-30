@@ -832,3 +832,31 @@ physical collisions or a complete-map result. No kitchen map was generated or
 admitted; mesh loading/projection and cylinder handling are unchanged. The
 native transit run remains on immutable c67a7fc sources. Consolidate this fix
 and wait for that native result before expanding generator work.
+
+
+The [native transit-budget acceptance](../src/oomwoo_sim_support/docs/evidence/gazebo_transit_budget_delivery_20261030.json)
+**failed** at 56.25% coverage after 483.676 seconds. Nine actual Nav2 UUIDs were
+observed: eight SUCCEEDED and one ABORTED. One long transit remained observed
+ACTIVE for more than 35 seconds before SUCCEEDED, beyond the original 30-second
+budget. This supports that scoped change; it is not full-room improvement.
+
+The final goal, from approximately (2.99, 0.05) to (4.23, 0.03) after a bumper
+escape, failed with controller code 105 and the original log "Failed to make
+progress". The exact command/pose cause remains unproven. The relay requested
+STOP and the coherent scorer returned motion_fault/exit1. The 90% target was
+not crossed, so there is no efficiency-at-target measurement; final clipped
+1.0 is not a passing efficiency claim. All eight input fingerprints were
+unchanged. The sampled Keepout audit has 23,056 poses, 23,055 chords, zero disk
+crossings and 20 ms maximum spacing; 39 pre-mask poses were excluded. All 19
+auxiliary processes closed cleanly, with only the scorer's expected exit1. No
+active docking or hardware result is implied.
+
+The existing FIFO granted ticket657 and the owned scope was restored from its
+waiting .25 CPU cap to 2 CPU after admission. Early startup before restoration
+was not fully profiled; no wall-time A/B gain is claimed. The wrapper buffers
+child logs in the container while running, so the outer collector's null meter
+heartbeat did not mean no motion. Both the FIFO and container are now terminal.
+Next inspect the existing controller-progress and relay command-projection
+paths, then make the smallest focused observation that distinguishes command
+source, filtered output and physical-simulation motion. Preserve ABORTED/STOP;
+changing success criteria or blindly rerunning the room would not diagnose it.
