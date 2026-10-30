@@ -4,6 +4,29 @@
 `executor:=reactive`; `executor:=nav2` remains the default baseline. This
 note retains the design rationale and outstanding acceptance work.*
 
+## Current review point — 30 October 2026
+
+The [short joint integration](../src/oomwoo_sim_support/docs/evidence/joint_cycle_delivery_20261030.json)
+completed two actual Nav2 goals, reactive sweep, sensor-guided docking and
+confirmed STOP after release, with valid Keepout and clean owned shutdown.
+It used a supplied three-point route, synthetic battery and private station
+map. Its frozen source hashes remain distinct from later branch changes;
+this is neither a full-room grade nor physical charging evidence.
+
+Two later corrections have separate evidence: the [Nav2 progress watchdog](../src/oomwoo_sim_support/docs/evidence/watchdog_cache_native_delivery_20261030.json)
+uses fresh TF instead of an untimed AMCL cache, with a controlled native
+cancel-before/success-after contrast; [status-query recovery](../src/oomwoo_sim_support/docs/evidence/relay_status_recovery_delivery_20261030.json)
+replaces a lost read-only reply through the existing poll without renewing
+health proof or relaxing active-owner STOP. Neither result proves the cause
+of an uninstrumented historical failure or certifies combined HEAD in Gazebo.
+
+Masked full-room acceptance remains open: the [latest peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
+reported 96% coverage and 77.34% first-target efficiency, below the unchanged
+80% requirement. The default local costmap frame remains `odom`; the private
+`map` experiment is not adopted. Consolidate the demonstrated reliability
+fixes and require evidence of earlier route savings before another full run.
+Earlier dated sections below describe their own historical snapshots.
+
 ## Why
 
 The coverage **planner** decides *what* to clean and in *what order* (cells →
