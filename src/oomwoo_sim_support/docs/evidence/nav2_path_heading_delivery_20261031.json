@@ -1,0 +1,47 @@
+{
+  "recorded_utc": "2026-10-30T23:59:05.173454+00:00",
+  "scope": "Actual installed Nav2 planner/controller diagnostics in isolated static scenes; no Gazebo, plant integration, physical commands or production parameter changes.",
+  "versions": "Nav2 controller, planner, Navfn and RPP1.3.13 (exact package builds in nav2_path_contract_versions_20261031.json).",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_regulated_pure_pursuit_controller/src/regulated_pure_pursuit_controller.cpp",
+      "contract": "RPP tests carrot heading against rotate_to_heading_min_angle; rotation sets linear zero; otherwise angular velocity follows regulated curvature. Existing publishers expose path, carrot and rotation flag."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_regulated_pure_pursuit_controller/src/parameter_handler.cpp",
+      "contract": "Installed-version default min heading angle is.785, but project explicitly configures.6; do not confuse them. Existing parameter accepts runtime updates."
+    }
+  ],
+  "demonstrated_utility": [
+    "Navfn using original map/220cellmask and production overlay yields33poses/0.858562m for recorded start/goal. Every segment is clear at.24m, including independent exact ROS wire geometry replay; control path also clear.",
+    "Actual RPP fixed-pose contrast, same retained path and TF: min_angle.6 outputs v=.13783935100947342,w=-.28; min_angle.35 outputs v=0,w=-.6400000000000001. Three samples each, actual rotation flags false\u2192true and identical carrot.",
+    "Effective parameter readback confirms changed threshold; actual FollowPath canceled with status5, both owned processes exit0."
+  ],
+  "carrot": {
+    "xy": [
+      0.43072642429938535,
+      -0.25391878112945065
+    ],
+    "frame": "base_link",
+    "heading_rad": -0.5326727057294041,
+    "header_stamp_ns": 0,
+    "limitation": "Actual publisher provided zero source stamp. Preserve it; never treat as fresh stamped evidence. Fixed pose/path and settled three-cycle observations support only this branch contrast. Future moving probe needs receipt/DDS provenance."
+  },
+  "measurement_correction": "Planner probe initially audited local OccupancyGrid before serialization (res.05). It is preserved as recorded. RPP probe replays the retained plan against serialize/deserialize mask res.05000000074505806, original origins/digest; all.24m swept segments remain clear. No repeated planner/Gazebo run needed.",
+  "remaining_distance": "Historical global path/laser costmap not retained, so this static result does not prove historical global plan was clear. Fixed-pose RPP gives no actual travel, localization, clearance, efficiency or SWEEP correction proof. Full90/80 still open.",
+  "next_increment": {
+    "use": "Test whether earlier heading alignment reduces actual incoming Nav2 arc near virtual zone without changing safety geometry.",
+    "candidate": "Existing FollowPath.rotate_to_heading_min_angle.6 vs.35 in private simulation parameters only; same start/goal, world, mask, speeds, lookahead, footprint and relay guard.",
+    "acceptance": "Short causal Gazebo pair through existing FIFO; actual path/carrot/commands/pose source or receipt provenance, valid independent Keepout and real goal/STOP lifecycle. Preserve scorer failure for incomplete full90/80. No source adoption if path/clearance does not improve.",
+    "minimum": "Prepare identical source freezes with one existing parameter difference and bounded passive topic capture in existing runner; test recorded-point cold-start scenario explicitly, not exact historical replay. Inspect baseline before running candidate.",
+    "decision": "Consolidate cheap discriminating evidence, advance to one controlled physical-simulation contrast; hold production parameter change and full-room repetition.",
+    "benefit_cost": "Two actual-binary checks took13.432+14.723s at.25CPU512MiB/noGPU; peaks229257216/104591360B, no memory events. They distinguish configured planner clearance from RPP branch behavior before a heavier run.",
+    "evidence_that_changes_decision": "Baseline fails to reproduce arc: reassess moving pose/path data rather than claim fix. Candidate improves clearance and completes same motion: consider configuration correction, then separate original SWEEP first-crossing and full90/80."
+  },
+  "evidence": {
+    "nav2_path_contract_versions_20261031.json": "b54f8a842d7cb671ba642b84bb5287f158a50edc9fadb723c8fdbc872b1b6057",
+    "nav2_path_contract_20261031.json": "14ef4383e1d38f44e117f48e32af85a1fedc94ac7a4c0aea54e9258c4bd1b1f7",
+    "rpp_heading_contract_20261031.json": "864cedebe529ada0d747d1ff2a3f86f18bc1dce6142cf133dfea37f5024adb25"
+  },
+  "hygiene": "Only receipt/docs delivered here; original YAML and planner hashes unchanged. No remote write, hardware, new persistent tool/timer/gate or suite."
+}

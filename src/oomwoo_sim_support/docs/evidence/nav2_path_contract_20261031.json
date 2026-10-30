@@ -1,0 +1,521 @@
+{
+  "completed_utc": "2026-10-30T23:54:49.928169+00:00",
+  "rc": 0,
+  "seconds": 13.432,
+  "host_timeout": false,
+  "guard": "LIBRE: carga 0.52, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14840 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=192m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "--name",
+    "oomwoo-nav-path-contract-20261031",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 ROS_HOME=/tmp/ros-home ROS_LOG_DIR=/tmp/roslogs ROS_DOMAIN_ID=87 ROS_LOCALHOST_ONLY=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4\nexport FASTRTPS_DEFAULT_PROFILES_FILE=/work/src/oomwoo_sim_support/config/nav2_lifecycle_replies.xml\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:/contrib/integration:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'CASE'\n\nimport asyncio,hashlib,inspect,json,math,time\nfrom pathlib import Path\nimport yaml,rclpy\nfrom launch import LaunchDescription,LaunchService\nfrom launch.actions import RegisterEventHandler\nfrom launch.event_handlers import OnProcessExit\nfrom launch_ros.actions import Node\nfrom rcl_interfaces.srv import GetParameters\nfrom rclpy.parameter import Parameter\nfrom rclpy.qos import QoSProfile,QoSReliabilityPolicy,QoSDurabilityPolicy\nfrom lifecycle_msgs.srv import ChangeState\nfrom nav_msgs.msg import OccupancyGrid\nfrom nav2_msgs.msg import CostmapFilterInfo\nfrom nav2_msgs.action import ComputePathToPose\nfrom geometry_msgs.msg import TransformStamped\nfrom tf2_msgs.msg import TFMessage\nfrom rosgraph_msgs.msg import Clock\nfrom generate_keepout_lab import generate\nfrom probe_real_nav2_keepout import Observer,cell\nfrom oomwoo_sim_support.keepout_config import build_keepout_overlay,_pgm\nfrom oomwoo_cleaning_jobs.map_admission import Raster\nfrom oomwoo_cleaning_jobs.swept_footprint import swept_disk_clear\n\nasync def main():\n    out=Path('/tmp/nav-path-contract');out.mkdir()\n    source=Path('/work/src/oomwoo_sim_support')\n    generate(out,test_room=source/'maps/test_room.yaml',nav_params=source/'config/nav2_params.yaml')\n    overlay,count=build_keepout_overlay(source/'config/nav2_params.yaml',source/'maps/test_room.yaml',out/'keepout_test_room.yaml',output_dir=out)\n    config=yaml.safe_load(overlay.read_text())\n    config['map_server']['ros__parameters'].update(yaml_filename=str(source/'maps/test_room.yaml'),use_sim_time=True)\n    config['planner_server']['ros__parameters']['use_sim_time']=True\n    config['global_costmap']['global_costmap']['ros__parameters']['use_sim_time']=True\n    effective=out/'effective.yaml';effective.write_text(yaml.safe_dump(config))\n    rclpy.init(args=['--ros-args','-r','/valdi/keepout_filter_mask:=/oomwoo/keepout_mask','-r','/valdi/keepout_costmap_filter_info:=/oomwoo/keepout_filter_info'])\n    node=Observer();node.set_parameters([Parameter('use_sim_time',value=True)])\n    q=QoSProfile(depth=1,reliability=QoSReliabilityPolicy.RELIABLE,durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)\n    masks=node.create_publisher(OccupancyGrid,'/oomwoo/keepout_mask',q)\n    infos=node.create_publisher(CostmapFilterInfo,'/oomwoo/keepout_filter_info',q)\n    tf=node.create_publisher(TFMessage,'/tf_static',q)\n    clocks=node.create_publisher(Clock,'/clock',10)\n    meta=yaml.safe_load((out/'keepout_test_room.yaml').read_text());w,h,pixels=_pgm(out/meta['image'])\n    mask=OccupancyGrid();mask.header.frame_id='map';mask.header.stamp.sec=1\n    mask.info.width=w;mask.info.height=h;mask.info.resolution=meta['resolution']\n    mask.info.origin.position.x,mask.info.origin.position.y=meta['origin'][:2]\n    mask.info.origin.orientation.w=1.;mask.data=[100 if pixels[row*w+col]==0 else 0 for row in reversed(range(h)) for col in range(w)]\n    assert list(mask.data).count(100)==count==220\n    masks.publish(mask)\n    info=CostmapFilterInfo();info.type=0;info.filter_mask_topic='/oomwoo/keepout_mask';info.base=0.;info.multiplier=1.;infos.publish(info)\n    start=(1.540262020442717,.01019207768302166)\n    goal=(1.4250000450760125,.7750000569969417)\n    transform=TransformStamped();transform.header.frame_id='map';transform.child_frame_id='base_link';transform.header.stamp.sec=1\n    transform.transform.translation.x,transform.transform.translation.y=start;transform.transform.rotation.w=1.\n    tf.publish(TFMessage(transforms=[transform]))\n    processes=[Node(package='nav2_map_server',executable='map_server',name='map_server',parameters=[str(effective)],output='screen'),Node(package='nav2_planner',executable='planner_server',name='planner_server',parameters=[str(effective)],output='screen')]\n    exits=[]\n    handlers=[RegisterEventHandler(OnProcessExit(target_action=p,on_exit=lambda event,context:exits.append(event.returncode) or [])) for p in processes]\n    launch=LaunchService();launch.include_launch_description(LaunchDescription(processes+handlers));task=asyncio.create_task(launch.run_async())\n    wall=time.monotonic();result={'ok':False,'scope':'Actual installed Navfn and production Keepout overlay; static original map/mask and declared synthetic map->base TF/clock, no scan/Gazebo/controller/motor. Not historical path reconstruction.','start_xy':list(start),'goal_xy':list(goal),'overlay_forbidden_cells':count,'synthetic_tf_yaw':0.,'effective_configuration':config['global_costmap']['global_costmap']['ros__parameters'],'cases':{}}\n    async def until(pred,seconds):\n        end=time.monotonic()+seconds\n        while time.monotonic()<end:\n            if task.done():raise RuntimeError('owned launch stopped before completing observation')\n            ns=2_000_000_000+int((time.monotonic()-wall)/.02)*20_000_000\n            clock=Clock();clock.clock.sec=ns//1_000_000_000;clock.clock.nanosec=ns%1_000_000_000;clocks.publish(clock)\n            rclpy.spin_once(node,timeout_sec=0.)\n            if pred():return\n            await asyncio.sleep(.01)\n        raise RuntimeError('observation stage timeout')\n    async def transition(name,ident):\n        client=node.create_client(ChangeState,'/'+name+'/change_state');await until(client.service_is_ready,15)\n        request=ChangeState.Request();request.transition.id=ident\n        f=client.call_async(request);await until(f.done,15);assert f.result().success,(name,ident)\n    async def params(name,names):\n        client=node.create_client(GetParameters,'/'+name+'/get_parameters');await until(client.service_is_ready,8)\n        req=GetParameters.Request();req.names=names;f=client.call_async(req);await until(f.done,8)\n        return {n:{'type':v.type,'double':v.double_value,'bool':v.bool_value,'string':v.string_value,'strings':list(v.string_array_value)} for n,v in zip(names,f.result().values)}\n    try:\n        for ident in (1,3):await transition('map_server',ident)\n        await until(lambda:node.base_map is not None,10)\n        for ident in (1,3):await transition('planner_server',ident)\n        await until(lambda:node.global_grid is not None and node.global_grid.data[cell(node.global_grid,.85,0.)]>=95 and node.planner.server_is_ready(),15)\n        result['effective_parameters']={'planner':await params('planner_server',['GridBased.plugin','GridBased.tolerance','GridBased.use_astar','GridBased.allow_unknown','use_sim_time']),'costmap':await params('global_costmap/global_costmap',['filters','robot_radius','keepout_inflation.inflation_radius','keepout_inflation.cost_scaling_factor','use_sim_time'])}\n        audit=Raster.from_ros(mask)\n        result['mask_geometry']={'width':w,'height':h,'resolution':audit.resolution,'origin_x':audit.origin_x,'origin_y':audit.origin_y,'data_sha256':hashlib.sha256(bytes(audit.data)).hexdigest()}\n        for key,a,z in [('recorded_point_pair',start,goal),('clear_control',(0.,0.),(0.,.8))]:\n            req=ComputePathToPose.Goal();req.start=node.pose(*a);req.goal=node.pose(*z);req.use_start=True;req.planner_id='GridBased'\n            sent=node.planner.send_goal_async(req);await until(sent.done,12);handle=sent.result();assert handle.accepted\n            completed=handle.get_result_async();await until(completed.done,20);reply=completed.result();planned=reply.result\n            points=[(p.pose.position.x,p.pose.position.y) for p in planned.path.poses]\n            assert reply.status==4 and planned.error_code==0 and len(points)>1,(key,reply.status,planned.error_code,planned.error_msg)\n            clear={str(radius):all(swept_disk_clear(audit,x,y,radius,0) for x,y in zip(points,points[1:])) for radius in (.18,.24)}\n            invalid=[i for i,(x,y) in enumerate(zip(points,points[1:])) if not swept_disk_clear(audit,x,y,.24,0)]\n            result['cases'][key]={'status':reply.status,'error_code':planned.error_code,'path_frame':planned.path.header.frame_id,'path_stamp_ns':planned.path.header.stamp.sec*1_000_000_000+planned.path.header.stamp.nanosec,'points_xy_m':points,'path_length_m':sum(math.dist(x,y) for x,y in zip(points,points[1:])),'swept_disk_clear':clear,'nonclear_24cm_segment_indices':invalid,'straight_link_24cm_clear':swept_disk_clear(audit,a,z,.24,0)}\n        assert result['cases']['clear_control']['swept_disk_clear']['0.24']\n        result['ok']=True\n    except Exception as exc:result['error']=repr(exc)\n    finally:\n        closed=launch.shutdown()\n        if inspect.isawaitable(closed):await closed\n        try:await asyncio.wait_for(task,timeout=15)\n        except Exception as exc:result['cleanup_error']=repr(exc);result['ok']=False\n        result['process_exit_codes']=exits\n        if sorted(exits)!=[0,0]:result['ok']=False\n        result['seconds']=round(time.monotonic()-wall,3)\n        result['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/memory.peak'),Path('/sys/fs/cgroup/memory.events'),Path('/sys/fs/cgroup/pids.peak')] if p.exists()}\n        node.destroy_node();rclpy.shutdown()\n        print('NAV2_PATH_CONTRACT_RESULT '+json.dumps(result),flush=True)\n    return 0 if result['ok'] else 1\nraise SystemExit(asyncio.run(main()))\n\nCASE\n"
+  ],
+  "source_sha256": {
+    "src/oomwoo_sim_support/config/nav2_params.yaml": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45",
+    "src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "cf153418178b987648d09f3c5e5e744aad5f0b218aa56d55332497b8a498d4ff",
+    "src/oomwoo_sim_support/maps/test_room.yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+    "src/oomwoo_sim_support/maps/test_room.pgm": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+  },
+  "result": {
+    "ok": true,
+    "scope": "Actual installed Navfn and production Keepout overlay; static original map/mask and declared synthetic map->base TF/clock, no scan/Gazebo/controller/motor. Not historical path reconstruction.",
+    "start_xy": [
+      1.540262020442717,
+      0.01019207768302166
+    ],
+    "goal_xy": [
+      1.4250000450760125,
+      0.7750000569969417
+    ],
+    "overlay_forbidden_cells": 220,
+    "synthetic_tf_yaw": 0.0,
+    "effective_configuration": {
+      "update_frequency": 2.0,
+      "publish_frequency": 4.0,
+      "global_frame": "map",
+      "robot_base_frame": "base_link",
+      "transform_tolerance": 5.0,
+      "robot_radius": 0.1745,
+      "resolution": 0.05,
+      "track_unknown_space": true,
+      "plugins": [
+        "static_layer",
+        "obstacle_layer",
+        "voxel_layer",
+        "inflation_layer"
+      ],
+      "obstacle_layer": {
+        "plugin": "nav2_costmap_2d::ObstacleLayer",
+        "enabled": true,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "voxel_layer": {
+        "plugin": "nav2_costmap_2d::VoxelLayer",
+        "enabled": true,
+        "publish_voxel_map": true,
+        "origin_z": 0.0,
+        "z_resolution": 0.05,
+        "z_voxels": 16,
+        "max_obstacle_height": 2.0,
+        "mark_threshold": 0,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "static_layer": {
+        "plugin": "nav2_costmap_2d::StaticLayer",
+        "map_subscribe_transient_local": true,
+        "transform_tolerance": 5.0
+      },
+      "inflation_layer": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "inflation_radius": 0.1,
+        "cost_scaling_factor": 10.0
+      },
+      "always_send_full_costmap": true,
+      "filters": [
+        "keepout_filter",
+        "keepout_inflation"
+      ],
+      "keepout_filter": {
+        "plugin": "nav2_costmap_2d::KeepoutFilter",
+        "enabled": true,
+        "filter_info_topic": "/oomwoo/keepout_filter_info",
+        "override_lethal_cost": false,
+        "transform_tolerance": 0.3
+      },
+      "keepout_inflation": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "enabled": true,
+        "inflation_radius": 0.2345,
+        "cost_scaling_factor": 5.0
+      },
+      "use_sim_time": true
+    },
+    "cases": {
+      "recorded_point_pair": {
+        "status": 4,
+        "error_code": 0,
+        "path_frame": "map",
+        "path_stamp_ns": 6280000000,
+        "points_xy_m": [
+          [
+            1.5500000469386577,
+            4.5448541818871036e-08
+          ],
+          [
+            1.5496733181129883,
+            0.027494476400232948
+          ],
+          [
+            1.5495100490675866,
+            0.05249390456816361
+          ],
+          [
+            1.5492878429485528,
+            0.07749295126636202
+          ],
+          [
+            1.549009942248611,
+            0.10249142575996206
+          ],
+          [
+            1.5486540309884247,
+            0.12748875584436536
+          ],
+          [
+            1.5482252590093792,
+            0.15248532298930417
+          ],
+          [
+            1.5476986400440125,
+            0.1774796013158495
+          ],
+          [
+            1.5470819942218355,
+            0.2024719722937336
+          ],
+          [
+            1.5463480464569925,
+            0.2274612915137597
+          ],
+          [
+            1.545508050106585,
+            0.2524471775061956
+          ],
+          [
+            1.5445324412663637,
+            0.2774281043921123
+          ],
+          [
+            1.543435525051288,
+            0.3024040721715098
+          ],
+          [
+            1.5421860209433134,
+            0.32737279202599456
+          ],
+          [
+            1.5408016672849896,
+            0.35233426395556666
+          ],
+          [
+            1.5392498484142094,
+            0.3772861991418326
+          ],
+          [
+            1.537550972961648,
+            0.4022282161150601
+          ],
+          [
+            1.5356710901211357,
+            0.42715764458712346
+          ],
+          [
+            1.5336338510160714,
+            0.4520744845580227
+          ],
+          [
+            1.5314041604310886,
+            0.4769749213304353
+          ],
+          [
+            1.5290081490428462,
+            0.5018597178438258
+          ],
+          [
+            1.526410149431379,
+            0.5267242964614072
+          ],
+          [
+            1.5236383903568735,
+            0.5515701830621085
+          ],
+          [
+            1.5206564414599,
+            0.576391655599946
+          ],
+          [
+            1.5174948203190382,
+            0.6011910028933132
+          ],
+          [
+            1.514116333635394,
+            0.6259617399567619
+          ],
+          [
+            1.5105534063362085,
+            0.6507065370784177
+          ],
+          [
+            1.5067682729179892,
+            0.6754181463333682
+          ],
+          [
+            1.506126450093484,
+            0.70041013584152
+          ],
+          [
+            1.5039650425905733,
+            0.7253166761296486
+          ],
+          [
+            1.5000000461935996,
+            0.7500000566244127
+          ],
+          [
+            1.4500000454485416,
+            0.8000000573694708
+          ],
+          [
+            1.4250000450760125,
+            0.7750000569969417
+          ]
+        ],
+        "path_length_m": 0.8585623488525799,
+        "swept_disk_clear": {
+          "0.18": true,
+          "0.24": true
+        },
+        "nonclear_24cm_segment_indices": [],
+        "straight_link_24cm_clear": true
+      },
+      "clear_control": {
+        "status": 4,
+        "error_code": 0,
+        "path_frame": "map",
+        "path_stamp_ns": 6340000000,
+        "points_xy_m": [
+          [
+            2.3841857821338408e-08,
+            4.5448541818871036e-08
+          ],
+          [
+            2.3841857821338408e-08,
+            0.05000004619359988
+          ],
+          [
+            2.3841857821338408e-08,
+            0.07500004656612891
+          ],
+          [
+            2.3841857821338408e-08,
+            0.10000004693865794
+          ],
+          [
+            2.3841857821338408e-08,
+            0.12500004731118697
+          ],
+          [
+            2.3841857821338408e-08,
+            0.150000047683716
+          ],
+          [
+            2.3841857821338408e-08,
+            0.17500004805624503
+          ],
+          [
+            2.3841857821338408e-08,
+            0.20000004842877406
+          ],
+          [
+            2.3841857821338408e-08,
+            0.2250000488013031
+          ],
+          [
+            2.3841857821338408e-08,
+            0.2500000491738321
+          ],
+          [
+            2.3841857821338408e-08,
+            0.27500004954636115
+          ],
+          [
+            2.3841857821338408e-08,
+            0.3000000499188902
+          ],
+          [
+            2.3841857821338408e-08,
+            0.3250000502914192
+          ],
+          [
+            2.3841857821338408e-08,
+            0.35000005066394824
+          ],
+          [
+            2.3841857821338408e-08,
+            0.37500005103647727
+          ],
+          [
+            2.3841857821338408e-08,
+            0.4000000514090063
+          ],
+          [
+            2.3841857821338408e-08,
+            0.4250000517815353
+          ],
+          [
+            2.3841857821338408e-08,
+            0.45000005215406436
+          ],
+          [
+            2.3841857821338408e-08,
+            0.4750000525265934
+          ],
+          [
+            2.3841857821338408e-08,
+            0.5000000528991224
+          ],
+          [
+            2.3841857821338408e-08,
+            0.5250000532716514
+          ],
+          [
+            2.3841857821338408e-08,
+            0.5500000536441805
+          ],
+          [
+            2.3841857821338408e-08,
+            0.5750000540167095
+          ],
+          [
+            2.3841857821338408e-08,
+            0.6000000543892385
+          ],
+          [
+            2.3841857821338408e-08,
+            0.6250000547617676
+          ],
+          [
+            2.3841857821338408e-08,
+            0.6500000551342966
+          ],
+          [
+            2.3841857821338408e-08,
+            0.6750000555068256
+          ],
+          [
+            2.3841857821338408e-08,
+            0.7000000558793547
+          ],
+          [
+            2.3841857821338408e-08,
+            0.7500000566244127
+          ],
+          [
+            0.0,
+            0.8
+          ]
+        ],
+        "path_length_m": 0.7999999545514639,
+        "swept_disk_clear": {
+          "0.18": true,
+          "0.24": true
+        },
+        "nonclear_24cm_segment_indices": [],
+        "straight_link_24cm_clear": true
+      }
+    },
+    "effective_parameters": {
+      "planner": {
+        "GridBased.plugin": {
+          "type": 4,
+          "double": 0.0,
+          "bool": false,
+          "string": "nav2_navfn_planner::NavfnPlanner",
+          "strings": []
+        },
+        "GridBased.tolerance": {
+          "type": 3,
+          "double": 0.5,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "GridBased.use_astar": {
+          "type": 1,
+          "double": 0.0,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "GridBased.allow_unknown": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        },
+        "use_sim_time": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        }
+      },
+      "costmap": {
+        "filters": {
+          "type": 9,
+          "double": 0.0,
+          "bool": false,
+          "string": "",
+          "strings": [
+            "keepout_filter",
+            "keepout_inflation"
+          ]
+        },
+        "robot_radius": {
+          "type": 3,
+          "double": 0.1745,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "keepout_inflation.inflation_radius": {
+          "type": 3,
+          "double": 0.2345,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "keepout_inflation.cost_scaling_factor": {
+          "type": 3,
+          "double": 5.0,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "use_sim_time": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        }
+      }
+    },
+    "mask_geometry": {
+      "width": 140,
+      "height": 140,
+      "resolution": 0.05,
+      "origin_x": -1.6,
+      "origin_y": -3.05,
+      "data_sha256": "a3c39af194847754d44ba23104649915a651426f450e452f1d5afe4b9279c1d1"
+    },
+    "process_exit_codes": [
+      0,
+      0
+    ],
+    "seconds": 4.749,
+    "cgroup": {
+      "/sys/fs/cgroup/memory.peak": "229257216\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "/sys/fs/cgroup/pids.peak": "53\n"
+    }
+  },
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/nav2_path_contract_20261031.log",
+  "raw_sha256": "bf926b8832bbf4bba75fcd28b0d2c1cc80260e8a0622ffc2e1d87a4bf1a56782"
+}

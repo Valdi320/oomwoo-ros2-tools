@@ -1,0 +1,31 @@
+{
+  "recorded_utc": "2026-10-30T23:53:07.492369+00:00",
+  "guard": "LIBRE: carga 0.36, sin motores ajenos, cerrojo suelto.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14846 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+  "rc": 0,
+  "seconds": 3.016,
+  "stdout": "ros-jazzy-nav2-controller\t1.3.13-1noble.20260921.031754\nros-jazzy-nav2-navfn-planner\t1.3.13-1noble.20260921.031752\nros-jazzy-nav2-planner\t1.3.13-1noble.20260921.031801\nros-jazzy-nav2-regulated-pure-pursuit-controller\t1.3.13-1noble.20260921.031808\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=64m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "dpkg-query -W ros-jazzy-nav2-regulated-pure-pursuit-controller ros-jazzy-nav2-navfn-planner ros-jazzy-nav2-controller ros-jazzy-nav2-planner"
+  ],
+  "scope": "Read-only package identity; no ROS process, simulator or motor commands."
+}

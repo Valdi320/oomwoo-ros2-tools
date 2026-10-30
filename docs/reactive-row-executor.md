@@ -45,6 +45,17 @@ proof. Twenty-five selected cases and two-file style checks pass. This
 cuts an already-invalid assay through existing launch shutdown; it does
 not repair motion or certify an immediate physical motor stop.
 
+A [static native planner/controller contrast](../src/oomwoo_sim_support/docs/evidence/nav2_path_heading_delivery_20261031.json)
+now narrows the next motion experiment. Navfn produces a 33-pose path for
+the recorded point pair that is clear for a 24 cm disk, including exact
+ROS wire geometry. With this path and a fixed declared TF, actual RPP
+changes from forward-turn motion to rotation in place when its existing
+heading threshold changes from 0.6 to 0.35 rad. These are static-scene
+checks without historical laser costs or a moving plant. The threshold
+remains unchanged in production; a short controlled Gazebo contrast is
+needed before claiming corrected tracking. The published carrot has a
+zero source stamp, which must not be treated as freshness evidence.
+
 Masked full-room acceptance remains open: the [earlier peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged
 80% requirement. The default local costmap frame remains `odom`; the private
