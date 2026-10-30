@@ -1,0 +1,598 @@
+{
+  "completed_utc": "2026-10-30T13:28:40.641796+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 5.511,
+  "stdout": "KITCHEN_MAP_INPUTS {\"world\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world\", \"world_sha256\": \"42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9\", \"map_candidates\": [{\"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/maps/living_room.yaml\", \"metadata\": {\"image\": \"living_room.pgm\", \"resolution\": 0.05, \"origin\": [-2.497, -2.434, 0], \"occupied_thresh\": 0.65, \"free_thresh\": 0.196}, \"image_exists\": true, \"yaml_sha256\": \"379b3034d088c7188bb8e8e933ea877f09f81799e5a1be1bb9ba75880dc56a1c\"}, {\"path\": \"/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/contour_torture.yaml\", \"metadata\": {\"image\": \"contour_torture.pgm\", \"resolution\": 0.05, \"origin\": [-3.25, -3.25, 0], \"occupied_thresh\": 0.65, \"free_thresh\": 0.196}, \"image_exists\": true, \"yaml_sha256\": \"ac2b6c43059bc9a9494d83b54c511d997376d263184195be5d0c5eed79f415f8\"}, {\"path\": \"/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.yaml\", \"metadata\": {\"image\": \"living_room.pgm\", \"resolution\": 0.05, \"origin\": [-2.499, -2.456, 0], \"occupied_thresh\": 0.65, \"free_thresh\": 0.196}, \"image_exists\": true, \"yaml_sha256\": \"1047cc04802915fc30031998c0eab0c8f86b152693da1ffc8568d78d421a0498\"}, {\"path\": \"/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/test_room.yaml\", \"metadata\": {\"image\": \"test_room.pgm\", \"resolution\": 0.05, \"origin\": [-1.6, -3.05, 0], \"occupied_thresh\": 0.65, \"free_thresh\": 0.25}, \"image_exists\": true, \"yaml_sha256\": \"457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83\"}, {\"path\": \"/ros_ws/src/oomwoo_one/maps/living_room.yaml\", \"metadata\": {\"image\": \"living_room.pgm\", \"resolution\": 0.05, \"origin\": [-2.499, -2.456, 0], \"occupied_thresh\": 0.65, \"free_thresh\": 0.196}, \"image_exists\": true, \"yaml_sha256\": \"b3ac0bc7775ddf864b5a1e35e2cd38db83b7d53da6ae5ebe05293a12d2fc72be\"}], \"models\": [{\"name\": \"wall_west\", \"pose\": \"-2.5 0 1.25 0 -0 0\", \"include\": \"model://room_wall_25x4m\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"39096b8e39ec87cdc15e1f52cb628e84804ef724bb5736796cae434ca5e16fec\", \"included_boxes\": [\"0.1 4.0 2.5\"]}, {\"name\": \"wall_east\", \"pose\": \"2.5 0 1.25 0 -0 0\", \"include\": \"model://room_wall_25x4m\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"39096b8e39ec87cdc15e1f52cb628e84804ef724bb5736796cae434ca5e16fec\", \"included_boxes\": [\"0.1 4.0 2.5\"]}, {\"name\": \"wall_south\", \"pose\": \"0 -1.95 1.25 0 -0 1.5707\", \"include\": \"model://room_wall_25x5m\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"fe3d4bd8577dcbdc285c54e2a8d95d54ecff5b2f3c29ba962063d0396c062a9f\", \"included_boxes\": [\"0.1 5.0 2.5\"]}, {\"name\": \"wall_north\", \"pose\": \"0 1.95 1.25 0 -0 1.5707\", \"include\": \"model://room_wall_25x5m\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"fe3d4bd8577dcbdc285c54e2a8d95d54ecff5b2f3c29ba962063d0396c062a9f\", \"included_boxes\": [\"0.1 5.0 2.5\"]}, {\"name\": \"door_08x2m\", \"pose\": \"-2.495 0.5 1 0 -0 0\", \"include\": \"model://door_08x2m\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"b35e85dc5a48a2c1eeccdc21d1767f9d463f4bf9cd5207818af777d9afebfc2e\", \"included_boxes\": []}, {\"name\": \"vacuum_dock\", \"pose\": \"-2.45 -0.5 0 0 -0 1.5708\", \"include\": \"model://vacuum_dock\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92\", \"included_boxes\": [\"0.43 0.34 0.41\", \"0.03 0.34 0.58\", \"0.03 0.34 0.58\", \"0.43 0.1 0.17\"]}, {\"name\": \"charging_dock_basic\", \"pose\": \"-1.9 -1.9 0 0 -0 3.1416\", \"include\": \"model://charging_dock_basic\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"071d97f34c2c7e73551f549574a4a80ad8382fd6dc59f3b0c47ecfecc55f2b8c\", \"included_boxes\": [\"0.22 0.048 0.098\"]}, {\"name\": \"makerspet_poster\", \"pose\": \"-2.435 -0.6 1.5 0 -0 0\", \"include\": \"model://makerspet_poster\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"f720194e598766eeff5211a76b3a4b3c87c48ac253b5a2488d60b8297a255af6\", \"included_boxes\": []}, {\"name\": \"window_curtains_south_west\", \"pose\": \"-1.4 -1.89 1.25 0 -0 1.5707\", \"include\": \"model://window_curtains\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"586f6808288b8c7ee568392656e7be4d5e3b475d8eb6116f2228721ce018c75c\", \"included_boxes\": []}, {\"name\": \"window_curtains_south_east\", \"pose\": \"0.85 -1.89 1.25 0 -0 1.5707\", \"include\": \"model://window_curtains\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"586f6808288b8c7ee568392656e7be4d5e3b475d8eb6116f2228721ce018c75c\", \"included_boxes\": []}, {\"name\": \"window_curtains_east\", \"pose\": \"2.44 0.75 1.6 0 -0 0\", \"include\": \"model://window_curtains_small\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"099c5244cdb67b2aad7afade13d34bf72382baba7859206815a5d52423bd0695\", \"included_boxes\": []}, {\"name\": \"fridge_double_door\", \"pose\": \"-2 1.9 0 0 -0 0\", \"include\": \"model://fridge_double_door\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"5176198b0e314904f53473181c1fcad304def296418ee31e3f254da8da5abe13\", \"included_boxes\": [\"0.9 0.722 1.78\"]}, {\"name\": \"kitchen_base_run_w\", \"pose\": \"-0.978 1.9 0 0 -0 0\", \"include\": \"model://kitchen_base_run_w\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"7a8cd1c4fbdd2277c89a0b9935dbbfb1353658e090c5fdef2febb3b6d31a5617\", \"included_boxes\": [\"1.144 0.524 0.089\", \"1.144 0.616 0.811\"]}, {\"name\": \"Oven\", \"pose\": \"0 1.5811 0 0 -0 -1.5707\", \"include\": \"model://Oven\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"395c9600f564b14ef2db239baaa5994d7bddff608f518a6ce824315826e53f51\", \"included_boxes\": [\"0.58448 0.81688 0.87411\"]}, {\"name\": \"kitchen_base_run_e\", \"pose\": \"1.0965 1.9 0 0 -0 0\", \"include\": \"model://kitchen_base_run_e\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"acd31beb35f8c85e3fb3ea8ea125edd28514e1ee120cccd063ebb80117ab792f\", \"included_boxes\": [\"1.381 0.524 0.089\", \"1.381 0.616 0.811\"]}, {\"name\": \"range_hood\", \"pose\": \"0 1.9 0 0 -0 0\", \"include\": \"model://range_hood\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"038fd3357288350af39aec6ccb94b0b187968d6c237a68bed8cb0fb739e36e39\", \"included_boxes\": [\"0.8 0.5 0.15\", \"0.3 0.25 0.75\"]}, {\"name\": \"kitchen_wall_cab_w\", \"pose\": \"-0.978 1.9 0 0 -0 0\", \"include\": \"model://kitchen_wall_cab_w\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"af792d73d0f19951890e66577e735b16fca642023cdab3e3dce0254911745743\", \"included_boxes\": [\"1.144 0.366 0.95\"]}, {\"name\": \"kitchen_wall_cab_e\", \"pose\": \"1.0965 1.9 0 0 -0 0\", \"include\": \"model://kitchen_wall_cab_e\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"9cd16f06b1a2778025b7df519971dd6a25b66ada8352bfb23541018bc30d5ed7\", \"included_boxes\": [\"1.381 0.366 0.95\"]}, {\"name\": \"coffee_maker\", \"pose\": \"-1 1.798 0.9 0 -0 0\", \"include\": \"model://coffee_maker\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"ec8bca080e7abaa4c12455b5ab3e0012f4c7cde6c8a0c029b1c225c4214ab3d6\", \"included_boxes\": [\"0.206 0.276 0.355\"]}, {\"name\": \"kitchen_base_run_east\", \"pose\": \"2.45 0.325 0 0 -0 -1.5707\", \"include\": \"model://kitchen_base_run_east\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"3c5055b6f6d103d6a88ce193998196df070439a41e34e83ae260ab9fd1b8f7f8\", \"included_boxes\": [\"3.15 0.524 0.089\", \"3.15 0.616 0.811\"]}, {\"name\": \"dishwasher\", \"pose\": \"2.45 -0.02 0 0 -0 -1.5707\", \"include\": \"model://dishwasher\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"e3c8e734476421e29a77795519fa45fb4df2d07373d0acc173f6b498e6dde41c\", \"included_boxes\": [\"0.596 0.596 0.771\"]}, {\"name\": \"kitchen_wall_cab_ec\", \"pose\": \"2.15 1.9 0 0 -0 0\", \"include\": \"model://kitchen_wall_cab_ec\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"02f84aab8a3406c180c3b51ea454aeab0ef7f1e8ce26da212ca6e92a41143949\", \"included_boxes\": [\"0.6 0.366 0.95\"]}, {\"name\": \"kitchen_wall_cab_es\", \"pose\": \"2.45 -0.525 0 0 -0 -1.5707\", \"include\": \"model://kitchen_wall_cab_es\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"72a758f2b2c34751047ab9d6d537e2b12e647f08a8050ed6aec650b62e0b2474\", \"included_boxes\": [\"1.45 0.366 0.95\"]}, {\"name\": \"kitchen_pantry\", \"pose\": \"2.45 -1.6 0 0 -0 -1.5707\", \"include\": \"model://kitchen_pantry\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"78016c166e4761b384f145414b5658d7a559a527edcb15870c3387a9ba0a3278\", \"included_boxes\": [\"0.6 0.636 2.1\"]}, {\"name\": \"DiningTable\", \"pose\": \"-0.33 -0.55 0 0 -0 1.5707\", \"include\": \"model://DiningTable\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"ab08e74a08c7092cf22848c6a5438734b15dc5ea55bf7c712f01d2d124e04712\", \"included_boxes\": [\"0.058 0.091 1.10422\", \"0.058 0.091 1.10422\", \"0.1 0.1 0.736144\", \"0.1 0.1 0.736144\", \"0.1 0.1 0.736144\", \"0.1 0.1 0.736144\", \"0.084456 0.884815 0.099045\", \"0.084456 0.884815 0.099045\", \"0.0612 2.15808 0.1065\", \"0.68 1.91 0.1065\", \"1.0 2.35 0.03\"]}, {\"name\": \"dining_chair_n_west\", \"pose\": \"-0.93 -0.2 0 0 -0 0\", \"include\": \"model://DiningChair\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"included_boxes\": [\"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\", \"0.3996 0.4468 0.148292\", \"0.35964 0.0272995 0.52543\", \"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\"]}, {\"name\": \"dining_chair_n_east\", \"pose\": \"0.27 0.15 0 0 -0 0\", \"include\": \"model://DiningChair\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"included_boxes\": [\"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\", \"0.3996 0.4468 0.148292\", \"0.35964 0.0272995 0.52543\", \"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\"]}, {\"name\": \"dining_chair_s_west\", \"pose\": \"-0.93 -0.9 0 0 -0 3.1416\", \"include\": \"model://DiningChair\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"included_boxes\": [\"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\", \"0.3996 0.4468 0.148292\", \"0.35964 0.0272995 0.52543\", \"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\"]}, {\"name\": \"dining_chair_s_east\", \"pose\": \"0.27 -1.25 0 0 -0 3.1416\", \"include\": \"model://DiningChair\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9\", \"included_boxes\": [\"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\", \"0.3996 0.4468 0.148292\", \"0.35964 0.0272995 0.52543\", \"0.04 0.04 0.436154\", \"0.04 0.04 0.436154\"]}, {\"name\": \"person_standing\", \"pose\": \"1.5 0.75 0 0 -0 1.5708\", \"include\": \"model://person_standing\", \"inline_boxes\": [], \"mesh_files\": [{\"uri\": \"model://person_standing/meshes/standing.dae\", \"scale\": \"1 1 1\", \"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/person_standing/meshes/standing.dae\", \"exists\": true, \"bytes\": 4147992}], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"d1aa125e358575d7a7dfb62923c65ebbbefb0e3854f4dfe2d915683373f1378f\", \"included_boxes\": [\"0.5 0.35 0.02\"]}, {\"name\": \"PatientFSit\", \"pose\": \"0.275 -1.288 0 0 -0 1.5708\", \"include\": \"model://PatientFSit\", \"inline_boxes\": [], \"mesh_files\": [{\"uri\": \"model://PatientFSit/meshes/PatientFSit_Col.obj\", \"scale\": \"1.1037 1.1037 1.1037\", \"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/PatientFSit/meshes/PatientFSit_Col.obj\", \"exists\": true, \"bytes\": 1382}], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"9cfc040aa0f560dfb72ac7e9b752cdc0fd60f017842974c66cc05affeb903952\", \"included_boxes\": []}, {\"name\": \"salad_plate\", \"pose\": \"0.27 -0.85 0.74 0 -0 0\", \"include\": \"model://salad_plate\", \"inline_boxes\": [], \"mesh_files\": [{\"uri\": \"meshes/model.obj\", \"scale\": \"1 1 1\", \"path\": \"/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/salad_plate/meshes/model.obj\", \"exists\": true, \"bytes\": 2895775}], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"6e4f38734854d0871493207f4e358575142773c1637f16c0d399ebb4259cae57\", \"included_boxes\": []}, {\"name\": \"pressure_cooker\", \"pose\": \"-1.34 1.73 0.9 0 -0 0\", \"include\": \"model://pressure_cooker\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"2294bb120e39e5cecf816927672e7524b6643c6b962291b4d982630dc0b28e7d\", \"included_boxes\": [\"0.342 0.076 0.032\"]}, {\"name\": \"toaster_4_slice\", \"pose\": \"-0.65 1.78 0.9 0 -0 0\", \"include\": \"model://toaster_4_slice\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"70e180cb83b15387a53cc3803fa8f6899ded0e11020f8cadda54a952f4fb3f10\", \"included_boxes\": [\"0.124 0.23 0.185\"]}, {\"name\": \"dish_drainer\", \"pose\": \"2.14 -0.02 0.9 0 -0 0\", \"include\": \"model://dish_drainer\", \"inline_boxes\": [], \"mesh_files\": [], \"model_sdf_exists\": true, \"model_sdf_sha256\": \"c889475a3a68c7725fa11ad6947239cb912bb27e91600c3bcecf08557ef40c06\", \"included_boxes\": [\"0.339 0.442 0.121\"]}]}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--name",
+    "oomwoo-kitchen-map-inputs-e75991bc11",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=64m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 python3 -"
+  ],
+  "fixture_python": "\nfrom pathlib import Path\nimport json,yaml,hashlib,xml.etree.ElementTree as ET\nfrom ament_index_python.packages import get_package_share_directory\npkg=Path(get_package_share_directory('oomwoo_gazebo'));world=pkg/'worlds/kitchen_dining.world'\nresult={'world':str(world),'world_sha256':hashlib.sha256(world.read_bytes()).hexdigest(),'map_candidates':[],'models':[]}\nseen=set()\nfor root in [Path('/ros_ws/install'),Path('/ros_ws/src')]:\n for p in root.rglob('*.yaml'):\n  if 'map' not in str(p).lower() and 'kitchen' not in str(p).lower():continue\n  resolved=str(p.resolve())\n  if resolved in seen:continue\n  seen.add(resolved)\n  try:data=yaml.safe_load(p.read_text())\n  except Exception:continue\n  if not isinstance(data,dict) or not all(key in data for key in ['image','resolution','origin']):continue\n  image=p.parent/str(data['image'])\n  result['map_candidates'].append({'path':str(p),'metadata':{k:data.get(k) for k in ['image','resolution','origin','occupied_thresh','free_thresh']},'image_exists':image.exists(),'yaml_sha256':hashlib.sha256(p.read_bytes()).hexdigest()})\nfor model in ET.parse(world).findall('.//world/model'):\n entry={'name':model.get('name'),'pose':model.findtext('pose',''),'include':model.findtext('include/uri',''),'inline_boxes':[n.text for n in model.findall('.//collision/geometry/box/size')],'mesh_files':[]}\n include=entry['include']\n if include.startswith('model://'):\n  modeldir=pkg/'models'/include[len('model://'):];sdf=modeldir/'model.sdf'\n  entry['model_sdf_exists']=sdf.exists()\n  if sdf.exists():\n   tree=ET.parse(sdf);entry['model_sdf_sha256']=hashlib.sha256(sdf.read_bytes()).hexdigest()\n   entry['included_boxes']=[n.text for n in tree.findall('.//collision/geometry/box/size')]\n   for mesh in tree.findall('.//collision/geometry/mesh'):\n    uri=mesh.findtext('uri','');path=pkg/'models'/uri[len('model://'):] if uri.startswith('model://') else modeldir/uri\n    entry['mesh_files'].append({'uri':uri,'scale':mesh.findtext('scale','1 1 1'),'path':str(path),'exists':path.exists(),'bytes':path.stat().st_size if path.exists() else None})\n result['models'].append(entry)\nprint('KITCHEN_MAP_INPUTS '+json.dumps(result))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-656: Bateria local qwen3.5-9b micro\u00bb desde hace 0 min (pid 3217633). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-656\u00bb.\n",
+  "resources": {
+    "meminfo": "MemAvailable:   10882444 kB",
+    "load": "1.12 1.09 1.19 5/2381 3239452"
+  },
+  "scope": "Read-only installed/source map YAML and kitchen collision-file metadata; no Gazebo/ROS nodes, mesh loading or hardware.",
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU small-test exception.",
+  "result": {
+    "world": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world",
+    "world_sha256": "42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9",
+    "map_candidates": [
+      {
+        "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/maps/living_room.yaml",
+        "metadata": {
+          "image": "living_room.pgm",
+          "resolution": 0.05,
+          "origin": [
+            -2.497,
+            -2.434,
+            0
+          ],
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.196
+        },
+        "image_exists": true,
+        "yaml_sha256": "379b3034d088c7188bb8e8e933ea877f09f81799e5a1be1bb9ba75880dc56a1c"
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/contour_torture.yaml",
+        "metadata": {
+          "image": "contour_torture.pgm",
+          "resolution": 0.05,
+          "origin": [
+            -3.25,
+            -3.25,
+            0
+          ],
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.196
+        },
+        "image_exists": true,
+        "yaml_sha256": "ac2b6c43059bc9a9494d83b54c511d997376d263184195be5d0c5eed79f415f8"
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.yaml",
+        "metadata": {
+          "image": "living_room.pgm",
+          "resolution": 0.05,
+          "origin": [
+            -2.499,
+            -2.456,
+            0
+          ],
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.196
+        },
+        "image_exists": true,
+        "yaml_sha256": "1047cc04802915fc30031998c0eab0c8f86b152693da1ffc8568d78d421a0498"
+      },
+      {
+        "path": "/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/test_room.yaml",
+        "metadata": {
+          "image": "test_room.pgm",
+          "resolution": 0.05,
+          "origin": [
+            -1.6,
+            -3.05,
+            0
+          ],
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.25
+        },
+        "image_exists": true,
+        "yaml_sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+      },
+      {
+        "path": "/ros_ws/src/oomwoo_one/maps/living_room.yaml",
+        "metadata": {
+          "image": "living_room.pgm",
+          "resolution": 0.05,
+          "origin": [
+            -2.499,
+            -2.456,
+            0
+          ],
+          "occupied_thresh": 0.65,
+          "free_thresh": 0.196
+        },
+        "image_exists": true,
+        "yaml_sha256": "b3ac0bc7775ddf864b5a1e35e2cd38db83b7d53da6ae5ebe05293a12d2fc72be"
+      }
+    ],
+    "models": [
+      {
+        "name": "wall_west",
+        "pose": "-2.5 0 1.25 0 -0 0",
+        "include": "model://room_wall_25x4m",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "39096b8e39ec87cdc15e1f52cb628e84804ef724bb5736796cae434ca5e16fec",
+        "included_boxes": [
+          "0.1 4.0 2.5"
+        ]
+      },
+      {
+        "name": "wall_east",
+        "pose": "2.5 0 1.25 0 -0 0",
+        "include": "model://room_wall_25x4m",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "39096b8e39ec87cdc15e1f52cb628e84804ef724bb5736796cae434ca5e16fec",
+        "included_boxes": [
+          "0.1 4.0 2.5"
+        ]
+      },
+      {
+        "name": "wall_south",
+        "pose": "0 -1.95 1.25 0 -0 1.5707",
+        "include": "model://room_wall_25x5m",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "fe3d4bd8577dcbdc285c54e2a8d95d54ecff5b2f3c29ba962063d0396c062a9f",
+        "included_boxes": [
+          "0.1 5.0 2.5"
+        ]
+      },
+      {
+        "name": "wall_north",
+        "pose": "0 1.95 1.25 0 -0 1.5707",
+        "include": "model://room_wall_25x5m",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "fe3d4bd8577dcbdc285c54e2a8d95d54ecff5b2f3c29ba962063d0396c062a9f",
+        "included_boxes": [
+          "0.1 5.0 2.5"
+        ]
+      },
+      {
+        "name": "door_08x2m",
+        "pose": "-2.495 0.5 1 0 -0 0",
+        "include": "model://door_08x2m",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "b35e85dc5a48a2c1eeccdc21d1767f9d463f4bf9cd5207818af777d9afebfc2e",
+        "included_boxes": []
+      },
+      {
+        "name": "vacuum_dock",
+        "pose": "-2.45 -0.5 0 0 -0 1.5708",
+        "include": "model://vacuum_dock",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "d3d7ab949320b1c60c10a388014df2ef8be29129bb29d484094da9a165d45b92",
+        "included_boxes": [
+          "0.43 0.34 0.41",
+          "0.03 0.34 0.58",
+          "0.03 0.34 0.58",
+          "0.43 0.1 0.17"
+        ]
+      },
+      {
+        "name": "charging_dock_basic",
+        "pose": "-1.9 -1.9 0 0 -0 3.1416",
+        "include": "model://charging_dock_basic",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "071d97f34c2c7e73551f549574a4a80ad8382fd6dc59f3b0c47ecfecc55f2b8c",
+        "included_boxes": [
+          "0.22 0.048 0.098"
+        ]
+      },
+      {
+        "name": "makerspet_poster",
+        "pose": "-2.435 -0.6 1.5 0 -0 0",
+        "include": "model://makerspet_poster",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "f720194e598766eeff5211a76b3a4b3c87c48ac253b5a2488d60b8297a255af6",
+        "included_boxes": []
+      },
+      {
+        "name": "window_curtains_south_west",
+        "pose": "-1.4 -1.89 1.25 0 -0 1.5707",
+        "include": "model://window_curtains",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "586f6808288b8c7ee568392656e7be4d5e3b475d8eb6116f2228721ce018c75c",
+        "included_boxes": []
+      },
+      {
+        "name": "window_curtains_south_east",
+        "pose": "0.85 -1.89 1.25 0 -0 1.5707",
+        "include": "model://window_curtains",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "586f6808288b8c7ee568392656e7be4d5e3b475d8eb6116f2228721ce018c75c",
+        "included_boxes": []
+      },
+      {
+        "name": "window_curtains_east",
+        "pose": "2.44 0.75 1.6 0 -0 0",
+        "include": "model://window_curtains_small",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "099c5244cdb67b2aad7afade13d34bf72382baba7859206815a5d52423bd0695",
+        "included_boxes": []
+      },
+      {
+        "name": "fridge_double_door",
+        "pose": "-2 1.9 0 0 -0 0",
+        "include": "model://fridge_double_door",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "5176198b0e314904f53473181c1fcad304def296418ee31e3f254da8da5abe13",
+        "included_boxes": [
+          "0.9 0.722 1.78"
+        ]
+      },
+      {
+        "name": "kitchen_base_run_w",
+        "pose": "-0.978 1.9 0 0 -0 0",
+        "include": "model://kitchen_base_run_w",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "7a8cd1c4fbdd2277c89a0b9935dbbfb1353658e090c5fdef2febb3b6d31a5617",
+        "included_boxes": [
+          "1.144 0.524 0.089",
+          "1.144 0.616 0.811"
+        ]
+      },
+      {
+        "name": "Oven",
+        "pose": "0 1.5811 0 0 -0 -1.5707",
+        "include": "model://Oven",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "395c9600f564b14ef2db239baaa5994d7bddff608f518a6ce824315826e53f51",
+        "included_boxes": [
+          "0.58448 0.81688 0.87411"
+        ]
+      },
+      {
+        "name": "kitchen_base_run_e",
+        "pose": "1.0965 1.9 0 0 -0 0",
+        "include": "model://kitchen_base_run_e",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "acd31beb35f8c85e3fb3ea8ea125edd28514e1ee120cccd063ebb80117ab792f",
+        "included_boxes": [
+          "1.381 0.524 0.089",
+          "1.381 0.616 0.811"
+        ]
+      },
+      {
+        "name": "range_hood",
+        "pose": "0 1.9 0 0 -0 0",
+        "include": "model://range_hood",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "038fd3357288350af39aec6ccb94b0b187968d6c237a68bed8cb0fb739e36e39",
+        "included_boxes": [
+          "0.8 0.5 0.15",
+          "0.3 0.25 0.75"
+        ]
+      },
+      {
+        "name": "kitchen_wall_cab_w",
+        "pose": "-0.978 1.9 0 0 -0 0",
+        "include": "model://kitchen_wall_cab_w",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "af792d73d0f19951890e66577e735b16fca642023cdab3e3dce0254911745743",
+        "included_boxes": [
+          "1.144 0.366 0.95"
+        ]
+      },
+      {
+        "name": "kitchen_wall_cab_e",
+        "pose": "1.0965 1.9 0 0 -0 0",
+        "include": "model://kitchen_wall_cab_e",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "9cd16f06b1a2778025b7df519971dd6a25b66ada8352bfb23541018bc30d5ed7",
+        "included_boxes": [
+          "1.381 0.366 0.95"
+        ]
+      },
+      {
+        "name": "coffee_maker",
+        "pose": "-1 1.798 0.9 0 -0 0",
+        "include": "model://coffee_maker",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "ec8bca080e7abaa4c12455b5ab3e0012f4c7cde6c8a0c029b1c225c4214ab3d6",
+        "included_boxes": [
+          "0.206 0.276 0.355"
+        ]
+      },
+      {
+        "name": "kitchen_base_run_east",
+        "pose": "2.45 0.325 0 0 -0 -1.5707",
+        "include": "model://kitchen_base_run_east",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "3c5055b6f6d103d6a88ce193998196df070439a41e34e83ae260ab9fd1b8f7f8",
+        "included_boxes": [
+          "3.15 0.524 0.089",
+          "3.15 0.616 0.811"
+        ]
+      },
+      {
+        "name": "dishwasher",
+        "pose": "2.45 -0.02 0 0 -0 -1.5707",
+        "include": "model://dishwasher",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "e3c8e734476421e29a77795519fa45fb4df2d07373d0acc173f6b498e6dde41c",
+        "included_boxes": [
+          "0.596 0.596 0.771"
+        ]
+      },
+      {
+        "name": "kitchen_wall_cab_ec",
+        "pose": "2.15 1.9 0 0 -0 0",
+        "include": "model://kitchen_wall_cab_ec",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "02f84aab8a3406c180c3b51ea454aeab0ef7f1e8ce26da212ca6e92a41143949",
+        "included_boxes": [
+          "0.6 0.366 0.95"
+        ]
+      },
+      {
+        "name": "kitchen_wall_cab_es",
+        "pose": "2.45 -0.525 0 0 -0 -1.5707",
+        "include": "model://kitchen_wall_cab_es",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "72a758f2b2c34751047ab9d6d537e2b12e647f08a8050ed6aec650b62e0b2474",
+        "included_boxes": [
+          "1.45 0.366 0.95"
+        ]
+      },
+      {
+        "name": "kitchen_pantry",
+        "pose": "2.45 -1.6 0 0 -0 -1.5707",
+        "include": "model://kitchen_pantry",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "78016c166e4761b384f145414b5658d7a559a527edcb15870c3387a9ba0a3278",
+        "included_boxes": [
+          "0.6 0.636 2.1"
+        ]
+      },
+      {
+        "name": "DiningTable",
+        "pose": "-0.33 -0.55 0 0 -0 1.5707",
+        "include": "model://DiningTable",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "ab08e74a08c7092cf22848c6a5438734b15dc5ea55bf7c712f01d2d124e04712",
+        "included_boxes": [
+          "0.058 0.091 1.10422",
+          "0.058 0.091 1.10422",
+          "0.1 0.1 0.736144",
+          "0.1 0.1 0.736144",
+          "0.1 0.1 0.736144",
+          "0.1 0.1 0.736144",
+          "0.084456 0.884815 0.099045",
+          "0.084456 0.884815 0.099045",
+          "0.0612 2.15808 0.1065",
+          "0.68 1.91 0.1065",
+          "1.0 2.35 0.03"
+        ]
+      },
+      {
+        "name": "dining_chair_n_west",
+        "pose": "-0.93 -0.2 0 0 -0 0",
+        "include": "model://DiningChair",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+        "included_boxes": [
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154",
+          "0.3996 0.4468 0.148292",
+          "0.35964 0.0272995 0.52543",
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154"
+        ]
+      },
+      {
+        "name": "dining_chair_n_east",
+        "pose": "0.27 0.15 0 0 -0 0",
+        "include": "model://DiningChair",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+        "included_boxes": [
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154",
+          "0.3996 0.4468 0.148292",
+          "0.35964 0.0272995 0.52543",
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154"
+        ]
+      },
+      {
+        "name": "dining_chair_s_west",
+        "pose": "-0.93 -0.9 0 0 -0 3.1416",
+        "include": "model://DiningChair",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+        "included_boxes": [
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154",
+          "0.3996 0.4468 0.148292",
+          "0.35964 0.0272995 0.52543",
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154"
+        ]
+      },
+      {
+        "name": "dining_chair_s_east",
+        "pose": "0.27 -1.25 0 0 -0 3.1416",
+        "include": "model://DiningChair",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "ef371ca2f7b646eaddd4591902d3234bbaa5d850a0a3a937aa1d401ac53dd4a9",
+        "included_boxes": [
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154",
+          "0.3996 0.4468 0.148292",
+          "0.35964 0.0272995 0.52543",
+          "0.04 0.04 0.436154",
+          "0.04 0.04 0.436154"
+        ]
+      },
+      {
+        "name": "person_standing",
+        "pose": "1.5 0.75 0 0 -0 1.5708",
+        "include": "model://person_standing",
+        "inline_boxes": [],
+        "mesh_files": [
+          {
+            "uri": "model://person_standing/meshes/standing.dae",
+            "scale": "1 1 1",
+            "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/person_standing/meshes/standing.dae",
+            "exists": true,
+            "bytes": 4147992
+          }
+        ],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "d1aa125e358575d7a7dfb62923c65ebbbefb0e3854f4dfe2d915683373f1378f",
+        "included_boxes": [
+          "0.5 0.35 0.02"
+        ]
+      },
+      {
+        "name": "PatientFSit",
+        "pose": "0.275 -1.288 0 0 -0 1.5708",
+        "include": "model://PatientFSit",
+        "inline_boxes": [],
+        "mesh_files": [
+          {
+            "uri": "model://PatientFSit/meshes/PatientFSit_Col.obj",
+            "scale": "1.1037 1.1037 1.1037",
+            "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/PatientFSit/meshes/PatientFSit_Col.obj",
+            "exists": true,
+            "bytes": 1382
+          }
+        ],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "9cfc040aa0f560dfb72ac7e9b752cdc0fd60f017842974c66cc05affeb903952",
+        "included_boxes": []
+      },
+      {
+        "name": "salad_plate",
+        "pose": "0.27 -0.85 0.74 0 -0 0",
+        "include": "model://salad_plate",
+        "inline_boxes": [],
+        "mesh_files": [
+          {
+            "uri": "meshes/model.obj",
+            "scale": "1 1 1",
+            "path": "/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/models/salad_plate/meshes/model.obj",
+            "exists": true,
+            "bytes": 2895775
+          }
+        ],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "6e4f38734854d0871493207f4e358575142773c1637f16c0d399ebb4259cae57",
+        "included_boxes": []
+      },
+      {
+        "name": "pressure_cooker",
+        "pose": "-1.34 1.73 0.9 0 -0 0",
+        "include": "model://pressure_cooker",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "2294bb120e39e5cecf816927672e7524b6643c6b962291b4d982630dc0b28e7d",
+        "included_boxes": [
+          "0.342 0.076 0.032"
+        ]
+      },
+      {
+        "name": "toaster_4_slice",
+        "pose": "-0.65 1.78 0.9 0 -0 0",
+        "include": "model://toaster_4_slice",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "70e180cb83b15387a53cc3803fa8f6899ded0e11020f8cadda54a952f4fb3f10",
+        "included_boxes": [
+          "0.124 0.23 0.185"
+        ]
+      },
+      {
+        "name": "dish_drainer",
+        "pose": "2.14 -0.02 0.9 0 -0 0",
+        "include": "model://dish_drainer",
+        "inline_boxes": [],
+        "mesh_files": [],
+        "model_sdf_exists": true,
+        "model_sdf_sha256": "c889475a3a68c7725fa11ad6947239cb912bb27e91600c3bcecf08557ef40c06",
+        "included_boxes": [
+          "0.339 0.442 0.121"
+        ]
+      }
+    ]
+  }
+}

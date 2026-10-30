@@ -1,0 +1,176 @@
+{
+  "completed_utc": "2026-10-30T13:33:14.747029+00:00",
+  "rc": 0,
+  "host_timeout": false,
+  "seconds": 5.51,
+  "stdout": "KITCHEN_STATIC_CANDIDATE {\"world_sha256\": \"42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9\", \"generator_sha256\": \"6d047c6fe1ec65f3bd75db0e42665db147e434d8d283ddc52c6592fb7d335914\", \"missing_dependencies\": [\"trimesh\"], \"unsupported_geometry\": [{\"owner\": \"pressure_cooker\", \"kind\": \"cylinder\"}], \"nonplanar_collision_poses\": [{\"owner\": \"DiningTable:collision\", \"pose\": \"0.0 0.302465 0.49338 -1.25664 0.0 0.0\"}, {\"owner\": \"DiningTable:collision\", \"pose\": \"0.0 -0.302465 0.49338 1.25664 0.0 0.0\"}, {\"owner\": \"DiningTable:collision\", \"pose\": \"-0.361336 -0.961929 0.36405 -0.10472 0.10472 -0.010472\"}, {\"owner\": \"DiningTable:collision\", \"pose\": \"0.361336 -0.961929 0.36405 -0.10472 -0.10472 0.010472\"}, {\"owner\": \"DiningTable:collision\", \"pose\": \"0.361336 0.961929 0.36405 0.10472 -0.10472 -0.010472\"}, {\"owner\": \"DiningTable:collision\", \"pose\": \"-0.361336 0.961929 0.36405 0.10472 0.10472 0.010472\"}, {\"owner\": \"dining_chair_n_west:collision\", \"pose\": \"-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_n_west:collision\", \"pose\": \"-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_n_west:collision\", \"pose\": \"0.0 0.246451 0.700029 -0.156988 0.0 0.0\"}, {\"owner\": \"dining_chair_n_west:collision\", \"pose\": \"0.17895 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_n_west:collision\", \"pose\": \"0.14657 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_n_east:collision\", \"pose\": \"-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_n_east:collision\", \"pose\": \"-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_n_east:collision\", \"pose\": \"0.0 0.246451 0.700029 -0.156988 0.0 0.0\"}, {\"owner\": \"dining_chair_n_east:collision\", \"pose\": \"0.17895 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_n_east:collision\", \"pose\": \"0.14657 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_s_west:collision\", \"pose\": \"-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_s_west:collision\", \"pose\": \"-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_s_west:collision\", \"pose\": \"0.0 0.246451 0.700029 -0.156988 0.0 0.0\"}, {\"owner\": \"dining_chair_s_west:collision\", \"pose\": \"0.17895 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_s_west:collision\", \"pose\": \"0.14657 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_s_east:collision\", \"pose\": \"-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"dining_chair_s_east:collision\", \"pose\": \"-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_s_east:collision\", \"pose\": \"0.0 0.246451 0.700029 -0.156988 0.0 0.0\"}, {\"owner\": \"dining_chair_s_east:collision\", \"pose\": \"0.17895 -0.198708 0.217889 0.0415208 0.0 0.0\"}, {\"owner\": \"dining_chair_s_east:collision\", \"pose\": \"0.14657 0.202837 0.217947 -0.0345933 0.0 0.0\"}, {\"owner\": \"person_standing:collision\", \"pose\": \"0 0 0.02 0.04 0 0\"}], \"pose_conventions\": [], \"missing_resources\": [], \"generated\": false}\n",
+  "stderr": "",
+  "args": [
+    "podman",
+    "run",
+    "-i",
+    "--rm",
+    "--name",
+    "oomwoo-kitchen-static-e941ed794a",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=64m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=64",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "docker.io/makerspet/oomwoo:jazzy-dev",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 python3 -"
+  ],
+  "fixture_python": "\nfrom pathlib import Path\nimport json,hashlib,importlib.util,xml.etree.ElementTree as ET,sys,base64\nfrom ament_index_python.packages import get_package_share_directory\npkg=Path(get_package_share_directory('oomwoo_gazebo'));world=pkg/'worlds/kitchen_dining.world';generator=Path('/work/tools/gen_livingroom_map.py')\nr={'world_sha256':hashlib.sha256(world.read_bytes()).hexdigest(),'generator_sha256':hashlib.sha256(generator.read_bytes()).hexdigest(),'missing_dependencies':[m for m in ['numpy','trimesh','PIL','scipy'] if importlib.util.find_spec(m) is None],'unsupported_geometry':[],'nonplanar_collision_poses':[],'pose_conventions':[],'missing_resources':[],'generated':False}\ndef pose_check(elem,owner):\n pose=elem.find('pose')\n if pose is None:return\n values=[float(v) for v in pose.text.split()]\n if len(values)>4 and any(abs(v)>1e-8 for v in values[3:5]):r['nonplanar_collision_poses'].append({'owner':owner,'pose':pose.text})\n if pose.attrib:r['pose_conventions'].append({'owner':owner,'attributes':pose.attrib})\nfor wm in ET.parse(world).findall('.//world/model'):\n name=wm.get('name','')\n if any(word in name.lower() for word in ['poster','sun','ground','curtain','rug','tv_65']):continue\n pose_check(wm,name)\n uri=wm.findtext('include/uri','');models=[wm]\n if uri.startswith('model://'):\n  path=pkg/'models'/uri[len('model://'):]/'model.sdf'\n  if not path.exists():r['missing_resources'].append(str(path));continue\n  models=ET.parse(path).findall('model')\n for model in models:\n  pose_check(model,name+':model')\n  for link in model.findall('link'):\n   if not link.findall('collision'):continue\n   pose_check(link,name+':link')\n   for collision in link.findall('collision'):\n    pose_check(collision,name+':collision')\n    geometry=collision.find('geometry')\n    if geometry is not None:\n     for shape in geometry:\n      if shape.tag not in ('box','mesh'):r['unsupported_geometry'].append({'owner':name,'kind':shape.tag})\nif not any(r[key] for key in ['missing_dependencies','unsupported_geometry','nonplanar_collision_poses','pose_conventions','missing_resources']):\n spec=importlib.util.spec_from_file_location('existing_kitchen_candidate_generator',generator);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\n out=Path('/tmp/kitchen-static-candidate');sys.argv=[str(generator),str(world),str(pkg/'models'),str(out)];module.main()\n import numpy as np,yaml\n from PIL import Image\n from scipy import ndimage\n meta=yaml.safe_load((out/'living_room.yaml').read_text());grid=np.flipud(np.asarray(Image.open(out/meta['image'])))\n def cell(x,y):return int((x-meta['origin'][0])/meta['resolution']),int((y-meta['origin'][1])/meta['resolution'])\n probes={}\n for label,(x,y) in {'dock_approach':(-1.3,-.5),'dock_mouth':(-2.11,-.5),'inside_center':(0.,0.),'west_wall':(-2.5,0.),'outside_west':(-2.7,0.)}.items():\n  col,row=cell(x,y);probes[label]={'xy':[x,y],'cell':[col,row],'pixel':int(grid[row,col]),'free':bool(grid[row,col]>250)}\n labels,count=ndimage.label(grid>250)\n r.update({'generated':True,'metadata':meta,'shape':list(grid.shape),'free_cells':int((grid>250).sum()),'occupied_cells':int((grid==0).sum()),'unknown_cells':int((grid==205).sum()),'free_components':int(count),'probes':probes,'image_sha256':hashlib.sha256((out/meta['image']).read_bytes()).hexdigest(),'pgm_base64':base64.b64encode((out/meta['image']).read_bytes()).decode(),'yaml_text':(out/'living_room.yaml').read_text()})\nprint('KITCHEN_STATIC_CANDIDATE '+json.dumps(r))\n",
+  "machine_lock": "OCUPADA: la maquina la tiene \u00abfifo-656: Bateria local qwen3.5-9b micro\u00bb desde hace 0 min (pid 3217633). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: OCUPADA; ya tiene el turno \u00abfifo-656\u00bb.\n",
+  "resources": {
+    "meminfo": "MemAvailable:   10733856 kB",
+    "load": "1.02 1.19 1.22 3/2478 3243402"
+  },
+  "scope": "Existing generator reused only in disposable container after static preflight; no Nav2/AMCL/Gazebo/hardware or production map change.",
+  "resource_authorization": "Explicit compatible .25CPU/512MB/noGPU exception.",
+  "result": {
+    "world_sha256": "42c50938e72b1335b116ee5ce5ec5ed552794ac888fe7685e81de693509d8bd9",
+    "generator_sha256": "6d047c6fe1ec65f3bd75db0e42665db147e434d8d283ddc52c6592fb7d335914",
+    "missing_dependencies": [
+      "trimesh"
+    ],
+    "unsupported_geometry": [
+      {
+        "owner": "pressure_cooker",
+        "kind": "cylinder"
+      }
+    ],
+    "nonplanar_collision_poses": [
+      {
+        "owner": "DiningTable:collision",
+        "pose": "0.0 0.302465 0.49338 -1.25664 0.0 0.0"
+      },
+      {
+        "owner": "DiningTable:collision",
+        "pose": "0.0 -0.302465 0.49338 1.25664 0.0 0.0"
+      },
+      {
+        "owner": "DiningTable:collision",
+        "pose": "-0.361336 -0.961929 0.36405 -0.10472 0.10472 -0.010472"
+      },
+      {
+        "owner": "DiningTable:collision",
+        "pose": "0.361336 -0.961929 0.36405 -0.10472 -0.10472 0.010472"
+      },
+      {
+        "owner": "DiningTable:collision",
+        "pose": "0.361336 0.961929 0.36405 0.10472 -0.10472 -0.010472"
+      },
+      {
+        "owner": "DiningTable:collision",
+        "pose": "-0.361336 0.961929 0.36405 0.10472 0.10472 0.010472"
+      },
+      {
+        "owner": "dining_chair_n_west:collision",
+        "pose": "-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_west:collision",
+        "pose": "-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_west:collision",
+        "pose": "0.0 0.246451 0.700029 -0.156988 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_west:collision",
+        "pose": "0.17895 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_west:collision",
+        "pose": "0.14657 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_east:collision",
+        "pose": "-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_east:collision",
+        "pose": "-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_east:collision",
+        "pose": "0.0 0.246451 0.700029 -0.156988 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_east:collision",
+        "pose": "0.17895 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_n_east:collision",
+        "pose": "0.14657 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_west:collision",
+        "pose": "-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_west:collision",
+        "pose": "-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_west:collision",
+        "pose": "0.0 0.246451 0.700029 -0.156988 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_west:collision",
+        "pose": "0.17895 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_west:collision",
+        "pose": "0.14657 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_east:collision",
+        "pose": "-0.146568 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_east:collision",
+        "pose": "-0.178948 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_east:collision",
+        "pose": "0.0 0.246451 0.700029 -0.156988 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_east:collision",
+        "pose": "0.17895 -0.198708 0.217889 0.0415208 0.0 0.0"
+      },
+      {
+        "owner": "dining_chair_s_east:collision",
+        "pose": "0.14657 0.202837 0.217947 -0.0345933 0.0 0.0"
+      },
+      {
+        "owner": "person_standing:collision",
+        "pose": "0 0 0.02 0.04 0 0"
+      }
+    ],
+    "pose_conventions": [],
+    "missing_resources": [],
+    "generated": false
+  },
+  "decision": "Do not generate/admit a kitchen map with the unmodified current generator. It lacks a mesh dependency in the inspected environment and ignores nonplanar collision transforms present in table/chair legs. Resolve geometry support in the existing generator or use an existing mapping path before joint Nav2/docking validation; no new map, tool or dependency was installed.",
+  "limits": [
+    "This was successful preflight metadata collection, not a passing map-generation or navigation test.",
+    "The unsupported pressure-cooker cylinder may be above the robot band; no claim that every flagged geometry blocks floor-level rasterization.",
+    "Several table/chair leg transforms are relevant to floor-level geometry; the yaw-only T_of/add_box code cannot represent them exactly.",
+    "Current native transit sources/world/map remain frozen and unchanged."
+  ]
+}

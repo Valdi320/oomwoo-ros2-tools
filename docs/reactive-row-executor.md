@@ -800,3 +800,17 @@ argument, but fixes its grid extent and output basename; blindly passing the
 kitchen world is insufficient. No map, world or runtime was modified, and this
 inventory is not a docking or charging test. The native transit acceptance
 continues independently with its frozen test_room inputs.
+
+
+The [kitchen map input search](../src/oomwoo_sim_support/docs/evidence/kitchen_map_inputs_20261030.json)
+found five map YAMLs across the inspected ROS install/source trees, none for
+kitchen_dining. All referenced kitchen model SDF and mesh files were present.
+The [generator preflight](../src/oomwoo_sim_support/docs/evidence/kitchen_map_static_candidate_20261030.json)
+then declined generation: trimesh is absent in the inspected image, and several
+actual table/chair collision poses include roll/pitch that the existing yaw-only
+T_of/add_box path does not represent. A pressure-cooker cylinder is also an
+unsupported primitive, although it may be above the robot band. No kitchen map
+was produced or admitted, and no dependency was installed. Metadata collection
+exiting zero does not mean map generation passed. Resolve the relevant geometry
+in the existing generator or use an existing mapping path before the joint
+cycle; the pending native transit test is unchanged.
