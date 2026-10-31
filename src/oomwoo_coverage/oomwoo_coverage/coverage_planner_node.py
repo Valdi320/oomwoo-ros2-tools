@@ -921,8 +921,14 @@ class CoveragePlanner(Node):
         if self.finished or (getattr(self, '_relay_enabled', False)
                              and self._relay_fault is not None):
             return
-        if status == 4:                 # reached the waypoint
-            self.wp_index += 1
+        if status == 4:
+            # Nav2's arrival tolerance is not cleaning credit. For a remaining
+            # gap, release navigation normally and let the existing reactive
+            # driver finish the short approach before leaving this target.
+            if not (getattr(self, 'exec_mode', None) == 'reactive'
+                    and getattr(self, 'gapfill_passes', 0) > 0
+                    and not self._covered_at(self.cached_poses[self.wp_index])):
+                self.wp_index += 1
             self.wp_retries = 0
             self.consecutive_skips = 0
         else:

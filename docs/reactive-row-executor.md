@@ -1928,3 +1928,44 @@ con retorno0 y todos los hijos cerrados, recibo y commit. Siguiente incremento:
 validación larga exacta con sólo wrapper cambiado; coste previsto18min, beneficio
 cerrar el hito. Decisión avanzar tras evidencia nueva y consolidar si pasa; sin
 más ajustes de rendimiento ni repetición ciega de los dos fallos de cierre.
+
+
+## Cierre nativo correcto; hueco repetido pendiente — 31/10/2026 14:01 UTC
+
+La ejecución exacta d32835b/9feaf3f termina con rc0 y todos sus hijos0,
+Gazebo por su RPC único sin escalada. Primer90% a790,7s con80,33%,
+cobertura95,28%; auditoría válida49749poses/49748segmentos, cero cruces,
+máximo20ms, radio0,18 y220celdas originales. Las17fuentes sin cambios;
+memoria pico1446879232bytes, sinOOM. El recibo íntegro queda en
+respaldo-oomwoo-acoplamiento/delivery_full_native_20261031.json.
+
+El goal sigue activo: end_reason=plateau, no sweep_complete. Aún navegaba
+al hueco(-0,975,-1,825) en la segunda pasada cuando venció la meseta
+original180s. Ese mismo destino había obtenido SUCCEEDED en la primera
+pasada desde(-0,82,-1,72), pero seguía sin limpiar. _on_result incrementa
+wp_index al éxito de Nav2, cuya tolerancia0,20m no demuestra limpiar la
+celda; el ejecutor reactivo tiene alcance0,12m y radio de limpieza0,20m.
+
+Siguiente incremento mínimo: en gap-fill reactivo, conservar el destino aún
+no acreditado tras éxito Nav2 para que el ejecutor de fila haga el acercamiento
+final con sus límites existentes. Mantener transición terminal/liberación de
+lease, STOP, tolerancias Nav2, radio, máscara, meseta y medición originales.
+Aceptación: reproducción causal con resultado real/feedback y testigos de
+regresión; luego una habitación90/80/cero/sweep_complete/rc0 con fuentes
+finales. Utilidad esperada: evitar otro tránsito largo al mismo hueco sin
+fingir limpieza. Coste focal más una integración; no se toca el barrido
+principal ya medido. Después, consolidar; otras escenas/hardware quedan fuera.
+
+La reproducción causal falla exactamente por wp_index adelantado; el test de
+lease confirma que terminal/release_nav ya ocurrieron antes de ese descarte.
+Corrección mínima aplicada sólo al gap-fill reactivo todavía sin crédito.
+Pasan20casos focales (5nuevos), incluida regresión del barrido principal,
+modoNav2, celda ya limpia, cancelación, aborto y lease; ament_flake8 limpio.
+Un primer transporte del test tras la corrección carecía de ext_ratio en el
+doble ligero y falló al alcanzar el log de índice0; se completó ese dato,
+sin nuevo cambio de producción. Los resultados previos se conservan.
+Recibo `src/oomwoo_sim_support/docs/evidence/gapfill_terminal_delivery_20261031.json`;
+el largo anterior80,33% se conserva íntegro junto a él como
+`delivery_full_native_20261031.json`, sin presentar plateau como barrido terminado.
+Decisión: una integración final con este único cambio adicional respaldado
+por evidencia; consolidar si cumple todos los requisitos simultáneamente.

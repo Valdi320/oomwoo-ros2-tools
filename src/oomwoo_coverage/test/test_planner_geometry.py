@@ -1519,3 +1519,55 @@ def test_sweep_does_not_count_clean_square_corners_outside_its_disk():
     target = row_target(10.5 * .05)
     target.pose.position.y = 10.5 * .05
     assert not CoveragePlanner._covered_at(node, target)
+
+
+def test_gapfill_nav_success_finishes_uncredited_cell_before_leaving():
+    from oomwoo_sim_support.coverage_meter_node import _stamp_disk
+
+    node = gapfill_with_small_unclean_hole()
+    node.exec_mode = 'reactive'
+    target = node.cached_poses[0].pose.position
+    node._robot_pose = lambda: (target.x + .20, target.y, float(np.pi))
+    node.awaiting = True
+    CoveragePlanner._on_result(node, SimpleNamespace(
+        result=lambda: SimpleNamespace(status=4)))
+    assert not node.awaiting
+    assert not node._covered_at(node.cached_poses[0])
+    assert node.wp_index == 0, 'Nav2 tolerance was mistaken for cleaning credit'
+    node._advance_to_target = MethodType(CoveragePlanner._advance_to_target, node)
+    commands = []
+    node.cmd_pub.publish = lambda tw: commands.append((tw.linear.x, tw.angular.z))
+    CoveragePlanner._tick_reactive(node)
+    assert commands[-1][0] > 0, 'existing reactive drive must finish the short approach'
+    assert node.wp_index == 0 and not node.finished
+    # Feed the unchanged meter disk from a closer virtual pose, rather than
+    # inventing credit because Nav2 succeeded. This is geometry, not a plant.
+    stamped = np.zeros_like(node.free_mask)
+    _stamp_disk(stamped, node.free_mask, 8, 6, 4)
+    node.covered_grid[stamped] = 100
+    CoveragePlanner._tick_reactive(node)
+    assert commands[-1] == (0.0, 0.0) and node.finished
+
+
+@pytest.mark.parametrize('mode,passes,clean', [
+    ('reactive', 0, False), ('nav2', 1, False), ('reactive', 1, True),
+])
+def test_nav_success_keeps_existing_main_sweep_and_credited_gap_progress(mode, passes, clean):
+    node = gapfill_with_small_unclean_hole()
+    node.exec_mode, node.gapfill_passes = mode, passes
+    if clean:
+        node.covered_grid[6, 6] = 100
+    CoveragePlanner._on_result(node, SimpleNamespace(
+        result=lambda: SimpleNamespace(status=4)))
+    assert node.wp_index == 1 and node.wp_retries == 0
+
+
+def test_gapfill_nav_success_keeps_terminal_lease_release_before_short_approach(tmp_path):
+    node, _, _, _, _, _, _, _ = contact_relay_planner(tmp_path)
+    node.exec_mode, node.gapfill_passes, node.ext_ratio = 'reactive', 1, .95
+    node._covered_at = lambda pose: False
+    CoveragePlanner._on_result(node, SimpleNamespace(
+        result=lambda: SimpleNamespace(status=4)))
+    assert node._relay_stage == 'release_nav'
+    assert node._relay_journal.read()['state'] == 'terminal'
+    assert node.wp_index == 0 and not node.awaiting
