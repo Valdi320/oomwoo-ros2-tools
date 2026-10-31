@@ -1,0 +1,23 @@
+{
+  "scope": "Byte-exact archived diagnostic input files from final native run; data for replay, no new background tool or runtime dependency.",
+  "full_receipt": "../gapfill_final_full_native_20261031.json",
+  "canonical_source_commits": {
+    "ROS": "a4d0bc666554270523794ae0ee7498bf5fbc3bfe",
+    "jobs": "9feaf3fcc660c7ac22ca074a09be420f6f37cd2e"
+  },
+  "inputs": {
+    "scorer": {
+      "archived_file": "coverage_regression_runner.py.txt",
+      "sha256": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+      "canonical_sha256": "0b10b4097dc5123454589a8d29e934ae4b5842c3e89470cec472bb42bd617b1a",
+      "difference": "bounded read-only diagnostics, original run inputs preserved verbatim"
+    },
+    "relay": {
+      "archived_file": "ros_dock_velocity_relay.py.txt",
+      "sha256": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6",
+      "canonical_sha256": "ad9093ec0bf088c60c6644fa280f9826a91d3cb06fd2dbe9c6a89bcdbc2ed159",
+      "difference": "bounded read-only diagnostics, original run inputs preserved verbatim"
+    }
+  },
+  "notice": "Historical fixture_patch prose says only scorer differs; original input hashes and these archived bytes show two diagnostic variants: scorer AND relay. This manifest clarifies that metadata without rewriting the original receipt. Relay tracing does not grant health/ownership and no revocation occurred in this accepted run."
+}

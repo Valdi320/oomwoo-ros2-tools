@@ -1,0 +1,1192 @@
+"""Experimental exclusive Nav2/dock-drive velocity relay for ISOLATED ROS2 labs.
+
+Never launch this unchanged against a real robot: it publishes ONLY the
+default /valdi/lab_safe_cmd_vel_output topic, NOT /cmd_vel, and will not
+arm unless simulation_lab=true. To move a physical robot, canonical OOMWOO
+bringup, trusted ROS2 endpoints and an independent MCU watchdog must be
+reviewed and tested. ROS2 status messages are not authenticated.
+
+The default two-source mode retains ExclusiveVelocityMux. Opt-in three_way
+uses the existing ThreeWayVelocityMux in this same node, with one lab output
+and one steady-clock timer. It derives health from TF/map/clock/phase/resource
+observations and checks unique graph endpoints plus native DDS sequence/time.
+Sources are experimental simulation observations, not physical attestations.
+"""
+from __future__ import annotations
+from copy import deepcopy
+import json
+import hashlib
+import math
+import time
+from collections import deque
+
+import rclpy
+from rclpy.executors import ExternalShutdownException
+from rclpy.node import Node
+from rclpy.clock import Clock, ClockType
+from rclpy.qos import (
+    QoSProfile,QoSDurabilityPolicy,QoSReliabilityPolicy)
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry, OccupancyGrid
+from nav2_msgs.action import NavigateToPose
+from nav2_msgs.msg import CostmapFilterInfo
+from lifecycle_msgs.srv import GetState
+from rosgraph_msgs.msg import Clock as ClockMessage
+from tf2_ros import Buffer, TransformListener, TransformException
+from sensor_msgs.msg import BatteryState
+from std_msgs.msg import Bool,String
+from action_msgs.msg import GoalStatusArray
+from oomwoo_cleaning_jobs_lab_interfaces.srv import (
+    ControlCleaning,GetCleaningStatus)
+
+from .dock_handoff import ExclusiveVelocityMux,Velocity,DockHandoffError
+from .reactive_velocity import ThreeWayVelocityMux, MotionHealth, ReactiveMuxError
+from .map_admission import Raster, AdmissionError
+from .lab_topic_guard import (
+    LabTopicGuardError,require_lab_output_publisher,
+    require_lab_input_subscriptions)
+from .ros_odom_stamp_gate import OdomStampGate
+from .ros_odom_frame_gate import OdomFrameError, require_odom_frames
+from .request_dedupe import RequestDedupe,CommandReplayError
+from .goal_journal import GoalJournal,GoalJournalError
+from .nav_lease_witness import NavLeaseWitness,ACTIVE,nav_status_idle
+from .nav_keepout_admission import VerifiedGlobalKeepout
+from .reactive_keepout_envelope import PoseEvidence,projected_motion_blocker
+
+
+_ACTIVE=frozenset((1,2,3))
+_TERMINAL=frozenset((4,5,6))
+
+
+class ExperimentalDockVelocityRelay(Node):
+    def __init__(self,*,parameter_overrides=None):
+        super().__init__("valdi_experimental_cmdvel_relay",
+                         parameter_overrides=parameter_overrides)
+        self.declare_parameter("simulation_lab",False)
+        self.declare_parameter("output_topic","/valdi/lab_safe_cmd_vel_output")
+        self.declare_parameter("goal_journal_path","")
+        self.declare_parameter("three_way",False)
+        self._three_way=self.get_parameter("three_way").value is True
+        self.declare_parameter("managed_nav2",False)
+        self._managed_nav2=self.get_parameter("managed_nav2").value is True
+        self.declare_parameter("require_keepout_filter",False)
+        self._keepout_required=self.get_parameter("require_keepout_filter").value is True
+        if self._keepout_required and not self._three_way:
+            raise ValueError("keepout requires the three-way lab policy")
+        if self._managed_nav2 and not self._three_way:
+            raise ValueError("managed_nav2 requires the three-way lab policy")
+        if self.get_parameter("simulation_lab").value is not True:
+            raise ValueError("command source relay requires isolated simulation_lab")
+        output=str(self.get_parameter("output_topic").value)
+        if output in ("/cmd_vel","cmd_vel","/diff_drive_controller/cmd_vel_unstamped"):
+            raise ValueError("lab relay must not publish directly to real motors")
+        if output!="/valdi/lab_safe_cmd_vel_output":
+            raise ValueError("unsupported lab output topic")
+        self.mux=(ThreeWayVelocityMux() if self._three_way else
+                  ExclusiveVelocityMux(max_age_s=.30,quiet_required_s=.75))
+        self._odom_stamp_gate=OdomStampGate()
+        self._requests=RequestDedupe(128)
+        journal_path=str(self.get_parameter("goal_journal_path").value)
+        self._goal_witness=(NavLeaseWitness(GoalJournal(journal_path))
+                            if journal_path else None)
+        self._nav_lease_started=None
+        self._last_status=None
+        self._nav_status=None
+        self._nav_zero=True
+        self._dock_state=None
+        self._docked=False
+        self._dock_last=None
+        self._odom_last=None
+        self._battery_last=None
+        self._battery_fraction=None
+        self._released_nav=False
+        self._latest_output=Velocity()
+        if self._three_way:
+            self._motion_token=None
+            self._nav_motion_history=deque(maxlen=32)
+            self._nav_motion_last_sample=None
+            self._nav_motion_trace_error=None
+            self._claim_wall_ns=0
+            self._source_gids={}
+            self._observed_gids={}
+            self._commands={}
+            self._command_sequences={}
+            self._sweep_state=None
+            self._sweep_last=None
+            self._docked_last=None
+            self._map_hash=None
+            self._map_fault=False
+            self._clock_ns=None
+            self._clock_advanced=None
+            self._clock_fault=False
+            self._unstable=None
+            self._unstable_last=None
+            self._prior_terminal=None
+            self._dock_started=False
+            self._keepout_mask=None
+            self._keepout_info_valid=False
+            self._keepout_mask_epoch=0
+            self._keepout_info_epoch=0
+            self._keepout_costmap=None
+            self._keepout_costmap_stamp=0
+            self._keepout_costmap_dds=0
+            self._keepout_costmap_sequence=0
+            self._keepout_sources=None
+            self._keepout_proof=None
+            self._keepout_fault=False
+            self._motion_pose_cache=None
+            self._motion_pose_pending=None
+            self._motion_pose_observed=None
+            self.tf_buffer=Buffer()
+            if self._managed_nav2:
+                self._motion_nav_uuid=None
+                self._nav_feedback=None
+                self._nav_backend_active=False
+                self._nav_backend_last=None
+                self._nav_backend_query=None
+                self._nav_backend_poll=0.
+                self._nav_single_dispatcher=False
+                self._nav_inventory_last=0.
+                self._nav_client_inventory=[]
+                self._nav_lifecycle=self.create_client(GetState,"/bt_navigator/get_state")
+                if self.resolve_service_name("/bt_navigator/get_state")!="/bt_navigator/get_state":
+                    raise LabTopicGuardError("managed Nav2 lifecycle service remapped")
+        latched=QoSProfile(depth=1,reliability=QoSReliabilityPolicy.RELIABLE,
+                           durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
+        self.safe=self.create_publisher(Twist,output,10)
+        # ROS2 CLI/launch remapping can redirect the *nominally safe* topic.
+        # Reject the REAL resolved publisher name before any output timer.
+        try:
+            require_lab_output_publisher(self.safe)
+        except LabTopicGuardError:
+            self.destroy_publisher(self.safe)
+            raise
+        # Actual ROS2 input resolution must retain source isolation.
+        # Verify all subscribed input topics before services/output timer.
+        inputs={}
+        try:
+            inputs["/valdi/nav2_cmd_vel"]=self.create_subscription(
+                Twist,"/valdi/nav2_cmd_vel",self._nav_twist,10)
+            inputs["/valdi/dock_drive_cmd_vel"]=self.create_subscription(
+                Twist,"/valdi/dock_drive_cmd_vel",self._dock_twist,10)
+            inputs["/odom"]=self.create_subscription(
+                Odometry,"/odom",self._on_odom,10)
+            inputs["/battery_state"]=self.create_subscription(
+                BatteryState,"/battery_state",self._battery,10)
+            inputs["/navigate_to_pose/_action/status"]=self.create_subscription(
+                GoalStatusArray,"/navigate_to_pose/_action/status",
+                self._on_nav_status,latched)
+            inputs["/dock_drive/state"]=self.create_subscription(
+                String,"/dock_drive/state",self._on_dock_state,10)
+            inputs["/dock_drive/docked"]=self.create_subscription(
+                Bool,"/dock_drive/docked",self._on_docked,latched)
+            if self._three_way:
+                inputs["/valdi/sweep_cmd_vel"]=self.create_subscription(
+                    Twist,"/valdi/sweep_cmd_vel",self._sweep_twist,10)
+                inputs["/coverage_planner/motion_state"]=self.create_subscription(
+                    String,"/coverage_planner/motion_state",self._on_sweep_state,10)
+                inputs["/map"]=self.create_subscription(
+                    OccupancyGrid,"/map",self._on_motion_map,latched)
+                inputs["/clock"]=self.create_subscription(
+                    ClockMessage,"/clock",self._on_motion_clock,10)
+                inputs["/coverage_meter/sim_unstable"]=self.create_subscription(
+                    Bool,"/coverage_meter/sim_unstable",self._on_motion_unstable,10)
+                self.tf_listener=TransformListener(self.tf_buffer,self)
+                inputs["/tf"]=self.tf_listener.tf_sub
+                inputs["/tf_static"]=self.tf_listener.tf_static_sub
+                if self._managed_nav2:
+                    inputs["/navigate_to_pose/_action/feedback"]=self.create_subscription(
+                        NavigateToPose.Impl.FeedbackMessage,
+                        "/navigate_to_pose/_action/feedback",self._on_motion_feedback,10)
+                if self._keepout_required:
+                    inputs["/oomwoo/keepout_mask"]=self.create_subscription(
+                        OccupancyGrid,"/oomwoo/keepout_mask",
+                        self._on_motion_keepout_mask,latched)
+                    inputs["/oomwoo/keepout_filter_info"]=self.create_subscription(
+                        CostmapFilterInfo,"/oomwoo/keepout_filter_info",
+                        self._on_motion_keepout_info,latched)
+                    inputs["/global_costmap/costmap"]=self.create_subscription(
+                        OccupancyGrid,"/global_costmap/costmap",
+                        self._on_motion_costmap,10)
+                require_lab_input_subscriptions(inputs,three_way=True,
+                    managed_nav2=self._managed_nav2,
+                    keepout_required=self._keepout_required)
+            else:
+                require_lab_input_subscriptions(inputs)
+        except Exception:
+            for sub in inputs.values():
+                try:self.destroy_subscription(sub)
+                except Exception:pass
+            self.destroy_publisher(self.safe)
+            raise
+        self.create_service(ControlCleaning,
+              "/valdi/relay/control",self._control)
+        self.create_service(GetCleaningStatus,
+              "/valdi/relay/status",self._status)
+        if self._three_way:
+            # Reuse this relay's only timer, on steady time so a paused /clock
+            # cannot suspend its existing output/lease checks.
+            self.create_timer(.05,self._tick,clock=Clock(clock_type=ClockType.STEADY_TIME))
+        else:
+            self.create_timer(.05,self._tick)
+
+    def _on_nav_status(self,msg):
+        self._last_status=time.monotonic()
+        self._nav_status=tuple(
+            (bytes(s.goal_info.goal_id.uuid).hex(),int(s.status))
+            for s in msg.status_list)
+        if getattr(self,"_three_way",False):
+            if self._goal_witness is not None and (
+                    self.mux.owner==self.mux.NAV or self._prior_terminal is not None):
+                self._goal_witness.observe(self._nav_status)
+                if self._goal_witness.fault is not None:
+                    self._reset(self._goal_witness.fault)
+                elif self.mux.owner==self.mux.NAV:
+                    # ACTIVE and CANCELED can both arrive between the50ms
+                    # output ticks. Preserve the real event in the mux too;
+                    # the timer must not invent an ACTIVE observation later.
+                    # Aggregate health and exact UUID checks still apply.
+                    try:
+                        proof=self._motion_health()
+                        self.mux.observe_health(now=self._motion_now(),proof=proof)
+                    except ReactiveMuxError as exc:
+                        self._reset(str(exc),proof=proof)
+            return
+        if (self._goal_witness is not None and
+            (self.mux.owner in (self.mux.NAV, self.mux.DOCK)
+             or self._released_nav)):
+            self._goal_witness.observe(self._nav_status)
+            if self._goal_witness.fault is not None:
+                self._reset(self._goal_witness.fault)
+                self._released_nav=False
+
+    def _on_dock_state(self,msg):
+        self._dock_state=str(msg.data)
+        self._dock_last=time.monotonic()
+        if getattr(self,"_three_way",False):
+            if self.mux.owner==self.mux.DOCK and self._dock_state in (
+                    "SEARCH","GOTO","TURN","BACK","REGROUP"):
+                self._dock_started=True
+            return
+        if (self.mux.owner==self.mux.DOCK and
+            (self._dock_state!="DONE" or self._docked)):
+            # DockDrive publishes state and docked on separate ROS topics.
+            # An arriving DONE state before its latched docked=True must
+            # NOT fault an otherwise legitimate confirmation pair.
+            try:self.mux.observe_dock(now=time.monotonic(),
+                 drive_state=self._dock_state,docked=self._docked)
+            except DockHandoffError as exc:self._reset(str(exc))
+
+    def _on_docked(self,msg):
+        self._docked=bool(msg.data)
+        if getattr(self,"_three_way",False):
+            self._docked_last=time.monotonic()
+            return
+        if (self.mux.owner==self.mux.DOCK and self._dock_state is not None
+            and (self._dock_state!="DONE" or self._docked
+                 or self.mux.docking_proven)):
+            try:self.mux.observe_dock(now=time.monotonic(),
+                 drive_state=self._dock_state,docked=self._docked)
+            except DockHandoffError as exc:self._reset(str(exc))
+
+    def _on_odom(self,msg):
+        # Receipt time alone is NOT a freshness proof: a delayed/replayed
+        # Odometry packet can arrive now with a stale original header stamp.
+        # Compare header to the node's own ROS clock (supports sim /clock),
+        # never to monotonic wall time. Missing /clock, rewind or replay STOP.
+        observed_at=time.monotonic()
+        # Fresh timestamps in an unrelated reference frame are NOT
+        # evidence of a stationary robot. Check OOMWOO's TF contract first.
+        try:
+            require_odom_frames(msg.header.frame_id,msg.child_frame_id)
+        except (OdomFrameError,TypeError,AttributeError):
+            self._odom_last=None
+            self._reset("ROS odometry frame mismatch or missing")
+            return
+        try:
+            stamp=msg.header.stamp
+            self._odom_stamp_gate.accept(
+                ros_now_ns=self.get_clock().now().nanoseconds,
+                stamp_sec=stamp.sec,stamp_nanosec=stamp.nanosec)
+        except Exception:
+            self._odom_last=None
+            self._reset("ROS odometry header stale/replayed/invalid")
+            return
+        try:
+            v=msg.twist.twist
+            speed=math.hypot(v.linear.x,v.linear.y)
+            self.mux.observe_odom(now=(self._motion_now() if getattr(self,"_managed_nav2",False)
+                                      else observed_at),
+                  linear_mps=speed,angular_rps=v.angular.z)
+        except (DockHandoffError,ReactiveMuxError,ValueError,TypeError,OverflowError):
+            self._odom_last=None
+            self._reset("invalid observed odometry")
+            return
+        self._odom_last=observed_at
+        if getattr(self,"_managed_nav2",False):
+            # Diagnostic copy only, after the original frame/stamp/mux gates.
+            self._motion_odom_sample=(stamp.sec*1_000_000_000+stamp.nanosec,
+                float(v.linear.x),float(v.linear.y),float(v.angular.z))
+
+    def _battery(self,msg):
+        self._battery_fraction=float(msg.percentage)
+        self._battery_last=time.monotonic()
+
+    def _fresh(self,then,age):
+        return then is not None and 0<=time.monotonic()-then<age
+
+    def _nav_idle(self):
+        return ((self._fresh(self._last_status,3.) and nav_status_idle(self._nav_status))
+                or (getattr(self,"_managed_nav2",False) and self._managed_idle()))
+
+    def _nav_confirmed_terminal(self):
+        # Revocable: never trust the terminal witness only from NAV phase.
+        return (self._nav_idle()
+            and self._goal_witness is not None
+            and self._nav_status is not None
+            and self._goal_witness.still_authorizes_dock(self._nav_status))
+
+    def _on_cmd(self,source,msg):
+        stamp=time.monotonic()
+        v=Velocity(float(msg.linear.x),float(msg.angular.z))
+        if source==self.mux.NAV:
+            self._nav_zero=(abs(v.linear)<.001 and abs(v.angular)<.001)
+        try:self.mux.accept_twist(source,v,now=stamp)
+        except DockHandoffError:self._reset("invalid velocity data")
+
+    def _nav_twist(self,msg,info):
+        if self._three_way:
+            self._on_motion_cmd(self.mux.NAV,msg,info)
+        else:
+            self._on_cmd(self.mux.NAV,msg)
+
+    def _dock_twist(self,msg,info):
+        if self._three_way:
+            self._on_motion_cmd(self.mux.DOCK,msg,info)
+        else:
+            self._on_cmd(self.mux.DOCK,msg)
+    def _sweep_twist(self,msg,info):self._on_motion_cmd(self.mux.SWEEP,msg,info)
+
+    def _execute(self,body):
+        if getattr(self,"_three_way",False):
+            return self._execute_motion(body)
+        name=body.get("operation")
+        now=self._motion_now()
+        if name=="stop":
+            self._reset("ROS2 explicit STOP")
+            self._released_nav=False
+            return {"ok":True,"state":self.mux.owner}
+        if name=="claim_nav":
+            if self._goal_witness is None:
+                raise DockHandoffError("exact Nav2 goal UUID journal required before lab handoff")
+            self.mux.claim_nav(now=now,nav2_idle=self._nav_idle(),
+                 pose_fresh=self._fresh(self._odom_last,.35),
+                 dock_process_inactive=(self._dock_state=="IDLE"
+                      and self._fresh(self._dock_last,3.)),
+                 resources_verified=(self._fresh(self._battery_last,10.)
+                      and self._battery_fraction is not None
+                      and math.isfinite(self._battery_fraction)
+                      and .20<=self._battery_fraction<=1.))
+            self._goal_witness.reset()
+            self._nav_lease_started=now
+            self._released_nav=False
+        elif name=="release_for_dock":
+            self.mux.release_for_dock(now=now,
+                  nav2_terminal=self._nav_confirmed_terminal(),
+                  action_uuid_reconciled=self._nav_confirmed_terminal(),
+                  nav2_input_stopped=self._nav_zero)
+            self._released_nav=True
+        elif name=="claim_dock":
+            self.mux.claim_dock(now=now,
+                    nav2_relinquished=(self._released_nav
+                        and self._nav_confirmed_terminal()),
+                    dock_drive_input_isolated=True)
+            self._released_nav=False  # one-shot, never replay a stale release
+        elif name=="finish_dock":
+            # This lab-only node cannot independently prove an actual
+            # physical dock controller has exited. Check last DONE/
+            # DOCKED and allow only when there is no named dock_drive
+            # node in this isolated graph. Never infer charge/empty/wash.
+            nodes=self.get_node_names()
+            self.mux.finish_dock(now=now,dock_drive_terminated=(
+                self._dock_state=="DONE" and self._docked
+                and self._fresh(self._dock_last,3.)
+                and "dock_drive" not in nodes))
+            self._released_nav=False
+        else:
+            raise DockHandoffError("unsupported exclusive relay operation")
+        return {"ok":True,"state":self.mux.owner}
+
+    def _control(self,request,response):
+        if not request.isolated_disposable_sim:
+            response.ok=False
+            response.error="isolated disposable simulator must be explicitly selected"
+            response.state=self.mux.owner
+            return response
+        packet={"operation":str(request.operation)}
+        try:
+            result=self._requests.handle(request.request_id,packet,self._execute)
+            response.ok=bool(result["ok"])
+            response.error=str(result.get("error",""))
+        except (DockHandoffError,ReactiveMuxError,GoalJournalError,CommandReplayError,ValueError) as exc:
+            response.ok=False
+            response.error=str(exc)
+        response.state=self.mux.owner
+        return response
+
+    def _status(self,request,response):
+        response.ok=True
+        response.status_json=json.dumps({
+            "mode":"ISOLATED ROS2 SIMULATION ONLY",
+            "owner":self.mux.owner,"reason":self.mux.stop_reason,
+            "last_lease_revocation":getattr(self,"_last_lease_revocation",None),
+            "policy":"three_way" if self._three_way else "two_way",
+            "motion_health":(self._motion_health().__dict__ if self._three_way else None),
+            "motion_inputs":({role:{"zero":entry[1]==Velocity(),
+                "age":self._motion_now()-entry[0]} for role,entry in self._commands.items()}
+                if self._three_way else None),
+            "managed_nav2":self._managed_nav2,
+            "managed_backend":({"active":self._nav_backend_active,
+                "single_dispatcher":self._nav_single_dispatcher,
+                "send_goal_clients":self._nav_client_inventory,
+                "query_pending":self._nav_backend_query is not None,
+                "service_ready":self._nav_lifecycle.service_is_ready(),
+                "response_fresh":self._fresh(self._nav_backend_last,2.5)}
+                if self._managed_nav2 else None),
+            "nav_status_fresh":self._fresh(self._last_status,3.),
+            "nav_idle":self._nav_idle(),
+            "odom_fresh":self._fresh(self._odom_last,.35),
+            "dock_state":self._dock_state,"docked":self._docked,
+            "battery_fresh":self._fresh(self._battery_last,10.),
+            "last_output":[self._latest_output.linear,self._latest_output.angular],
+            "physical_dock_service_verified":False,
+            "motor_hardware_connected":False,
+            "nav_uuid_evidence":(
+                {"uuid":self._goal_witness.uuid,
+                 "saw_current_goal_active":self._goal_witness.saw_active,
+                 "terminal_journal_matched":self._goal_witness.can_release_for_dock(),
+                 "fault":self._goal_witness.fault}
+                if self._goal_witness else None)},sort_keys=True)
+        return response
+
+    def _tick(self):
+        if getattr(self,"_three_way",False):
+            self._tick_motion()
+            return
+        # Active ownership is a continuing lease, NOT a one-off service
+        # promise: loss of odometry, battery or the Nav2 goal-status topic
+        # makes the lab output STOP even if the old Twist remains fresh.
+        owner=self.mux.owner
+        if owner!=self.mux.STOP:
+            if not self._fresh(self._odom_last,.35):
+                self._reset("odometry lost during velocity lease")
+            elif not self._fresh(self._battery_last,10.):
+                self._reset("battery telemetry lost during velocity lease")
+            elif (self._battery_fraction is None or
+                  not math.isfinite(self._battery_fraction) or
+                  not .15<=self._battery_fraction<=1.):
+                self._reset("unsafe resource telemetry during velocity lease")
+            elif not self._fresh(self._last_status,3.):
+                self._reset("Nav2 status expired during velocity lease")
+            elif owner==self.mux.DOCK and not self._nav_idle():
+                self._reset("new Nav2 action started during dock velocity ownership")
+            elif owner==self.mux.DOCK and not self._nav_confirmed_terminal():
+                self._reset("Nav2 terminal proof expired during dock velocity ownership")
+                self._released_nav=False
+            elif owner==self.mux.NAV and (
+                    self._goal_witness is None or
+                    self._goal_witness.fault is not None):
+                self._reset("missing/current Nav2 goal UUID evidence")
+            elif owner==self.mux.NAV and (
+                    self._dock_state!="IDLE" or not self._fresh(self._dock_last,3.)):
+                self._reset("dock controller activated during Nav2 velocity ownership")
+        try:velocity=self.mux.output(now=time.monotonic())
+        except DockHandoffError:
+            self._reset("relay clock/motion fault")
+            velocity=Velocity()
+        # Even though this controller owns the velocity mux, no nonzero
+        # NAV2 command may pass unless the exact PRE-ALLOCATED UUID was
+        # observed active during this lease and matches the durable
+        # GoalJournal. Old latched terminal status is never sufficient.
+        if self.mux.owner==self.mux.NAV:
+            witnessed=(self._goal_witness is not None
+                       and self._goal_witness.current_active_matches()
+                       and self._nav_status is not None
+                       and any(uuid==self._goal_witness.uuid and status in _ACTIVE
+                               for uuid,status in self._nav_status)
+                       and self._fresh(self._last_status,1.0))
+            if not witnessed:
+                velocity=Velocity()
+                if (self._nav_lease_started is not None
+                    and time.monotonic()-self._nav_lease_started>2.0
+                    and not (self._goal_witness is not None
+                             and self._goal_witness.can_release_for_dock())):
+                    self._reset("Nav2 goal UUID never became active")
+        # Only one safe OUTPUT publisher. Competing upstream sources
+        # publish on isolated input topics that never reach the motors
+        # directly in this lab. Zero on STOP or stale owner command.
+        self._latest_output=velocity
+        m=Twist()
+        m.linear.x=velocity.linear
+        m.angular.z=velocity.angular
+        self.safe.publish(m)
+
+    def _reset(self,reason,*,proof=None,projection=None):
+        revocation=None
+        if getattr(self,"_three_way",False):
+            if self._motion_token is not None:
+                # Retain one bounded first cause per lease. Later foreign
+                # commands while STOP must not erase the useful diagnosis.
+                self._last_lease_revocation={"reason":reason,
+                    "health":proof.__dict__ if proof is not None else None,
+                    "blocked_projection":projection,
+                    "original_ages":getattr(self,"_motion_health_detail",None),
+                    "nav_motion_trace":({
+                        "uuid":getattr(self,"_motion_nav_uuid",None),
+                        "sample_period_s":.5,"capacity":32,
+                        "samples":list(self._nav_motion_history)}
+                        if getattr(self,"_nav_motion_history",None) else None),
+                    "nav_motion_trace_error":getattr(self,"_nav_motion_trace_error",None),
+                    "nav_witness_snapshot":{
+                        key:getattr(getattr(self,"_goal_witness",None),key,None)
+                        for key in ("uuid","fault","saw_active","saw_terminal",
+                                    "saw_durable_acceptance")},
+                    "nav_feedback_snapshot":{
+                        "latest":getattr(self,"_nav_feedback",None),
+                        "last_status_monotonic_s":getattr(self,"_last_status",None),
+                        "last_clock_received_ns":getattr(self,"_clock_ns",None),
+                        "observed_monotonic_s":time.monotonic()}}
+                revocation=self._last_lease_revocation
+            self.mux.stop(reason)
+            self._motion_token=None
+            self._prior_terminal=None
+            if getattr(self,"_managed_nav2",False):
+                self._motion_nav_uuid=None
+            self._motion_pose_cache=None
+            self._motion_pose_pending=None
+            self._motion_pose_observed=None
+        else:
+            self.mux.reset(reason)
+        self._released_nav=False
+        # Diagnostic I/O must see an already closed software permission.
+        # A logger failure cannot keep authority or stop the next zero tick.
+        if revocation is not None:
+            try:
+                revocation["diagnostic_ros_now_ns"]=self.get_clock().now().nanoseconds
+                self.get_logger().warn("MOTION_LEASE_REVOKED "+json.dumps(
+                    revocation,sort_keys=True))
+            except (AttributeError,OSError,RuntimeError,TypeError,ValueError) as exc:
+                revocation["diagnostic_log_error"]=type(exc).__name__
+
+    def _on_sweep_state(self,msg):
+        self._sweep_state=str(msg.data)
+        self._sweep_last=time.monotonic()
+
+    def _on_motion_map(self,msg):
+        try:
+            raster=Raster.from_ros(msg)
+            payload=json.dumps([raster.width,raster.height,raster.resolution,
+                raster.origin_x,raster.origin_y,raster.yaw,raster.data],separators=(",",":"))
+            digest=hashlib.sha256(payload.encode()).hexdigest()
+            if self._map_hash is not None and digest!=self._map_hash:
+                raise AdmissionError("static map changed; restart/reconcile lab")
+            self._map_hash=digest
+            self._map_raster=raster
+        except (AdmissionError,ValueError,TypeError):
+            self._map_fault=True
+            self._reset("invalid/changed motion map")
+
+    def _on_motion_clock(self,msg):
+        stamp=msg.clock.sec*1_000_000_000+msg.clock.nanosec
+        if stamp<=0 or (self._clock_ns is not None and stamp<self._clock_ns):
+            self._clock_fault=True
+            self._reset("simulator clock rewound/invalid; restart/reconcile lab")
+        elif self._clock_ns is None or stamp>self._clock_ns:
+            self._clock_advanced=time.monotonic()
+        self._clock_ns=stamp
+
+    @staticmethod
+    def _keepout_dds_stamp(info):
+        stamp=info.get("source_timestamp") if isinstance(info,dict) else None
+        if type(stamp) is not int or stamp<=0:
+            raise AdmissionError("keepout DDS source timestamp unavailable")
+        return stamp
+
+    def _on_motion_keepout_mask(self,msg,info):
+        try:
+            mask=Raster.from_ros(msg)
+            stamp=self._keepout_dds_stamp(info)
+            if any(v not in (0,100) for v in mask.data):
+                raise AdmissionError("keepout mask is not binary")
+            if self._keepout_mask is not None and mask!=self._keepout_mask:
+                raise AdmissionError("keepout mask changed; restart/reconcile lab")
+            if self._keepout_mask is None:
+                self._keepout_mask=mask
+                self._keepout_mask_epoch=stamp
+                self._keepout_proof=None
+        except (AdmissionError,ValueError,TypeError) as exc:
+            self._keepout_fault=True
+            self._reset(str(exc))
+
+    def _on_motion_keepout_info(self,msg,info):
+        try:
+            stamp=self._keepout_dds_stamp(info)
+            if (msg.type!=0 or msg.filter_mask_topic!="/oomwoo/keepout_mask"
+                    or msg.base!=0. or msg.multiplier!=1.):
+                raise AdmissionError("keepout FilterInfo contract differs")
+            if not self._keepout_info_valid:
+                self._keepout_info_epoch=stamp
+                self._keepout_info_valid=True
+        except (AdmissionError,ValueError,TypeError) as exc:
+            self._keepout_fault=True
+            self._reset(str(exc))
+
+    def _on_motion_costmap(self,msg,info):
+        try:
+            stamp=self._keepout_dds_stamp(info)
+            sequence=info.get("publication_sequence_number")
+            if (type(sequence) is not int or not 0<sequence<2**63
+                    or sequence<=self._keepout_costmap_sequence
+                    or stamp<=self._keepout_costmap_dds):
+                raise AdmissionError("post-filter costmap replayed/reordered")
+            raster=Raster.from_ros(msg)
+            self._keepout_costmap=raster
+            self._keepout_costmap_stamp=(msg.header.stamp.sec*1_000_000_000
+                                         +msg.header.stamp.nanosec)
+            self._keepout_costmap_dds=stamp
+            self._keepout_costmap_sequence=sequence
+            self._keepout_proof=None
+        except (AdmissionError,ValueError,TypeError) as exc:
+            self._keepout_costmap=None
+            self._reset(str(exc))
+
+    def _keepout_ready(self):
+        # The static mask is immutable, not a freshly sampled sensor. Attest
+        # its content against a recent ORIGINAL post-filter costmap and live,
+        # stable graph endpoints. Callback receipt never refreshes map stamps.
+        if (self._keepout_fault or getattr(self,"_map_fault",False)
+                or not self._keepout_info_valid):
+            return False
+        if (self._keepout_mask is None or self._keepout_costmap is None
+                or getattr(self,"_map_raster",None) is None):
+            return False
+        observed=[]
+        for topic,kind in (
+                ("/oomwoo/keepout_mask","nav_msgs/msg/OccupancyGrid"),
+                ("/oomwoo/keepout_filter_info","nav2_msgs/msg/CostmapFilterInfo"),
+                ("/global_costmap/costmap","nav_msgs/msg/OccupancyGrid")):
+            endpoints=self.get_publishers_info_by_topic(topic)
+            if len(endpoints)!=1 or endpoints[0].topic_type!=kind:
+                return False
+            gid=bytes(endpoints[0].endpoint_gid)
+            if not gid or not any(gid):return False
+            observed.append(gid)
+        if len(set(observed))!=3:return False
+        if self._keepout_sources is None:self._keepout_sources=tuple(observed)
+        elif self._keepout_sources!=tuple(observed):
+            self._keepout_fault=True
+            return False
+        age=self.get_clock().now().nanoseconds-self._keepout_costmap_stamp
+        wall_age=time.time_ns()-self._keepout_costmap_dds
+        if (self._keepout_costmap_stamp<=0 or not 0<=age<=1_000_000_000
+                or not 0<=wall_age<=1_000_000_000
+                or self._keepout_costmap_dds<max(
+                    self._keepout_mask_epoch,self._keepout_info_epoch)):
+            return False
+        if self._keepout_proof is None:
+            try:
+                self._keepout_proof=VerifiedGlobalKeepout(
+                    self._map_raster,self._keepout_mask,self._keepout_costmap)
+            except AdmissionError:
+                return False
+        return True
+
+    def _motion_transform(self,max_age_ns):
+        # TF and /clock can arrive in either order. A future observation must
+        # not replace an already admitted source, renew it or widen its age.
+        self._motion_pose_observed=None
+        transform=self.tf_buffer.lookup_transform("map","base_link",rclpy.time.Time())
+        now=self.get_clock().now().nanoseconds
+        stamp=transform.header.stamp.sec*1_000_000_000+transform.header.stamp.nanosec
+        self._motion_pose_observed=(stamp,now-stamp)
+        if stamp>now:
+            newest=transform
+            transform=None
+            # The preceding pending sample may now be in the past even if
+            # every newest TF leads /clock. Never promote it before its stamp.
+            for candidate in (getattr(self,"_motion_pose_cache",None),
+                              getattr(self,"_motion_pose_pending",None)):
+                if candidate is None:
+                    continue
+                source=candidate.header.stamp
+                source_ns=source.sec*1_000_000_000+source.nanosec
+                if 0<source_ns<=now and (transform is None or source_ns>stamp):
+                    transform=candidate
+                    stamp=source_ns
+            self._motion_pose_pending=deepcopy(newest)
+            if transform is None:
+                raise AdmissionError("motion pose stamp missing/stale; latest is future")
+        else:
+            self._motion_pose_pending=None
+        if stamp<=0 or not 0<=now-stamp<=max_age_ns:
+            raise AdmissionError("motion pose stamp missing/stale")
+        # Keep the original message stamp, not its receipt or this lookup time.
+        self._motion_pose_cache=deepcopy(transform)
+        return transform
+
+    def _keepout_output(self,velocity):
+        if not self._keepout_ready():
+            self._reset("keepout enforcement evidence missing/stale")
+            return Velocity()
+        projection=None
+        try:
+            transform=self._motion_transform(200_000_000)
+            stamp=transform.header.stamp.sec*1_000_000_000+transform.header.stamp.nanosec
+            age=self.get_clock().now().nanoseconds-stamp
+            t=transform.transform.translation;q=transform.transform.rotation
+            if stamp<=0 or not 0<=age<=200_000_000:
+                raise AdmissionError("keepout pose stamp missing/stale")
+            values=(t.x,t.y,q.x,q.y,q.z,q.w)
+            if (not all(math.isfinite(v) for v in values)
+                    or abs(sum(v*v for v in (q.x,q.y,q.z,q.w))-1.)>1e-3):
+                raise AdmissionError("keepout pose nonfinite/invalid quaternion")
+            yaw=math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))
+            pose=PoseEvidence(t.x,t.y,yaw,stamp*1e-9)
+            radius,margin,horizon=.18,.06,.8
+            hit=projected_motion_blocker(velocity,pose,
+                (("keepout",self._keepout_mask,0),),
+                radius=radius,margin=margin,horizon=horizon)
+            if hit is not None:
+                # Preserve the actual rejected projection, without another TF
+                # lookup or confusing the last health sample with this pose.
+                mask=self._keepout_mask
+                projection={"command":{"linear_mps":velocity.linear,
+                    "angular_rps":velocity.angular},
+                    "pose_xy_yaw":(pose.x,pose.y,pose.yaw),
+                    "pose_stamp_ns":stamp,"pose_age_ns":age,
+                    "observed_ros_ns":stamp+age,"owner":self.mux.owner,
+                    "nav_uuid":(getattr(self,"_motion_nav_uuid",None)
+                        if self.mux.owner==self.mux.NAV else None),
+                    "radius_m":radius,"margin_m":margin,"horizon_s":horizon,
+                    "mask_geometry":(mask.width,mask.height,mask.resolution,
+                        mask.origin_x,mask.origin_y,mask.yaw),
+                    "mask_epoch_dds_ns":self._keepout_mask_epoch}
+                raise AdmissionError("projected motion intersects "+hit)
+            return velocity
+        except (TransformException,AdmissionError,ValueError,ArithmeticError,TypeError) as exc:
+            self._reset(str(exc),projection=projection)
+            return Velocity()
+
+    def _on_motion_unstable(self,msg):
+        self._unstable=bool(msg.data)
+        self._unstable_last=time.monotonic()
+
+    def _motion_graph(self):
+        topics={self.mux.NAV:"/valdi/nav2_cmd_vel",
+                self.mux.SWEEP:"/valdi/sweep_cmd_vel",
+                self.mux.DOCK:"/valdi/dock_drive_cmd_vel"}
+        observed={}
+        used=set()
+        for role,topic in topics.items():
+            publishers=self.get_publishers_info_by_topic(topic)
+            if len(publishers)!=1:
+                return False
+            if getattr(self,"_managed_nav2",False) and role==self.mux.NAV and any(
+                    p.node_name!="controller_server"
+                    or p.node_namespace!="/" or p.topic_type!="geometry_msgs/msg/Twist"
+                    for p in publishers):
+                return False
+            gids={bytes(p.endpoint_gid) for p in publishers}
+            if any(not gid or not any(gid) for gid in gids) or used & gids:
+                return False
+            used.update(gids)
+            observed[role]=next(iter(gids))
+        output=self.get_publishers_info_by_topic("/valdi/lab_safe_cmd_vel_output")
+        if (len(set(observed.values()))!=3 or len(output)!=1
+            or output[0].node_name!=self.get_name()
+            or output[0].node_namespace!=self.get_namespace()
+            or self.count_publishers("/cmd_vel")!=0):
+            return False
+        self._observed_gids=observed
+        return self.mux.owner==self.mux.STOP or observed==self._source_gids
+
+    def _motion_health(self):
+        pose=False;stamp=None;age=None
+        pose_xy=None;cell=None;cell_value=None;pose_error=None
+        try:
+            t=self._motion_transform(500_000_000)
+            stamp=t.header.stamp.sec*1_000_000_000+t.header.stamp.nanosec
+            age=self.get_clock().now().nanoseconds-stamp
+            xy=(t.transform.translation.x,t.transform.translation.y)
+            if all(math.isfinite(v) for v in xy):pose_xy=xy
+            if stamp>0 and 0<=age<=500_000_000 and self._map_hash is not None:
+                cell=self._map_raster.cell_at(t.transform.translation.x,
+                                               t.transform.translation.y)
+                cell_value=self._map_raster.data[cell]
+                pose=cell_value==0
+        except (TransformException,AdmissionError,ValueError,AttributeError) as exc:
+            pose_error=type(exc).__name__+": "+str(exc)[:256]
+        # A cached ACTIVE UUID must not be refreshed by the relay timer.
+        # Preserve the existing one-second nonzero-NAV status budget.
+        candidate=(None if self._nav_status is None else
+                   next((uuid for uuid,code in self._nav_status if code in _ACTIVE),None))
+        live=(self._fresh(self._last_status,1.) or
+              (getattr(self,"_managed_nav2",False) and self._feedback_live(candidate)))
+        # Read idle after activity: the journal can become terminal inside
+        # _feedback_live. This order cannot pair old non-idle with new inactive.
+        # Nonzero output still needs the exact active UUID; release needs its
+        # matching terminal DDS event and durable result.
+        idle=self._nav_idle()
+        active=candidate if live and not idle else None
+        # These fields are derived observations in this disposable simulation.
+        # Meter health is not an electrical/MCU safety attestation.
+        observed=getattr(self,"_motion_pose_observed",None)
+        self._motion_health_detail={"pose_stamp_ns":stamp,"pose_age_ns":age,
+            "pose_xy_m":pose_xy,"pose_map_cell":cell,
+            "pose_map_value":cell_value,"pose_error":pose_error,
+            "pose_latest_stamp_ns":observed[0] if observed is not None else None,
+            "pose_latest_age_ns":observed[1] if observed is not None else None,
+            "postfilter_stamp_ns":getattr(self,"_keepout_costmap_stamp",None),
+            "postfilter_age_ns":(self.get_clock().now().nanoseconds
+                -self._keepout_costmap_stamp if getattr(self,"_keepout_required",False)
+                else None),
+            "postfilter_dds_age_ns":(time.time_ns()-self._keepout_costmap_dds
+                if getattr(self,"_keepout_required",False) else None)}
+        return MotionHealth(
+            pose_fresh=bool(pose),
+            resources_ok=(self._fresh(self._battery_last,10.)
+                and self._battery_fraction is not None
+                and math.isfinite(self._battery_fraction)
+                and (.20 if self.mux.owner==self.mux.STOP else .15)
+                    <=self._battery_fraction<=1.),
+            map_current=(self._map_hash is not None and not self._map_fault
+                and (not getattr(self,"_keepout_required",False) or self._keepout_ready())),
+            safety_loop_ok=(not self._clock_fault and self._fresh(self._clock_advanced,.35)
+                and self._unstable is False and self._fresh(self._unstable_last,2.5)
+                and (self._sweep_state in ("IDLE","TRANSIT","PREPARE_NAV","SWEEP","ESCAPE")
+                     or (getattr(self,"_managed_nav2",False)
+                         and self._sweep_state=="TRANSIT_CANCEL"))
+                and self._fresh(self._sweep_last,1.)
+                and (not getattr(self,"_managed_nav2",False)
+                     or (self._nav_single_dispatcher and self._nav_backend_active
+                         and self._fresh(self._nav_backend_last,2.5)))
+                and self._dock_state in ("IDLE","SEARCH","GOTO","TURN","BACK","REGROUP","DONE")
+                and self._fresh(self._dock_last,3.)),
+            isolated_sources=self._motion_graph(),
+            nav2_idle=idle,nav2_active_goal=active,
+            dock_inactive=self._dock_state=="IDLE" and self._fresh(self._dock_last,3.),
+            sweep_inactive=(self._sweep_state in ("IDLE","TRANSIT","PREPARE_NAV")
+                or (getattr(self,"_managed_nav2",False) and self._sweep_state=="TRANSIT_CANCEL"))
+                and self._fresh(self._sweep_last,1.))
+
+    def _on_motion_cmd(self,source,msg,info):
+        now=self._motion_now()
+        velocity=Velocity(float(msg.linear.x),float(msg.angular.z))
+        # Raw Twist has no lease token. Jazzy's MessageInfo supplies sequence
+        # and DDS wall timestamp, but no per-packet publisher GID. Associate
+        # with the unique current graph endpoint; do not call it authentication.
+        try:
+            if not self._motion_graph():
+                raise ReactiveMuxError("velocity writer graph changed/nonexclusive")
+            if not isinstance(info,dict):
+                raise ReactiveMuxError("DDS command metadata unavailable")
+            stamp=info["source_timestamp"]
+            sequence=info["publication_sequence_number"]
+            if (type(stamp) is not int or type(sequence) is not int
+                or not 0<sequence<2**63):
+                raise ReactiveMuxError("invalid/unsupported DDS source sequence")
+            gid=self._observed_gids[source]
+            previous=self._command_sequences.get(source)
+            if previous is not None and previous[0]==gid and (
+                    sequence<=previous[1] or stamp<=previous[2]):
+                raise ReactiveMuxError("DDS command replayed/reordered")
+            wall=time.time_ns()
+            if stamp<=0 or not 0<=wall-stamp<=300_000_000:
+                raise ReactiveMuxError("stale/future DDS command timestamp")
+            if self.mux.owner==source and stamp<self._claim_wall_ns:
+                # A queued STOP from the preceding quiet interval cannot
+                # move anything. Ignore it without refreshing command/zero
+                # evidence or revoking the newly granted lease. Old nonzero
+                # commands remain faults and never acquire this epoch.
+                if velocity==Velocity():return
+                raise ReactiveMuxError("DDS command predates current velocity lease")
+            self._command_sequences[source]=(gid,sequence,stamp)
+            self._commands[source]=(now,velocity)
+            if source==self.mux.NAV:
+                self._nav_zero=velocity==Velocity()
+            if self.mux.owner!=source and velocity==Velocity():
+                return
+            self.mux.accept_twist(source=source,token=self._motion_token,now=now,
+                                  velocity=velocity)
+        except (AttributeError,KeyError,TypeError,ValueError,ReactiveMuxError) as exc:
+            # Nonzero foreign commands revoke ownership. Graph endpoint and
+            # sequence observations survive STOP; they are not DDS credentials.
+            self._reset(str(exc))
+
+    def _motion_zero(self,source):
+        entry=self._commands.get(source)
+        return (entry is not None and 0<=self._motion_now()-entry[0]<=.30
+                and entry[1]==Velocity())
+
+    def _execute_motion(self,body):
+        name=body.get("operation")
+        now=self._motion_now()
+        if name=="stop":
+            self._reset("ROS2 explicit STOP")
+            return {"ok":True,"state":self.mux.owner}
+        health=self._motion_health()
+        self.mux.observe_health(now=now,proof=health)
+        if name=="claim_nav":
+            if self._goal_witness is None:
+                raise ReactiveMuxError("durable preallocated Nav2 UUID required")
+            record=self._goal_witness.journal.read()
+            if (record is None or record["state"]=="terminal"
+                or record["map_digest"]!=self._map_hash):
+                raise ReactiveMuxError("pending Nav2 UUID/map journal mismatch")
+            token=self.mux.claim_transit(now=now,nav_goal_uuid=record["uuid"])
+            self._goal_witness.reset()
+            self._nav_lease_started=time.monotonic()
+            if getattr(self,"_managed_nav2",False):
+                self._motion_nav_uuid=record["uuid"]
+        elif name in ("release_nav","release_for_dock"):
+            stopped=self._motion_zero(self.mux.NAV)
+            if getattr(self,"_managed_nav2",False):
+                entry=self._commands.get(self.mux.NAV)
+                stopped=(entry is not None and entry[1]==Velocity()
+                         and self._latest_output==Velocity())
+            if not self._nav_confirmed_terminal() or not stopped:
+                raise ReactiveMuxError("fresh exact Nav2 terminal/zero not observed")
+            uuid=self._goal_witness.uuid
+            self.mux.release_transit(now=now,terminal_uuid=uuid,
+                terminal_verified=self._nav_confirmed_terminal(),
+                nav_input_isolated=health.isolated_sources)
+            self._prior_terminal=uuid
+            self._motion_token=None
+            return {"ok":True,"state":self.mux.owner}
+        elif name in ("claim_sweep","claim_dock"):
+            if self._goal_witness is None:
+                raise ReactiveMuxError("cold-start journal reconciliation required")
+            record=self._goal_witness.journal.read()
+            reconciled=(health.nav2_idle and (record is None or self._nav_confirmed_terminal()))
+            claim=self.mux.claim_sweep if name=="claim_sweep" else self.mux.claim_dock
+            token=claim(now=now,nav_released=reconciled,
+                        prior_terminal_uuid=self._prior_terminal)
+            self._prior_terminal=None
+            self._dock_started=False
+        elif name=="release_motion":
+            owner=self.mux.owner
+            inactive=(health.sweep_inactive if owner==self.mux.SWEEP else
+                (self._dock_state=="IDLE" and self._fresh(self._dock_last,3.)) or
+                (self._dock_started and self._dock_state=="DONE" and self._docked
+                 and self._fresh(self._dock_last,3.) and self._fresh(self._docked_last,3.)))
+            self.mux.release_non_nav(now=now,token=self._motion_token,
+                source_stopped=inactive and self._motion_zero(owner),
+                source_isolated=health.isolated_sources)
+            self._motion_token=None
+            return {"ok":True,"state":self.mux.owner}
+        else:
+            raise ReactiveMuxError("unsupported three-way lab operation")
+        # Only a successful new claim rotates the receiver-side command epoch.
+        self._motion_token=token
+        # A diagnostic history belongs to one lease, never the next owner.
+        self._nav_motion_history=deque(maxlen=32)
+        self._nav_motion_last_sample=None
+        self._nav_motion_trace_error=None
+        self._claim_wall_ns=time.time_ns()
+        self._source_gids=dict(self._observed_gids)
+        return {"ok":True,"state":self.mux.owner}
+
+    def _motion_now(self):
+        if getattr(self,"_managed_nav2",False):
+            return self.get_clock().now().nanoseconds*1e-9
+        return time.monotonic()
+
+    def _on_motion_feedback(self,msg):
+        uuid=bytes(msg.goal_id.uuid).hex()
+        stamp=msg.feedback.current_pose.header.stamp
+        stamp_ns=stamp.sec*1_000_000_000+stamp.nanosec
+        if self.mux.owner==self.mux.NAV and uuid!=self._motion_nav_uuid:
+            self._reset("foreign Nav2 feedback UUID")
+            return
+        self._nav_feedback=(uuid,time.monotonic(),stamp_ns)
+
+    def _feedback_live(self,uuid):
+        value=self._nav_feedback
+        return (value is not None and uuid==value[0]==self._motion_nav_uuid
+                and self._fresh(value[1],1.) and value[2]>0
+                and 0<=self.get_clock().now().nanoseconds-value[2]<=500_000_000
+                and self._goal_witness is not None
+                and self._goal_witness.current_active_matches())
+
+    def _poll_nav_backend(self):
+        now=time.monotonic()
+        if (self._nav_backend_query is not None and not self._nav_backend_query.done()
+                and now-self._nav_backend_poll>=1.5):
+            # A request discovered while the lifecycle server is starting can
+            # be lost. Bound that future too; never let it suppress all later
+            # actual state queries. Cancellation removes it from rclpy's map.
+            self._nav_backend_query.cancel()
+            self._nav_backend_query=None
+            self._nav_backend_active=False
+        if self._nav_backend_query is not None and self._nav_backend_query.done():
+            try:
+                reply=self._nav_backend_query.result()
+                self._nav_backend_active=reply is not None and reply.current_state.id==3
+                self._nav_backend_last=now
+            except Exception:
+                self._nav_backend_active=False
+            self._nav_backend_query=None
+        if (self._nav_backend_query is None and now-self._nav_backend_poll>=.5
+                and self._nav_lifecycle.service_is_ready()):
+            self._nav_backend_poll=now
+            self._nav_backend_query=self._nav_lifecycle.call_async(GetState.Request())
+        if now-self._nav_inventory_last>=1.:
+            self._nav_inventory_last=now
+            owners=[]
+            for name,namespace in self.get_node_names_and_namespaces():
+                # Action graph discovery can classify passive feedback readers.
+                # Count actual SendGoal service clients, not those observers.
+                try:clients=self.get_client_names_and_types_by_node(name,namespace)
+                except Exception:
+                    self._nav_single_dispatcher=False
+                    return
+                for service,types in clients:
+                    if service=="/navigate_to_pose/_action/send_goal":
+                        owners.append((name,namespace))
+            self._nav_client_inventory=owners
+            phase=self.get_publishers_info_by_topic("/coverage_planner/motion_state")
+            # Jazzy's navigator also owns a self-client which forwards the
+            # RViz goal_pose subscription. Admit it only with that alternative
+            # ingress quarantined and without any publishers on either topic.
+            quarantine="/valdi/disabled_nav2_goal_pose"
+            receivers=self.get_subscriptions_info_by_topic(quarantine)
+            self._nav_single_dispatcher=(sorted(owners)==[
+                    ("bt_navigator","/"),("coverage_planner","/")]
+                and len(phase)==1 and phase[0].node_name=="coverage_planner"
+                and phase[0].node_namespace=="/"
+                and len(receivers)==1 and receivers[0].node_name=="bt_navigator"
+                and receivers[0].node_namespace=="/"
+                and receivers[0].topic_type=="geometry_msgs/msg/PoseStamped"
+                and not self.get_subscriptions_info_by_topic("/goal_pose")
+                and self.count_publishers(quarantine)==0
+                and self.count_publishers("/goal_pose")==0)
+
+    def _managed_idle(self):
+        # Nav2 status is event-driven. Do not fabricate periodic status:
+        # require a live sole dispatcher, fresh actual lifecycle response,
+        # its current phase and durable journal, plus no contradictory goal.
+        if (not self._nav_single_dispatcher or not self._nav_backend_active
+                or not self._fresh(self._nav_backend_last,2.5)
+                or not self._fresh(self._sweep_last,1.) or self._goal_witness is None):
+            return False
+        try:record=self._goal_witness.journal.read()
+        except GoalJournalError:return False
+        active=(() if self._nav_status is None else
+                tuple(uuid for uuid,code in self._nav_status if code in _ACTIVE))
+        if active:
+            return (self.mux.owner==self.mux.NAV and record is not None
+                and record["state"]=="terminal" and record["uuid"]==self._motion_nav_uuid
+                and set(active)=={self._motion_nav_uuid})
+        if self._nav_status is not None and not nav_status_idle(self._nav_status):
+            return False
+        if record is None:
+            return self._sweep_state in ("IDLE","SWEEP","ESCAPE","PREPARE_NAV")
+        if record["state"]=="terminal":
+            return self._goal_witness.can_release_for_dock()
+        if record["state"]=="submitting" and self._sweep_state=="PREPARE_NAV":
+            return True
+        return (self.mux.owner==self.mux.NAV and not self._goal_witness.saw_active
+                and record["uuid"]==self._motion_nav_uuid
+                and self._nav_lease_started is not None
+                and time.monotonic()-self._nav_lease_started<2.)
+
+    def _record_nav_motion(self,velocity):
+        """Bounded diagnostic snapshots; never a health or ownership witness."""
+        if not getattr(self,"_managed_nav2",False) or self.mux.owner!=self.mux.NAV:
+            return
+        try:
+            observed=time.monotonic()
+            previous=getattr(self,"_nav_motion_last_sample",None)
+            if previous is not None and 0<=observed-previous<.5:
+                return
+            command=self._commands.get(self.mux.NAV)
+            sequence=self._command_sequences.get(self.mux.NAV)
+            transform=getattr(self,"_motion_pose_cache",None)
+            pose=None
+            if transform is not None:
+                t=transform.transform.translation;q=transform.transform.rotation
+                stamp=transform.header.stamp
+                pose=[stamp.sec*1_000_000_000+stamp.nanosec,t.x,t.y,q.z,q.w]
+            odom=getattr(self,"_motion_odom_sample",None)
+            sample={"observed_monotonic_s":observed,
+                "observed_ros_ns":self.get_clock().now().nanoseconds,
+                "nav_dds_sequence_stamp":list(sequence[1:]) if sequence else None,
+                "nav_input":[command[1].linear,command[1].angular] if command else None,
+                "selected_output":[velocity.linear,velocity.angular],
+                "tf_stamp_xy_qz_qw":pose,
+                "odom_stamp_vx_vy_wz":list(odom) if odom else None}
+            if not hasattr(self,"_nav_motion_history"):
+                self._nav_motion_history=deque(maxlen=32)
+            self._nav_motion_history.append(sample)
+            self._nav_motion_last_sample=observed
+        except (AttributeError,KeyError,TypeError,ValueError,OverflowError) as exc:
+            # Missing diagnostics cannot change admission or interrupt output.
+            self._nav_motion_trace_error=type(exc).__name__
+
+    def _tick_motion(self):
+        proof=None
+        try:
+            if getattr(self,"_managed_nav2",False):
+                self._poll_nav_backend()
+                # The one terminal DDS event can precede the dispatcher's
+                # durable result callback. Reconcile those already received
+                # bytes while still fresh, without refreshing their receipt.
+                if (self.mux.owner==self.mux.NAV and self._goal_witness is not None
+                        and self._goal_witness.saw_active and not self._goal_witness.saw_terminal
+                        and self._fresh(self._last_status,1.)
+                        and nav_status_idle(self._nav_status)):
+                    self._goal_witness.observe(self._nav_status)
+                    if self._goal_witness.fault is not None:
+                        self._reset(self._goal_witness.fault)
+            proof=self._motion_health()
+            self.mux.observe_health(now=self._motion_now(),proof=proof)
+            velocity=self.mux.output(now=self._motion_now())
+            if self.mux.owner==self.mux.STOP and self._motion_token is not None:
+                self._reset(self.mux.stop_reason,proof=proof)
+            if self.mux.owner==self.mux.NAV:
+                if (getattr(self,"_managed_nav2",False)
+                        and getattr(self,"_sweep_state",None)=="TRANSIT_CANCEL"):
+                    velocity=Velocity()
+                witnessed=(self._goal_witness is not None
+                    and self._goal_witness.current_active_matches())
+                if not witnessed:
+                    velocity=Velocity()
+                    if (self._nav_lease_started is not None
+                        and time.monotonic()-self._nav_lease_started>2.
+                        and (self._goal_witness is None or not self._goal_witness.saw_active)
+                        and not self._nav_confirmed_terminal()):
+                        self._reset("Nav2 UUID never became active/verified")
+        except (ReactiveMuxError,GoalJournalError) as exc:
+            self._reset(str(exc),proof=proof)
+            velocity=Velocity()
+        if getattr(self,"_keepout_required",False) and velocity!=Velocity():
+            velocity=self._keepout_output(velocity)
+        self._latest_output=velocity
+        message=Twist()
+        message.linear.x=velocity.linear
+        message.angular.z=velocity.angular
+        self.safe.publish(message)
+        self._record_nav_motion(velocity)
+
+
+def main():
+    rclpy.init()
+    node=ExperimentalDockVelocityRelay()
+    try:rclpy.spin(node)
+    except (KeyboardInterrupt,ExternalShutdownException):pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():rclpy.shutdown()
+
+
+if __name__=="__main__":main()

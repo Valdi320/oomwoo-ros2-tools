@@ -4,7 +4,128 @@
 `executor:=reactive`; `executor:=nav2` remains the default baseline. This
 note retains the design rationale and outstanding acceptance work.*
 
-## Current review point — 30 October 2026
+## Native acceptance — 31 October 2026
+
+The opt-in masked `test_room` sweep now finishes with **95.38% coverage**,
+**80.47% efficiency at the first 90% crossing**, `sweep_complete` and exit 0.
+The strict ground-truth disk/chord audit is valid: **zero forbidden crossings**
+over 48,996 poses / 48,995 segments, maximum sample gap 20 ms, unchanged
+0.18 m audit radius and 220-cell mask. All 20 owned processes close cleanly.
+Final-sweep efficiency is **66.26%**, reported separately; it is not the 80% gate.
+The first crossing is at 789.7 simulated seconds / 106.38 m. Original metrics,
+mask, safety checks and deadlines remain in effect.
+
+Acceptance snapshots: ROS code `a4d0bc666554270523794ae0ee7498bf5fbc3bfe`,
+cleaning-jobs code `9feaf3fcc660c7ac22ca074a09be420f6f37cd2e`.
+The ROS snapshot with the final receipt is
+[`9f1720f`](https://github.com/Valdi320/oomwoo-ros2-tools/commit/9f1720f9c21af05e1b5b57d44f4c95ef5be39dff).
+
+- [Acceptance audit, all source hashes and limits](https://github.com/Valdi320/oomwoo-ros2-tools/blob/9f1720f9c21af05e1b5b57d44f4c95ef5be39dff/src/oomwoo_sim_support/docs/evidence/native_90_80_delivery_20261031.json)
+- [Full unmodified native receipt and logs](https://github.com/Valdi320/oomwoo-ros2-tools/blob/9f1720f9c21af05e1b5b57d44f4c95ef5be39dff/src/oomwoo_sim_support/docs/evidence/gapfill_final_full_native_20261031.json)
+- [Focused gap-fill causal/regression evidence: 20 cases and style](https://github.com/Valdi320/oomwoo-ros2-tools/blob/9f1720f9c21af05e1b5b57d44f4c95ef5be39dff/src/oomwoo_sim_support/docs/evidence/gapfill_terminal_delivery_20261031.json)
+- [Owned shutdown causal/regression evidence: 17 cases and native prefix](https://github.com/Valdi320/oomwoo-ros2-tools/blob/9f1720f9c21af05e1b5b57d44f4c95ef5be39dff/src/oomwoo_sim_support/docs/evidence/coordinated_shutdown_delivery_20261031.json)
+
+### Delivered behavior
+
+Rows use the reactive executor; Nav2 owns only transit goals in this profile.
+The optional private cleaning-jobs adapter arbitrates NAV/SWEEP/DOCK through
+one output, with exact UUID/durable-result checks and fail-closed health.
+Keepout uses both Nav2 costmaps plus the reactive-motion checks. The existing
+0.25 m lookahead avoids the 0.5 m experimental override; RPP rechecks distance
+instead of retaining a final rotation after localization corrections.
+AMCL uses the probabilistic likelihood-field model in simulation only.
+Global ordinary-obstacle inflation is 0.24 m; local inflation stays 0.10 m.
+The cleaning-meter denominator is not reduced to improve the score.
+
+Gap-fill now retains an uncredited target after Nav2 reports arrival, releases
+navigation normally, then lets the existing reactive driver finish the short
+approach. Four residual targets finish in one pass. The scorer buffers bounded
+future-stamped truth until its original clock catches up, keeping original
+stamps and all chord checks. Gazebo receives one native stop request; ROS children
+receive their normal interrupt, with the same shutdown deadline and strict
+nonzero-exit classification. SIGTERM and crashes still fail the run.
+
+This is one configured scene/profile, not multi-room or repeated-seed reliability,
+a complete cleaning-jobs RFC, an agreed public API, physical cleaning/charging,
+or MCU safety validation. The margin over the gate is 0.47 percentage points.
+Earlier short docking evidence uses another frozen snapshot and does not prove
+that this final full-room run included a dock-service interruption.
+
+### Reproduce the accepted profile
+
+Use native x86-64 Linux and Docker or Podman. Check out the delivery source
+commit linked in PR #79; the branch below includes the historical trace and
+byte-exact diagnostic input archive. The cleaning-jobs branch contains the
+paired relay fixes. No hardware or GPU is required. The battery input is
+synthetic (0.92). Respect the host's existing CI/resource reservations.
+
+```bash
+git clone --branch delivery/reactive-90-80-20261031   https://github.com/Valdi320/oomwoo-ros2-tools.git ros2-tools
+git clone --branch delivery/reactive-90-80-20261031   https://github.com/Valdi320/oomwoo-cleaning-jobs.git cleaning-jobs
+```
+
+The following uses the recorded image digest (cached image ID
+`65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f`,
+ROS 2 Jazzy, Nav2 1.3.13, Gazebo 8.15.0). It runs one focal room integration,
+not all suites. Diagnostic mounts preserve the actual scorer and relay bytes;
+they are archives, not promoted runtime features. The scorer's control/grading
+methods are unchanged by those observers. See the archive manifest for the
+canonical/observed hashes and the correction of historical observer metadata.
+
+```bash
+mkdir -p oomwoo-acceptance-output
+docker run --rm -i --network none --cap-drop ALL \
+  --security-opt no-new-privileges --security-opt label=disable \
+  --memory 3g --memory-swap 3584m --cpus 2 --pids-limit 512 --ulimit core=0 \
+  --tmpfs /tmp:rw,exec,size=1024m,mode=1777 \
+  -v "$PWD/ros2-tools:/work:ro" -v "$PWD/cleaning-jobs:/contrib:ro" \
+  -v "$PWD/oomwoo-acceptance-output:/results:rw" \
+  -v "$PWD/ros2-tools/src/oomwoo_sim_support/launch/sim_bringup.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/sim_bringup.launch.py:ro" \
+  -v "$PWD/ros2-tools/src/oomwoo_sim_support/launch/coverage_regression.launch.py:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/launch/coverage_regression.launch.py:ro" \
+  -v "$PWD/ros2-tools/src/oomwoo_sim_support/config/nav2_params.yaml:/ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/config/nav2_params.yaml:ro" \
+  -v "$PWD/ros2-tools/src/oomwoo_sim_support/docs/evidence/native_90_80_runtime_20261031/coverage_regression_runner.py.txt:/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py:ro" \
+  -v "$PWD/ros2-tools/src/oomwoo_sim_support/docs/evidence/native_90_80_runtime_20261031/ros_dock_velocity_relay.py.txt:/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py:ro" \
+  --entrypoint /bin/bash \
+  makerspet/oomwoo@sha256:b97aaa649ff91b6a92a0a5ddbe741ff3be590ca3658e5fd5fc8618e5e0f762cd \
+  -s <<'RUN'
+set -eo pipefail
+source /opt/ros/jazzy/setup.bash
+source /ros_ws/install/setup.bash
+export ROS_DOMAIN_ID=88 ROS_LOCALHOST_ONLY=1 ROS_LOG_DIR=/tmp/roslogs
+export FASTRTPS_DEFAULT_PROFILES_FILE=/work/src/oomwoo_sim_support/config/nav2_lifecycle_replies.xml
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 LP_NUM_THREADS=2
+export PYTHONPATH=/work/src/oomwoo_sim_support:/work/src/oomwoo_coverage:/work/src/oomwoo_dock:/contrib/src:${PYTHONPATH:-}
+export OOMWOO_MOTION_AUDIT=1 OOMWOO_SIM_BATTERY_FRACTION=0.92
+export MAX_WALL_TIME_S=1800 CLOCK_DEAD_WALL_S=45 RUNS=1
+mkdir -p /tmp/valdi_ros_ws/src
+cp -r /contrib/ros2_lab_interfaces /tmp/valdi_ros_ws/src/oomwoo_cleaning_jobs_lab_interfaces
+cd /tmp/valdi_ros_ws
+colcon build --packages-select oomwoo_cleaning_jobs_lab_interfaces --parallel-workers 2
+source /tmp/valdi_ros_ws/install/setup.bash
+python3 /contrib/integration/generate_keepout_lab.py --out /tmp/keepout-fusion \
+  --test-room /work/src/oomwoo_sim_support/maps/test_room.yaml \
+  --nav-params /work/src/oomwoo_sim_support/config/nav2_params.yaml
+# Only the mask below is consumed; the generator's legacy Nav2 overlay is not.
+bank_code=0
+bash /work/deploy/run_coverage_regression.sh executor:=reactive \
+  v_cruise:=0.25 rotate_speed:=0.8 nav_linear_speed:=0.14 nav_angular_speed:=0.7 \
+  motion_relay_journal:=/tmp/oomwoo-owned-motion.json \
+  sweep_cmd_topic:=/valdi/sweep_cmd_vel nav_cmd_topic:=/valdi/nav2_cmd_vel \
+  motor_cmd_topic:=/valdi/lab_safe_cmd_vel_output \
+  keepout_mask:=/tmp/keepout-fusion/keepout_test_room.yaml || bank_code=$?
+cp /tmp/coverage_regression.log.1 /results/coverage_regression.log
+cp /tmp/coverage_runs.*/run1.json /results/coverage_report.json
+cp /tmp/oomwoo-owned-motion.json /results/motion_journal.json
+exit "$bank_code"
+RUN
+```
+
+Expected acceptance is coverage >=90%, first-crossing efficiency >=80%, valid
+zero-crossing audit, `sweep_complete` and exit 0, not identical timing on every
+machine. The archived native record is one successful observation. Reports, launch log and the final journal are retained in
+`oomwoo-acceptance-output/`; the command preserves the original bank exit code.
+
+## Historical review point — 30 October 2026
 
 The [short joint integration](../src/oomwoo_sim_support/docs/evidence/joint_cycle_delivery_20261030.json)
 completed two actual Nav2 goals, reactive sweep, sensor-guided docking and

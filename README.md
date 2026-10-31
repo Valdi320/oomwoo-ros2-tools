@@ -17,6 +17,8 @@ open-source robot vacuum — **one home for the vacuum's ROS 2 packages** instea
 repo per package. Behaviours like partition-and-clean, localization, docking and
 map-and-clean live here so they build, test and version together.
 
+Latest contributor milestone: [masked reactive sweep, 95.38% coverage / 80.47% first-target efficiency](docs/reactive-row-executor.md#native-acceptance--31-october-2026), with zero audited crossings and clean shutdown. One simulation profile; full cleaning-jobs integration remains open.
+
 ## Packages
 
 - **`oomwoo_coverage`** — boustrophedon cell-decomposition coverage cleaning: drives a
