@@ -1,0 +1,630 @@
+{
+  "raw_receipt": "/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/body_clock_full_native_20261031.json",
+  "raw_sha256": "4e75483d06940d120ed921a2b7f48ee0b8c0ccdbe0bef25557dcfc4fbf1f289b",
+  "native": {
+    "completed_utc": "2026-10-31T12:11:49.669255+00:00",
+    "rc": 1,
+    "seconds": 128.851,
+    "host_timeout": false,
+    "container": "oomwoo-body-clock-b9f7ebf",
+    "input_sha256": {
+      "planner": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+      "scorer": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+      "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+      "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+      "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+      "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+      "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+      "relay": "e01a390fe90668a8a5660f78dc61c7dfddb4c5c0c99d3de5b638864bd3ca6297",
+      "nav2_config": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90",
+      "planner_production": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+      "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+      "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+      "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+      "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+      "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+      "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+      "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+    },
+    "input_unchanged": {
+      "planner": true,
+      "scorer": true,
+      "meter": true,
+      "wrapper": true,
+      "driver": true,
+      "journal": true,
+      "witness": true,
+      "relay": true,
+      "nav2_config": true,
+      "planner_production": true,
+      "coverage_launch": true,
+      "sim_launch": true,
+      "lifecycle_response_qos": true,
+      "world": true,
+      "map_yaml": true,
+      "map_image": true,
+      "keepout_builder": true
+    },
+    "canonical_commit": "b9f7ebf28e863a11338383b550661bd54e465eb3",
+    "jobs_canonical_commit": "cc70b2a3aa931261283fffb735324dd431418eea"
+  },
+  "report": {
+    "coverage": 0.0859,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 1.0,
+    "revisit_ratio": 0.0936,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "motion_fault",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 4300,
+    "segments": 4299,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "first_footprint_crossing": null,
+    "min_sampled_center_to_mask_bbox_m": 0.2617020658858278,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 10,
+        "distance_m": 6.971437374218047e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000328304688
+      },
+      "IDLE": {
+        "poses": 589,
+        "distance_m": 3.457186988578052e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.43291921179753856
+      },
+      "SWEEP": {
+        "poses": 2441,
+        "distance_m": 5.974182533689374,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2617020658858278
+      },
+      "PREPARE_NAV": {
+        "poses": 220,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.4177814425062726
+      },
+      "TRANSIT": {
+        "poses": 1040,
+        "distance_m": 2.100085241703531,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.4177814425062726
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "cgroup": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "324\n",
+    "/sys/fs/cgroup/memory.peak": "1487974400\n",
+    "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+  },
+  "first_revoke": {
+    "blocked_projection": null,
+    "health": {
+      "dock_inactive": true,
+      "isolated_sources": true,
+      "map_current": true,
+      "nav2_active_goal": null,
+      "nav2_idle": false,
+      "pose_fresh": true,
+      "resources_ok": true,
+      "safety_loop_ok": true,
+      "sweep_inactive": true
+    },
+    "nav_motion_trace": {
+      "capacity": 32,
+      "sample_period_s": 0.5,
+      "samples": [
+        {
+          "nav_dds_sequence_stamp": [
+            106,
+            1793448677244409254
+          ],
+          "nav_input": [
+            0.0,
+            0.0
+          ],
+          "observed_monotonic_s": 466110.378023829,
+          "observed_ros_ns": 84400000000,
+          "odom_stamp_vx_vy_wz": [
+            84400000000,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "selected_output": [
+            0.0,
+            0.0
+          ],
+          "tf_stamp_xy_qz_qw": [
+            84400000000,
+            0.2490899794554938,
+            -0.7783123931323108,
+            0.0227580152253735,
+            0.999741002831734
+          ]
+        },
+        {
+          "nav_dds_sequence_stamp": [
+            108,
+            1793448705237468586
+          ],
+          "nav_input": [
+            0.0,
+            -0.6400000000000001
+          ],
+          "observed_monotonic_s": 466110.879447619,
+          "observed_ros_ns": 84870000000,
+          "odom_stamp_vx_vy_wz": [
+            84860000000,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "selected_output": [
+            0.0,
+            0.0
+          ],
+          "tf_stamp_xy_qz_qw": [
+            84860000000,
+            0.24621609234864825,
+            -0.7776055729254501,
+            0.022015163924676066,
+            0.9997576369087506
+          ]
+        },
+        {
+          "nav_dds_sequence_stamp": [
+            111,
+            1793448705843148915
+          ],
+          "nav_input": [
+            0.0,
+            -0.6400000000000001
+          ],
+          "observed_monotonic_s": 466111.427371254,
+          "observed_ros_ns": 85350000000,
+          "odom_stamp_vx_vy_wz": [
+            85340000000,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "selected_output": [
+            0.0,
+            0.0
+          ],
+          "tf_stamp_xy_qz_qw": [
+            85340000000,
+            0.23950795049700146,
+            -0.7759499641644142,
+            0.020281797663744446,
+            0.9997943031861739
+          ]
+        }
+      ],
+      "uuid": "8c4b27bbc3524f5fa6bc4680a05c0b81"
+    },
+    "nav_motion_trace_error": null,
+    "original_ages": {
+      "pose_age_ns": 15000000,
+      "pose_error": null,
+      "pose_latest_age_ns": 15000000,
+      "pose_latest_stamp_ns": 85480000000,
+      "pose_map_cell": 6336,
+      "pose_map_value": 0,
+      "pose_stamp_ns": 85480000000,
+      "pose_xy_m": [
+        0.23950795049700146,
+        -0.7759499641644142
+      ],
+      "postfilter_age_ns": 255000000,
+      "postfilter_dds_age_ns": 266601432,
+      "postfilter_stamp_ns": 85240000000
+    },
+    "reason": "health contradicts active owner"
+  },
+  "status_packets": [
+    {
+      "wall": 466032.659953192,
+      "sim": 10.8,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          2
+        ]
+      ]
+    },
+    {
+      "wall": 466043.292620312,
+      "sim": 19.925,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ]
+      ]
+    },
+    {
+      "wall": 466060.252387541,
+      "sim": 36.400000000000006,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          2
+        ]
+      ]
+    },
+    {
+      "wall": 466066.08553785,
+      "sim": 41.435,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          4
+        ]
+      ]
+    },
+    {
+      "wall": 466078.582530982,
+      "sim": 53.6,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          4
+        ],
+        [
+          "9aa3b2a9be4b4f47b43120912693fc89",
+          2
+        ]
+      ]
+    },
+    {
+      "wall": 466082.839996013,
+      "sim": 57.370000000000005,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          4
+        ],
+        [
+          "9aa3b2a9be4b4f47b43120912693fc89",
+          4
+        ]
+      ]
+    },
+    {
+      "wall": 466110.572458885,
+      "sim": 84.60000000000001,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          4
+        ],
+        [
+          "9aa3b2a9be4b4f47b43120912693fc89",
+          4
+        ],
+        [
+          "8c4b27bbc3524f5fa6bc4680a05c0b81",
+          2
+        ]
+      ]
+    },
+    {
+      "wall": 466111.932890843,
+      "sim": 85.805,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          4
+        ],
+        [
+          "9aa3b2a9be4b4f47b43120912693fc89",
+          4
+        ],
+        [
+          "8c4b27bbc3524f5fa6bc4680a05c0b81",
+          3
+        ]
+      ]
+    },
+    {
+      "wall": 466111.960586499,
+      "sim": 85.83,
+      "states": [
+        [
+          "d39c79ab932b4b458266da38c65b40be",
+          4
+        ],
+        [
+          "0a1b784e6ad54f0981bf0b35d3a00ed6",
+          4
+        ],
+        [
+          "9aa3b2a9be4b4f47b43120912693fc89",
+          4
+        ],
+        [
+          "8c4b27bbc3524f5fa6bc4680a05c0b81",
+          5
+        ]
+      ]
+    }
+  ],
+  "phase_tail": [
+    {
+      "phase": "SWEEP",
+      "wall": 466084.114082803,
+      "sim": 58.6,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          0.21708082173007406,
+          0.03983197255673997
+        ],
+        "stamp_ns": 58580000000
+      },
+      "nav_feedback": {
+        "uuid": "9aa3b2a9be4b4f47b43120912693fc89",
+        "frame": "map",
+        "stamp_ns": 57340000000,
+        "position": [
+          0.171520700436684,
+          0.012314997734966138,
+          0.012499497823787202
+        ],
+        "orientation": [
+          3.2117968685306765e-10,
+          -1.0108864226585417e-08,
+          0.014275738602689911,
+          0.9998980964515073
+        ],
+        "received_wall": 466082.810625562,
+        "received_sim": 57.355000000000004
+      }
+    },
+    {
+      "phase": "PREPARE_NAV",
+      "wall": 466109.353670696,
+      "sim": 83.4,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          0.2785838059672676,
+          -0.7412885395295696
+        ],
+        "stamp_ns": 83400000000
+      },
+      "nav_feedback": {
+        "uuid": "9aa3b2a9be4b4f47b43120912693fc89",
+        "frame": "map",
+        "stamp_ns": 57340000000,
+        "position": [
+          0.171520700436684,
+          0.012314997734966138,
+          0.012499497823787202
+        ],
+        "orientation": [
+          3.2117968685306765e-10,
+          -1.0108864226585417e-08,
+          0.014275738602689911,
+          0.9998980964515073
+        ],
+        "received_wall": 466082.810625562,
+        "received_sim": 57.355000000000004
+      }
+    },
+    {
+      "phase": "TRANSIT",
+      "wall": 466110.586582037,
+      "sim": 84.61500000000001,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          0.2785838059672676,
+          -0.7412885395295696
+        ],
+        "stamp_ns": 84600000000
+      },
+      "nav_feedback": {
+        "uuid": "8c4b27bbc3524f5fa6bc4680a05c0b81",
+        "frame": "map",
+        "stamp_ns": 84600000000,
+        "position": [
+          0.2490899794554938,
+          -0.7783123931323108,
+          0.012499303355232333
+        ],
+        "orientation": [
+          2.104650626041596e-08,
+          8.580748252581931e-09,
+          0.0227580152253735,
+          0.9997410028317338
+        ],
+        "received_wall": 466110.573597272,
+        "received_sim": 84.60000000000001
+      }
+    },
+    {
+      "phase": "FAULT",
+      "wall": 466112.142421339,
+      "sim": 86.00500000000001,
+      "truth_position": {
+        "frame": "map",
+        "position": [
+          0.2785838059672676,
+          -0.7412885395295696
+        ],
+        "stamp_ns": 86000000000
+      },
+      "nav_feedback": {
+        "uuid": "8c4b27bbc3524f5fa6bc4680a05c0b81",
+        "frame": "map",
+        "stamp_ns": 85800000000,
+        "position": [
+          0.24351687173970368,
+          -0.7802972507518318,
+          0.01249961055729335
+        ],
+        "orientation": [
+          1.2771029886119779e-08,
+          1.0464729332127852e-08,
+          0.021230163154100316,
+          0.9997746146869554
+        ],
+        "received_wall": 466111.929696642,
+        "received_sim": 85.80000000000001
+      }
+    }
+  ],
+  "journal_final": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "canceled",
+    "revision": 12,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 2582,
+    "token": "b55bfc8b107142919e4efe283d6df589-1",
+    "uuid": "8c4b27bbc3524f5fa6bc4680a05c0b81"
+  },
+  "jobs_commit_after_causal_fix": "9feaf3fcc660c7ac22ca074a09be420f6f37cd2e",
+  "reader_delivery": {
+    "scope": "Read-only NavLeaseWitness: real ACTIVE may precede the client durable acceptance. Initial submitting remains unauthorized zero, without latching a fault; any submitting regression after accepted proof still latches. No journal/storage/schema/timer/deadline/freshness/release change.",
+    "tests": {
+      "acceptance_before": {
+        "rc": 1,
+        "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 0 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: RESERVADA; hay un freno ajeno y solo quedan 8093 MiB.\n",
+        "args": [
+          "podman",
+          "run",
+          "-i",
+          "--rm",
+          "--name",
+          "oomwoo-acceptance-before-20261031",
+          "--pull=never",
+          "--network=none",
+          "--cap-drop=ALL",
+          "--security-opt=no-new-privileges",
+          "--security-opt=label=disable",
+          "--read-only",
+          "--tmpfs",
+          "/tmp:rw,exec,size=128m,mode=1777",
+          "--memory=512m",
+          "--memory-swap=512m",
+          "--cpus=.25",
+          "--pids-limit=96",
+          "-v",
+          "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+          "-v",
+          "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/terminal_order_full_native_20261031.json:/record.json:ro",
+          "-v",
+          "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+          "--entrypoint",
+          "/bin/bash",
+          "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+          "-lc",
+          "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/ros-home PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:$PYTHONPATH python3 -"
+        ],
+        "fixture_python": "import pytest\nraise SystemExit(pytest.main(['-q','-p','no:cacheprovider','/contrib/tests/test_nav_lease_witness.py::DockNavUUIDWitnessTests::test_active_before_durable_acceptance_stays_zero_then_recognizes_acceptance']))\n",
+        "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/acceptance_before_20261031.log",
+        "raw_sha256": "1a1d6bfdb12291d86abd0d40c201b39e4242450e69082c02df8e92339f167d2c",
+        "log": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_ DockNavUUIDWitnessTests.test_active_before_durable_acceptance_stays_zero_then_recognizes_acceptance _\n\nself = <test_nav_lease_witness.DockNavUUIDWitnessTests testMethod=test_active_before_durable_acceptance_stays_zero_then_recognizes_acceptance>\n\n    def test_active_before_durable_acceptance_stays_zero_then_recognizes_acceptance(self):\n        self.j.begin(uuid_hex=UUID,token=TOKEN,job_id=\"lab\",\n                     map_digest=DIGEST,target_cell=1)\n        self.w.observe(((UUID,2),))\n        self.assertFalse(self.w.current_active_matches())\n        self.assertFalse(self.w.can_release_for_dock())\n>       self.assertIsNone(self.w.fault)\nE       AssertionError: 'Nav2 goal no longer durably accepted' is not None\n\n/contrib/tests/test_nav_lease_witness.py:251: AssertionError\n=========================== short test summary info ============================\nFAILED ../contrib/tests/test_nav_lease_witness.py::DockNavUUIDWitnessTests::test_active_before_durable_acceptance_stays_zero_then_recognizes_acceptance\n1 failed in 0.21s\n"
+      },
+      "acceptance_after": {
+        "rc": 0,
+        "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 1 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: RESERVADA; hay un freno ajeno y solo quedan 8187 MiB.\n",
+        "args": [
+          "podman",
+          "run",
+          "-i",
+          "--rm",
+          "--name",
+          "oomwoo-acceptance-after-20261031",
+          "--pull=never",
+          "--network=none",
+          "--cap-drop=ALL",
+          "--security-opt=no-new-privileges",
+          "--security-opt=label=disable",
+          "--read-only",
+          "--tmpfs",
+          "/tmp:rw,exec,size=128m,mode=1777",
+          "--memory=512m",
+          "--memory-swap=512m",
+          "--cpus=.25",
+          "--pids-limit=96",
+          "-v",
+          "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+          "-v",
+          "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/terminal_order_full_native_20261031.json:/record.json:ro",
+          "-v",
+          "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+          "--entrypoint",
+          "/bin/bash",
+          "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+          "-lc",
+          "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/ros-home PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:$PYTHONPATH python3 -"
+        ],
+        "fixture_python": "import pytest\nraise SystemExit(pytest.main(['-q','-p','no:cacheprovider','/contrib/tests/test_nav_lease_witness.py','-k','active_before_durable_acceptance or submitting_after_observed or read_failure or corrupted_journal or replaced_journal or durable_submitting or terminal_journal_blocks or unknown_status_revokes or callback_terminal_before_fsync or current_exact_active or simultaneous_owners']))\n",
+        "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/acceptance_after_20261031.log",
+        "raw_sha256": "3b7caef4f9e862af6840bd5a82050837f015b729a0db4815723c4b96f7b3b405",
+        "log": "...........                                                              [100%]\n11 passed, 16 deselected in 0.20s\n"
+      }
+    },
+    "native_attribution_limit": "128.851s native stops with exact ACTIVE then zeros and health activity loss. Native first-cause receipt lacks witness fault/acceptance state, so this focal confirmed bug is consistent with that symptom, not uniquely proved as its cause. Next frozen capture adds only bounded existing revocation fields.",
+    "source_sha256": {
+      "src/oomwoo_cleaning_jobs/nav_lease_witness.py": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c",
+      "src/oomwoo_cleaning_jobs/goal_journal.py": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+      "tests/test_nav_lease_witness.py": "78356197843bd76c968494a370217f09ead4370eddd11d42a141f13b68d8dcf9"
+    }
+  }
+}

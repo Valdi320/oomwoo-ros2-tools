@@ -1757,3 +1757,37 @@ fuentes finales. Beneficio esperado ahorrar más de4,25m al evitar recuperacione
 no garantizado; coste una corrida completa. Decisión avanzar con una nueva
 congelación y dejar después las ampliaciones de menor retorno. El resultado
 real cambiará la decisión; no ampliar el radio ni otros parámetros a ciegas.
+
+
+## Confirmación de aceptación pendiente — 31/10/2026
+
+El nativo b9f7ebf termina tras128,851s reales, antes del televisor: cobertura
+8,59%,measurement_valid=true,cero cruces/4300poses, sin salto ni OOM. Tres
+tránsitos completan; en el cuarto, UUID8c4b27bb…, llega ACTIVE y el relé
+mantiene salida cero pese a órdenes de giro. Tras1s de presupuesto del estado,
+health queda sin activo y revoca; Nav2 se cancela por STOP, no aborta105.
+Las17fuentes quedan intactas. Por tanto no se ha medido todavía el ahorro
+del radio global en movimiento. Recibo:
+`src/oomwoo_sim_support/docs/evidence/pending_acceptance_native_delivery_20261031.json`.
+
+Se discrimina una carrera concreta del lector: ACTIVE puede llegar mientras
+el mismo UUID preasignado sigue submitting, antes del callback de aceptación.
+current_active_matches devolvía false correctamente, pero además fijaba un
+fallo permanente. Con GoalJournal real temporal se reproduce y corrige la
+espera inicial: salida sigue no autorizada hasta accepted; después reconoce
+esa confirmación. Un recuerdo volátil de aceptación conserva el fallo si el
+registro vuelve a submitting tras haberse visto accepted. No cambia guardado,
+esquema, escrituras,fsync, umbrales, tiempos ni permiso de relevo terminal.
+Pasan11casos focales, incluidos el rojo causal, regresión, otros UUID,
+corrupción/ausencia, terminal y propiedad múltiple. Commit jobs 9feaf3fcc660c7ac22ca074a09be420f6f37cd2e.
+
+La captura vieja carece del fallo interno del testigo: la secuencia es
+compatible con esta carrera confirmada, pero no permite atribución única.
+La próxima congelación añadirá sólo esos campos acotados al recibo de
+revocación ya existente, sin nuevas lecturas de disco ni otra herramienta.
+Se conservarán todas las demás fuentes del nativo128s. Utilidad: corrección
+focal de una confirmación que podía envenenarse durante el inicio. Mínimo
+pendiente sigue siendo la habitación válida90/80/cero/cierre. Siguiente
+incremento: comprobar esa entrega con movimiento y medir el ahorro global;
+beneficio esperado evitar parada falsa y resolver el hito, coste una corrida.
+Decisión avanzar con esta evidencia nueva, sin repetir un rojo sin diagnóstico.
