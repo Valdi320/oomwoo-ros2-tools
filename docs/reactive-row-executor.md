@@ -1791,3 +1791,52 @@ pendiente sigue siendo la habitación válida90/80/cero/cierre. Siguiente
 incremento: comprobar esa entrega con movimiento y medir el ahorro global;
 beneficio esperado evitar parada falsa y resolver el hito, coste una corrida.
 Decisión avanzar con esta evidencia nueva, sin repetir un rojo sin diagnóstico.
+
+
+## Habitación válida completada, eficiencia y cierre de proceso pendientes — 31/10/2026
+
+La entrega35579b5/9feaf3f termina el barrido a13:42:32CET tras1213,799s
+reales: cobertura94,55%, primer90% a857,3s con eficiencia78,05%, final65,45%,
+revisitas29,63%. Auditoría válida:51838poses/51837segmentos, cero cruces,
+gap máximo20ms, sin errores, distancia mínima a máscara0,26225m. Sin salto,
+OOM ni timeout. Las17fuentes intactas;12escapes frente a16 de la captura
+anterior. El relé completa sus tránsitos, sin revocación ni aborto105.
+
+Sigue NO verde: faltan aproximadamente2,67m antes del90% (109,67m frente a
+107m). Además el servidor Gazebo confirma stop:true pero no termina dentro
+de la salida SIGINT de Launch; escala aSIGTERM(-15), que el ejecutor conserva
+correctamente como rc3. No se aumenta el tiempo, no se convierte -15 en
+salida válida y no se oculta como éxito. La misma receta había cerrado por
+SIGINT(-2) en capturas anteriores; queda una incidencia de cierre por
+revisar si se repite. Recibo:
+`src/oomwoo_sim_support/docs/evidence/acceptance_native_delivery_20261031.json`.
+
+Una ventana pasiva12s de esta corrida permite4pares AMCL/truth/odom/TF de
+sello idéntico. AMCL da error mediano4,67cm y TF actual4,40cm. El contrafactual
+sólo temporal de postdatación1s da4,56cm y0,5s da4,72cm; esta ventana no
+respalda cambiarlo. Se descarta ese ajuste, sin generalizar a otras zonas.
+Originales y análisis en `src/oomwoo_sim_support/docs/evidence/live_tf_window_20261031.json`.
+
+## Usar la anticipación normal del proyecto — 31/10/2026
+
+El perfil congelado sobrescribía nav_lookahead:=0.5; ambos lanzamientos y
+nav2_params.yaml ya establecen0,25 para seguir filas/esquinas más cerca.
+El banco RPP existente, con el binario real y la ruta XY del Navfn global0,24,
+contrasta sólo esos valores. Integra su Twist con un modelo unicíclo ideal,
+TF identidad y sin AMCL/scan/contactos/Gazebo: NO es movimiento físico ni
+una nueva medición90/80. Permite penetración virtual para medir el recorte.
+
+Con0,5 aparecen52segmentos que no libran la huella0,18 contra mobiliario;
+distancia mínima centro–TV0,15177m. Con0,25 son cero y0,21259m; ambos FollowPath
+terminan SUCCEEDED, mismos parámetros restantes y objetivo. Recorrido virtual
+2,29009→2,32618m, sólo3,61cm extra. Parámetros efectivos re-leídos, dos procesos
+rc0, sin OOM. Recibo completo `src/oomwoo_sim_support/docs/evidence/rpp_corner_20261031.json`.
+
+Próximo incremento: retirar únicamente el override0,5 y usar el0,25 existente
+en la habitación completa. Ningún código/configuración de producto nuevo;
+las17fuentes serán idénticas a la corrida anterior y se verificará el valor
+efectivo. Mínimo pendiente:90/80/cero/barrido y cierre correcto de todos los
+procesos. Beneficio esperado evitar recuperaciones por esquinas, con coste
+pequeño de ruta y una corrida de validación; no garantía de80%. Decisión
+avanzar con este contraste. Si se cumple el hito, consolidar sin barrer más
+parámetros; fiabilidad entre escenas/semillas y hardware quedan después.

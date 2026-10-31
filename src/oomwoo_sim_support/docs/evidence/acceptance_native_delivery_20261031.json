@@ -1,0 +1,167 @@
+{
+  "raw_receipt": "/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/acceptance_full_native_20261031.json",
+  "raw_sha256": "38d6d84b1fea7ba84e334f054d80e3b890fe2f03d7b120ac6f50287263faf8ef",
+  "native": {
+    "completed_utc": "2026-10-31T12:42:32.019672+00:00",
+    "rc": 3,
+    "seconds": 1213.799,
+    "host_timeout": false,
+    "container": "oomwoo-acceptance-9feaf3f",
+    "input_sha256": {
+      "planner": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+      "scorer": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+      "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+      "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+      "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+      "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+      "witness": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c",
+      "relay": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6",
+      "nav2_config": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90",
+      "planner_production": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+      "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+      "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+      "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+      "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+      "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+      "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+      "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+    },
+    "input_unchanged": {
+      "planner": true,
+      "scorer": true,
+      "meter": true,
+      "wrapper": true,
+      "driver": true,
+      "journal": true,
+      "witness": true,
+      "relay": true,
+      "nav2_config": true,
+      "planner_production": true,
+      "coverage_launch": true,
+      "sim_launch": true,
+      "lifecycle_response_qos": true,
+      "world": true,
+      "map_yaml": true,
+      "map_image": true,
+      "keepout_builder": true
+    },
+    "canonical_commit": "35579b54b6fc52502278ee95278fc30e05807e93",
+    "jobs_canonical_commit": "9feaf3fcc660c7ac22ca074a09be420f6f37cd2e"
+  },
+  "report": {
+    "coverage": 0.9455,
+    "coverage_target": 0.9,
+    "target_crossed": true,
+    "efficiency_at_target": 0.7805,
+    "efficiency_final": 0.6545,
+    "revisit_ratio": 0.2963,
+    "efficiency_target": 0.8,
+    "time_to_target_s": 857.3,
+    "end_reason": "sweep_complete",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 51838,
+    "segments": 51837,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "first_footprint_crossing": null,
+    "min_sampled_center_to_mask_bbox_m": 0.26225238654883826,
+    "motion_by_phase": {
+      "IDLE": {
+        "poses": 1932,
+        "distance_m": 6.741138542436839e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.31288362984921814
+      },
+      "SWEEP": {
+        "poses": 19431,
+        "distance_m": 62.97643066807261,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.26225238654883826
+      },
+      "PREPARE_NAV": {
+        "poses": 1795,
+        "distance_m": 0.00016123199886059725,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2955158540833689
+      },
+      "TRANSIT": {
+        "poses": 26791,
+        "distance_m": 64.4196693308448,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2761188189160993
+      },
+      "TRANSIT_CANCEL": {
+        "poses": 331,
+        "distance_m": 0.08621275763045914,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.5492510657362613
+      },
+      "ESCAPE": {
+        "poses": 1558,
+        "distance_m": 3.3037136669369,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.5492510657362613
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "cgroup": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "337\n",
+    "/sys/fs/cgroup/memory.peak": "1442656256\n",
+    "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+  },
+  "motion_journal": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "succeeded",
+    "revision": 105,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 9366,
+    "token": "116bab49433044ff814de5b0488b177c-1",
+    "uuid": "3251955954be46eebf578b3fe4ca0025"
+  },
+  "shutdown_evidence": [
+    "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.",
+    "[ERROR] [gazebo-3]: process[gazebo-3] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'",
+    "COVERAGE_PROCESS_FAILURE gazebo-3 -15"
+  ],
+  "escapes": [
+    "[coverage_planner-11] [WARN] [1793449517.936357119] [coverage_planner]: bumper held while targeting waypoint 43: peel off (turn -0.6) 2.5s (escape 1/25)",
+    "[coverage_planner-11] [WARN] [1793449528.502318449] [coverage_planner]: bumper held while targeting waypoint 44: peel off (turn -0.6) 2.5s (escape 2/25)",
+    "[coverage_planner-11] [WARN] [1793449537.815762195] [coverage_planner]: bumper held while targeting waypoint 45: peel off (turn -0.6) 2.5s (escape 3/25)",
+    "[coverage_planner-11] [WARN] [1793449545.605868588] [coverage_planner]: bumper held while targeting waypoint 46: peel off (turn -0.6) 2.5s (escape 4/25)",
+    "[coverage_planner-11] [WARN] [1793449556.182111539] [coverage_planner]: bumper held while targeting waypoint 47: peel off (turn -0.6) 2.5s (escape 5/25)",
+    "[coverage_planner-11] [WARN] [1793449564.720826095] [coverage_planner]: bumper held while targeting waypoint 48: peel off (turn -0.6) 2.5s (escape 6/25)",
+    "[coverage_planner-11] [WARN] [1793449575.376311524] [coverage_planner]: bumper held while targeting waypoint 49: peel off (turn -0.6) 2.5s (escape 7/25)",
+    "[coverage_planner-11] [WARN] [1793449583.967785241] [coverage_planner]: bumper held while targeting waypoint 50: peel off (turn -0.6) 2.5s (escape 8/25)",
+    "[coverage_planner-11] [WARN] [1793449595.014822037] [coverage_planner]: bumper held while targeting waypoint 51: peel off (turn -0.6) 2.5s (escape 9/25)",
+    "[coverage_planner-11] [WARN] [1793449604.102482818] [coverage_planner]: bumper held while targeting waypoint 52: peel off (turn -0.6) 2.5s (escape 10/25)",
+    "[coverage_planner-11] [WARN] [1793449614.343262103] [coverage_planner]: bumper held while targeting waypoint 53: peel off (turn -0.6) 2.5s (escape 11/25)",
+    "[coverage_planner-11] [WARN] [1793449621.033076044] [coverage_planner]: bumper held while targeting waypoint 54: peel off (turn -0.6) 2.5s (escape 12/25)"
+  ],
+  "amcl_same_stamp_error_m": {
+    "count": 9,
+    "median": 0.026755374642058138,
+    "max": 0.032716057959838764
+  },
+  "interpretation": "First valid observed complete native sweep of this delivery,0crossings. First90eff78.05% still misses80. Native Gazebo stop ACKtrue did not prove process exit; launch escalated after5s toSIGTERM and wrapper correctly retains rc3. Do not count this run as accepted goal or mask process failure."
+}
