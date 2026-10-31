@@ -1403,3 +1403,37 @@ observable as a failure, and the historical long-run hang was not recreated.
 
 Decision: consolidate this bounded closure and move to the prepared short
 NAV/SWEEP/DOCK integration. Full masked90/80 performance remains open.
+
+
+### Isolate virtual inflation and protect unknown static terrain
+
+The opt-in simulator overlay combines the closed local changes `ecf9af2`
+(isolated inflation) and `26fc288` (unknown-mask normalization). It retains
+the actual outer KeepoutFilter. A stock PluginContainerLayer inflates only
+the served binary mask, keeping ordinary furniture inflation at 0.10 m.
+The existing mask server serves a temporary derived mask containing the
+original NoGo area plus unknown cells from the static source P5 map. Source
+map and mask files remain unchanged; existing scratch cleanup owns the
+derived assets. Source unknown is explicitly blocked as 100 in the mask
+and resulting costmap, while the original source remains -1.
+
+The [combined delivery receipt](../src/oomwoo_sim_support/docs/evidence/keepout_combined_delivery_20261031.json)
+records 20 configuration cases, three launch graph cases and clean style.
+The decoder matches the actual installed MapServer for all 256 intensities
+in seven trinary/raw/scale and negate/threshold cases. A cold three-process
+ROS check validates the exact combined builder and served YAML: both
+unknown test cells are lethal, binary-mask attestation accepts 221 blocked
+cells, the clear control remains free, and original files remain intact.
+Real Navfn succeeds from the localized start that failed in FIFO860 and
+around the mask; both computed paths clear the existing 0.24 m disk audit.
+All three processes exit 0, with no memory-limit events. This is planning
+evidence, with no navigation, motor commands or physical S12 activity.
+
+Removing the outer filter is not an equivalent general fix: with
+MaxWithoutUnknownOverwrite an unknown master cell inside NoGo can stay -1.
+Keep the retained filter and normalized mask together. This static-map
+contract does not cover dynamic map updates or unknown cells arising only
+in the local costmap. Actual motion with this combined source, normalized
+rolling behavior and the original full-room 90/80 acceptance remain open.
+Consolidate this component and inspect the already queued native captures
+before scheduling another run or changing AMCL parameters.

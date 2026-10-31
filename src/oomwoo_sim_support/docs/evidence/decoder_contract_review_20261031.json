@@ -1,0 +1,120 @@
+{
+  "utc": "2026-10-31T01:16:46.821095+00:00",
+  "rc": 0,
+  "seconds": 13.905,
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=192m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "--name",
+    "oomwoo-decoder-review-20261031",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/revision_decoder_unknown_20261031:/review:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-vigente-20261030:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 ROS_HOME=/tmp/roshome ROS_LOG_DIR=/tmp/roslogs ROS_DOMAIN_ID=89 ROS_LOCALHOST_ONLY=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'CASE'\n\nimport asyncio,importlib.util,json,time,traceback,math\nfrom pathlib import Path\nimport yaml,rclpy\nfrom launch import LaunchDescription,LaunchService\nfrom launch.actions import RegisterEventHandler\nfrom launch.event_handlers import OnProcessExit\nfrom launch_ros.actions import Node\nfrom lifecycle_msgs.srv import ChangeState\nfrom nav2_msgs.srv import LoadMap\nspec=importlib.util.spec_from_file_location('review_decoder','/review/keepout_config.py')\nmodule=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)\nasync def main():\n out=Path('/tmp/decoder-review');out.mkdir()\n (out/'ramp.pgm').write_bytes(b'P5\\n256 1\\n255\\n'+bytes(range(256)))\n cases=[\n  ('trinary',0,.25,.65),('trinary',1,.25,.65),\n  ('trinary',0,50/255,165/255),('trinary',1,50/255,165/255),\n  ('raw',0,.25,.65),('scale',0,.25,.65),('scale',1,.25,.65)]\n files=[]\n for i,(mode,negate,free,occupied) in enumerate(cases):\n  meta={'image':'ramp.pgm','mode':mode,'resolution':.05,'origin':[0.,0.,0.],'negate':negate,'free_thresh':free,'occupied_thresh':occupied}\n  p=out/f'case{i}.yaml';p.write_text(yaml.safe_dump(meta));files.append((p,meta))\n rclpy.init();node=rclpy.create_node('decoder_review_observer')\n process=Node(package='nav2_map_server',executable='map_server',name='decoder_review_map',parameters=[{'yaml_filename':str(files[0][0]),'use_sim_time':False}],output='screen')\n exits=[];handler=RegisterEventHandler(OnProcessExit(target_action=process,on_exit=lambda e,c:exits.append(e.returncode) or []))\n launch=LaunchService();launch.include_launch_description(LaunchDescription([process,handler]));task=asyncio.create_task(launch.run_async());start=time.monotonic()\n result={'ok':False,'scope':'Exhaustive256P5intensities vs actual installed ROS MapServer; decoder snapshot from peer, no adoption; no planner, Gazebo, goals or motors.','cases':[]}\n async def until(pred,seconds=15):\n  deadline=time.monotonic()+seconds\n  while time.monotonic()<deadline:\n   if task.done():raise RuntimeError('owned MapServer launch exited')\n   rclpy.spin_once(node,timeout_sec=0.)\n   if pred():return\n   await asyncio.sleep(.01)\n  raise RuntimeError('owned service observation timeout')\n try:\n  c=node.create_client(ChangeState,'/decoder_review_map/change_state');await until(c.service_is_ready)\n  for transition in (1,3):\n   req=ChangeState.Request();req.transition.id=transition\n   f=c.call_async(req);await until(f.done);assert f.result().success\n  loader=node.create_client(LoadMap,'/decoder_review_map/load_map');await until(loader.service_is_ready)\n  for (path,meta) in files:\n   req=LoadMap.Request();req.map_url=str(path);f=loader.call_async(req);await until(f.done)\n   response=f.result();assert response.result==0,response.result\n   actual=bytes(v<0 for v in response.map.data)\n   predicted=module._source_unknown_pixels(meta,bytes(range(256)))\n   differences=[{'pixel':i,'mapserver_unknown':bool(a),'decoder_unknown':bool(b)} for i,(a,b) in enumerate(zip(actual,predicted)) if a!=b]\n   assert len(actual)==len(predicted)==256\n   result['cases'].append({'mode':meta['mode'],'negate':meta['negate'],'free_thresh':meta['free_thresh'],'occupied_thresh':meta['occupied_thresh'],'actual_unknown_count':sum(actual),'predicted_unknown_count':sum(predicted),'differences':differences})\n  result['ok']=all(not c['differences'] for c in result['cases'])\n except Exception as e:result['error']=repr(e);result['traceback']=traceback.format_exc()\n finally:\n  await launch.shutdown();await asyncio.wait_for(task,20);node.destroy_node();rclpy.shutdown()\n result['process_exit_codes']=exits;result['seconds']=round(time.monotonic()-start,3)\n result['ok']=result['ok'] and exits==[0]\n result['cgroup']={p.name:p.read_text() for p in (Path('/sys/fs/cgroup/memory.peak'),Path('/sys/fs/cgroup/memory.events')) if p.exists()}\n print('DECODER_REVIEW_RESULT '+json.dumps(result),flush=True)\n return 0 if result['ok'] else 1\nraise SystemExit(asyncio.run(main()))\n\nCASE"
+  ],
+  "stdout": "[INFO] [launch]: All log files can be found below /tmp/roslogs/2026-10-31-01-16-41-900490-3f255af078a5-42\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [map_server-1]: process started with pid [58]\n[map_server-1] [WARN] [1793409402.300775394] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[map_server-1] [WARN] [1793409402.300793644] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[map_server-1] [INFO] [1793409402.398430017] [decoder_review_map]: \n[map_server-1] \tdecoder_review_map lifecycle node launched. \n[map_server-1] \tWaiting on external lifecycle transitions to activate\n[map_server-1] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[map_server-1] [INFO] [1793409402.398534957] [decoder_review_map]: Creating\n[map_server-1] [INFO] [1793409405.472724481] [decoder_review_map]: Configuring\n[map_server-1] [INFO] [1793409405.472793151] [map_io]: Loading yaml file: /tmp/decoder-review/case0.yaml\n[map_server-1] [INFO] [1793409405.473019930] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409405.473030120] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409405.473035700] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409405.473040130] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409405.473044460] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409405.473049110] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409405.473054830] [map_io]: mode: trinary\n[map_server-1] [INFO] [1793409405.473060110] [map_io]: negate: 0\n[map_server-1] [INFO] [1793409405.473967558] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409405.474178507] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409405.486196163] [decoder_review_map]: Activating\n[map_server-1] [INFO] [1793409405.486266453] [decoder_review_map]: Creating bond (decoder_review_map) to lifecycle manager.\n[map_server-1] [INFO] [1793409405.966516119] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409405.966574779] [map_io]: Loading yaml file: /tmp/decoder-review/case0.yaml\n[map_server-1] [INFO] [1793409405.966756889] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409405.966768119] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409405.966773079] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409405.966777139] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409405.966781639] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409405.966786348] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409405.966790788] [map_io]: mode: trinary\n[map_server-1] [INFO] [1793409405.966795598] [map_io]: negate: 0\n[map_server-1] [INFO] [1793409405.966808118] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409405.966995778] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409405.970079879] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409405.970099119] [map_io]: Loading yaml file: /tmp/decoder-review/case1.yaml\n[map_server-1] [INFO] [1793409405.970164549] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409405.970169019] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409405.970171879] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409405.970174539] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409405.970177299] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409405.970180099] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409405.970182659] [map_io]: mode: trinary\n[map_server-1] [INFO] [1793409405.970185249] [map_io]: negate: 1\n[map_server-1] [INFO] [1793409405.970191169] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409405.970256189] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409405.991870047] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409405.991921177] [map_io]: Loading yaml file: /tmp/decoder-review/case2.yaml\n[map_server-1] [INFO] [1793409405.992095397] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409405.992107727] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409405.992112937] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409405.992117277] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409405.992122247] [map_io]: free_thresh: 0.196078\n[map_server-1] [INFO] [1793409405.992127067] [map_io]: occupied_thresh: 0.647059\n[map_server-1] [INFO] [1793409405.992132237] [map_io]: mode: trinary\n[map_server-1] [INFO] [1793409405.992138337] [map_io]: negate: 0\n[map_server-1] [INFO] [1793409405.992154087] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409405.992314256] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409406.014203054] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409406.014252334] [map_io]: Loading yaml file: /tmp/decoder-review/case3.yaml\n[map_server-1] [INFO] [1793409406.014415353] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409406.014426613] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409406.014431573] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409406.014435833] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409406.014440293] [map_io]: free_thresh: 0.196078\n[map_server-1] [INFO] [1793409406.014462783] [map_io]: occupied_thresh: 0.647059\n[map_server-1] [INFO] [1793409406.014468293] [map_io]: mode: trinary\n[map_server-1] [INFO] [1793409406.014472883] [map_io]: negate: 1\n[map_server-1] [INFO] [1793409406.014485743] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409406.014608063] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409406.036185091] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409406.036237471] [map_io]: Loading yaml file: /tmp/decoder-review/case4.yaml\n[map_server-1] [INFO] [1793409406.036380221] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409406.036388021] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409406.036392231] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409406.036395841] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409406.036399811] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409406.036403571] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409406.036407341] [map_io]: mode: raw\n[map_server-1] [INFO] [1793409406.036411211] [map_io]: negate: 0\n[map_server-1] [INFO] [1793409406.036422121] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409406.036559740] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409406.058012990] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409406.058057720] [map_io]: Loading yaml file: /tmp/decoder-review/case5.yaml\n[map_server-1] [INFO] [1793409406.058195129] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409406.058204319] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409406.058207759] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409406.058210629] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409406.058214219] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409406.058217089] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409406.058219789] [map_io]: mode: scale\n[map_server-1] [INFO] [1793409406.058222799] [map_io]: negate: 0\n[map_server-1] [INFO] [1793409406.058232629] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409406.058379679] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409406.079747698] [decoder_review_map]: Handling LoadMap request\n[map_server-1] [INFO] [1793409406.079795598] [map_io]: Loading yaml file: /tmp/decoder-review/case6.yaml\n[map_server-1] [INFO] [1793409406.079922228] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409406.079928958] [map_io]: origin[0]: 0\n[map_server-1] [INFO] [1793409406.079932708] [map_io]: origin[1]: 0\n[map_server-1] [INFO] [1793409406.079935418] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409406.079938388] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409406.079941318] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409406.079945848] [map_io]: mode: scale\n[map_server-1] [INFO] [1793409406.079950258] [map_io]: negate: 1\n[map_server-1] [INFO] [1793409406.079962567] [map_io]: Loading image_file: /tmp/decoder-review/ramp.pgm\n[map_server-1] [INFO] [1793409406.080103997] [map_io]: Read map /tmp/decoder-review/ramp.pgm: 256 X 1 map @ 0.05 m/cell\n[INFO] [map_server-1]: sending signal 'SIGINT' to process[map_server-1]\n[map_server-1] [INFO] [1793409406.102725663] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[map_server-1] [INFO] [1793409406.102823753] [decoder_review_map]: Running Nav2 LifecycleNode rcl preshutdown (decoder_review_map)\n[map_server-1] [INFO] [1793409406.102870202] [decoder_review_map]: Deactivating\n[map_server-1] [INFO] [1793409406.102882652] [decoder_review_map]: Destroying bond (decoder_review_map) to lifecycle manager.\n[map_server-1] [INFO] [1793409406.113067723] [decoder_review_map]: Cleaning up\n[map_server-1] [INFO] [1793409406.113107403] [decoder_review_map]: Destroying bond (decoder_review_map) to lifecycle manager.\n[map_server-1] [INFO] [1793409406.114323450] [decoder_review_map]: Destroying\n[INFO] [map_server-1]: process has finished cleanly [pid 58]\nDECODER_REVIEW_RESULT {\"ok\": true, \"scope\": \"Exhaustive256P5intensities vs actual installed ROS MapServer; decoder snapshot from peer, no adoption; no planner, Gazebo, goals or motors.\", \"cases\": [{\"mode\": \"trinary\", \"negate\": 0, \"free_thresh\": 0.25, \"occupied_thresh\": 0.65, \"actual_unknown_count\": 102, \"predicted_unknown_count\": 102, \"differences\": []}, {\"mode\": \"trinary\", \"negate\": 1, \"free_thresh\": 0.25, \"occupied_thresh\": 0.65, \"actual_unknown_count\": 102, \"predicted_unknown_count\": 102, \"differences\": []}, {\"mode\": \"trinary\", \"negate\": 0, \"free_thresh\": 0.19607843137254902, \"occupied_thresh\": 0.6470588235294118, \"actual_unknown_count\": 114, \"predicted_unknown_count\": 114, \"differences\": []}, {\"mode\": \"trinary\", \"negate\": 1, \"free_thresh\": 0.19607843137254902, \"occupied_thresh\": 0.6470588235294118, \"actual_unknown_count\": 114, \"predicted_unknown_count\": 114, \"differences\": []}, {\"mode\": \"raw\", \"negate\": 0, \"free_thresh\": 0.25, \"occupied_thresh\": 0.65, \"actual_unknown_count\": 155, \"predicted_unknown_count\": 155, \"differences\": []}, {\"mode\": \"scale\", \"negate\": 0, \"free_thresh\": 0.25, \"occupied_thresh\": 0.65, \"actual_unknown_count\": 0, \"predicted_unknown_count\": 0, \"differences\": []}, {\"mode\": \"scale\", \"negate\": 1, \"free_thresh\": 0.25, \"occupied_thresh\": 0.65, \"actual_unknown_count\": 0, \"predicted_unknown_count\": 0, \"differences\": []}], \"process_exit_codes\": [0], \"seconds\": 4.216, \"cgroup\": {\"memory.peak\": \"84275200\\n\", \"memory.events\": \"low 0\\nhigh 0\\nmax 0\\noom 0\\noom_kill 0\\noom_group_kill 0\\n\"}}\n",
+  "stderr": "[WARN] [1793409401.209451062] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[WARN] [1793409401.210328230] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n",
+  "result": {
+    "ok": true,
+    "scope": "Exhaustive256P5intensities vs actual installed ROS MapServer; decoder snapshot from peer, no adoption; no planner, Gazebo, goals or motors.",
+    "cases": [
+      {
+        "mode": "trinary",
+        "negate": 0,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 102,
+        "predicted_unknown_count": 102,
+        "differences": []
+      },
+      {
+        "mode": "trinary",
+        "negate": 1,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 102,
+        "predicted_unknown_count": 102,
+        "differences": []
+      },
+      {
+        "mode": "trinary",
+        "negate": 0,
+        "free_thresh": 0.19607843137254902,
+        "occupied_thresh": 0.6470588235294118,
+        "actual_unknown_count": 114,
+        "predicted_unknown_count": 114,
+        "differences": []
+      },
+      {
+        "mode": "trinary",
+        "negate": 1,
+        "free_thresh": 0.19607843137254902,
+        "occupied_thresh": 0.6470588235294118,
+        "actual_unknown_count": 114,
+        "predicted_unknown_count": 114,
+        "differences": []
+      },
+      {
+        "mode": "raw",
+        "negate": 0,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 155,
+        "predicted_unknown_count": 155,
+        "differences": []
+      },
+      {
+        "mode": "scale",
+        "negate": 0,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 0,
+        "predicted_unknown_count": 0,
+        "differences": []
+      },
+      {
+        "mode": "scale",
+        "negate": 1,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 0,
+        "predicted_unknown_count": 0,
+        "differences": []
+      }
+    ],
+    "process_exit_codes": [
+      0
+    ],
+    "seconds": 4.216,
+    "cgroup": {
+      "memory.peak": "84275200\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    }
+  },
+  "source": {
+    "source": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py",
+    "sha256": "0eae34eb0501b1e6118bc23945682fce4686fc9193c46249a13069683e33d3db",
+    "status": "read-only review snapshot of peer WIP, no adoption or authorship claim",
+    "utc": "2026-10-31T01:16:09.976343+00:00"
+  },
+  "resource_policy": "Explicit active goal exception; guard occupied owner game. .25CPU512MiB,noGPU; read-only isolated one MapServer; no motors.",
+  "primary_contract": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_map_server/src/map_io.cpp"
+}

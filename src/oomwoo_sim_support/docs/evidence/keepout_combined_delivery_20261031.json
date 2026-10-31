@@ -1,0 +1,275 @@
+{
+  "utc": "2026-10-31T01:20:30.677504+00:00",
+  "status": "COMBINED_STATIC_ROS_VERIFIED; MOVEMENT_AND_FULL90_80_PENDING",
+  "scope": "Integrate two independently authored closed local changes into own delivery branch. Literal KeepoutFilter retained; source-mask unknown union and isolated inflation; no hardware or new simulator run.",
+  "source_commits": {
+    "isolated_inflation": {
+      "repo": "/var/home/Valdi/Documents/Codex/2026-10-31/oomwoo-inflacion-aislada",
+      "commit": "ecf9af2167955797c0e0445a6173aad4f434a23f"
+    },
+    "unknown_normalization": {
+      "repo": "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/work/ros2-tools",
+      "commit": "26fc28882d319fe8fa4e5242f47920f7f7777978"
+    }
+  },
+  "composition": {
+    "selection_loop": "AST identical to ecf9af2; only comment original\u2192served after combined native check, whole builder AST unchanged",
+    "normalizer": "decoder function AST identical to26fc288 and reviewed snapshot; normalization/asset ownership retained verbatim",
+    "tests": "isolated16 plus peer4unknown cases; combined graph3. Focal config20passed,graph3passed; style4files0errors after blank-line-only correction, AST identity retained.",
+    "launch": "only existing maskserver parameter source changes to generated overlay; no new nodes,timers,tools/hooks/gates"
+  },
+  "source_sha256": {
+    "src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09",
+    "src/oomwoo_sim_support/test/test_keepout_config.py": "327c06b4982e9f2fd20d94d079abd5aeb0b4d54397aa32955881f0f0ebd584f0",
+    "src/oomwoo_sim_support/test/test_keepout_launch_graph.py": "21429a790449607369a520becc7431aa0b75d1b21fba0ce789aa4024ca0ee2c1",
+    "src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1d6d4ef34508571301db9fbca7f7b7d5c2cb328c92ff27919285de6ca6cc637c"
+  },
+  "native_result": {
+    "ok": true,
+    "scope": "Combined isolated-inflation ecf9af2 and normalized-mask26fc288, exact own builder, cold startup3actualROSprocesses, physical source map contains2unknowncells inside/outside originalNoGo. ComputePath only, no navigation or velocity/motor/Gazebo activity. Original mask and source files retained.",
+    "forbidden_count": 221,
+    "served_yaml": "/tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml",
+    "original_mask_yaml_sha256": "40c5a4c982bdb708c2ff43ba7a69c67464ea1282c3cf86fc816051360a9f7585",
+    "original_mask_pgm_sha256": "f9c4c9e4122d99b0780809af03d7ad8f2e8d3f40d9623f3d84bf5c8b4ba80af6",
+    "actual_source_unknown_count": 2,
+    "actual_mask_forbidden_count": 221,
+    "cells": {
+      "14072": {
+        "base": -1,
+        "mask": 100,
+        "costmap": 100
+      },
+      "8589": {
+        "base": -1,
+        "mask": 100,
+        "costmap": 100
+      }
+    },
+    "free_control": 0,
+    "existing_proof_forbidden_count": 221,
+    "unknown_made_free": 0,
+    "actual_maskserver_yaml": "/tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml",
+    "original_inputs_unchanged": true,
+    "path_cases": {
+      "localized_start": {
+        "status": 4,
+        "error_code": 0,
+        "points": 176,
+        "path_length_m": 5.4174438398803515,
+        "swept_disk_24cm_clear": true
+      },
+      "around_keepout": {
+        "status": 4,
+        "error_code": 0,
+        "points": 116,
+        "path_length_m": 2.9304316484759867,
+        "swept_disk_24cm_clear": true
+      }
+    },
+    "unknown_goal_admitted": {
+      "14072": false,
+      "8589": false
+    },
+    "selection_config": {
+      "global_costmap": {
+        "filters": [
+          "keepout_filter"
+        ],
+        "keepout_filter": {
+          "plugin": "nav2_costmap_2d::KeepoutFilter",
+          "enabled": true,
+          "filter_info_topic": "/oomwoo/keepout_filter_info",
+          "override_lethal_cost": false,
+          "transform_tolerance": 0.3
+        },
+        "keepout_inflation": {
+          "plugin": "nav2_costmap_2d::PluginContainerLayer",
+          "enabled": true,
+          "combination_method": 2,
+          "plugins": [
+            "mask",
+            "inflation"
+          ],
+          "mask": {
+            "plugin": "nav2_costmap_2d::StaticLayer",
+            "enabled": true,
+            "map_topic": "/oomwoo/keepout_mask",
+            "map_subscribe_transient_local": true,
+            "subscribe_to_updates": false,
+            "use_maximum": false,
+            "track_unknown_space": true,
+            "trinary_costmap": true,
+            "lethal_cost_threshold": 100
+          },
+          "inflation": {
+            "plugin": "nav2_costmap_2d::InflationLayer",
+            "enabled": true,
+            "inflation_radius": 0.3345,
+            "cost_scaling_factor": 5.0
+          }
+        },
+        "inflation_layer": {
+          "cost_scaling_factor": 10.0,
+          "inflation_radius": 0.1,
+          "plugin": "nav2_costmap_2d::InflationLayer"
+        }
+      },
+      "local_costmap": {
+        "filters": [
+          "keepout_filter"
+        ],
+        "keepout_filter": {
+          "plugin": "nav2_costmap_2d::KeepoutFilter",
+          "enabled": true,
+          "filter_info_topic": "/oomwoo/keepout_filter_info",
+          "override_lethal_cost": false,
+          "transform_tolerance": 0.3
+        },
+        "keepout_inflation": {
+          "plugin": "nav2_costmap_2d::PluginContainerLayer",
+          "enabled": true,
+          "combination_method": 2,
+          "plugins": [
+            "mask",
+            "inflation"
+          ],
+          "mask": {
+            "plugin": "nav2_costmap_2d::StaticLayer",
+            "enabled": true,
+            "map_topic": "/oomwoo/keepout_mask",
+            "map_subscribe_transient_local": true,
+            "subscribe_to_updates": false,
+            "use_maximum": false,
+            "track_unknown_space": true,
+            "trinary_costmap": true,
+            "lethal_cost_threshold": 100
+          },
+          "inflation": {
+            "plugin": "nav2_costmap_2d::InflationLayer",
+            "enabled": true,
+            "inflation_radius": 0.2745,
+            "cost_scaling_factor": 5.0
+          }
+        },
+        "inflation_layer": {
+          "cost_scaling_factor": 10.0,
+          "inflation_radius": 0.1,
+          "plugin": "nav2_costmap_2d::InflationLayer"
+        }
+      }
+    },
+    "process_exit_codes": [
+      0,
+      0,
+      0
+    ],
+    "seconds": 5.247,
+    "cgroup": {
+      "/sys/fs/cgroup/memory.peak": "169275392\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "/sys/fs/cgroup/pids.peak": "68\n"
+    }
+  },
+  "decoder_validation": {
+    "cases": [
+      {
+        "mode": "trinary",
+        "negate": 0,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 102,
+        "predicted_unknown_count": 102,
+        "differences": []
+      },
+      {
+        "mode": "trinary",
+        "negate": 1,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 102,
+        "predicted_unknown_count": 102,
+        "differences": []
+      },
+      {
+        "mode": "trinary",
+        "negate": 0,
+        "free_thresh": 0.19607843137254902,
+        "occupied_thresh": 0.6470588235294118,
+        "actual_unknown_count": 114,
+        "predicted_unknown_count": 114,
+        "differences": []
+      },
+      {
+        "mode": "trinary",
+        "negate": 1,
+        "free_thresh": 0.19607843137254902,
+        "occupied_thresh": 0.6470588235294118,
+        "actual_unknown_count": 114,
+        "predicted_unknown_count": 114,
+        "differences": []
+      },
+      {
+        "mode": "raw",
+        "negate": 0,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 155,
+        "predicted_unknown_count": 155,
+        "differences": []
+      },
+      {
+        "mode": "scale",
+        "negate": 0,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 0,
+        "predicted_unknown_count": 0,
+        "differences": []
+      },
+      {
+        "mode": "scale",
+        "negate": 1,
+        "free_thresh": 0.25,
+        "occupied_thresh": 0.65,
+        "actual_unknown_count": 0,
+        "predicted_unknown_count": 0,
+        "differences": []
+      }
+    ],
+    "process_exit_codes": [
+      0
+    ],
+    "memory_peak_bytes": 84275200,
+    "source_decoder_ast_identical_to_adopted": true
+  },
+  "raw_evidence_sha256": {
+    "decoder_contract_review_20261031.json": "a1b4336b64a4195285ae00bd87f0b44afa82ed4d11cc9b9d8e3266819126fdfe",
+    "integracion_mascara_config_20261031.json": "7952b3438a4364dc91d7042ec93c3864454e923bf620ad6d0ec9515435350df0",
+    "integracion_mascara_graph_20261031.json": "395463aabfea9d4a2b99655134a0f3cc0826237ef9b6bc179eb3177c97e5d3b9",
+    "integracion_mascara_style_20261031.json": "78b8a35831a7baeef4e61442b927ec5a5c912b9de4f5449c195719af1208770e",
+    "integracion_mascara_style_final_20261031.json": "7cd577dd9781bd3c80e73b94337e1a0d86bcfc17e14e73a234ff57a5f344e834",
+    "integracion_mascara_native_20261031.json": "261fd9647b4f2781b3b88e543ef6755d3e773ad410183f13e03e97680647d710",
+    "integracion_mascara_style_identity_20261031.json": "4530319dbbe46e94cda1f28c3d793515ed86a482acb7257567151d842958636e"
+  },
+  "interpretation": {
+    "unknown": "Static source unknown becomes binary blocked100 in served mask and post costmap; original source remains-1. It does not preserve unknown label-1 in post costmap.",
+    "native_prefix": "This controlled global plan succeeds from860localized point; it is not historical scan/costmap replay or an AMCL repair.",
+    "local_rolling": "Prior ecf isolated known-map rolling check exists; combined normalized-mask rolling with actual motion not proved here.",
+    "physical_costs": "Existing ordinary inflation0.10 and all other costmap parameters retained; no assertion of physical contact safety or changed AMCLaccuracy.",
+    "queued862": "Immutable separate candidate da64c00f removes outer filter. Its full known-map movement test can inform performance but does not prove unknown-inside blocking for this delivery. Do not mutate/restart it."
+  },
+  "limits": [
+    "No motor, NavigateToPose, actual motion, physical S12 or Gazebo in these new checks.",
+    "Static P5 maps only; dynamic map changes/local unknown arising independently of source map are not covered.",
+    "Full original90percent coverage,80percent efficiency,zero crossings and native closure remain open.",
+    "Existing861 queued localization source capture stays immutable and has not yet produced a terminal receipt."
+  ],
+  "receipt_return": {
+    "utility_demonstrated": "One combined real ROS configuration restores focused Navfn planning and preserves explicit lethal blocking of source unknown inside/outside NoGo, with binary attestation and unchanged source files.",
+    "distance_to_useful_milestone": "Combined static component is reviewable and verified. Actual motion/rolling-normalized and full90/80 acceptance remain unproved.",
+    "next_increment": "Use already queued861source capture and862movement evidence; replay observed localization transforms before choosing another native change/run. Do not duplicate those jobs.",
+    "benefit_cost": "Integration reuses stock plugins and existing maskserver; native combined check16.886s .25CPU512MiB/noGPU,pico169275392bytes. Avoid speculative timing/heading tuning or new workers.",
+    "decision": "Consolidate local commit; advance on native evidence, not additional static variants.",
+    "evidence_that_changes_decision": "Combined-motion or dynamic-unknown counterexample requires correction; only actual original full-room acceptance justifies overall completion."
+  }
+}

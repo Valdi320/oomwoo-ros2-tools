@@ -150,9 +150,10 @@ def generate_launch_description() -> LaunchDescription:
             keepout_actions.extend([
                 Node(package='nav2_map_server', executable='map_server',
                      name='oomwoo_keepout_mask_server', output='screen',
-                     parameters=[{'use_sim_time': True,
-                                  'yaml_filename': keepout_path,
-                                  'topic_name': MASK_TOPIC, 'frame_id': 'map'}]),
+                     parameters=[
+                         str(overlay),
+                         {'use_sim_time': True, 'topic_name': MASK_TOPIC, 'frame_id': 'map'},
+                     ]),
                 Node(package='nav2_map_server',
                      executable='costmap_filter_info_server',
                      name='oomwoo_keepout_info_server', output='screen',

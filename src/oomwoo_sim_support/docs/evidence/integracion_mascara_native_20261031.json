@@ -1,0 +1,190 @@
+{
+  "utc": "2026-10-31T01:19:26.531628+00:00",
+  "rc": 0,
+  "seconds": 16.886,
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=192m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "--name",
+    "oomwoo-mascara-combinada-native-20261031",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-29/apoyo-oomwoo/validation/cleaning-jobs-vigente-20261030:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 ROS_HOME=/tmp/roshome ROS_LOG_DIR=/tmp/roslogs ROS_DOMAIN_ID=87 ROS_LOCALHOST_ONLY=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\nexport FASTRTPS_DEFAULT_PROFILES_FILE=/work/src/oomwoo_sim_support/config/nav2_lifecycle_replies.xml\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:/contrib/integration:${PYTHONPATH:-}\npython3 - <<'CASE'\n\nimport asyncio,hashlib,inspect,json,math,time\nfrom pathlib import Path\nimport yaml,rclpy\nfrom launch import LaunchDescription,LaunchService\nfrom launch.actions import RegisterEventHandler\nfrom launch.event_handlers import OnProcessExit\nfrom launch_ros.actions import Node\nfrom rclpy.parameter import Parameter\nfrom rclpy.qos import QoSProfile,QoSReliabilityPolicy,QoSDurabilityPolicy\nfrom lifecycle_msgs.srv import ChangeState\nfrom rcl_interfaces.srv import GetParameters\nfrom nav2_msgs.msg import CostmapFilterInfo\nfrom nav2_msgs.action import ComputePathToPose\nfrom geometry_msgs.msg import TransformStamped\nfrom tf2_msgs.msg import TFMessage\nfrom rosgraph_msgs.msg import Clock\nfrom generate_keepout_lab import generate\nfrom probe_real_nav2_keepout import Observer,cell\nfrom oomwoo_sim_support.keepout_config import build_keepout_overlay,_pgm\nfrom oomwoo_cleaning_jobs.map_admission import Raster,CostmapChecker\nfrom oomwoo_cleaning_jobs.swept_footprint import swept_disk_clear\nfrom oomwoo_cleaning_jobs.nav_keepout_admission import VerifiedGlobalKeepout\nasync def main():\n out=Path('/tmp/normalized-mask-native');out.mkdir();source=Path('/work/src/oomwoo_sim_support')\n original=yaml.safe_load((source/'maps/test_room.yaml').read_text());w,h,pixels=_pgm(source/'maps'/original['image']);changed=bytearray(pixels)\n for index in (14072,8589):\n  row,col=divmod(index,w);changed[(h-1-row)*w+col]=128\n source_image=out/'source_unknown.pgm';source_image.write_bytes(f'P5\\n{w} {h}\\n255\\n'.encode()+changed);original['image']=source_image.name;source_yaml=out/'source_unknown.yaml';source_yaml.write_text(yaml.safe_dump(original))\n nav=yaml.safe_load((source/'config/nav2_params.yaml').read_text());nav['map_server']['ros__parameters'].update(yaml_filename=str(source_yaml),use_sim_time=True);nav['planner_server']['ros__parameters']['use_sim_time']=True;nav['global_costmap']['global_costmap']['ros__parameters']['use_sim_time']=True\n nav_path=out/'nav.yaml';nav_path.write_text(yaml.safe_dump(nav));generate(out,test_room=source_yaml,nav_params=nav_path);mask_yaml=out/'keepout_test_room.yaml';before_mask=mask_yaml.read_bytes();before_pgm=(out/'keepout_test_room.pgm').read_bytes();overlay,count=build_keepout_overlay(nav_path,source_yaml,mask_yaml,output_dir=out);assert count==221;config=yaml.safe_load(overlay.read_text());served=Path(config['oomwoo_keepout_mask_server']['ros__parameters']['yaml_filename']);assert served!=mask_yaml and mask_yaml.read_bytes()==before_mask and (out/'keepout_test_room.pgm').read_bytes()==before_pgm\n for name in ('global_costmap','local_costmap'):\n  params=config[name][name]['ros__parameters'];assert params['filters']==['keepout_filter'];assert params['keepout_inflation']['plugin']=='nav2_costmap_2d::PluginContainerLayer';assert params['inflation_layer']['inflation_radius']==.10\n rclpy.init(args=['--ros-args','-r','/valdi/keepout_filter_mask:=/oomwoo/keepout_mask','-r','/valdi/keepout_costmap_filter_info:=/oomwoo/keepout_filter_info']);node=Observer();node.set_parameters([Parameter('use_sim_time',value=True)]);q=QoSProfile(depth=1,reliability=QoSReliabilityPolicy.RELIABLE,durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)\n infos=node.create_publisher(CostmapFilterInfo,'/oomwoo/keepout_filter_info',q);info=CostmapFilterInfo();info.type=0;info.filter_mask_topic='/oomwoo/keepout_mask';info.multiplier=1.;infos.publish(info)\n transforms=node.create_publisher(TFMessage,'/tf_static',q);tf=TransformStamped();tf.header.frame_id='map';tf.child_frame_id='base_link';tf.header.stamp.sec=1;tf.transform.rotation.w=1.;transforms.publish(TFMessage(transforms=[tf]));clocks=node.create_publisher(Clock,'/clock',10)\n processes=[Node(package='nav2_map_server',executable='map_server',name='map_server',parameters=[str(overlay)],output='screen'),Node(package='nav2_map_server',executable='map_server',name='oomwoo_keepout_mask_server',parameters=[str(overlay),{'use_sim_time':True,'topic_name':'/oomwoo/keepout_mask','frame_id':'map'}],output='screen'),Node(package='nav2_planner',executable='planner_server',name='planner_server',parameters=[str(overlay)],output='screen')]\n exits=[];handlers=[RegisterEventHandler(OnProcessExit(target_action=p,on_exit=lambda e,c:exits.append(e.returncode) or [])) for p in processes];launch=LaunchService();launch.include_launch_description(LaunchDescription(processes+handlers));task=asyncio.create_task(launch.run_async());start=time.monotonic();result={'ok':False,'scope':'Combined isolated-inflation ecf9af2 and normalized-mask26fc288, exact own builder, cold startup3actualROSprocesses, physical source map contains2unknowncells inside/outside originalNoGo. ComputePath only, no navigation or velocity/motor/Gazebo activity. Original mask and source files retained.','forbidden_count':count,'served_yaml':str(served),'original_mask_yaml_sha256':hashlib.sha256(before_mask).hexdigest(),'original_mask_pgm_sha256':hashlib.sha256(before_pgm).hexdigest()}\n async def until(pred,seconds):\n  end=time.monotonic()+seconds\n  while time.monotonic()<end:\n   if task.done():raise RuntimeError('owned launch stopped before observation')\n   ns=2_000_000_000+int((time.monotonic()-start)/.02)*20_000_000;clock=Clock();clock.clock.sec=ns//1_000_000_000;clock.clock.nanosec=ns%1_000_000_000;clocks.publish(clock);rclpy.spin_once(node,timeout_sec=0.)\n   if pred():return\n   await asyncio.sleep(.01)\n  raise RuntimeError('observation timeout')\n async def transition(name,ident):\n  c=node.create_client(ChangeState,'/'+name+'/change_state');await until(c.service_is_ready,15);req=ChangeState.Request();req.transition.id=ident;f=c.call_async(req);await until(f.done,15);assert f.result().success,(name,ident)\n try:\n  for name in ('map_server','oomwoo_keepout_mask_server'):\n   for ident in (1,3):await transition(name,ident)\n  await until(lambda:node.base_map is not None and node.mask is not None,10)\n  for ident in (1,3):await transition('planner_server',ident)\n  await until(lambda:node.global_grid is not None and all(node.global_grid.data[i]>=95 for i in (14072,8589)),15)\n  result['actual_source_unknown_count']=list(node.base_map.data).count(-1);assert result['actual_source_unknown_count']==2\n  result['actual_mask_forbidden_count']=list(node.mask.data).count(100);assert result['actual_mask_forbidden_count']==221 and set(node.mask.data)=={0,100}\n  result['cells']={str(i):{'base':int(node.base_map.data[i]),'mask':int(node.mask.data[i]),'costmap':int(node.global_grid.data[i])} for i in (14072,8589)};assert all(c=={'base':-1,'mask':100,'costmap':100} for c in result['cells'].values())\n  result['free_control']=int(node.global_grid.data[cell(node.global_grid,0.,2.)]);assert result['free_control']==0\n  proof=VerifiedGlobalKeepout(Raster.from_ros(node.base_map),Raster.from_ros(node.mask),Raster.from_ros(node.global_grid));result['existing_proof_forbidden_count']=proof.forbidden_count;assert proof.forbidden_count==221\n  result['unknown_made_free']=sum(a<0 and b==0 for a,b in zip(node.base_map.data,node.global_grid.data));assert result['unknown_made_free']==0\n  getter=node.create_client(GetParameters,'/oomwoo_keepout_mask_server/get_parameters');await until(getter.service_is_ready,5);req=GetParameters.Request();req.names=['yaml_filename'];f=getter.call_async(req);await until(f.done,5);result['actual_maskserver_yaml']=f.result().values[0].string_value;assert result['actual_maskserver_yaml']==str(served)\n  result['original_inputs_unchanged']=mask_yaml.read_bytes()==before_mask and (out/'keepout_test_room.pgm').read_bytes()==before_pgm;assert result['original_inputs_unchanged'];result['ok']=True\n\n  await until(node.planner.server_is_ready,10)\n  audit=Raster.from_ros(node.mask)\n  result['path_cases']={}\n  for name,start_xy,goal_xy in [\n   ('localized_start',(-.22217017330367905,-2.6064883256596816),(4.725000094249845,-2.52499999217689)),\n   ('around_keepout',(0.,0.),(1.85,0.))]:\n   req=ComputePathToPose.Goal();req.start=node.pose(*start_xy);req.goal=node.pose(*goal_xy);req.use_start=True\n   sent=node.planner.send_goal_async(req);await until(sent.done,15);handle=sent.result();assert handle.accepted\n   finished=handle.get_result_async();await until(finished.done,20);reply=finished.result();planned=reply.result\n   points=[(p.pose.position.x,p.pose.position.y) for p in planned.path.poses]\n   clear=len(points)>1 and all(swept_disk_clear(audit,a,z,.24,0) for a,z in zip(points,points[1:]))\n   result['path_cases'][name]={'status':reply.status,'error_code':planned.error_code,'points':len(points),'path_length_m':sum(math.dist(a,z) for a,z in zip(points,points[1:])),'swept_disk_24cm_clear':clear}\n   assert reply.status==4 and planned.error_code==0 and clear,result['path_cases'][name]\n  checker=CostmapChecker(Raster.from_ros(node.base_map),Raster.from_ros(node.global_grid),footprint_radius_m=.24)\n  result['unknown_goal_admitted']={str(i):checker.route_admitted((i,)) for i in (14072,8589)}\n  assert not any(result['unknown_goal_admitted'].values())\n  result['selection_config']={name:{k:config[name][name]['ros__parameters'][k] for k in ('filters','keepout_filter','keepout_inflation','inflation_layer')} for name in ('global_costmap','local_costmap')}\n except Exception as exc:result['error']=repr(exc)\n finally:\n  done=launch.shutdown()\n  if inspect.isawaitable(done):await done\n  try:await asyncio.wait_for(task,timeout=15)\n  except Exception as exc:result['cleanup_error']=repr(exc);result['ok']=False\n  result['process_exit_codes']=exits\n  if exits!=[0,0,0]:result['ok']=False\n  result['seconds']=round(time.monotonic()-start,3);result['cgroup']={str(p):p.read_text() for p in (Path('/sys/fs/cgroup/memory.peak'),Path('/sys/fs/cgroup/memory.events'),Path('/sys/fs/cgroup/pids.peak')) if p.exists()};node.destroy_node();rclpy.shutdown();print('NORMALIZED_MASK_NATIVE_RESULT '+json.dumps(result),flush=True)\n return 0 if result['ok'] else 1\nraise SystemExit(asyncio.run(main()))\n\nCASE\n"
+  ],
+  "stdout": "NAV2_KEEP_OUT_GENERATED {\"count\": 220, \"filter_info_topic\": \"/valdi/keepout_costmap_filter_info\", \"filters_global\": [\"keepout_filter\", \"keepout_inflation\"], \"filters_local\": [\"keepout_filter\", \"keepout_inflation\"], \"mask_topic\": \"/valdi/keepout_filter_mask\", \"mask_yaml\": \"/tmp/normalized-mask-native/keepout_test_room.yaml\", \"nav_params\": \"/tmp/normalized-mask-native/nav2_keepout_params.yaml\", \"origin\": [-1.6, -3.05, 0.0], \"params_source\": \"/tmp/normalized-mask-native/nav.yaml\", \"pgm\": \"/tmp/normalized-mask-native/keepout_test_room.pgm\", \"rectangle_world\": [[0.67, -0.55], [1.14, 0.55]], \"resolution_m\": 0.05, \"shape\": \"rectangular experimental no-go area\", \"source_map_fingerprint\": \"03c495932504d9c1da9677ae0f0caf6848a6ebd3df4a4e5f8c36f4ac7cce22a0\", \"source_map_yaml\": \"/tmp/normalized-mask-native/source_unknown.yaml\"}\n[INFO] [launch]: All log files can be found below /tmp/roslogs/2026-10-31-01-19-20-386315-2b00416f6730-42\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [map_server-1]: process started with pid [58]\n[INFO] [map_server-2]: process started with pid [59]\n[INFO] [planner_server-3]: process started with pid [60]\n[planner_server-3] [WARN] [1793409560.887398067] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[planner_server-3] [WARN] [1793409560.887416416] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[planner_server-3] [INFO] [1793409561.285396507] [planner_server]: \n[planner_server-3] \tplanner_server lifecycle node launched. \n[planner_server-3] \tWaiting on external lifecycle transitions to activate\n[planner_server-3] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[planner_server-3] [INFO] [1793409561.382727170] [planner_server]: Creating\n[map_server-1] [WARN] [1793409561.388578284] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[map_server-1] [WARN] [1793409561.388600504] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[map_server-2] [WARN] [1793409561.478775038] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[map_server-2] [WARN] [1793409561.478805968] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n[planner_server-3] [INFO] [1793409561.581761995] [global_costmap.global_costmap]: \n[planner_server-3] \tglobal_costmap lifecycle node launched. \n[planner_server-3] \tWaiting on external lifecycle transitions to activate\n[planner_server-3] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[planner_server-3] [INFO] [1793409561.677880322] [global_costmap.global_costmap]: Creating Costmap\n[map_server-1] [INFO] [1793409561.780635251] [map_server]: \n[map_server-1] \tmap_server lifecycle node launched. \n[map_server-1] \tWaiting on external lifecycle transitions to activate\n[map_server-1] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[map_server-1] [INFO] [1793409561.780743491] [map_server]: Creating\n[map_server-2] [INFO] [1793409561.782063237] [oomwoo_keepout_mask_server]: \n[map_server-2] \toomwoo_keepout_mask_server lifecycle node launched. \n[map_server-2] \tWaiting on external lifecycle transitions to activate\n[map_server-2] \tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[map_server-2] [INFO] [1793409561.782142597] [oomwoo_keepout_mask_server]: Creating\n[map_server-1] [INFO] [1793409563.945645546] [map_server]: Configuring\n[map_server-1] [INFO] [1793409563.945700976] [map_io]: Loading yaml file: /tmp/normalized-mask-native/source_unknown.yaml\n[map_server-1] [INFO] [1793409563.945877825] [map_io]: resolution: 0.05\n[map_server-1] [INFO] [1793409563.945889225] [map_io]: origin[0]: -1.6\n[map_server-1] [INFO] [1793409563.945893315] [map_io]: origin[1]: -3.05\n[map_server-1] [INFO] [1793409563.945896155] [map_io]: origin[2]: 0\n[map_server-1] [INFO] [1793409563.945898965] [map_io]: free_thresh: 0.25\n[map_server-1] [INFO] [1793409563.945901785] [map_io]: occupied_thresh: 0.65\n[map_server-1] [INFO] [1793409563.945905985] [map_io]: mode: trinary\n[map_server-1] [INFO] [1793409563.945909705] [map_io]: negate: 0\n[map_server-1] [INFO] [1793409563.947535650] [map_io]: Loading image_file: /tmp/normalized-mask-native/source_unknown.pgm\n[map_server-1] [INFO] [1793409563.948301508] [map_io]: Read map /tmp/normalized-mask-native/source_unknown.pgm: 140 X 140 map @ 0.05 m/cell\n[map_server-1] [INFO] [1793409564.000115051] [map_server]: Activating\n[map_server-1] [INFO] [1793409564.000278660] [map_server]: Creating bond (map_server) to lifecycle manager.\n[map_server-2] [INFO] [1793409564.135226198] [oomwoo_keepout_mask_server]: Configuring\n[map_server-2] [INFO] [1793409564.135330997] [map_io]: Loading yaml file: /tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml\n[map_server-2] [INFO] [1793409564.135649506] [map_io]: resolution: 0.05\n[map_server-2] [INFO] [1793409564.135660426] [map_io]: origin[0]: -1.6\n[map_server-2] [INFO] [1793409564.135669686] [map_io]: origin[1]: -3.05\n[map_server-2] [INFO] [1793409564.135672696] [map_io]: origin[2]: 0\n[map_server-2] [INFO] [1793409564.135675646] [map_io]: free_thresh: 0.25\n[map_server-2] [INFO] [1793409564.135678396] [map_io]: occupied_thresh: 0.65\n[map_server-2] [INFO] [1793409564.135683006] [map_io]: mode: trinary\n[map_server-2] [INFO] [1793409564.135687286] [map_io]: negate: 0\n[map_server-2] [INFO] [1793409564.135876036] [map_io]: Loading image_file: /tmp/normalized-mask-native/protected_mask_hly5arul/mask.pgm\n[map_server-2] [INFO] [1793409564.136444494] [map_io]: Read map /tmp/normalized-mask-native/protected_mask_hly5arul/mask.pgm: 140 X 140 map @ 0.05 m/cell\n[map_server-2] [INFO] [1793409564.183583660] [oomwoo_keepout_mask_server]: Activating\n[map_server-2] [INFO] [1793409564.183829010] [oomwoo_keepout_mask_server]: Creating bond (oomwoo_keepout_mask_server) to lifecycle manager.\n[planner_server-3] [INFO] [1793409564.238394275] [planner_server]: Configuring\n[planner_server-3] [INFO] [1793409564.238433964] [global_costmap.global_costmap]: Configuring\n[planner_server-3] [INFO] [1793409564.245992143] [global_costmap.global_costmap]: Using plugin \"static_layer\"\n[planner_server-3] [INFO] [1793409564.281696691] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability\n[planner_server-3] [INFO] [1793409564.283443267] [global_costmap.global_costmap]: Initialized plugin \"static_layer\"\n[planner_server-3] [INFO] [1793409564.283470717] [global_costmap.global_costmap]: Using plugin \"obstacle_layer\"\n[planner_server-3] [INFO] [1793409564.283676956] [global_costmap.global_costmap]: Subscribed to Topics: scan\n[planner_server-3] [INFO] [1793409564.288287353] [global_costmap.global_costmap]: Initialized plugin \"obstacle_layer\"\n[planner_server-3] [INFO] [1793409564.288311973] [global_costmap.global_costmap]: Using plugin \"voxel_layer\"\n[planner_server-3] [INFO] [1793409564.288572842] [global_costmap.global_costmap]: Subscribed to Topics: scan\n[planner_server-3] [INFO] [1793409564.351930313] [global_costmap.global_costmap]: Initialized plugin \"voxel_layer\"\n[planner_server-3] [INFO] [1793409564.351965892] [global_costmap.global_costmap]: Using plugin \"inflation_layer\"\n[planner_server-3] [INFO] [1793409564.352227722] [global_costmap.global_costmap]: Initialized plugin \"inflation_layer\"\n[planner_server-3] [INFO] [1793409564.352243342] [global_costmap.global_costmap]: Using plugin \"keepout_inflation\"\n[planner_server-3] [INFO] [1793409564.380376842] [global_costmap.global_costmap]: Subscribing to the map topic (/oomwoo/keepout_mask) with transient local durability\n[planner_server-3] [INFO] [1793409564.381206169] [global_costmap.global_costmap]: Initialized plugin \"keepout_inflation\"\n[planner_server-3] [INFO] [1793409564.381224839] [global_costmap.global_costmap]: Using costmap filter \"keepout_filter\"\n[planner_server-3] [INFO] [1793409564.386665144] [global_costmap.global_costmap]: Initialized costmap filter \"keepout_filter\"\n[planner_server-3] [ERROR] [1793409564.479181931] [global_costmap.global_costmap]: The configured inflation radius (0.100) is smaller than the computed inscribed radius (0.181) of your footprint, it is highly recommended to set inflation radius to be at least as big as the inscribed radius to avoid collisions\n[planner_server-3] [INFO] [1793409564.482973301] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 140 X 140 at 0.050000 m/pix\n[planner_server-3] [INFO] [1793409564.485059754] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner\n[planner_server-3] [INFO] [1793409564.485085214] [planner_server]: Configuring plugin GridBased of type NavfnPlanner\n[planner_server-3] [INFO] [1793409564.485239624] [planner_server]: Planner Server has GridBased  planners available.\n[planner_server-3] [INFO] [1793409564.620669520] [planner_server]: Activating\n[planner_server-3] [INFO] [1793409564.620707309] [global_costmap.global_costmap]: Activating\n[planner_server-3] [INFO] [1793409564.620714499] [global_costmap.global_costmap]: Checking transform\n[planner_server-3] [INFO] [1793409564.620817949] [global_costmap.global_costmap]: start\n[planner_server-3] [INFO] [1793409564.621452767] [global_costmap.global_costmap]: KeepoutFilter: Subscribing to \"/oomwoo/keepout_filter_info\" topic for filter info...\n[planner_server-3] [INFO] [1793409564.632214497] [global_costmap.global_costmap]: KeepoutFilter: Received filter info from /oomwoo/keepout_filter_info topic.\n[planner_server-3] [INFO] [1793409564.632251677] [global_costmap.global_costmap]: KeepoutFilter: Subscribing to \"/oomwoo/keepout_mask\" topic for filter mask...\n[planner_server-3] [INFO] [1793409564.649935636] [global_costmap.global_costmap]: KeepoutFilter: Received filter mask from /oomwoo/keepout_mask topic.\n[planner_server-3] [INFO] [1793409565.172040245] [planner_server]: Activating plugin GridBased of type NavfnPlanner\n[planner_server-3] [INFO] [1793409565.172880182] [planner_server]: Creating bond (planner_server) to lifecycle manager.\n[planner_server-3] [WARN] [1793409565.248767417] [planner_server]: No planners specified in action call. Server will use only plugin GridBased  in server. This warning will appear once.\n[INFO] [planner_server-3]: sending signal 'SIGINT' to process[planner_server-3]\n[INFO] [map_server-2]: sending signal 'SIGINT' to process[map_server-2]\n[INFO] [map_server-1]: sending signal 'SIGINT' to process[map_server-1]\n[planner_server-3] [INFO] [1793409565.401092304] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[planner_server-3] [INFO] [1793409565.401155844] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)\n[planner_server-3] [INFO] [1793409565.401205054] [planner_server]: Deactivating\n[planner_server-3] [INFO] [1793409565.401226334] [global_costmap.global_costmap]: Deactivating\n[map_server-2] [INFO] [1793409565.401464743] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[map_server-2] [INFO] [1793409565.401605203] [oomwoo_keepout_mask_server]: Running Nav2 LifecycleNode rcl preshutdown (oomwoo_keepout_mask_server)\n[map_server-2] [INFO] [1793409565.401648753] [oomwoo_keepout_mask_server]: Deactivating\n[map_server-2] [INFO] [1793409565.401660473] [oomwoo_keepout_mask_server]: Destroying bond (oomwoo_keepout_mask_server) to lifecycle manager.\n[map_server-1] [INFO] [1793409565.401770882] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[map_server-1] [INFO] [1793409565.401865832] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)\n[map_server-1] [INFO] [1793409565.401907182] [map_server]: Deactivating\n[map_server-1] [INFO] [1793409565.401925402] [map_server]: Destroying bond (map_server) to lifecycle manager.\n[map_server-2] [INFO] [1793409565.411913914] [oomwoo_keepout_mask_server]: Cleaning up\n[map_server-2] [INFO] [1793409565.411955363] [oomwoo_keepout_mask_server]: Destroying bond (oomwoo_keepout_mask_server) to lifecycle manager.\n[map_server-1] [INFO] [1793409565.412121043] [map_server]: Cleaning up\n[map_server-1] [INFO] [1793409565.412151953] [map_server]: Destroying bond (map_server) to lifecycle manager.\n[map_server-1] [INFO] [1793409565.413486159] [map_server]: Destroying\n[map_server-2] [INFO] [1793409565.451388571] [oomwoo_keepout_mask_server]: Destroying\n[INFO] [map_server-1]: process has finished cleanly [pid 58]\n[INFO] [map_server-2]: process has finished cleanly [pid 59]\n[planner_server-3] [INFO] [1793409565.621011770] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner\n[planner_server-3] [INFO] [1793409565.621054200] [planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[planner_server-3] [INFO] [1793409565.631265461] [planner_server]: Cleaning up\n[planner_server-3] [INFO] [1793409565.634228183] [global_costmap.global_costmap]: Cleaning up\n[planner_server-3] [INFO] [1793409565.635953458] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner\n[planner_server-3] [INFO] [1793409565.636200227] [planner_server]: Destroying plugin GridBased of type NavfnPlanner\n[planner_server-3] [INFO] [1793409565.679954143] [planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[planner_server-3] [INFO] [1793409565.681092070] [global_costmap.global_costmap]: Destroying\n[planner_server-3] [INFO] [1793409565.683522873] [planner_server]: Destroying\n[INFO] [planner_server-3]: process has finished cleanly [pid 60]\nNORMALIZED_MASK_NATIVE_RESULT {\"ok\": true, \"scope\": \"Combined isolated-inflation ecf9af2 and normalized-mask26fc288, exact own builder, cold startup3actualROSprocesses, physical source map contains2unknowncells inside/outside originalNoGo. ComputePath only, no navigation or velocity/motor/Gazebo activity. Original mask and source files retained.\", \"forbidden_count\": 221, \"served_yaml\": \"/tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml\", \"original_mask_yaml_sha256\": \"40c5a4c982bdb708c2ff43ba7a69c67464ea1282c3cf86fc816051360a9f7585\", \"original_mask_pgm_sha256\": \"f9c4c9e4122d99b0780809af03d7ad8f2e8d3f40d9623f3d84bf5c8b4ba80af6\", \"actual_source_unknown_count\": 2, \"actual_mask_forbidden_count\": 221, \"cells\": {\"14072\": {\"base\": -1, \"mask\": 100, \"costmap\": 100}, \"8589\": {\"base\": -1, \"mask\": 100, \"costmap\": 100}}, \"free_control\": 0, \"existing_proof_forbidden_count\": 221, \"unknown_made_free\": 0, \"actual_maskserver_yaml\": \"/tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml\", \"original_inputs_unchanged\": true, \"path_cases\": {\"localized_start\": {\"status\": 4, \"error_code\": 0, \"points\": 176, \"path_length_m\": 5.4174438398803515, \"swept_disk_24cm_clear\": true}, \"around_keepout\": {\"status\": 4, \"error_code\": 0, \"points\": 116, \"path_length_m\": 2.9304316484759867, \"swept_disk_24cm_clear\": true}}, \"unknown_goal_admitted\": {\"14072\": false, \"8589\": false}, \"selection_config\": {\"global_costmap\": {\"filters\": [\"keepout_filter\"], \"keepout_filter\": {\"plugin\": \"nav2_costmap_2d::KeepoutFilter\", \"enabled\": true, \"filter_info_topic\": \"/oomwoo/keepout_filter_info\", \"override_lethal_cost\": false, \"transform_tolerance\": 0.3}, \"keepout_inflation\": {\"plugin\": \"nav2_costmap_2d::PluginContainerLayer\", \"enabled\": true, \"combination_method\": 2, \"plugins\": [\"mask\", \"inflation\"], \"mask\": {\"plugin\": \"nav2_costmap_2d::StaticLayer\", \"enabled\": true, \"map_topic\": \"/oomwoo/keepout_mask\", \"map_subscribe_transient_local\": true, \"subscribe_to_updates\": false, \"use_maximum\": false, \"track_unknown_space\": true, \"trinary_costmap\": true, \"lethal_cost_threshold\": 100}, \"inflation\": {\"plugin\": \"nav2_costmap_2d::InflationLayer\", \"enabled\": true, \"inflation_radius\": 0.3345, \"cost_scaling_factor\": 5.0}}, \"inflation_layer\": {\"cost_scaling_factor\": 10.0, \"inflation_radius\": 0.1, \"plugin\": \"nav2_costmap_2d::InflationLayer\"}}, \"local_costmap\": {\"filters\": [\"keepout_filter\"], \"keepout_filter\": {\"plugin\": \"nav2_costmap_2d::KeepoutFilter\", \"enabled\": true, \"filter_info_topic\": \"/oomwoo/keepout_filter_info\", \"override_lethal_cost\": false, \"transform_tolerance\": 0.3}, \"keepout_inflation\": {\"plugin\": \"nav2_costmap_2d::PluginContainerLayer\", \"enabled\": true, \"combination_method\": 2, \"plugins\": [\"mask\", \"inflation\"], \"mask\": {\"plugin\": \"nav2_costmap_2d::StaticLayer\", \"enabled\": true, \"map_topic\": \"/oomwoo/keepout_mask\", \"map_subscribe_transient_local\": true, \"subscribe_to_updates\": false, \"use_maximum\": false, \"track_unknown_space\": true, \"trinary_costmap\": true, \"lethal_cost_threshold\": 100}, \"inflation\": {\"plugin\": \"nav2_costmap_2d::InflationLayer\", \"enabled\": true, \"inflation_radius\": 0.2745, \"cost_scaling_factor\": 5.0}}, \"inflation_layer\": {\"cost_scaling_factor\": 10.0, \"inflation_radius\": 0.1, \"plugin\": \"nav2_costmap_2d::InflationLayer\"}}}, \"process_exit_codes\": [0, 0, 0], \"seconds\": 5.247, \"cgroup\": {\"/sys/fs/cgroup/memory.peak\": \"169275392\\n\", \"/sys/fs/cgroup/memory.events\": \"low 0\\nhigh 0\\nmax 0\\noom 0\\noom_kill 0\\noom_group_kill 0\\n\", \"/sys/fs/cgroup/pids.peak\": \"68\\n\"}}\n",
+  "stderr": "[WARN] [1793409559.981687227] [rcl]: ROS_LOCALHOST_ONLY is deprecated but still honored if it is enabled. Use ROS_AUTOMATIC_DISCOVERY_RANGE and ROS_STATIC_PEERS instead.\n[WARN] [1793409559.981698747] [rcl]: 'localhost_only' is enabled, 'automatic_discovery_range' and 'static_peers' will be ignored.\n",
+  "result": {
+    "ok": true,
+    "scope": "Combined isolated-inflation ecf9af2 and normalized-mask26fc288, exact own builder, cold startup3actualROSprocesses, physical source map contains2unknowncells inside/outside originalNoGo. ComputePath only, no navigation or velocity/motor/Gazebo activity. Original mask and source files retained.",
+    "forbidden_count": 221,
+    "served_yaml": "/tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml",
+    "original_mask_yaml_sha256": "40c5a4c982bdb708c2ff43ba7a69c67464ea1282c3cf86fc816051360a9f7585",
+    "original_mask_pgm_sha256": "f9c4c9e4122d99b0780809af03d7ad8f2e8d3f40d9623f3d84bf5c8b4ba80af6",
+    "actual_source_unknown_count": 2,
+    "actual_mask_forbidden_count": 221,
+    "cells": {
+      "14072": {
+        "base": -1,
+        "mask": 100,
+        "costmap": 100
+      },
+      "8589": {
+        "base": -1,
+        "mask": 100,
+        "costmap": 100
+      }
+    },
+    "free_control": 0,
+    "existing_proof_forbidden_count": 221,
+    "unknown_made_free": 0,
+    "actual_maskserver_yaml": "/tmp/normalized-mask-native/protected_mask_hly5arul/mask.yaml",
+    "original_inputs_unchanged": true,
+    "path_cases": {
+      "localized_start": {
+        "status": 4,
+        "error_code": 0,
+        "points": 176,
+        "path_length_m": 5.4174438398803515,
+        "swept_disk_24cm_clear": true
+      },
+      "around_keepout": {
+        "status": 4,
+        "error_code": 0,
+        "points": 116,
+        "path_length_m": 2.9304316484759867,
+        "swept_disk_24cm_clear": true
+      }
+    },
+    "unknown_goal_admitted": {
+      "14072": false,
+      "8589": false
+    },
+    "selection_config": {
+      "global_costmap": {
+        "filters": [
+          "keepout_filter"
+        ],
+        "keepout_filter": {
+          "plugin": "nav2_costmap_2d::KeepoutFilter",
+          "enabled": true,
+          "filter_info_topic": "/oomwoo/keepout_filter_info",
+          "override_lethal_cost": false,
+          "transform_tolerance": 0.3
+        },
+        "keepout_inflation": {
+          "plugin": "nav2_costmap_2d::PluginContainerLayer",
+          "enabled": true,
+          "combination_method": 2,
+          "plugins": [
+            "mask",
+            "inflation"
+          ],
+          "mask": {
+            "plugin": "nav2_costmap_2d::StaticLayer",
+            "enabled": true,
+            "map_topic": "/oomwoo/keepout_mask",
+            "map_subscribe_transient_local": true,
+            "subscribe_to_updates": false,
+            "use_maximum": false,
+            "track_unknown_space": true,
+            "trinary_costmap": true,
+            "lethal_cost_threshold": 100
+          },
+          "inflation": {
+            "plugin": "nav2_costmap_2d::InflationLayer",
+            "enabled": true,
+            "inflation_radius": 0.3345,
+            "cost_scaling_factor": 5.0
+          }
+        },
+        "inflation_layer": {
+          "cost_scaling_factor": 10.0,
+          "inflation_radius": 0.1,
+          "plugin": "nav2_costmap_2d::InflationLayer"
+        }
+      },
+      "local_costmap": {
+        "filters": [
+          "keepout_filter"
+        ],
+        "keepout_filter": {
+          "plugin": "nav2_costmap_2d::KeepoutFilter",
+          "enabled": true,
+          "filter_info_topic": "/oomwoo/keepout_filter_info",
+          "override_lethal_cost": false,
+          "transform_tolerance": 0.3
+        },
+        "keepout_inflation": {
+          "plugin": "nav2_costmap_2d::PluginContainerLayer",
+          "enabled": true,
+          "combination_method": 2,
+          "plugins": [
+            "mask",
+            "inflation"
+          ],
+          "mask": {
+            "plugin": "nav2_costmap_2d::StaticLayer",
+            "enabled": true,
+            "map_topic": "/oomwoo/keepout_mask",
+            "map_subscribe_transient_local": true,
+            "subscribe_to_updates": false,
+            "use_maximum": false,
+            "track_unknown_space": true,
+            "trinary_costmap": true,
+            "lethal_cost_threshold": 100
+          },
+          "inflation": {
+            "plugin": "nav2_costmap_2d::InflationLayer",
+            "enabled": true,
+            "inflation_radius": 0.2745,
+            "cost_scaling_factor": 5.0
+          }
+        },
+        "inflation_layer": {
+          "cost_scaling_factor": 10.0,
+          "inflation_radius": 0.1,
+          "plugin": "nav2_costmap_2d::InflationLayer"
+        }
+      }
+    },
+    "process_exit_codes": [
+      0,
+      0,
+      0
+    ],
+    "seconds": 5.247,
+    "cgroup": {
+      "/sys/fs/cgroup/memory.peak": "169275392\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "/sys/fs/cgroup/pids.peak": "68\n"
+    }
+  },
+  "source_sha256": {
+    "src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "884f46b31e1959a2da72c41ef148ceb20ab356d8f1992004e1837677117f9087",
+    "src/oomwoo_sim_support/test/test_keepout_config.py": "327c06b4982e9f2fd20d94d079abd5aeb0b4d54397aa32955881f0f0ebd584f0",
+    "src/oomwoo_sim_support/test/test_keepout_launch_graph.py": "21429a790449607369a520becc7431aa0b75d1b21fba0ce789aa4024ca0ee2c1",
+    "src/oomwoo_sim_support/launch/sim_bringup.launch.py": "1d6d4ef34508571301db9fbca7f7b7d5c2cb328c92ff27919285de6ca6cc637c"
+  },
+  "source_unchanged": true,
+  "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 4 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8282 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+  "resource_policy": "Explicit active goal small-test exception .25CPU512MiB/noGPU"
+}
