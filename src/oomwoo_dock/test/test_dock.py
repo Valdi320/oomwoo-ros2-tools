@@ -210,3 +210,89 @@ def test_docks_from_parked_poses_with_a_beacon():
         docked += m['ok']
     assert docked >= 10, 'only %d of %d parked poses docked' % (
         docked, len(harness.CI_POSES))
+
+
+@pytest.mark.parametrize('auto_start, expected', [(False, 'IDLE'), (True, 'SEARCH')])
+def test_ros_dock_state_stays_fresh_for_a_late_subscriber(auto_start, expected):
+    """
+    Check live dock state for late relay subscribers and after disable.
+
+    This uses real ROS2 messages on an isolated lab velocity topic. It checks
+    the live-driver signal only; neither IDLE nor a received zero proves that
+    another process cannot move a robot.
+    """
+    import time
+
+    from geometry_msgs.msg import Twist
+    from oomwoo_dock.dock_drive_node import DockDrive
+    import rclpy
+    from rclpy.executors import SingleThreadedExecutor
+    from rclpy.node import Node
+    from rclpy.qos import DurabilityPolicy, QoSProfile
+    from std_msgs.msg import Bool, String
+
+    rclpy.init(args=[
+        '--ros-args', '-r', '__ns:=/valdi/dock_state_test',
+        '-r', 'cmd_vel:=/valdi/lab_safe_cmd_vel_output',
+        '-p', 'auto_start:=' + str(auto_start).lower(),
+        '-p', 'exit_when_done:=false',
+    ])
+    driver = None
+    observer = None
+    executor = SingleThreadedExecutor()
+    try:
+        driver = DockDrive()
+        assert driver.cmd_pub.topic_name == '/valdi/lab_safe_cmd_vel_output'
+        executor.add_node(driver)
+
+        def spin_for(seconds):
+            deadline = time.monotonic() + seconds
+            while time.monotonic() < deadline:
+                executor.spin_once(timeout_sec=0.02)
+
+        # Deliberately miss all startup/transition announcements.
+        spin_for(0.3)
+        observer = Node('dock_state_observer', use_global_arguments=False)
+        executor.add_node(observer)
+        states = []
+        commands = []
+        docked = []
+        observer.create_subscription(
+            Bool, '/valdi/dock_state_test/dock_drive/docked',
+            lambda msg: docked.append(msg.data),
+            QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
+        observer.create_subscription(
+            String, '/valdi/dock_state_test/dock_drive/state',
+            lambda msg: states.append((time.monotonic(), msg.data)), 10)
+        observer.create_subscription(
+            Twist, '/valdi/lab_safe_cmd_vel_output',
+            lambda msg: commands.append((msg.linear.x, msg.angular.z)), 10)
+        enable = observer.create_publisher(
+            Bool, '/valdi/dock_state_test/dock_drive/enable', 10)
+        spin_for(4.2)  # longer than the existing relay's 3 s state budget
+        assert len(states) >= 2, 'late subscriber received no live state stream'
+        assert {state for _, state in states} == {expected}
+        assert states[-1][0] - states[0][0] > 3.0
+        assert time.monotonic() - states[-1][0] < 0.5
+        assert commands
+        assert docked == [False], 'initial inactive contact state was not latched'
+        assert observer.count_publishers('/cmd_vel') == 0
+        assert observer.count_publishers('/valdi/lab_safe_cmd_vel_output') == 1
+        if auto_start:
+            assert any(abs(w) > 0.0 for _, w in commands)
+        else:
+            assert all(v == w == 0.0 for v, w in commands)
+
+        states.clear()
+        commands.clear()
+        enable.publish(Bool(data=False))
+        spin_for(0.5)
+        assert states and states[-1][1] == 'IDLE'
+        assert commands[-1] == (0.0, 0.0)
+    finally:
+        executor.shutdown()
+        if observer is not None:
+            observer.destroy_node()
+        if driver is not None:
+            driver.destroy_node()
+        rclpy.shutdown()

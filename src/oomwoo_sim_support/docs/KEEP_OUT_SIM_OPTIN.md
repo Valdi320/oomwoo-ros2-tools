@@ -1,3 +1,5 @@
+Current delivery: [native masked sweep and source-linked proof](../../../docs/reactive-row-executor.md#native-acceptance--31-october-2026). This supersedes the initial untested/draft status below; historical initial evidence remains recorded. Full traces are kept in the contributor repository.
+
 # Simulation-only Nav2 virtual walls (opt-in)
 
 This experimental Nav2 KeepoutFilter integration is OFF by default.

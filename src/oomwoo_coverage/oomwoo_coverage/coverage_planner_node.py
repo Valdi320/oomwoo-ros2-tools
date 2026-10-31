@@ -15,11 +15,13 @@
 """
 Boustrophedon coverage planner for the OOMWOO robot vacuum.
 
-Behavior "regular / auto cleaning": given a saved occupancy map, plan a
-back-and-forth (boustrophedon) sweep that covers the entire reachable floor,
-respecting keep-out zones, and execute it through Nav2's
-``NavigateThroughPoses`` action. Nav2 handles obstacle-aware routing between the
-sweep waypoints; this node owns the *what and where to clean* decision.
+Given a saved occupancy map, plan a back-and-forth (boustrophedon) sweep of
+reachable floor while respecting keep-out zones. Execution has two modes:
+``nav2`` (the default) sends one ``NavigateToPose`` goal per waypoint;
+``reactive`` drives the sweep passes on cmd_vel and uses Nav2 for longer
+transits between them. This node owns the sweep plan and its execution state.
+The opt-in simulation relay coordinates exclusive ownership of the isolated
+Nav2 and reactive command inputs; it does not establish physical motor safety.
 
 Interfaces (as actually wired):
   subscribes  map               nav_msgs/OccupancyGrid   (transient_local)
@@ -40,7 +42,12 @@ planner under test consumes the same grid the grader scores with, so the
 sim pass certifies the sweep + the harness loop, not a standalone estimator.
 """
 
+import hashlib
+import json
+import math
+import time
 from typing import List, Optional
+import uuid
 
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped, Twist
 
@@ -63,7 +70,7 @@ from rclpy.qos import (
 
 from ros_gz_interfaces.msg import Contacts
 
-from std_msgs.msg import Bool, Float32
+from std_msgs.msg import Bool, Float32, String
 
 from tf2_ros import Buffer, TransformException, TransformListener
 
@@ -92,6 +99,7 @@ class CoveragePlanner(Node):
         self.declare_parameter('cleaning_radius', 0.16)   # m, effective clean swath / 2
         self.declare_parameter('row_overlap', 0.10)       # fraction of swath overlapped
         self.declare_parameter('robot_radius', 0.17)      # m, for obstacle inflation
+        self.declare_parameter('require_keepout_filter', False)
         # coverage_target is a GATE the harness asserts on, not a stop switch:
         # by default the sweep runs to completion (all rows + gap-fill passes)
         # so the reported number is uncapped — it can distinguish a planner
@@ -115,6 +123,7 @@ class CoveragePlanner(Node):
         self.cleaning_radius = self.get_parameter('cleaning_radius').value
         self.row_overlap = self.get_parameter('row_overlap').value
         self.robot_radius = self.get_parameter('robot_radius').value
+        self._keepout_required = self.get_parameter('require_keepout_filter').value is True
         self.row_substep_m = self.get_parameter('row_substep_m').value
         self.long_axis_sweep = self.get_parameter('long_axis_sweep').value
         self.coverage_target = self.get_parameter('coverage_target').value
@@ -128,6 +137,8 @@ class CoveragePlanner(Node):
         self.map_msg: Optional[OccupancyGrid] = None
         self.free_mask: Optional[np.ndarray] = None       # bool[H,W], inflated-free
         self.keepout: Optional[np.ndarray] = None         # bool[H,W], True = no-go
+        self._keepout_geometry_value = None
+        self._keepout_fault = None
         self.total_free_cells = 0
         self.robot_xy = None            # latest robot pose (map frame), for seeding
         self.ext_ratio = 0.0            # coverage %, from the coverage_meter
@@ -141,6 +152,12 @@ class CoveragePlanner(Node):
         self.goal_deadline = None      # per-waypoint watchdog start
         self.declare_parameter('goal_timeout_sec', 30.0)
         self.goal_timeout = self.get_parameter('goal_timeout_sec').value
+        # Optional known transit speed; zero preserves the legacy fixed budget.
+        self.declare_parameter('nav_linear_speed', 0.0)
+        self.nav_linear_speed = self.get_parameter('nav_linear_speed').value
+        if not math.isfinite(self.nav_linear_speed) or self.nav_linear_speed < 0:
+            raise ValueError('nav_linear_speed must be finite and nonnegative')
+        self._nav_goal_budget_s = self.goal_timeout
         # No-progress skip: if the robot doesn't get meaningfully closer to the
         # current waypoint for this long it's stuck/blocked — give up FAST rather
         # than waiting out Nav2's collision-averse recovery ladder (backup/spin/
@@ -230,9 +247,8 @@ class CoveragePlanner(Node):
         self.escapes_done = 0
 
         # --- ROS plumbing -------------------------------------------------
-        # Coverage % comes from the coverage_meter (ground-truth based), so this
-        # node needs no TF listener — which also avoids flooding the graph with
-        # TF_OLD_DATA warnings under a slow/jumpy sim clock.
+        # Coverage % comes from the ground-truth coverage_meter. The TF
+        # listener above supplies localized poses for direct reactive motion.
         self.create_subscription(
             OccupancyGrid, 'map', self._on_map, latched_qos())
         self.create_subscription(
@@ -259,7 +275,7 @@ class CoveragePlanner(Node):
         # RViz connects. Cheap (a few hundred poses every 2 s).
         self.plan_pub = self.create_publisher(Path, '~/plan', latched_qos())
         self.create_timer(2.0, self._publish_plan)
-        # only used by the wedge escape, while no Nav2 goal is active
+        # direct reactive rows and wedge escape, while no Nav2 goal is active
         self.cmd_pub = self.create_publisher(Twist, 'cmd_vel', 10)
         # which bumper is pressed decides which way to peel off (_escape_angular)
         self.create_subscription(Contacts, 'bumper_left/contact', self._bump_left_cb, 10)
@@ -267,6 +283,15 @@ class CoveragePlanner(Node):
         self.nav_client = ActionClient(
             self, NavigateToPose, 'navigate_to_pose')
 
+        self.declare_parameter('motion_relay_journal', '')
+        relay_path = self.get_parameter('motion_relay_journal').value
+        self._relay_enabled = bool(relay_path)
+        if self._keepout_required and not self._relay_enabled:
+            # Nav2-only execution can still enter a direct bumper/wedge
+            # escape. Its mask must therefore share the existing final relay.
+            raise ValueError('keepout coverage requires the existing motion relay')
+        if self._relay_enabled:
+            self._init_motion_relay(relay_path)
         # 5 Hz coverage accounting; planning kicks off once the map arrives
         self.create_timer(0.2, self._tick)
         self.get_logger().info('coverage_planner up; waiting for /map')
@@ -282,14 +307,73 @@ class CoveragePlanner(Node):
             f'{self.total_free_cells} reachable free cells')
 
     def _on_keepout(self, msg: OccupancyGrid) -> None:
-        # keepout filter mask uses the same grid geometry; occupied => no-go
-        data = np.asarray(msg.data, dtype=np.int16).reshape(
-            msg.info.height, msg.info.width)
-        self.keepout = data >= OCC_THRESH
-        if self.map_msg is not None:
-            self._build_masks()
+        try:
+            geometry = self._keepout_geometry(msg)
+            data = np.asarray(msg.data, dtype=np.int16).reshape(
+                msg.info.height, msg.info.width)
+            if not np.all((data == 0) | (data == 100)):
+                raise ValueError('keepout mask must be binary 0/100')
+            if not np.any(data == 100) or np.all(data == 100):
+                raise ValueError('keepout mask needs both forbidden and free cells')
+            if self.map_msg is not None and geometry != self._keepout_geometry(self.map_msg):
+                raise ValueError('keepout geometry differs from current map')
+            mask = data == 100
+            if self.keepout is not None and (
+                    geometry != self._keepout_geometry_value
+                    or not np.array_equal(mask, self.keepout)):
+                raise ValueError('keepout changed; restart/reconcile the plan')
+            if self._keepout_fault is not None:
+                return
+            self.keepout = mask
+            self._keepout_geometry_value = geometry
+            if self.map_msg is not None:
+                self._build_masks()
+        except (ValueError, TypeError, AttributeError) as exc:
+            self._invalid_keepout(str(exc))
+
+    @staticmethod
+    def _keepout_geometry(msg):
+        """Validate the axis-aligned map geometry actually used by this planner."""
+        info = msg.info
+        p, q = info.origin.position, info.origin.orientation
+        values = (info.resolution, p.x, p.y, p.z, q.x, q.y, q.z, q.w)
+        if (msg.header.frame_id != 'map' or info.width <= 0 or info.height <= 0
+                or not all(math.isfinite(v) for v in values) or info.resolution <= 0
+                or any(abs(v) > 1e-8 for v in (q.x, q.y, q.z))
+                or abs(abs(q.w) - 1.) > 1e-8):
+            raise ValueError('invalid/rotated keepout grid geometry')
+        return (info.width, info.height, float(info.resolution), p.x, p.y, p.z)
+
+    def _invalid_keepout(self, reason):
+        """Retain a mask fault and stop the existing producer/lease path."""
+        self._keepout_fault = reason
+        self.free_mask = None
+        self.total_free_cells = 0
+        if getattr(self, '_relay_enabled', False):
+            self._relay_fail(reason)
+        else:
+            self.get_logger().error(reason)
+            self.finished = True
+            self.active_pub.publish(Bool(data=False))
+            self.cmd_pub.publish(Twist())
+            if self.goal_handle is not None:
+                self.goal_handle.cancel_goal_async()
+            elif self.awaiting:
+                self.cancel_on_accept = True
 
     def _build_masks(self) -> None:
+        if (getattr(self, '_keepout_fault', None) is not None
+                or (getattr(self, '_keepout_required', False) and self.keepout is None)):
+            self.free_mask = None
+            self.total_free_cells = 0
+            return
+        if self.keepout is not None:
+            try:
+                if self._keepout_geometry_value != self._keepout_geometry(self.map_msg):
+                    raise ValueError('keepout geometry differs from current map')
+            except (ValueError, TypeError, AttributeError) as exc:
+                self._invalid_keepout(str(exc))
+                return
         info = self.map_msg.info
         h, w = info.height, info.width
         grid = np.asarray(self.map_msg.data, dtype=np.int16).reshape(h, w)
@@ -298,11 +382,18 @@ class CoveragePlanner(Node):
         unknown = grid == UNKNOWN
         # inflate obstacles + unknown by robot radius so the center path is safe
         infl = max(1, int(round(self.robot_radius / info.resolution)))
-        blocked = _dilate(obstacle | unknown, infl)
+        # The Keepout overlay also inflates ordinary obstacles in Nav2.
+        # Include their corners here: cardinal-only clearance can admit
+        # a waypoint whose robot disk overlaps furniture at a diagonal.
+        blocked = _dilate(obstacle | unknown, infl, square=self.keepout is not None)
         free = (grid == FREE) & ~blocked
 
-        if self.keepout is not None and self.keepout.shape == free.shape:
-            free &= ~self.keepout
+        if self.keepout is not None:
+            # Match the .18 m lab footprint + .06 m keepout margin at the
+            # final output. Square dilation conservatively covers corners
+            # for the virtual zone as well as the ordinary obstacles above.
+            keepout_radius = int(math.ceil((self.robot_radius + .06) / info.resolution))
+            free &= ~_dilate(self.keepout, keepout_radius, square=True)
 
         self.free_mask = free
         self.total_free_cells = int(free.sum())
@@ -341,37 +432,52 @@ class CoveragePlanner(Node):
         return False
 
     def _covered_at(self, pose) -> bool:
-        """Return True when the disk around this waypoint is already mostly clean."""
+        """Skip covered disks in the sweep, but only covered cells in gap-fill."""
         if self.covered_grid is None or self.map_msg is None:
             return False
         info = self.map_msg.info
         res = info.resolution
         cx = int((pose.pose.position.x - info.origin.position.x) / res)
         cy = int((pose.pose.position.y - info.origin.position.y) / res)
-        r = max(1, int(round(self.cleaning_radius / res)))
         h, w = self.covered_grid.shape
+        if self.gapfill_passes > 0:
+            # Gap-fill selected an uncovered centre cell. A mostly clean
+            # neighbourhood does not mean that this remaining hole is clean.
+            if not (0 <= cx < w and 0 <= cy < h):
+                return False
+            return bool(self.covered_grid[cy, cx] >= 100)
+        r = max(1, int(round(self.cleaning_radius / res)))
         y0, y1 = max(0, cy - r), min(h, cy + r + 1)
         x0, x1 = max(0, cx - r), min(w, cx + r + 1)
         if y0 >= y1 or x0 >= x1:
             return False
+        # Feedback credits a circular cleaning footprint, not its square bbox.
+        # Outside corners may be uncredited edge floor or unrelated clean cells.
+        ys = np.arange(y0, y1)[:, None]
+        xs = np.arange(x0, x1)[None, :]
+        disk = (ys - cy) ** 2 + (xs - cx) ** 2 <= r * r
         sub = self.covered_grid[y0:y1, x0:x1]
-        return float((sub >= 100).mean()) > 0.6
+        return bool(disk.any() and float((sub[disk] >= 100).mean()) > 0.6)
 
     def _on_amcl(self, msg: PoseWithCovarianceStamped) -> None:
         self.robot_xy = (msg.pose.pose.position.x, msg.pose.pose.position.y)
         self.robot_yaw = _yaw_from_quat(msg.pose.pose.orientation)
 
     def _robot_pose(self):
-        """Return (x, y, yaw) in the map frame, TF-first (high rate) then AMCL."""
+        """Return a map-frame TF pose no more than 500 ms old, otherwise None."""
         try:
             t = self.tf_buffer.lookup_transform(
                 self.global_frame, self.base_frame, rclpy.time.Time())
-            tr = t.transform.translation
-            return (tr.x, tr.y, _yaw_from_quat(t.transform.rotation))
-        except TransformException:               # TF not ready yet -> fall back
-            if self.robot_xy is None:
-                return None
-            return (self.robot_xy[0], self.robot_xy[1], self.robot_yaw)
+        except TransformException:
+            return None
+        # Time(0) selects the latest *cached* transform, not necessarily a live
+        # one. Do not let latched AMCL planning data revive direct row motion.
+        stamp_ns = t.header.stamp.sec * 1_000_000_000 + t.header.stamp.nanosec
+        now_ns = self.get_clock().now().nanoseconds
+        if stamp_ns <= 0 or not 0 <= now_ns - stamp_ns <= 500_000_000:
+            return None
+        tr = t.transform.translation
+        return (tr.x, tr.y, _yaw_from_quat(t.transform.rotation))
 
     # ------------------------------------------------------------- planning
     def _plan_waypoints(self) -> List[PoseStamped]:
@@ -496,9 +602,11 @@ class CoveragePlanner(Node):
                 flip = not flip
             return pts
 
+        recorded_tracks = []
+
         def build_sweep(cell_data):
             """Chain cells nearest-corner-first into one serpentine list."""
-            wps = []
+            wps, tracks = [], []
             cur = (ox + (seed[1] + 0.5) * res, oy + (seed[0] + 0.5) * res)
             remaining = list(cell_data)
             while remaining:
@@ -515,8 +623,10 @@ class CoveragePlanner(Node):
                 cd = remaining.pop(ci)
                 pts = cell_waypoints(cd, maj_last, min_last)
                 if pts:
+                    tracks.append((cd['m'], cd['vertical'], pts))
                     wps.extend(pts)
                     cur = pts[-1]
+            recorded_tracks.append((wps, tracks))
             return wps
 
         def sweep_cost(wps):
@@ -540,6 +650,17 @@ class CoveragePlanner(Node):
             cand = build_sweep(build_cell_data(True))
             if sweep_cost(cand) < sweep_cost(waypoints):
                 waypoints, mode = cand, 'long-axis'
+        tracks = next(tracks for points, tracks in recorded_tracks if points is waypoints)
+        floor = np.asarray(self.map_msg.data, dtype=np.int16).reshape(h, w)
+        compact = _compact_sweep(
+            tracks, reachable, (floor >= 0) & (floor < OCC_THRESH),
+            (ox, oy), res, max(1, int(round(self.cleaning_radius / res))),
+            step, self.robot_xy)
+        if compact is not None:
+            candidate = [point for track in compact for point in track]
+            if candidate and (sweep_cost(candidate) + math.dist(self.robot_xy, candidate[0])
+                              < sweep_cost(waypoints) + math.dist(self.robot_xy, waypoints[0])):
+                waypoints, mode = candidate, mode + '-compact'
         self.get_logger().info(
             f'cell decomposition: {len(cells)} cells; {mode} sweep, '
             f'{len(waypoints)} waypoints')
@@ -611,6 +732,9 @@ class CoveragePlanner(Node):
                and self._skip_waypoint(self.wp_index)):
             self.wp_index += 1
             self.wp_retries = 0
+            # Distance/progress belong to the previous target, not this one.
+            self._drive_best_dist = None
+            self._drive_progress_t = None
         if self.wp_index < len(self.cached_poses):
             return True
         # the boustrophedon leaves furniture-shadow / pocket gaps a single sweep
@@ -625,6 +749,8 @@ class CoveragePlanner(Node):
                 self.gapfill_passes += 1
                 self.cached_poses = gaps
                 self.wp_index = 0
+                self._drive_best_dist = None
+                self._drive_progress_t = None
                 self._publish_plan()
                 self.get_logger().info(
                     f'gap-fill pass {self.gapfill_passes}: '
@@ -638,15 +764,39 @@ class CoveragePlanner(Node):
         return False
 
     def _send_goal_to(self, p) -> None:
-        """Dispatch a NavigateToPose goal (Nav2) for pose p."""
+        """Dispatch a NavigateToPose goal, acquiring its lab lease first if enabled."""
+        if getattr(self, '_relay_enabled', False):
+            self._relay_goal_pose = p
+            self._relay_stage = 'release_sweep'
+            self.cmd_pub.publish(Twist())
+            return
+        self._dispatch_goal(p)
+
+    def _dispatch_goal(self, p, goal_uuid=None) -> None:
+        """Send one actual action request after any required durable lab preflight."""
+        # Nav2 owns this interval; its travel time is not a stalled row.
+        self._drive_best_dist = None
+        self._drive_progress_t = None
         p.header.stamp = self.get_clock().now().to_msg()
         goal = NavigateToPose.Goal()
         goal.pose = p
         self.awaiting = True
         self.goal_deadline = self.get_clock().now()
+        self._nav_goal_budget_s = self.goal_timeout
+        if self.nav_linear_speed > 0 and self.robot_xy is not None:
+            target = p.pose.position
+            distance = math.hypot(target.x - self.robot_xy[0], target.y - self.robot_xy[1])
+            if math.isfinite(distance):
+                # Keep the existing no-progress allowance and a finite backstop.
+                # Handoff/boot still use the unchanged goal_timeout, not this budget.
+                self._nav_goal_budget_s = min(
+                    2.0 * self.goal_timeout,
+                    max(self.goal_timeout,
+                        distance / self.nav_linear_speed + self.no_progress_sec))
         self._goal_best_dist = None     # reset no-progress tracking for this goal
         self._goal_progress_t = self.get_clock().now()
-        self.nav_client.send_goal_async(goal).add_done_callback(
+        options = {} if goal_uuid is None else {'goal_uuid': goal_uuid}
+        self.nav_client.send_goal_async(goal, **options).add_done_callback(
             self._on_goal_response)
 
     def _send_next(self) -> None:
@@ -712,6 +862,26 @@ class CoveragePlanner(Node):
 
     def _on_goal_response(self, fut) -> None:
         handle = fut.result()
+        if getattr(self, '_relay_enabled', False):
+            if not handle.accepted:
+                self._relay_journal.terminal(
+                    token=self._relay_token,
+                    uuid_hex=self._relay_uuid, outcome='rejected')
+                self._relay_fail('Nav2 rejected its preallocated lab goal')
+                return
+            self._relay_journal.accepted(token=self._relay_token, uuid_hex=self._relay_uuid)
+            self.goal_handle = handle
+            handle.get_result_async().add_done_callback(self._on_result)
+            if getattr(self, 'cancel_on_accept', False):
+                self.cancel_on_accept = False
+                try:
+                    cancel = handle.cancel_goal_async()
+                except Exception as exc:
+                    self._relay_fail('cancel-on-accept transport failed: ' + str(exc))
+                    return
+                if getattr(self, '_relay_bumper_escape', None) is not None:
+                    self._relay_contact_cancel = cancel
+            return
         if not handle.accepted:
             self.awaiting = False       # Nav2 busy/not-ready -> retry same wp
             self.next_send = self.get_clock().now()
@@ -726,14 +896,39 @@ class CoveragePlanner(Node):
         handle.get_result_async().add_done_callback(self._on_result)
 
     def _on_result(self, fut) -> None:
-        status = fut.result().status    # 4=SUCCEEDED, 5=CANCELED, 6=ABORTED
+        result = fut.result()
+        status = result.status    # 4=SUCCEEDED, 5=CANCELED, 6=ABORTED
+        if getattr(self, '_relay_enabled', False):
+            outcome = {4: 'succeeded', 5: 'canceled', 6: 'aborted'}.get(status)
+            if outcome is None:
+                self._relay_fail('unknown actual Nav2 terminal result')
+                return
+            self._relay_journal.terminal(
+                token=self._relay_token,
+                uuid_hex=self._relay_uuid, outcome=outcome)
+            if self._relay_fault is None:
+                self._relay_stage = 'release_nav'
+            if status == 6:
+                detail = getattr(result, 'result', None)
+                contacts = tuple(self._bumper_fresh(getattr(self, name, None))
+                                 for name in ('_bump_left_t', '_bump_right_t'))
+                self._relay_fail(
+                    'actual Nav2 goal aborted; lab reconciliation required; '
+                    f'code={getattr(detail, "error_code", None)} bumper_fresh={contacts}')
         self.goal_handle = None
         self.awaiting = False
         self.goal_deadline = None
-        if self.finished:
+        if self.finished or (getattr(self, '_relay_enabled', False)
+                             and self._relay_fault is not None):
             return
-        if status == 4:                 # reached the waypoint
-            self.wp_index += 1
+        if status == 4:
+            # Nav2's arrival tolerance is not cleaning credit. For a remaining
+            # gap, release navigation normally and let the existing reactive
+            # driver finish the short approach before leaving this target.
+            if not (getattr(self, 'exec_mode', None) == 'reactive'
+                    and getattr(self, 'gapfill_passes', 0) > 0
+                    and not self._covered_at(self.cached_poses[self.wp_index])):
+                self.wp_index += 1
             self.wp_retries = 0
             self.consecutive_skips = 0
         else:
@@ -805,6 +1000,8 @@ class CoveragePlanner(Node):
 
     # -------------------------------------------------------------- ticking
     def _tick(self) -> None:
+        if getattr(self, '_relay_enabled', False) and self._relay_tick():
+            return
         if self.map_msg is None or self.total_free_cells == 0:
             return
         ratio = self.ext_ratio
@@ -862,24 +1059,9 @@ class CoveragePlanner(Node):
             if self.awaiting and self.goal_handle is not None:
                 self.goal_handle.cancel_goal_async()
             self.awaiting = False
-            self.consecutive_skips = 0
             target = self.cached_poses[self.wp_index] \
                 if self.wp_index < len(self.cached_poses) else None
-            if target is not None:
-                tx = target.pose.position.x
-                ty = target.pose.position.y
-                if not _pt_in_zones(tx, ty, self.wedge_zones):
-                    self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))
-            self.escapes_done += 1
-            self._escape_az = self._escape_angular()
-            self._bump_left_held_since = None
-            self._bump_right_held_since = None
-            self.get_logger().warn(
-                f'bumper held near waypoint {self.wp_index}: peel off '
-                f'(turn {self._escape_az:+.1f}) {self.escape_sec}s '
-                f'(escape {self.escapes_done}/{self.max_escapes})')
-            self.escape_until = self.get_clock().now() \
-                + rclpy.duration.Duration(seconds=self.escape_sec)
+            self._begin_bumper_escape(self.wp_index, target, self._escape_angular())
             return
 
         # Reactive executor drives sweep passes on /cmd_vel and routes only long
@@ -903,15 +1085,18 @@ class CoveragePlanner(Node):
 
         No-progress means the robot isn't getting closer to the target — it's
         stuck/blocked and Nav2's recovery ladder can't help, so skip on one
-        strike (not a retry); gap-fill revisits later. goal_timeout is only a
-        slow absolute backstop for a robot that creeps but never arrives.
+        strike (not a retry); gap-fill revisits later. The per-goal absolute
+        budget may allow known-speed travel, capped at twice goal_timeout.
+        Handoff deadlines and the no-progress window are not extended.
         """
         stuck = False
-        if self.robot_xy is not None \
-                and self.wp_index < len(self.cached_poses):
+        # AMCL's cached planning seed can be sparse even while odometry moves.
+        # Use the same age-checked map TF as row motion; unavailable TF must
+        # not refresh progress or remove the independent absolute deadline.
+        pose = self._robot_pose()
+        if pose is not None and self.wp_index < len(self.cached_poses):
             g = self.cached_poses[self.wp_index].pose.position
-            dist = ((g.x - self.robot_xy[0]) ** 2
-                    + (g.y - self.robot_xy[1]) ** 2) ** 0.5
+            dist = ((g.x - pose[0]) ** 2 + (g.y - pose[1]) ** 2) ** 0.5
             if dist <= 0.3:                     # basically arrived; let Nav2 finish
                 self._goal_progress_t = self.get_clock().now()
             elif self._goal_best_dist is None \
@@ -922,7 +1107,8 @@ class CoveragePlanner(Node):
                     and self._elapsed(self._goal_progress_t) \
                     >= self.no_progress_sec:
                 stuck = True
-        if stuck or self._elapsed(self.goal_deadline) >= self.goal_timeout:
+        budget = getattr(self, '_nav_goal_budget_s', self.goal_timeout)
+        if stuck or self._elapsed(self.goal_deadline) >= budget:
             self.get_logger().warn(
                 f'waypoint {self.wp_index} '
                 + ('stuck (no progress)' if stuck else 'timed out')
@@ -932,6 +1118,27 @@ class CoveragePlanner(Node):
                 self.goal_handle.cancel_goal_async()  # -> _on_result -> skip
             else:
                 self.awaiting = False
+
+    def _begin_bumper_escape(self, index, target, angular):
+        """Locate the observed contact and schedule the caller-owned escape."""
+        self.consecutive_skips = 0
+        if target is not None:
+            # The target may be unvisited; record the robot's contact location.
+            pose = self._robot_pose()
+            if pose is not None and all(math.isfinite(v) for v in pose[:2]):
+                tx, ty = pose[:2]
+                if not _pt_in_zones(tx, ty, self.wedge_zones):
+                    self.wedge_zones.append((tx, ty, self.wedge_avoid_radius))
+        self.escapes_done += 1
+        self._escape_az = angular
+        self._bump_left_held_since = self._bump_right_held_since = None
+        self.get_logger().warn(
+            f'bumper held while targeting waypoint {index}: peel off '
+            f'(turn {angular:+.1f}) {self.escape_sec}s '
+            f'(escape {self.escapes_done}/{self.max_escapes})')
+        self.escape_until = self.get_clock().now() \
+            + rclpy.duration.Duration(seconds=self.escape_sec)
+        self.cmd_pub.publish(Twist())
 
     def _maybe_wedge_escape(self) -> bool:
         """
@@ -943,6 +1150,9 @@ class CoveragePlanner(Node):
         """
         if self.awaiting or self.consecutive_skips < self.escape_after:
             return False
+        # This tick schedules escape/pruning instead of driving. End the old
+        # command now; leaving a missing 5Hz command would expire the relay.
+        self.cmd_pub.publish(Twist())
         self.consecutive_skips = 0
         # Record a no-go POCKET so upcoming and gap-fill waypoints inside it are
         # pruned — stops the re-entry loop that used to freeze the run. Centre it
@@ -975,6 +1185,293 @@ class CoveragePlanner(Node):
             self.next_send = self.get_clock().now()
         return True
 
+    def _init_motion_relay(self, path):
+        """Use the existing private relay API; no new node or timer."""
+        from oomwoo_cleaning_jobs.goal_journal import GoalJournal
+        from oomwoo_cleaning_jobs_lab_interfaces.srv import ControlCleaning, GetCleaningStatus
+
+        if self.exec_mode != 'reactive' or not 0 < self.v_cruise <= 0.25 \
+                or not 0 < self.rotate_speed <= 0.8:
+            raise ValueError('lab relay requires reactive speeds within 0.25 m/s and 0.8 rad/s')
+        if self.cmd_pub.topic_name != '/valdi/sweep_cmd_vel':
+            raise ValueError('lab sweep publisher must resolve to its isolated input')
+        self._relay_journal = GoalJournal(path)
+        if self._relay_journal.read() is not None:
+            raise ValueError('existing lab goal journal requires explicit reconciliation')
+        self._relay_control_type = ControlCleaning
+        self._relay_status_type = GetCleaningStatus
+        self._relay_control = self.create_client(ControlCleaning, '/valdi/relay/control')
+        self._relay_status_client = self.create_client(GetCleaningStatus, '/valdi/relay/status')
+        self._relay_phase_pub = self.create_publisher(String, '~/motion_state', 10)
+        if (self.resolve_service_name('/valdi/relay/control') != '/valdi/relay/control'
+                or self.resolve_service_name('/valdi/relay/status') != '/valdi/relay/status'
+                or self._relay_phase_pub.topic_name != '/coverage_planner/motion_state'):
+            raise ValueError('lab relay services or producer phase remapped')
+        self._relay_stage = 'boot'
+        self._relay_fault = None
+        self._relay_owner = 'stopped'
+        self._relay_snapshot = {}
+        self._relay_status_last = None
+        self._relay_status_future = None
+        self._relay_status_started = None
+        self._relay_rpc = None
+        self._relay_rpc_operation = None
+        self._relay_rpc_started = None
+        self._relay_rpc_sequence = 0
+        self._relay_epoch = 0
+        self._relay_status_epoch = 0
+        self._relay_goal_pose = None
+        self._relay_uuid = None
+        self._relay_token = None
+        self._relay_retry_at = 0.0
+        self._relay_stop_future = None
+        self._relay_bumper_escape = None
+        self._relay_contact_cancel = None
+        self._relay_contact_wall = None
+        self._relay_last_stage = None
+        self._relay_stage_wall = time.monotonic()
+
+    def _relay_fail(self, reason):
+        """Latch fault, request STOP once and keep commands zero until reconciliation."""
+        first = self._relay_fault is None
+        if first:
+            self.get_logger().error('motion relay fault: ' + reason)
+            self._relay_fault = reason
+            self._relay_epoch += 1
+        self._relay_stage = 'fault'
+        self.cmd_pub.publish(Twist())
+        if first and self.goal_handle is not None:
+            try:
+                self.goal_handle.cancel_goal_async()
+            except Exception as exc:
+                self.get_logger().warn('fault cancellation unavailable: ' + str(exc))
+        elif first and self.awaiting:
+            self.cancel_on_accept = True
+        if self._relay_stop_future is None and self._relay_control.service_is_ready():
+            request = self._relay_control_type.Request()
+            request.request_id = 'coverage-emergency-' + uuid.uuid4().hex
+            request.operation = 'stop'
+            request.isolated_disposable_sim = True
+            try:
+                self._relay_stop_future = self._relay_control.call_async(request)
+            except Exception as exc:
+                self._relay_stop_future = False
+                self.get_logger().warn('fault STOP transport unavailable: ' + str(exc))
+
+    def _relay_phase(self):
+        """Report actual dispatcher phase, independently of a velocity command."""
+        if self._relay_fault is not None:
+            return 'FAULT'
+        if self.finished and self._relay_stage not in ('nav', 'release_nav'):
+            return 'IDLE'
+        if self._relay_stage in ('release_sweep', 'claim_nav'):
+            return 'PREPARE_NAV'
+        if self._relay_stage in ('nav', 'release_nav'):
+            if getattr(self, '_relay_bumper_escape', None) is not None:
+                return 'TRANSIT_CANCEL'
+            return 'TRANSIT'
+        if self._relay_stage == 'sweep' and not self.finished:
+            return 'ESCAPE' if self.escape_until is not None else 'SWEEP'
+        return 'IDLE'
+
+    def _relay_request(self, operation):
+        if self._relay_rpc is not None or not self._relay_control.service_is_ready():
+            return
+        request = self._relay_control_type.Request()
+        self._relay_rpc_sequence += 1
+        request.request_id = 'coverage-' + str(self._relay_rpc_sequence) + '-' + uuid.uuid4().hex
+        request.operation = operation
+        request.isolated_disposable_sim = True
+        self._relay_rpc = self._relay_control.call_async(request)
+        self._relay_rpc_operation = operation
+        self._relay_rpc_started = time.monotonic()
+
+    def _relay_poll(self):
+        if self._relay_rpc is not None:
+            if not self._relay_rpc.done():
+                if time.monotonic() - self._relay_rpc_started > 3.0:
+                    self._relay_fail('control service did not answer')
+            else:
+                try:
+                    reply = self._relay_rpc.result()
+                except Exception as exc:
+                    self._relay_fail('control transport failed: ' + str(exc))
+                    reply = None
+                operation = self._relay_rpc_operation
+                self._relay_rpc = None
+                if self._relay_fault is None:
+                    if reply is None:
+                        self._relay_fail('empty control response')
+                    elif not reply.ok:
+                        if operation in ('claim_sweep', 'claim_nav') and reply.state == 'stopped':
+                            self._relay_retry_at = time.monotonic() + 0.25
+                        else:
+                            self._relay_fail(operation + ': ' + reply.error)
+                    else:
+                        self._relay_epoch += 1
+                        self._relay_owner = reply.state
+                        self.get_logger().info('motion relay accepted ' + operation)
+                        if operation == 'claim_sweep':
+                            self._relay_stage = 'sweep'
+                            self._relay_uuid = self._relay_token = None
+                        elif operation == 'release_motion':
+                            if self.finished:
+                                self._relay_stage = 'done'
+                            else:
+                                from oomwoo_cleaning_jobs.map_admission import Raster
+                                raster = Raster.from_ros(self.map_msg)
+                                data = json.dumps(
+                                    [raster.width, raster.height, raster.resolution,
+                                     raster.origin_x, raster.origin_y, raster.yaw, raster.data],
+                                    separators=(',', ':'))
+                                self._relay_uuid = uuid.uuid4().hex
+                                self._relay_token = uuid.uuid4().hex + '-1'
+                                p = self._relay_goal_pose.pose.position
+                                self._relay_journal.begin(
+                                    uuid_hex=self._relay_uuid,
+                                    token=self._relay_token, job_id='coverage_sweep',
+                                    map_digest=hashlib.sha256(data.encode()).hexdigest(),
+                                    target_cell=raster.cell_at(p.x, p.y))
+                                self._relay_stage = 'claim_nav'
+                        elif operation == 'claim_nav':
+                            from unique_identifier_msgs.msg import UUID
+                            self._relay_stage = 'nav'
+                            goal_uuid = UUID(uuid=list(bytes.fromhex(self._relay_uuid)))
+                            self._dispatch_goal(self._relay_goal_pose, goal_uuid)
+                        elif operation == 'release_nav':
+                            self._relay_stage = 'claim_sweep'
+        # A lost read-only response must not stall every later status query.
+        # Retrying does not refresh the separate 2.5 s active-owner proof.
+        if self._relay_status_future is not None \
+                and time.monotonic() - self._relay_status_started > 1.5:
+            self._relay_status_client.remove_pending_request(self._relay_status_future)
+            self._relay_status_future.cancel()
+            self._relay_status_future = None
+            self._relay_status_started = None
+        if self._relay_status_future is not None and self._relay_status_future.done():
+            try:
+                response = self._relay_status_future.result()
+            except Exception as exc:
+                self._relay_fail('status transport failed: ' + str(exc))
+                response = None
+            self._relay_status_future = None
+            self._relay_status_started = None
+            if response is not None and response.ok \
+                    and self._relay_status_epoch == self._relay_epoch:
+                self._relay_snapshot = json.loads(response.status_json)
+                self._relay_owner = self._relay_snapshot['owner']
+                self._relay_status_last = time.monotonic()
+        if self._relay_status_future is None and self._relay_status_client.service_is_ready():
+            self._relay_status_epoch = self._relay_epoch
+            self._relay_status_started = time.monotonic()
+            self._relay_status_future = self._relay_status_client.call_async(
+                self._relay_status_type.Request())
+
+    def _relay_nav_contact(self):
+        """Cancel once on held contact; retain the reflex until SWEEP is granted."""
+        pending = getattr(self, '_relay_bumper_escape', None)
+        if pending is None and self.escape_until is None and self.escapes_done < self.max_escapes \
+                and self._bumper_held_long():
+            target = self.cached_poses[self.wp_index] \
+                if self.wp_index < len(self.cached_poses) else None
+            self._relay_bumper_escape = (self.wp_index, target, self._escape_angular())
+            self._relay_contact_wall = time.monotonic()
+            if self.goal_handle is not None:
+                try:
+                    self._relay_contact_cancel = self.goal_handle.cancel_goal_async()
+                except Exception as exc:
+                    self._relay_fail('contact cancellation send failed: ' + str(exc))
+                    return True
+            elif self.awaiting:
+                self.cancel_on_accept = True
+            else:
+                self._relay_fail('held contact without a known cancellable goal')
+                return True
+            self.cmd_pub.publish(Twist())
+            self._relay_phase_pub.publish(String(data='TRANSIT_CANCEL'))
+            self.get_logger().warn('held contact: awaiting exact Nav2 cancellation before escape')
+        if getattr(self, '_relay_bumper_escape', None) is None:
+            return False
+        if time.monotonic() - self._relay_contact_wall > 3.0:
+            self._relay_fail('contact cancellation did not yield a terminal result')
+        elif self._relay_contact_cancel is not None and self._relay_contact_cancel.done():
+            try:
+                response = self._relay_contact_cancel.result()
+                # ERROR_GOAL_TERMINATED is a normal result/cancel race. It
+                # grants no permission: keep zero and await the real result.
+                if response is not None and response.return_code == 3 \
+                        and not response.goals_canceling:
+                    return True
+                matched = response is not None and response.return_code == 0 \
+                    and len(response.goals_canceling) == 1 \
+                    and bytes(response.goals_canceling[0].goal_id.uuid).hex() == self._relay_uuid
+            except Exception as exc:
+                self._relay_fail('contact cancellation transport failed: ' + str(exc))
+                return True
+            if not matched:
+                self._relay_fail('contact cancellation did not name the current UUID')
+        return True
+
+    def _relay_tick(self):
+        """Coordinate asynchronous ownership in the planner's existing 5Hz tick."""
+        self._relay_poll()
+        if self.finished and self._relay_stage == 'sweep':
+            self._relay_stage = 'release_sweep'
+        self._relay_phase_pub.publish(String(data=self._relay_phase()))
+        if self._relay_fault is not None:
+            self.cmd_pub.publish(Twist())
+            return True
+        if self._relay_stage != self._relay_last_stage:
+            self._relay_last_stage = self._relay_stage
+            self._relay_stage_wall = time.monotonic()
+        elif self._relay_stage in (
+                'boot', 'claim_sweep', 'release_sweep', 'claim_nav', 'release_nav') \
+                and time.monotonic() - self._relay_stage_wall > self.goal_timeout:
+            self._relay_fail('handoff timed out in ' + self._relay_stage + ': '
+                             + str(self._relay_snapshot))
+            return True
+        if not self.plan_started:
+            self.cmd_pub.publish(Twist())
+            return False
+        if self._relay_stage in ('sweep', 'nav') and self._relay_status_last is not None:
+            if time.monotonic() - self._relay_status_last > 2.5:
+                self._relay_fail('relay status stopped arriving')
+                return True
+            expected = 'navigation' if self._relay_stage == 'nav' else 'reactive_sweep'
+            if self._relay_owner != expected:
+                self._relay_fail('ownership lost: ' + str(self._relay_snapshot.get('reason')))
+                return True
+        if self._relay_stage == 'nav':
+            if not self._relay_nav_contact() and self.awaiting and self.goal_deadline is not None:
+                self._goal_watchdog()
+            return True
+        if self._relay_stage == 'sweep':
+            pending = getattr(self, '_relay_bumper_escape', None)
+            if pending is not None:
+                self._relay_bumper_escape = None
+                self._relay_contact_cancel = None
+                self._begin_bumper_escape(*pending)
+                return True
+            return False
+        self.cmd_pub.publish(Twist())
+        if self._relay_rpc is not None or time.monotonic() < self._relay_retry_at:
+            return True
+        health = self._relay_snapshot.get('motion_health') or {}
+        if self._relay_stage in ('boot', 'claim_sweep', 'claim_nav'):
+            common = all(health.get(key) is True for key in (
+                'pose_fresh', 'resources_ok', 'map_current', 'safety_loop_ok',
+                'isolated_sources', 'nav2_idle', 'dock_inactive'))
+            if self._relay_owner == 'stopped' and common:
+                self._relay_request(
+                    'claim_nav' if self._relay_stage == 'claim_nav' else 'claim_sweep')
+        elif self._relay_stage in ('release_sweep', 'release_nav'):
+            role = 'navigation' if self._relay_stage == 'release_nav' else 'reactive_sweep'
+            inputs = self._relay_snapshot.get('motion_inputs') or {}
+            if self._relay_owner == role and inputs.get(role, {}).get('zero') is True \
+                    and self._relay_snapshot.get('last_output') == [0.0, 0.0]:
+                self._relay_request('release_nav' if role == 'navigation' else 'release_motion')
+        return True
+
     def _tick_reactive(self) -> None:
         """Reactive executor: drive passes on /cmd_vel, transits via Nav2."""
         # a transit (Nav2) goal may be in flight — let Nav2 finish or skip it
@@ -986,8 +1483,13 @@ class CoveragePlanner(Node):
             return
         pose = self._robot_pose()
         if pose is None:
+            # Localization loss is not evidence that this target is blocked.
+            self._drive_best_dist = None
+            self._drive_progress_t = None
+            self.cmd_pub.publish(Twist())
             return
         if not self._advance_to_target():
+            self.cmd_pub.publish(Twist())
             return
         target = self.cached_poses[self.wp_index]
         tx, ty = target.pose.position.x, target.pose.position.y
@@ -996,10 +1498,14 @@ class CoveragePlanner(Node):
         dist = (dx * dx + dy * dy) ** 0.5
         # long inter-cell hop: route via Nav2 (avoid plowing through furniture)
         if dist > self.min_transit_len:
+            # End the row command before Nav2 takes over, or while its
+            # server is unavailable. Do not keep the last cruise Twist.
+            self.cmd_pub.publish(Twist())
             if self.nav_client.server_is_ready():
                 self._send_goal_to(target)
             return
         if dist <= self.reach_tol:              # reached this pass waypoint
+            self.cmd_pub.publish(Twist())
             self.wp_index += 1
             self.wp_retries = 0
             self.consecutive_skips = 0
@@ -1014,6 +1520,7 @@ class CoveragePlanner(Node):
                 and self._elapsed(self._drive_progress_t) >= self.no_progress_sec:
             self.get_logger().warn(
                 f'waypoint {self.wp_index} stuck (reactive); skipping')
+            self.cmd_pub.publish(Twist())
             self.wp_index += 1
             self.consecutive_skips += 1
             self._drive_best_dist = None
@@ -1051,8 +1558,8 @@ def _yaw_from_quat(q) -> float:
                             1.0 - 2.0 * (q.y * q.y + q.z * q.z)))
 
 
-def _dilate(mask: np.ndarray, radius: int) -> np.ndarray:
-    """Binary dilation by a square structuring element of given radius."""
+def _dilate(mask: np.ndarray, radius: int, *, square=False) -> np.ndarray:
+    """Dilate with legacy cardinal neighbours, optionally including corners."""
     if radius <= 0:
         return mask.copy()
     out = mask.copy()
@@ -1062,8 +1569,128 @@ def _dilate(mask: np.ndarray, radius: int) -> np.ndarray:
         shifted[:-1, :] |= out[1:, :]
         shifted[:, 1:] |= out[:, :-1]
         shifted[:, :-1] |= out[:, 1:]
+        if square:
+            shifted[1:, 1:] |= out[:-1, :-1]
+            shifted[1:, :-1] |= out[:-1, 1:]
+            shifted[:-1, 1:] |= out[1:, :-1]
+            shifted[:-1, :-1] |= out[1:, 1:]
         out = shifted
     return out
+
+
+def _sweep_swath(points, allowed, floor, origin, resolution, radius):
+    """Raster cleaning disks along admitted intra-cell lines, including their halo."""
+    h, w = allowed.shape
+    ox, oy = origin
+    centers = np.zeros_like(allowed)
+
+    def cell(point):
+        return int((point[1] - oy) / resolution), int((point[0] - ox) / resolution)
+
+    for point in points:
+        y, x = cell(point)
+        if 0 <= y < h and 0 <= x < w:
+            centers[y, x] = True
+    for first, last in zip(points, points[1:]):
+        # Use identical arithmetic when a complete track is reversed.
+        if (last[0], last[1]) < (first[0], first[1]):
+            first, last = last, first
+        count = max(1, int(math.ceil(math.dist(first, last) / (resolution / 4))))
+        samples = [cell((first[0] + (last[0] - first[0]) * i / count,
+                         first[1] + (last[1] - first[1]) * i / count))
+                   for i in range(count + 1)]
+        if all(0 <= y < h and 0 <= x < w and allowed[y, x] for y, x in samples):
+            for y, x in samples:
+                centers[y, x] = True
+    swath = np.zeros_like(allowed)
+    for dy in range(-radius, radius + 1):
+        for dx in range(-radius, radius + 1):
+            if dx * dx + dy * dy > radius * radius:
+                continue
+            y0, y1 = max(0, dy), min(h, h + dy)
+            x0, x1 = max(0, dx), min(w, w + dx)
+            if y0 < y1 and x0 < x1:
+                swath[y0:y1, x0:x1] |= centers[y0 - dy:y1 - dy, x0 - dx:x1 - dx]
+    return swath & floor
+
+
+def _compact_sweep(tracks, allowed, floor, origin, resolution, radius, step, seed):
+    """Try rectangular narrow passes and bounded whole-track reordering."""
+    # Preparation is optional: larger plans retain their original geometry.
+    if (not tracks or len(tracks) > 32 or radius > 16
+            or sum(len(points) for _, _, points in tracks) > 4096
+            or allowed.size * len(tracks) * (2 * radius + 1) ** 2 > 64_000_000
+            or sum(math.ceil(math.dist(a, b) * 4 / resolution) + 1
+                   for _, _, points in tracks for a, b in zip(points, points[1:])) > 65_536):
+        return None
+    choices = []
+    for index, (mask, vertical, points) in enumerate(tracks):
+        major_size = mask.shape[1] if vertical else mask.shape[0]
+        axis = 0 if vertical else 1
+        major = sorted({point[axis] for point in points})
+        if 1 < major_size <= step and bool(mask.all()) and len(major) == 2:
+            choices.append((index, axis, major))
+    if not choices:
+        return None
+    paths = [points for _, _, points in tracks]
+    swaths = [_sweep_swath(points, allowed, floor, origin, resolution, radius)
+              for points in paths]
+    counts = np.zeros(allowed.shape, dtype=np.uint16)
+    for swath in swaths:
+        counts += swath
+    changed = False
+    for index, axis, major in choices:
+        for keep in major:
+            line = [point for point in paths[index] if point[axis] == keep]
+            other = major[1] if keep == major[0] else major[0]
+            entry_cap, exit_cap = list(line[0]), list(line[-1])
+            entry_cap[axis] = exit_cap[axis] = other
+            candidate = [tuple(entry_cap)] + line + [tuple(exit_cap)]
+            swath = _sweep_swath(candidate, allowed, floor, origin, resolution, radius)
+            if np.any((counts == 1) & swaths[index] & ~swath):
+                continue
+            counts -= swaths[index]
+            counts += swath
+            paths[index], swaths[index] = candidate, swath
+            changed = True
+            break
+    if not changed:
+        return None
+
+    def entry(item):
+        index, reverse = item
+        return paths[index][-1 if reverse else 0]
+
+    def end_point(item):
+        index, reverse = item
+        return paths[index][0 if reverse else -1]
+
+    order, remaining, current = [], list(range(len(paths))), seed
+    while remaining:
+        _, index, reverse = min((math.dist(current, entry((i, r))), i, r)
+                                for i in remaining for r in (False, True))
+        order.append((index, reverse))
+        remaining.remove(index)
+        current = end_point(order[-1])
+    # Reversing a complete block preserves every admitted internal curve.
+    # Only its two boundary connections change; at most N improvements.
+    for _ in range(len(order)):
+        best, move = -1e-9, None
+        for first in range(len(order)):
+            previous = seed if first == 0 else end_point(order[first - 1])
+            for stop in range(first + 1, len(order) + 1):
+                start, end = entry(order[first]), end_point(order[stop - 1])
+                delta = math.dist(previous, end) - math.dist(previous, start)
+                if stop < len(order):
+                    following = entry(order[stop])
+                    delta += math.dist(start, following) - math.dist(end, following)
+                if delta < best:
+                    best, move = delta, (first, stop)
+        if move is None:
+            break
+        first, stop = move
+        order[first:stop] = [(i, not r) for i, r in reversed(order[first:stop])]
+    return [list(reversed(paths[i])) if reverse else paths[i] for i, reverse in order]
 
 
 def _pt_in_zones(x: float, y: float, zones) -> bool:

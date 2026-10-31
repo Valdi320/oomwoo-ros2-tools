@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8'?>
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <data_writer profile_name="rr/oomwoo_keepout_mask_server/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+  <data_writer profile_name="rr/oomwoo_keepout_info_server/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+  <data_writer profile_name="rr/map_server/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+  <data_writer profile_name="rr/amcl/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+  <data_writer profile_name="rr/controller_server/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+  <data_writer profile_name="rr/planner_server/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+  <data_writer profile_name="rr/bt_navigator/change_stateReply">
+    <qos>
+      <reliability>
+        <kind>RELIABLE</kind>
+        <max_blocking_time>
+          <sec>1</sec>
+          <nanosec>0</nanosec>
+        </max_blocking_time>
+      </reliability>
+    </qos>
+  </data_writer>
+</profiles>

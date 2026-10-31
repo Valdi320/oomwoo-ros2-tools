@@ -20,14 +20,17 @@ and logs COVERAGE_REPORT lines the regression test asserts on.
 """
 
 import os
+import sys
 
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (
-    DeclareLaunchArgument, IncludeLaunchDescription)
+    DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction,
+    SetEnvironmentVariable, SetLaunchConfiguration)
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import EnvironmentVariable, LaunchConfiguration
 
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
@@ -45,6 +48,7 @@ def generate_launch_description() -> LaunchDescription:
     default_map = os.path.join(pkg_sim, 'maps', 'test_room.yaml')
     reg_args = [
         DeclareLaunchArgument('world', default_value=default_world),
+        DeclareLaunchArgument('with_meter', default_value='true'),
         DeclareLaunchArgument('map', default_value=default_map),
         DeclareLaunchArgument('x_pose', default_value='0.0'),
         DeclareLaunchArgument('y_pose', default_value='0.0'),
@@ -75,6 +79,16 @@ def generate_launch_description() -> LaunchDescription:
         DeclareLaunchArgument('executor', default_value='nav2'),
         # reactive-executor tuning (only used when executor:=reactive)
         DeclareLaunchArgument('v_cruise', default_value='0.35'),
+        DeclareLaunchArgument('rotate_speed', default_value='1.0'),
+        DeclareLaunchArgument('motion_relay_journal', default_value=''),
+        DeclareLaunchArgument('keepout_mask', default_value=''),
+        DeclareLaunchArgument('sweep_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('nav_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('motor_cmd_topic', default_value='cmd_vel'),
+        DeclareLaunchArgument('nav_linear_speed', default_value='0.2'),
+        DeclareLaunchArgument('nav_angular_speed', default_value='1.0'),
+        DeclareLaunchArgument('nav_lookahead', default_value='0.25'),
+        DeclareLaunchArgument('nav_goal_pose_topic', default_value='goal_pose'),
         DeclareLaunchArgument('min_transit_len', default_value='0.7'),
     ]
     robot_radius = ParameterValue(
@@ -97,10 +111,19 @@ def generate_launch_description() -> LaunchDescription:
             'yaw': LaunchConfiguration('yaw'),
             'robot_model': LaunchConfiguration('robot_model'),
             'gui': LaunchConfiguration('gui'),
+            'nav_cmd_topic': LaunchConfiguration('nav_cmd_topic'),
+            'motor_cmd_topic': LaunchConfiguration('motor_cmd_topic'),
+            'nav_linear_speed': LaunchConfiguration('nav_linear_speed'),
+            'nav_angular_speed': LaunchConfiguration('nav_angular_speed'),
+            'nav_lookahead': LaunchConfiguration('nav_lookahead'),
+            'nav_goal_pose_topic': LaunchConfiguration('nav_goal_pose_topic'),
+            'managed_motion': LaunchConfiguration('managed_motion', default='false'),
+            'keepout_mask': LaunchConfiguration('keepout_mask'),
         }.items())
 
     coverage_meter = Node(
         package='oomwoo_sim_support', executable='coverage_meter', output='screen',
+        condition=IfCondition(LaunchConfiguration('with_meter')),
         parameters=[{'cleaning_radius': cleaning_radius,
                      'robot_radius': true_robot_radius,
                      'coverage_target': coverage_target, 'use_sim_time': True}],
@@ -124,21 +147,82 @@ def generate_launch_description() -> LaunchDescription:
                      'long_axis_sweep': ParameterValue(
                          LaunchConfiguration('long_axis'), value_type=bool),
                      'executor': LaunchConfiguration('executor'),
+                     'nav_linear_speed': ParameterValue(
+                         LaunchConfiguration('nav_linear_speed'), value_type=float),
                      'v_cruise': ParameterValue(
                          LaunchConfiguration('v_cruise'), value_type=float),
+                     'rotate_speed': ParameterValue(
+                         LaunchConfiguration('rotate_speed'), value_type=float),
+                     'motion_relay_journal': ParameterValue(
+                         LaunchConfiguration('motion_relay_journal'), value_type=str),
+                     'require_keepout_filter': ParameterValue(
+                         LaunchConfiguration('coverage_keepout_required', default='false'),
+                         value_type=bool),
                      'min_transit_len': ParameterValue(
                          LaunchConfiguration('min_transit_len'), value_type=float),
                      'use_sim_time': True}],
-        remappings=[('map', '/map'),
+        remappings=[('cmd_vel', LaunchConfiguration('sweep_cmd_topic')),
+                    ('keepout_filter_mask', LaunchConfiguration(
+                        'coverage_keepout_topic', default='keepout_filter_mask')),
+                    ('map', '/map'),
                     ('coverage_ratio', '/coverage_meter/ratio'),
                     ('covered_grid', '/coverage_meter/covered_grid'),
                     ('navigate_to_pose', '/navigate_to_pose')])
+
+    def existing_motion_components(context):
+        mask = context.perform_substitution(LaunchConfiguration('keepout_mask'))
+        actions = []
+        if mask:
+            if not os.path.isabs(mask):
+                raise ValueError('keepout_mask must be an absolute disposable lab path')
+            actions += [
+                SetLaunchConfiguration('coverage_keepout_required', 'true'),
+                SetLaunchConfiguration('coverage_keepout_topic', '/oomwoo/keepout_mask')]
+        path = context.perform_substitution(LaunchConfiguration('motion_relay_journal'))
+        if not path:
+            if mask:
+                raise ValueError(
+                    'keepout coverage requires the existing motion_relay_journal mode')
+            return actions
+        if not os.path.isabs(path):
+            raise ValueError('motion_relay_journal must be an absolute disposable lab path')
+        # Reuse the contributor relay and OOMWOO DockDrive. Direct inclusion
+        # avoids dock.launch's parent Shutdown action on driver exit.
+        return actions + [
+            # Fast DDS 2.14.7 detected heap corruption in SharedMemTransport
+            # teardown after a successful managed run. Keep this workaround
+            # local to the disposable lab, retaining any explicit parent choice.
+            SetEnvironmentVariable(
+                'FASTDDS_BUILTIN_TRANSPORTS', EnvironmentVariable(
+                    'FASTDDS_BUILTIN_TRANSPORTS', default_value='UDPv4')),
+            # Bound discovery matching only for the lifecycle reply writers.
+            # Retain an explicit parent Fast DDS profile choice.
+            SetEnvironmentVariable(
+                'FASTRTPS_DEFAULT_PROFILES_FILE', EnvironmentVariable(
+                    'FASTRTPS_DEFAULT_PROFILES_FILE', default_value=os.path.join(
+                        pkg_sim, 'config', 'nav2_lifecycle_replies.xml'))),
+            SetLaunchConfiguration('nav_goal_pose_topic', '/valdi/disabled_nav2_goal_pose'),
+            SetLaunchConfiguration('managed_motion', 'true'),
+            ExecuteProcess(cmd=[
+                sys.executable, '-m',
+                'oomwoo_cleaning_jobs.ros_dock_velocity_relay', '--ros-args',
+                '-p', 'simulation_lab:=true', '-p', 'three_way:=true',
+                '-p', 'managed_nav2:=true', '-p', 'use_sim_time:=true',
+                '-p', 'require_keepout_filter:=' + ('true' if mask else 'false'),
+                '-p', 'goal_journal_path:=' + path], output='screen'),
+            Node(package='oomwoo_dock', executable='dock_drive', name='dock_drive',
+                 parameters=[{'use_sim_time': True, 'auto_start': False,
+                              'exit_when_done': False}],
+                 remappings=[('cmd_vel', '/valdi/dock_drive_cmd_vel'),
+                             ('~/dock_pose', '/dock_detector/dock_pose')], output='screen'),
+        ]
 
     # No fixed timers: the meter self-gates on /map + /ground_truth, and the
     # planner self-gates on /amcl_pose + the Nav2 action server (retrying until
     # ready). cleaning_active is latched, so meter accounting can't miss the
     # planner's start regardless of launch order.
     return LaunchDescription(reg_args + [
+        OpaqueFunction(function=existing_motion_components),
         base,
         coverage_meter,
         coverage_planner,
