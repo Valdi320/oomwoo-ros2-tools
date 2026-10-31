@@ -1,0 +1,414 @@
+{
+  "completed_utc": "2026-10-31T10:49:03.441336+00:00",
+  "rc": 0,
+  "result": {
+    "ok": true,
+    "scope": "Installed Nav2 1.3.13 RPP and actual retained 53-point path. Declared TF map correction 0\u2192.05\u21920 with base fixed in odom; controls only stateful true/false. No plant, hardware, original sensor replay or full-motion proof.",
+    "start_xy": [
+      0.325,
+      1.275
+    ],
+    "goal_xy": [
+      0.5250000316649674,
+      1.1750000629574062
+    ],
+    "overlay_forbidden_cells": 220,
+    "synthetic_tf_yaw": 0.0,
+    "effective_configuration": {
+      "update_frequency": 2.0,
+      "publish_frequency": 4.0,
+      "global_frame": "map",
+      "robot_base_frame": "base_link",
+      "transform_tolerance": 5.0,
+      "robot_radius": 0.1745,
+      "resolution": 0.05,
+      "track_unknown_space": true,
+      "plugins": [
+        "static_layer",
+        "obstacle_layer",
+        "voxel_layer",
+        "inflation_layer",
+        "keepout_inflation"
+      ],
+      "obstacle_layer": {
+        "plugin": "nav2_costmap_2d::ObstacleLayer",
+        "enabled": true,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "voxel_layer": {
+        "plugin": "nav2_costmap_2d::VoxelLayer",
+        "enabled": true,
+        "publish_voxel_map": true,
+        "origin_z": 0.0,
+        "z_resolution": 0.05,
+        "z_voxels": 16,
+        "max_obstacle_height": 2.0,
+        "mark_threshold": 0,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "static_layer": {
+        "plugin": "nav2_costmap_2d::StaticLayer",
+        "map_subscribe_transient_local": true,
+        "transform_tolerance": 5.0
+      },
+      "inflation_layer": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "inflation_radius": 0.1,
+        "cost_scaling_factor": 10.0
+      },
+      "always_send_full_costmap": true,
+      "filters": [
+        "keepout_filter"
+      ],
+      "keepout_filter": {
+        "plugin": "nav2_costmap_2d::KeepoutFilter",
+        "enabled": true,
+        "filter_info_topic": "/oomwoo/keepout_filter_info",
+        "override_lethal_cost": false,
+        "transform_tolerance": 0.3
+      },
+      "keepout_inflation": {
+        "plugin": "nav2_costmap_2d::PluginContainerLayer",
+        "enabled": true,
+        "combination_method": 2,
+        "plugins": [
+          "mask",
+          "inflation"
+        ],
+        "mask": {
+          "plugin": "nav2_costmap_2d::StaticLayer",
+          "enabled": true,
+          "map_topic": "/oomwoo/keepout_mask",
+          "map_subscribe_transient_local": true,
+          "subscribe_to_updates": false,
+          "use_maximum": false,
+          "track_unknown_space": true,
+          "trinary_costmap": true,
+          "lethal_cost_threshold": 100
+        },
+        "inflation": {
+          "plugin": "nav2_costmap_2d::InflationLayer",
+          "enabled": true,
+          "inflation_radius": 0.3345,
+          "cost_scaling_factor": 5.0
+        }
+      },
+      "use_sim_time": true
+    },
+    "cases": {
+      "True": {
+        "initial": {
+          "offset_x": 0.0,
+          "commands": [
+            {
+              "received_ros_ns": 6800000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            },
+            {
+              "received_ros_ns": 7000000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            },
+            {
+              "received_ros_ns": 7220000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            }
+          ],
+          "carrot": {
+            "frame": "base_link",
+            "stamp_ns": 7160000000,
+            "xy": [
+              0.20000003166496744,
+              -0.09999993704259369
+            ]
+          },
+          "rotating_flags": [
+            false,
+            false,
+            false
+          ]
+        },
+        "inside": {
+          "offset_x": 0.05,
+          "commands": [
+            {
+              "received_ros_ns": 7600000000,
+              "v": 0.0,
+              "w": -0.0
+            },
+            {
+              "received_ros_ns": 7820000000,
+              "v": 0.0,
+              "w": -0.0
+            },
+            {
+              "received_ros_ns": 8020000000,
+              "v": 0.0,
+              "w": -0.0
+            }
+          ],
+          "carrot": {
+            "frame": "base_link",
+            "stamp_ns": 7960000000,
+            "xy": [
+              0.15000003166496745,
+              -0.09999993704259369
+            ]
+          },
+          "rotating_flags": [
+            true,
+            true,
+            true
+          ]
+        },
+        "back_outside": {
+          "offset_x": 0.0,
+          "commands": [
+            {
+              "received_ros_ns": 8620000000,
+              "v": 0.0,
+              "w": -0.0
+            },
+            {
+              "received_ros_ns": 8820000000,
+              "v": 0.0,
+              "w": -0.0
+            },
+            {
+              "received_ros_ns": 9000000000,
+              "v": 0.0,
+              "w": -0.0
+            }
+          ],
+          "carrot": {
+            "frame": "base_link",
+            "stamp_ns": 8760000000,
+            "xy": [
+              0.20000003166496744,
+              -0.09999993704259369
+            ]
+          },
+          "rotating_flags": [
+            true,
+            true,
+            true
+          ]
+        },
+        "effective": {},
+        "terminal_status": 5
+      },
+      "False": {
+        "initial": {
+          "offset_x": 0.0,
+          "commands": [
+            {
+              "received_ros_ns": 10060000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            },
+            {
+              "received_ros_ns": 10280000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            },
+            {
+              "received_ros_ns": 10480000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            }
+          ],
+          "carrot": {
+            "frame": "base_link",
+            "stamp_ns": 10420000000,
+            "xy": [
+              0.20000003166496744,
+              -0.09999993704259369
+            ]
+          },
+          "rotating_flags": [
+            false,
+            false,
+            false
+          ]
+        },
+        "inside": {
+          "offset_x": 0.05,
+          "commands": [
+            {
+              "received_ros_ns": 11080000000,
+              "v": 0.0,
+              "w": -0.0
+            },
+            {
+              "received_ros_ns": 11240000000,
+              "v": 0.0,
+              "w": -0.0
+            },
+            {
+              "received_ros_ns": 11460000000,
+              "v": 0.0,
+              "w": -0.0
+            }
+          ],
+          "carrot": {
+            "frame": "base_link",
+            "stamp_ns": 11220000000,
+            "xy": [
+              0.15000003166496745,
+              -0.09999993704259369
+            ]
+          },
+          "rotating_flags": [
+            true,
+            true,
+            true
+          ]
+        },
+        "back_outside": {
+          "offset_x": 0.0,
+          "commands": [
+            {
+              "received_ros_ns": 11880000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            },
+            {
+              "received_ros_ns": 12060000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            },
+            {
+              "received_ros_ns": 12260000000,
+              "v": 0.1,
+              "w": -0.39999974757428974
+            }
+          ],
+          "carrot": {
+            "frame": "base_link",
+            "stamp_ns": 12220000000,
+            "xy": [
+              0.20000003166496744,
+              -0.09999993704259369
+            ]
+          },
+          "rotating_flags": [
+            false,
+            false,
+            false
+          ]
+        },
+        "effective": {},
+        "terminal_status": 5
+      }
+    },
+    "wire_path_audit": {
+      "resolution": 0.05000000074505806,
+      "origin_x": -1.6,
+      "origin_y": -3.05,
+      "data_sha256": "a3c39af194847754d44ba23104649915a651426f450e452f1d5afe4b9279c1d1",
+      "all_24cm_segments_clear": true
+    },
+    "effective_parameters": {
+      "FollowPath.plugin": {
+        "type": 4,
+        "double": 0.0,
+        "bool": false,
+        "string": "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController",
+        "strings": []
+      },
+      "FollowPath.desired_linear_vel": {
+        "type": 3,
+        "double": 0.14,
+        "bool": false,
+        "string": "",
+        "strings": []
+      },
+      "FollowPath.lookahead_dist": {
+        "type": 3,
+        "double": 0.5,
+        "bool": false,
+        "string": "",
+        "strings": []
+      },
+      "FollowPath.use_velocity_scaled_lookahead_dist": {
+        "type": 1,
+        "double": 0.0,
+        "bool": false,
+        "string": "",
+        "strings": []
+      },
+      "FollowPath.use_fixed_curvature_lookahead": {
+        "type": 1,
+        "double": 0.0,
+        "bool": false,
+        "string": "",
+        "strings": []
+      },
+      "FollowPath.use_rotate_to_heading": {
+        "type": 1,
+        "double": 0.0,
+        "bool": true,
+        "string": "",
+        "strings": []
+      },
+      "FollowPath.rotate_to_heading_min_angle": {
+        "type": 3,
+        "double": 0.6,
+        "bool": false,
+        "string": "",
+        "strings": []
+      },
+      "FollowPath.stateful": {
+        "type": 1,
+        "double": 0.0,
+        "bool": true,
+        "string": "",
+        "strings": []
+      },
+      "controller_frequency": {
+        "type": 3,
+        "double": 5.0,
+        "bool": false,
+        "string": "",
+        "strings": []
+      }
+    },
+    "process_exit_codes": [
+      0,
+      0
+    ],
+    "seconds": 10.669,
+    "cgroup": {
+      "/sys/fs/cgroup/memory.peak": "158875648\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "/sys/fs/cgroup/pids.peak": "52\n"
+    }
+  },
+  "prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/rpp_stateful_contrast_prepared_20261031.json",
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/rpp_stateful_contrast_20261031.log",
+  "raw_sha256": "4b3e62279376ec272d12cb6b8617fb75afdcf929d75a9b0bcf60d5ba021cd8d5"
+}

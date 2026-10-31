@@ -1502,3 +1502,38 @@ de 17 min; coste aún no medido. Decisión: consolidar la evidencia, sin repetir
 ensayo ni ampliar bancos o variantes. La cambiaría una hipótesis falsable
 respaldada por lectura del contrato/controlador o un contraste focal. Esta única
 corrida no certifica fiabilidad ni hardware; objetivo general sigue pendiente.
+
+
+## Re-evaluar el giro final tras una corrección de localización — 31/10/2026
+
+El banco existente del controlador, con el binario Nav2 1.3.13 instalado,
+la ruta original de 53 puntos y el frame local `odom`, reproduce una retención
+de giro: con cuerpo fijo en odom y corrección declarada map→odom de
+0→5 cm→0, el objetivo entra y vuelve a salir del radio de 20 cm. Con
+`FollowPath.stateful=true` el RPP conserva giro y velocidad lineal cero
+fuera de ese radio. Cambiando sólo ese parámetro a false vuelve a evaluar
+la distancia y devuelve velocidad lineal positiva. Ambos casos conservan
+los criterios del goal checker y terminan por cancelación explícita; los
+dos servidores cierran con rc0, sin OOM. No es una reproducción de sensores
+históricos ni prueba de movimiento de la planta.
+
+Se adopta `FollowPath.stateful=false` en la configuración existente. No cambia
+`goal_checker.stateful`, tolerancias, rotación inicial, velocidades, máscara
+ni radios de seguridad. La traza del nativo fallido ya muestra el objetivo
+a 18,92 cm al entrar en giro y después a más de 21 cm conservando ese modo.
+El contrato de [RPP 1.3.13](https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_regulated_pure_pursuit_controller/src/regulated_pure_pursuit_controller.cpp)
+y del [controller server](https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_controller/src/controller_server.cpp)
+explica el estado retenido y el uso del sello original al transformar el extremo.
+La validación completa debe comprobar el parámetro efectivo y el cierre real.
+
+Recibo: `src/oomwoo_sim_support/docs/evidence/rpp_stateful_contrast_20261031.json`.
+El subcampo `effective` de cada caso quedó vacío porque el sondeo incluía un
+nombre de parámetro no declarado. Se conserva esa limitación; las respuestas
+SetParameters y las órdenes reales acreditan el contraste, no una relectura
+completa posterior. El sondeo inicial sí acredita stateful=true instalado.
+La próxima captura deberá releer sólo nombres declarados.
+
+Utilidad: corrección mínima respaldada por contraste del binario. Falta
+comprobarla con movimiento y alcanzar 80% de eficiencia; no hay nuevo verde
+de habitación. Siguiente incremento: medir el coste de enlaces antes del 90%
+y valorar un ahorro de recorrido demostrable antes de repetir el nativo completo.
