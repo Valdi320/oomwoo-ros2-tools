@@ -1537,3 +1537,35 @@ Utilidad: corrección mínima respaldada por contraste del binario. Falta
 comprobarla con movimiento y alcanzar 80% de eficiencia; no hay nuevo verde
 de habitación. Siguiente incremento: medir el coste de enlaces antes del 90%
 y valorar un ahorro de recorrido demostrable antes de repetir el nativo completo.
+
+
+## Selección de pasadas según la huella acreditada — 31/10/2026
+
+El medidor original acredita discos y mantiene su exclusión de la banda de
+pared, pero `_covered_at` decidía sobre el cuadrado que contiene al disco.
+Dos casos con las funciones reales del medidor fallan antes de corregir:
+un disco atendido junto a pared se repite por las esquinas sin crédito;
+las esquinas exteriores limpias también pueden ocultar un disco pendiente.
+Ahora sólo se computan las celdas de la huella circular. El umbral sigue
+siendo 60%, los límites ya eran inclusivos y gap-fill conserva la comprobación
+de la celda central, incluidos huecos con valor0/50/-1 y bolsillos conocidos.
+
+Pasan 11 casos focales seleccionados y ament_flake8 de los dos ficheros,
+usando la receta del proyecto. El flake8 sin esa configuración dio errores
+y se conserva como intento no pertinente, sin ocultarlos ni arreglar código
+ajeno. AST de todos los métodos salvo `_covered_at` idéntico al anterior.
+Se conservan el rojo causal y un segundo rojo repetido por un error de
+transporte: el primer parche literal fue rechazado antes de editar, pero se
+lanzó el test dependiente por equivocación. Se restituyeron los tests propios,
+se leyó el método exacto y se corrigió la sustitución antes del siguiente
+oráculo. Recibo: `src/oomwoo_sim_support/docs/evidence/covered_disk_delivery_20261031.json`.
+
+Se han descartado sin tocar el plan tres alternativas geométricas: el
+orden exacto de los nueve bloques (incluidos rodeos por el mapa), borrar
+pasadas completas y cambiar su fase. Ninguna ahorra recorrido conservando
+toda la huella libre original. Por ello no se añade ningún algoritmo de
+rutas. El siguiente incremento de mayor retorno es medir con movimiento
+las dos correcciones respaldadas: giro final no retenido y selector circular.
+La copia congelada conservará máscara, radios, medidor,90/80,STOP y límites.
+La utilidad demostrada sigue siendo focal; el ahorro de2,75m y el cierre
+nativo siguen pendientes. La decisión cambiará con el resultado real.

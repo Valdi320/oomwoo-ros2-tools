@@ -1472,3 +1472,50 @@ def test_transit_budget_rejects_invalid_configured_speed(speed):
     finally:
         node.destroy_node()
         rclpy.shutdown()
+
+
+def test_sweep_skips_a_meter_credited_disk_next_to_the_wall():
+    from oomwoo_sim_support.coverage_meter_node import CoverageMeter, _stamp_disk
+
+    grid = OccupancyGrid()
+    grid.info.width, grid.info.height, grid.info.resolution = 40, 30, .05
+    free = np.ones((30, 40), dtype=bool)
+    free[:4] = False
+    meter = SimpleNamespace(
+        info=grid.info, free=free, reachable=None, total_reachable=0,
+        robot_radius=.175, cleaning_radius=.20, edge_margin=.15,
+        get_logger=lambda: SimpleNamespace(info=lambda message: None))
+    CoverageMeter._ensure_reachable(meter, 20, 8)
+    credited = np.zeros_like(free)
+    _stamp_disk(credited, meter.reachable, 20, 8, 4)
+    footprint = np.zeros_like(free)
+    _stamp_disk(footprint, np.ones_like(free), 20, 8, 4)
+    assert credited.sum() / footprint.sum() > .6
+    node = SimpleNamespace(
+        map_msg=grid, covered_grid=credited.astype(np.int8) * 100,
+        cleaning_radius=.20, gapfill_passes=0)
+    target = row_target(20.5 * .05)
+    target.pose.position.y = 8.5 * .05
+    assert CoveragePlanner._covered_at(node, target)
+
+
+def test_sweep_does_not_count_clean_square_corners_outside_its_disk():
+    from oomwoo_sim_support.coverage_meter_node import _stamp_disk
+
+    grid = OccupancyGrid()
+    grid.info.width = grid.info.height = 21
+    grid.info.resolution = .05
+    disk = np.zeros((21, 21), dtype=bool)
+    _stamp_disk(disk, np.ones_like(disk), 10, 10, 4)
+    covered = ~disk
+    inside_old_square = np.zeros_like(disk)
+    inside_old_square[6:14, 6:14] = True
+    for y, x in np.argwhere(disk & inside_old_square)[:24]:
+        covered[y, x] = True
+    assert np.count_nonzero(covered & disk) / disk.sum() < .6
+    node = SimpleNamespace(
+        map_msg=grid, covered_grid=covered.astype(np.int8) * 100,
+        cleaning_radius=.20, gapfill_passes=0)
+    target = row_target(10.5 * .05)
+    target.pose.position.y = 10.5 * .05
+    assert not CoveragePlanner._covered_at(node, target)

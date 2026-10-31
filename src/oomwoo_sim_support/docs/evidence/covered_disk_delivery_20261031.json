@@ -1,0 +1,264 @@
+{
+  "utc": "2026-10-31T11:07:25.810596+00:00",
+  "change": "Use circular credited cleaning footprint rather than bounding square for main-sweep waypoint skipping; unchanged60% threshold, inclusive bounds and exact gap-fill center policy.",
+  "trigger": "The unchanged meter credits a circle and excludes its existing wall edge band. Bounding square incorrectly marks a fully credited wall-side footprint unclean, and unrelated clean outer corners can hide an unclean disk.",
+  "source_sha256": {
+    "src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+    "src/oomwoo_coverage/test/test_planner_geometry.py": "c1e94477690b13c159a7d262a054fb65e35e9a527b3882c027d72e7dc1456dc9"
+  },
+  "verification": {
+    "causal_before": {
+      "utc": "2026-10-31T11:03:04.626672+00:00",
+      "guard": "OCUPADA: la maquina la tiene «el propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo» desde hace 5 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8274 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+      "authorization": "Goal80, Crimson abierto",
+      "rc": 1,
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-covered-disk-before-20261031",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=96",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+        "-lc",
+        "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_coverage:/work/src/oomwoo_sim_support:$PYTHONPATH python3 -m pytest -q /work/src/oomwoo_coverage/test/test_planner_geometry.py::test_sweep_skips_a_meter_credited_disk_next_to_the_wall /work/src/oomwoo_coverage/test/test_planner_geometry.py::test_sweep_does_not_count_clean_square_corners_outside_its_disk -p no:cacheprovider"
+      ],
+      "stdout": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________ test_sweep_skips_a_meter_credited_disk_next_to_the_wall ____________\n\n    def test_sweep_skips_a_meter_credited_disk_next_to_the_wall():\n        from oomwoo_sim_support.coverage_meter_node import CoverageMeter, _stamp_disk\n    \n        grid = OccupancyGrid()\n        grid.info.width, grid.info.height, grid.info.resolution = 40, 30, .05\n        free = np.ones((30, 40), dtype=bool)\n        free[:4] = False\n        meter = SimpleNamespace(\n            info=grid.info, free=free, reachable=None, total_reachable=0,\n            robot_radius=.175, cleaning_radius=.20, edge_margin=.15,\n            get_logger=lambda: SimpleNamespace(info=lambda message: None))\n        CoverageMeter._ensure_reachable(meter, 20, 8)\n        credited = np.zeros_like(free)\n        _stamp_disk(credited, meter.reachable, 20, 8, 4)\n        footprint = np.zeros_like(free)\n        _stamp_disk(footprint, np.ones_like(free), 20, 8, 4)\n        assert credited.sum() / footprint.sum() > .6\n        node = SimpleNamespace(\n            map_msg=grid, covered_grid=credited.astype(np.int8) * 100,\n            cleaning_radius=.20, gapfill_passes=0)\n        target = row_target(20.5 * .05)\n        target.pose.position.y = 8.5 * .05\n>       assert CoveragePlanner._covered_at(node, target)\nE       assert False\nE        +  where False = <function CoveragePlanner._covered_at at 0x7ff048d00f40>(namespace(map_msg=nav_msgs.msg.OccupancyGrid(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanos...],\\n       [0, 0, 0, ..., 0, 0, 0],\\n       [0, 0, 0, ..., 0, 0, 0]], dtype=int8), cleaning_radius=0.2, gapfill_passes=0), geometry_msgs.msg.PoseStamped(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanosec=0), frame_id...0250000000000001, y=0.42500000000000004, z=0.0), orientation=geometry_msgs.msg.Quaternion(x=0.0, y=0.0, z=0.0, w=1.0))))\nE        +    where <function CoveragePlanner._covered_at at 0x7ff048d00f40> = CoveragePlanner._covered_at\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:1499: AssertionError\n_______ test_sweep_does_not_count_clean_square_corners_outside_its_disk ________\n\n    def test_sweep_does_not_count_clean_square_corners_outside_its_disk():\n        from oomwoo_sim_support.coverage_meter_node import _stamp_disk\n    \n        grid = OccupancyGrid()\n        grid.info.width = grid.info.height = 21\n        grid.info.resolution = .05\n        disk = np.zeros((21, 21), dtype=bool)\n        _stamp_disk(disk, np.ones_like(disk), 10, 10, 4)\n        covered = ~disk\n        inside_old_square = np.zeros_like(disk)\n        inside_old_square[6:14, 6:14] = True\n        for y, x in np.argwhere(disk & inside_old_square)[:24]:\n            covered[y, x] = True\n        assert np.count_nonzero(covered & disk) / disk.sum() < .6\n        node = SimpleNamespace(\n            map_msg=grid, covered_grid=covered.astype(np.int8) * 100,\n            cleaning_radius=.20, gapfill_passes=0)\n        target = row_target(10.5 * .05)\n        target.pose.position.y = 10.5 * .05\n>       assert not CoveragePlanner._covered_at(node, target)\nE       assert not True\nE        +  where True = <function CoveragePlanner._covered_at at 0x7ff048d00f40>(namespace(map_msg=nav_msgs.msg.OccupancyGrid(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanos...0, 100, 100, 100,\\n        100, 100, 100, 100, 100, 100, 100, 100]], dtype=int8), cleaning_radius=0.2, gapfill_passes=0), geometry_msgs.msg.PoseStamped(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanosec=0), frame_id...eometry_msgs.msg.Point(x=0.525, y=0.525, z=0.0), orientation=geometry_msgs.msg.Quaternion(x=0.0, y=0.0, z=0.0, w=1.0))))\nE        +    where <function CoveragePlanner._covered_at at 0x7ff048d00f40> = CoveragePlanner._covered_at\n\n/work/src/oomwoo_coverage/test/test_planner_geometry.py:1521: AssertionError\n=========================== short test summary info ============================\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_sweep_skips_a_meter_credited_disk_next_to_the_wall\nFAILED ../work/src/oomwoo_coverage/test/test_planner_geometry.py::test_sweep_does_not_count_clean_square_corners_outside_its_disk\n2 failed in 3.89s\n",
+      "stderr": ""
+    },
+    "focal_after": {
+      "utc": "2026-10-31T11:04:47.279174+00:00",
+      "guard": "OCUPADA: la maquina la tiene «el propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo» desde hace 7 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8274 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+      "authorization": "Goal80, Crimson abierto",
+      "rc": 0,
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-covered-disk-corrected-20261031",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=96",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+        "-lc",
+        "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_coverage:/work/src/oomwoo_sim_support:$PYTHONPATH python3 -m pytest -q /work/src/oomwoo_coverage/test/test_planner_geometry.py -k 'sweep_skips_a_meter_credited_disk or sweep_does_not_count_clean_square_corners or gapfill or covered_waypoint_skip' -p no:cacheprovider"
+      ],
+      "stdout": "...........                                                              [100%]\n11 passed, 127 deselected in 3.59s\n",
+      "stderr": "",
+      "new_evidence": "Previous literal patch did not apply: source already had inclusive bbox. Restored own tests, read exact method and verified AST identity of all other methods before applying disk selection.",
+      "source_sha256": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8"
+    },
+    "style": {
+      "utc": "2026-10-31T11:06:40.982361+00:00",
+      "rc": 0,
+      "guard": "OCUPADA: la maquina la tiene «el propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo» desde hace 9 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8270 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-covered-disk-ament-style-20261031",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=96",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+        "-lc",
+        "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_coverage:/work/src/oomwoo_sim_support:$PYTHONPATH python3 -c \"from ament_flake8.main import main_with_errors; rc, errors = main_with_errors(argv=['/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py','/work/src/oomwoo_coverage/test/test_planner_geometry.py']); raise SystemExit(rc)\""
+      ],
+      "stdout": "\n2 files checked\nNo problems found\n\nChecked files:\n\n* /work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py\n* /work/src/oomwoo_coverage/test/test_planner_geometry.py\n",
+      "stderr": "",
+      "new_evidence": "Existing test_flake8.py invokes ament_flake8.main.main_with_errors, not bare flake8. Original bare run used different default configuration and is retained."
+    },
+    "all_other_methods_AST_identical": true
+  },
+  "failed_patch_attempt": {
+    "receipt": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/covered_disk_focal_after_20261031.json",
+    "result": "Source literal guard rejected patch before editing. A dependent test was mistakenly run unchanged and repeated two failures. Own tests restored; exact method re-read showed inclusive bounds already present; corrected transport applied only disk selection and AST checked before next run."
+  },
+  "bare_style_attempt": {
+    "receipt": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/covered_disk_style_20261031.json",
+    "result": "Bare flake8 used different defaults from project ament_flake8; original errors preserved. Actual existing test recipe passes both changed files."
+  },
+  "route_diagnostics": {
+    "route_cost_bounded_20261031.json": {
+      "receipt": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/route_cost_bounded_20261031.json",
+      "sha256": "0d3e94a13c04b5b37238985530bead139ca7fb2d632cbf9fe44b7fb0a83516ad",
+      "result": {
+        "scope": "Source-only fixed existing cell tracks. Exact bounded open route through nine cells, both orientations. No native path execution or measured efficiency prediction. Geodesic costs use existing allowed centre grid, no diagonal corner cutting.",
+        "cells": 9,
+        "waypoints": 318,
+        "unchanged_internal_path_m": 115.66301458127347,
+        "current_euclidean_links_m": 9.03466404893638,
+        "best_euclidean_links_m": 9.03466404893638,
+        "euclidean_saving_m": 0.0,
+        "best_euclidean_order": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            8,
+            0
+          ]
+        ],
+        "current_geodesic_links_m": 9.973401871576774,
+        "best_geodesic_links_m": 9.973401871576774,
+        "geodesic_saving_m": 0.0,
+        "best_geodesic_order": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ],
+          [
+            8,
+            0
+          ]
+        ],
+        "euclidean_links_of_geodesic_order_m": 9.03466404893638,
+        "geodesic_links_of_euclidean_order_m": 9.973401871576774,
+        "seconds": 6.996994839981198
+      }
+    },
+    "redundant_pass_comparison_20261031.json": {
+      "receipt": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/redundant_pass_comparison_20261031.json",
+      "sha256": "3ec63c87b5014cbfa124daae0d688ce6cd881777e3f3106625ecb31d771c3952",
+      "result": {
+        "scope": "Bounded whole-pass removal only if the full union of original free-floor swath is retained. Same nine cell order and original points; new joined lines sampled in original allowed grid. Source-only candidate; no motion/efficiency claim.",
+        "before_path_m": 124.69767863020985,
+        "after_path_m": 124.69767863020985,
+        "saving_m": 0.0,
+        "before_points": 318,
+        "after_points": 318,
+        "changes": [],
+        "independent_lost_swath_cells": 0,
+        "original_swath_cells": 14669,
+        "candidate_swath_cells": 14669,
+        "seconds": 0.6295570349902846
+      }
+    },
+    "pass_phase_comparison_20261031.json": {
+      "receipt": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/pass_phase_comparison_20261031.json",
+      "sha256": "12ae51a259a94c3baaa02e0ac69139f1ea802a724bd8c0ac73c9a83b097ad9b8",
+      "result": {
+        "scope": "Shift pass phase inside original cell mask, fixed cell order and direction; only adopt if all original global free-floor swath is retained. Source-only feasibility; not native efficiency.",
+        "before_path_m": 124.69767863020985,
+        "after_path_m": 124.69767863020985,
+        "saving_m": 0.0,
+        "before_points": 318,
+        "after_points": 318,
+        "changes": [],
+        "lower_cost_layouts_checked": 136,
+        "independent_lost_swath_cells": 0,
+        "original_swath_cells": 14669,
+        "candidate_swath_cells": 14669,
+        "seconds": 1.2039146500173956
+      }
+    }
+  },
+  "utility": "Two actual meter-driven selector regressions corrected; no native saving claimed.",
+  "remaining": "Full native90/80/zero crossings/sweep_complete with stateful=false and circular selector.",
+  "next": "Freeze exact sources and execute one original full room at2CPU3GiB/noGPU despite authorized Crimson.",
+  "limits": [
+    "No meter, denominator, cleaning radius, coverage/efficiency thresholds, motion safety or frozen oracle changes.",
+    "No route variant adopted: exact fixed-endpoint ordering, whole-pass removal and row-phase alternatives all saved0 while retaining full free-floor swath.",
+    "2.75m saving remains a target, not an observed improvement."
+  ]
+}

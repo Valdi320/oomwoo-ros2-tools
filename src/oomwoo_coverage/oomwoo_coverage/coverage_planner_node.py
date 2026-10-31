@@ -451,8 +451,13 @@ class CoveragePlanner(Node):
         x0, x1 = max(0, cx - r), min(w, cx + r + 1)
         if y0 >= y1 or x0 >= x1:
             return False
+        # Feedback credits a circular cleaning footprint, not its square bbox.
+        # Outside corners may be uncredited edge floor or unrelated clean cells.
+        ys = np.arange(y0, y1)[:, None]
+        xs = np.arange(x0, x1)[None, :]
+        disk = (ys - cy) ** 2 + (xs - cx) ** 2 <= r * r
         sub = self.covered_grid[y0:y1, x0:x1]
-        return float((sub >= 100).mean()) > 0.6
+        return bool(disk.any() and float((sub[disk] >= 100).mean()) > 0.6)
 
     def _on_amcl(self, msg: PoseWithCovarianceStamped) -> None:
         self.robot_xy = (msg.pose.pose.position.x, msg.pose.pose.position.y)
