@@ -82,6 +82,7 @@ class CoverageRunner(CoverageMeter):
         self._motion_status_count = 0
         self._keepout_audit_mask = None
         self._keepout_audit_previous = None
+        self._deferred_audit_truth = []
         self._keepout_audit_bbox = None
         self._keepout_audit = {
             'poses_before_mask': 0, 'poses': 0, 'segments': 0,
@@ -154,6 +155,32 @@ class CoverageRunner(CoverageMeter):
     def _on_pose(self, msg):
         CoverageMeter._on_pose(self, msg)
         if getattr(self, 'motion_audit', False):
+            self._drain_audit_truth()
+            stamp = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
+            lead = stamp - self.get_clock().now().nanoseconds
+            # Independent DDS streams may deliver truth before its /clock.
+            # Retain the original sample, never re-stamp or omit its chord.
+            # The strict auditor still checks frame, order and age on release.
+            if (self._keepout_audit_mask is not None and 0 < lead <= 500_000_000
+                    and len(self._deferred_audit_truth) < 32):
+                self._deferred_audit_truth.append(msg)
+                self._keepout_audit['deferred_future_poses'] = (
+                    self._keepout_audit.get('deferred_future_poses', 0) + 1)
+                self._keepout_audit['max_deferred_lead_ns'] = max(
+                    self._keepout_audit.get('max_deferred_lead_ns', 0), lead)
+            else:
+                self._audit_keepout_truth(msg)
+
+    def _drain_audit_truth(self, *, final=False):
+        """Release original samples only when the existing clock reaches them."""
+        pending = getattr(self, '_deferred_audit_truth', [])
+        while pending:
+            msg = pending[0]
+            stamp = msg.header.stamp.sec * 1_000_000_000 + msg.header.stamp.nanosec
+            if not final and stamp > self.get_clock().now().nanoseconds:
+                break
+            pending.pop(0)
+            # Final unresolved or expired samples must fail the SAME auditor.
             self._audit_keepout_truth(msg)
 
     def _audit_phase(self, msg):
@@ -289,6 +316,8 @@ class CoverageRunner(CoverageMeter):
             self._audit_keepout_error(str(exc))
 
     def _audit_keepout_result(self):
+        if getattr(self, '_deferred_audit_truth', None):
+            self._drain_audit_truth(final=True)
         result = dict(self._keepout_audit)
         result['mask_seen'] = self._keepout_audit_mask is not None
         result['valid'] = bool(result['mask_seen'] and result['poses'] > 1
@@ -368,6 +397,8 @@ class CoverageRunner(CoverageMeter):
         last_sim_advance_wall = wall_start
         while rclpy.ok():
             rclpy.spin_once(self, timeout_sec=0.5)
+            if getattr(self, '_deferred_audit_truth', None):
+                self._drain_audit_truth()
             # wall-clock backstops: a dead/frozen sim clock stops every
             # sim-time exit condition, so bound the run in real time too
             now_wall = time.monotonic()
@@ -431,6 +462,8 @@ class CoverageRunner(CoverageMeter):
                                 wall_start + self.max_wall)
                 while rclpy.ok() and time.monotonic() < grace_end:
                     rclpy.spin_once(self, timeout_sec=0.2)
+                    if getattr(self, '_deferred_audit_truth', None):
+                        self._drain_audit_truth()
                     if getattr(self, '_motion_fault', False):
                         break
                     # Retain the first paired crossing during grace too;

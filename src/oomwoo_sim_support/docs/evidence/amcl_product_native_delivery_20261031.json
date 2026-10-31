@@ -1,0 +1,644 @@
+{
+  "native_receipt": "/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/amcl_product_full_native_20261031.json",
+  "native_sha256": "2d5c2b2beb59889d2be585a6c0ae6f28f728afdd728079bee069f2e5fb611a21",
+  "native": {
+    "completed_utc": "2026-10-31T11:56:59.286167+00:00",
+    "rc": 2,
+    "seconds": 1188.588,
+    "host_timeout": false,
+    "container": "oomwoo-amcl-product-3643ab8",
+    "input_sha256": {
+      "planner": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+      "scorer": "f29eca96d4a295d754be578b14d6ef9611dca0e5d6120e295bcb67ec3b6e54f8",
+      "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+      "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+      "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+      "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+      "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+      "relay": "e01a390fe90668a8a5660f78dc61c7dfddb4c5c0c99d3de5b638864bd3ca6297",
+      "nav2_config": "c1dd8b2a2362f756930bd896987aca360ec13e012a592b3f660b57fdb289a4b9",
+      "planner_production": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+      "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+      "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+      "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+      "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+      "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+      "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+      "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+    },
+    "input_unchanged": {
+      "planner": true,
+      "scorer": true,
+      "meter": true,
+      "wrapper": true,
+      "driver": true,
+      "journal": true,
+      "witness": true,
+      "relay": true,
+      "nav2_config": true,
+      "planner_production": true,
+      "coverage_launch": true,
+      "sim_launch": true,
+      "lifecycle_response_qos": true,
+      "world": true,
+      "map_yaml": true,
+      "map_image": true,
+      "keepout_builder": true
+    },
+    "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/amcl_product_full_native_20261031.log",
+    "raw_sha256": "84990d12f5fcc130025783b02920ecc793f5f91334fa9f1097795c5f295cd058",
+    "canonical_commit": "3643ab80171c8a8dd51573179f8d8bc15a1a918d",
+    "jobs_canonical_commit": "cc70b2a3aa931261283fffb735324dd431418eea",
+    "scope": "Full original room90/80/zero/sweep_complete with simulation AMCL likelihood_field_prob. Product change only sim_launch since last181s native; scorer passive existing parameter reply now also records laser_model_type/string value, every other method AST-identical. All other runtime hashes and original criteria unchanged."
+  },
+  "report": {
+    "coverage": 0.9457,
+    "coverage_target": 0.9,
+    "target_crossed": true,
+    "efficiency_at_target": 0.7695,
+    "efficiency_final": 0.6441,
+    "revisit_ratio": 0.3275,
+    "efficiency_target": 0.8,
+    "time_to_target_s": 882.7,
+    "end_reason": "sweep_complete",
+    "sim_unstable": false,
+    "measurement_valid": false,
+    "pass": false
+  },
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 53790,
+    "segments": 53789,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.04,
+    "errors": [
+      "ground-truth stamp/frame/position invalid or stale: frame_prefix='map' stamp_ns=285020000000 now_ns=285015000000 age_ns=-5000000 x=4.548260317634943 y=-1.623738196612235"
+    ],
+    "first_footprint_crossing": null,
+    "min_sampled_center_to_mask_bbox_m": 0.255208441127178,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 9,
+        "distance_m": 6.295332622839101e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000328980793
+      },
+      "IDLE": {
+        "poses": 2169,
+        "distance_m": 6.190168795981519e-05,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.31585306937726526
+      },
+      "SWEEP": {
+        "poses": 19737,
+        "distance_m": 64.07560513146927,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.255208441127178
+      },
+      "PREPARE_NAV": {
+        "poses": 2043,
+        "distance_m": 2.002179762922238e-06,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.29731005974083324
+      },
+      "TRANSIT": {
+        "poses": 27114,
+        "distance_m": 64.08135332783473,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.28677261058676234
+      },
+      "TRANSIT_CANCEL": {
+        "poses": 506,
+        "distance_m": 0.05724506234409846,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.6198765335518073
+      },
+      "ESCAPE": {
+        "poses": 2212,
+        "distance_m": 4.682548799136489,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 1.4568814778407195
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": false
+  },
+  "cgroup": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "324\n",
+    "/sys/fs/cgroup/memory.peak": "1039290368\n",
+    "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+  },
+  "actual_localization_parameters": {
+    "received_ros_ns": 10420000000,
+    "received_monotonic_s": 464071.342552931,
+    "names": [
+      "transform_tolerance",
+      "update_min_d",
+      "update_min_a",
+      "alpha1",
+      "alpha2",
+      "alpha3",
+      "alpha4",
+      "sigma_hit",
+      "z_hit",
+      "z_rand",
+      "max_beams",
+      "laser_model_type"
+    ],
+    "values": [
+      {
+        "type": 3,
+        "double_value": 5.0,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.15,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.1,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.2,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.2,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.2,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.2,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.2,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.95,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 3,
+        "double_value": 0.05,
+        "integer_value": 0,
+        "string_value": ""
+      },
+      {
+        "type": 2,
+        "double_value": 0.0,
+        "integer_value": 120,
+        "string_value": ""
+      },
+      {
+        "type": 4,
+        "double_value": 0.0,
+        "integer_value": 0,
+        "string_value": "likelihood_field_prob"
+      }
+    ]
+  },
+  "amcl_same_stamp_pairs": [
+    {
+      "stamp_ns": 1062400000000,
+      "amcl_xy": [
+        4.330558710723381,
+        0.437372431383649
+      ],
+      "truth_xy": [
+        4.346754654451835,
+        0.44544340146954836
+      ],
+      "error_m": 0.01809555612250448
+    },
+    {
+      "stamp_ns": 1062600000000,
+      "amcl_xy": [
+        4.324177870427932,
+        0.43182328780946644
+      ],
+      "truth_xy": [
+        4.346342930404978,
+        0.44574713065550453
+      ],
+      "error_m": 0.026175623839503847
+    },
+    {
+      "stamp_ns": 1063000000000,
+      "amcl_xy": [
+        4.372251347447013,
+        0.4566568830596735
+      ],
+      "truth_xy": [
+        4.398905673563309,
+        0.4714766259877514
+      ],
+      "error_m": 0.030497178249277324
+    },
+    {
+      "stamp_ns": 1063800000000,
+      "amcl_xy": [
+        4.527498467600937,
+        0.5149122707868917
+      ],
+      "truth_xy": [
+        4.548219906408326,
+        0.5263214048090281
+      ],
+      "error_m": 0.023654732409888343
+    },
+    {
+      "stamp_ns": 1064600000000,
+      "amcl_xy": [
+        4.58820118960755,
+        0.5283201210083013
+      ],
+      "truth_xy": [
+        4.608578396153599,
+        0.544526445708668
+      ],
+      "error_m": 0.026036042458754727
+    },
+    {
+      "stamp_ns": 1064800000000,
+      "amcl_xy": [
+        4.58799481878092,
+        0.52725486181895
+      ],
+      "truth_xy": [
+        4.608589373452956,
+        0.5445328165463055
+      ],
+      "error_m": 0.026882399478097903
+    },
+    {
+      "stamp_ns": 1065000000000,
+      "amcl_xy": [
+        4.586880314643438,
+        0.5237066481008018
+      ],
+      "truth_xy": [
+        4.608966075780449,
+        0.5446065493847437
+      ],
+      "error_m": 0.030407017589359493
+    },
+    {
+      "stamp_ns": 1065200000000,
+      "amcl_xy": [
+        4.594861799438057,
+        0.51674882429035
+      ],
+      "truth_xy": [
+        4.609672986177332,
+        0.5448604617704544
+      ],
+      "error_m": 0.03177476065115958
+    },
+    {
+      "stamp_ns": 1065400000000,
+      "amcl_xy": [
+        4.5918430319450545,
+        0.5146552153093071
+      ],
+      "truth_xy": [
+        4.610515045611448,
+        0.5453178098529105
+      ],
+      "error_m": 0.03590040109112166
+    },
+    {
+      "stamp_ns": 1065600000000,
+      "amcl_xy": [
+        4.589179569017494,
+        0.511235336398584
+      ],
+      "truth_xy": [
+        4.611240073971698,
+        0.545874982061597
+      ],
+      "error_m": 0.04106788198207373
+    },
+    {
+      "stamp_ns": 1065800000000,
+      "amcl_xy": [
+        4.5978187892385085,
+        0.5022507178041742
+      ],
+      "truth_xy": [
+        4.623034131761768,
+        0.533640954393216
+      ],
+      "error_m": 0.04026363684121607
+    },
+    {
+      "stamp_ns": 1066200000000,
+      "amcl_xy": [
+        4.65618735181992,
+        0.42896470287661936
+      ],
+      "truth_xy": [
+        4.681880328725473,
+        0.45631236421803467
+      ],
+      "error_m": 0.03752364112281789
+    },
+    {
+      "stamp_ns": 1066600000000,
+      "amcl_xy": [
+        4.710240607750555,
+        0.3357755978728266
+      ],
+      "truth_xy": [
+        4.732759369874032,
+        0.37093866496058103
+      ],
+      "error_m": 0.041755669490401194
+    },
+    {
+      "stamp_ns": 1067400000000,
+      "amcl_xy": [
+        4.714671756253712,
+        0.3180403688877124
+      ],
+      "truth_xy": [
+        4.740121990349069,
+        0.35153383493391605
+      ],
+      "error_m": 0.042065742395643604
+    },
+    {
+      "stamp_ns": 1067600000000,
+      "amcl_xy": [
+        4.714156848925229,
+        0.324464076094852
+      ],
+      "truth_xy": [
+        4.740237922710573,
+        0.35194138457743895
+      ],
+      "error_m": 0.03788436209366379
+    },
+    {
+      "stamp_ns": 1067800000000,
+      "amcl_xy": [
+        4.713773868238417,
+        0.32119775657994437
+      ],
+      "truth_xy": [
+        4.740312253531924,
+        0.3525403512934293
+      ],
+      "error_m": 0.04106877326339799
+    },
+    {
+      "stamp_ns": 1068000000000,
+      "amcl_xy": [
+        4.7125564688409165,
+        0.32708947945817823
+      ],
+      "truth_xy": [
+        4.740321965054763,
+        0.3526090892268039
+      ],
+      "error_m": 0.03771171254058954
+    },
+    {
+      "stamp_ns": 1068200000000,
+      "amcl_xy": [
+        4.715192935152917,
+        0.320107723170544
+      ],
+      "truth_xy": [
+        4.740397836109924,
+        0.3522247997548093
+      ],
+      "error_m": 0.04082638412316364
+    },
+    {
+      "stamp_ns": 1068400000000,
+      "amcl_xy": [
+        4.718207760022812,
+        0.32097552751927744
+      ],
+      "truth_xy": [
+        4.7406524607594,
+        0.3515201613662234
+      ],
+      "error_m": 0.037904343392268246
+    },
+    {
+      "stamp_ns": 1068600000000,
+      "amcl_xy": [
+        4.720069476598361,
+        0.3213164119353925
+      ],
+      "truth_xy": [
+        4.741111406773176,
+        0.35067941130520364
+      ],
+      "error_m": 0.036124071717807654
+    },
+    {
+      "stamp_ns": 1068800000000,
+      "amcl_xy": [
+        4.720790070849838,
+        0.3219855598230885
+      ],
+      "truth_xy": [
+        4.741698827758036,
+        0.3499218735427699
+      ],
+      "error_m": 0.034894322456390625
+    },
+    {
+      "stamp_ns": 1069000000000,
+      "amcl_xy": [
+        4.721005069848522,
+        0.3222862478624674
+      ],
+      "truth_xy": [
+        4.742399411090949,
+        0.34926755768240353
+      ],
+      "error_m": 0.034434124307099225
+    },
+    {
+      "stamp_ns": 1069200000000,
+      "amcl_xy": [
+        4.722128946706623,
+        0.3235095882605468
+      ],
+      "truth_xy": [
+        4.7431952487156135,
+        0.3487331921929509
+      ],
+      "error_m": 0.032863646719023566
+    },
+    {
+      "stamp_ns": 1069400000000,
+      "amcl_xy": [
+        4.723284279542183,
+        0.32123626102278663
+      ],
+      "truth_xy": [
+        4.744066011226614,
+        0.3483324412005654
+      ],
+      "error_m": 0.034147962633667636
+    },
+    {
+      "stamp_ns": 1069600000000,
+      "amcl_xy": [
+        4.728834087353952,
+        0.3216696564443224
+      ],
+      "truth_xy": [
+        4.744989460602119,
+        0.3480755542480406
+      ],
+      "error_m": 0.030955896427142908
+    },
+    {
+      "stamp_ns": 1069800000000,
+      "amcl_xy": [
+        4.726105245193107,
+        0.31853730186937407
+      ],
+      "truth_xy": [
+        4.745934386553806,
+        0.34796937432287867
+      ],
+      "error_m": 0.035488614174280175
+    },
+    {
+      "stamp_ns": 1070000000000,
+      "amcl_xy": [
+        4.725673581051881,
+        0.3166073308162032
+      ],
+      "truth_xy": [
+        4.745572741354236,
+        0.3479397266976199
+      ],
+      "error_m": 0.0371173222688362
+    },
+    {
+      "stamp_ns": 1070200000000,
+      "amcl_xy": [
+        4.7119437605742505,
+        0.3179396980083142
+      ],
+      "truth_xy": [
+        4.731299881593569,
+        0.35056754641445004
+      ],
+      "error_m": 0.03793726284971383
+    },
+    {
+      "stamp_ns": 1070600000000,
+      "amcl_xy": [
+        4.61662560671269,
+        0.34550653462133163
+      ],
+      "truth_xy": [
+        4.638703298631426,
+        0.37690963372639946
+      ],
+      "error_m": 0.038387225920367474
+    },
+    {
+      "stamp_ns": 1071400000000,
+      "amcl_xy": [
+        4.4264287615432565,
+        0.42687928156792937
+      ],
+      "truth_xy": [
+        4.4542436932735106,
+        0.4524464014671282
+      ],
+      "error_m": 0.037780260018939846
+    },
+    {
+      "stamp_ns": 1072200000000,
+      "amcl_xy": [
+        4.244191928531863,
+        0.5178544587104738
+      ],
+      "truth_xy": [
+        4.274358108518532,
+        0.5392936961468388
+      ],
+      "error_m": 0.03700863840836316
+    }
+  ],
+  "amcl_error_m": {
+    "count": 31,
+    "median": 0.036124071717807654,
+    "max": 0.042065742395643604
+  },
+  "contact_escapes": [
+    "[coverage_planner-11] [WARN] [1793446804.185079412] [coverage_planner]: bumper held while targeting waypoint 43: peel off (turn -0.6) 2.5s (escape 1/25)",
+    "[coverage_planner-11] [WARN] [1793446814.463483841] [coverage_planner]: bumper held while targeting waypoint 44: peel off (turn -0.6) 2.5s (escape 2/25)",
+    "[coverage_planner-11] [WARN] [1793446824.722188574] [coverage_planner]: bumper held while targeting waypoint 45: peel off (turn -0.6) 2.5s (escape 3/25)",
+    "[coverage_planner-11] [WARN] [1793446834.939252103] [coverage_planner]: bumper held while targeting waypoint 46: peel off (turn -0.6) 2.5s (escape 4/25)",
+    "[coverage_planner-11] [WARN] [1793446845.173027025] [coverage_planner]: bumper held while targeting waypoint 47: peel off (turn -0.6) 2.5s (escape 5/25)",
+    "[coverage_planner-11] [WARN] [1793446855.107237768] [coverage_planner]: bumper held while targeting waypoint 48: peel off (turn -0.6) 2.5s (escape 6/25)",
+    "[coverage_planner-11] [WARN] [1793446865.260791353] [coverage_planner]: bumper held while targeting waypoint 49: peel off (turn -0.6) 2.5s (escape 7/25)",
+    "[coverage_planner-11] [WARN] [1793446875.473145385] [coverage_planner]: bumper held while targeting waypoint 50: peel off (turn -0.6) 2.5s (escape 8/25)",
+    "[coverage_planner-11] [WARN] [1793446885.552979254] [coverage_planner]: bumper held while targeting waypoint 51: peel off (turn -0.6) 2.5s (escape 9/25)",
+    "[coverage_planner-11] [WARN] [1793446895.733707094] [coverage_planner]: bumper held while targeting waypoint 52: peel off (turn -0.6) 2.5s (escape 10/25)",
+    "[coverage_planner-11] [WARN] [1793446905.855971345] [coverage_planner]: bumper held while targeting waypoint 53: peel off (turn -0.6) 2.5s (escape 11/25)",
+    "[coverage_planner-11] [WARN] [1793447259.972185354] [coverage_planner]: bumper held while targeting waypoint 178: peel off (turn +0.6) 2.5s (escape 12/25)",
+    "[coverage_planner-11] [WARN] [1793447270.415761964] [coverage_planner]: bumper held while targeting waypoint 179: peel off (turn +0.6) 2.5s (escape 13/25)",
+    "[coverage_planner-11] [WARN] [1793447284.873061487] [coverage_planner]: bumper held while targeting waypoint 180: peel off (turn +0.6) 2.5s (escape 14/25)",
+    "[coverage_planner-11] [WARN] [1793447297.106052880] [coverage_planner]: bumper held while targeting waypoint 181: peel off (turn +0.6) 2.5s (escape 15/25)",
+    "[coverage_planner-11] [WARN] [1793447326.077629323] [coverage_planner]: bumper held while targeting waypoint 195: peel off (turn -0.6) 2.5s (escape 16/25)",
+    "[coverage_planner-11] [WARN] [1793447786.423557396] [coverage_planner]: bumper held while targeting waypoint 9: peel off (turn -0.6) 2.5s (escape 17/25)"
+  ],
+  "motion_journal": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "succeeded",
+    "revision": 120,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 10200,
+    "token": "edbb4fdc1e3b45a0a68b46e349285be5-1",
+    "uuid": "4501309897a34126be931ed5c2b23da8"
+  },
+  "interpretation": "Operational sweep_complete and no Nav2 abort, but measurement_valid=false from one original truth sample5ms ahead of ROS clock. No accepted90/80/zero proof. Recorded first90eff76.95% and4.25m saving still needed. Original raw receipt retained, never rewritten."
+}

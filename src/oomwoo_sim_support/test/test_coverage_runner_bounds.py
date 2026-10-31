@@ -822,3 +822,64 @@ def test_first_crossing_is_not_created_from_rejected_stale_or_future_pose(stamp)
     result = node._audit_keepout_result()
     assert result['first_footprint_crossing'] is None
     assert result['footprint_crossings'] == 0 and result['errors']
+
+
+@pytest.mark.parametrize('finish_with_next_pose', [False, True])
+def test_truth_ingress_keeps_future_chord_until_clock_catches_up(
+        fused_meter, monkeypatch, finish_with_next_pose):
+    """A DDS pose may precede its clock; retain its real chord and source stamp."""
+    _, mask, now = truth_audit()
+    monkeypatch.setattr(fused_meter, 'get_clock', lambda: SimpleNamespace(
+        now=lambda: SimpleNamespace(nanoseconds=now[0])))
+    fused_meter.motion_audit = True
+    fused_meter._audit_keepout_mask(mask)
+    fused_meter._on_pose(truth_pose(.2, now[0]))
+    future = truth_pose(1.4, now[0] + 5_000_000)
+    fused_meter._on_pose(future)
+    assert fused_meter._keepout_audit['poses'] == 1
+    assert not fused_meter._keepout_audit['errors']
+    assert not fused_meter._motion_fault
+    now[0] += 20_000_000
+    if finish_with_next_pose:
+        fused_meter._on_pose(truth_pose(1.45, now[0]))
+    result = fused_meter._audit_keepout_result()
+    assert result['valid'] and result['footprint_crossings'] == 1
+    assert fused_meter._motion_fault
+    assert result['poses'] == (3 if finish_with_next_pose else 2)
+    first = result['first_footprint_crossing']
+    assert first['current'] == {'xy_m': [1.4, .125], 'stamp_ns': 10_205_000_000}
+    assert first['previous'] == {'xy_m': [.2, .125], 'stamp_ns': 10_200_000_000}
+    assert first['source_age_ns'] == 15_000_000
+    assert future.header.stamp.nanosec == 205_000_000
+
+
+@pytest.mark.parametrize('clock_advance', [0, 1_000_000_000])
+def test_truth_ingress_cannot_certify_unresolved_or_expired_future(
+        fused_meter, monkeypatch, clock_advance):
+    _, mask, now = truth_audit()
+    monkeypatch.setattr(fused_meter, 'get_clock', lambda: SimpleNamespace(
+        now=lambda: SimpleNamespace(nanoseconds=now[0])))
+    fused_meter.motion_audit = True
+    fused_meter._audit_keepout_mask(mask)
+    fused_meter._on_pose(truth_pose(.2, now[0]))
+    fused_meter._on_pose(truth_pose(1.4, now[0] + 5_000_000))
+    now[0] += clock_advance
+    result = fused_meter._audit_keepout_result()
+    assert not result['valid'] and result['errors']
+    assert result['poses'] == 1 and result['footprint_crossings'] == 0
+    assert 'stamp_ns=10205000000' in result['errors'][0]
+    assert f'now_ns={now[0]}' in result['errors'][0]
+
+
+def test_truth_ingress_future_buffer_is_bounded_without_discarding_audit_failure(
+        fused_meter, monkeypatch):
+    _, mask, now = truth_audit()
+    monkeypatch.setattr(fused_meter, 'get_clock', lambda: SimpleNamespace(
+        now=lambda: SimpleNamespace(nanoseconds=now[0])))
+    fused_meter.motion_audit = True
+    fused_meter._audit_keepout_mask(mask)
+    for index in range(33):
+        fused_meter._on_pose(truth_pose(.2, now[0] + (index + 1) * 1_000_000))
+    assert len(fused_meter._deferred_audit_truth) == 32
+    assert fused_meter._keepout_audit['errors']
+    assert not fused_meter._audit_keepout_result()['valid']

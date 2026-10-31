@@ -1678,3 +1678,56 @@ Validación de entrega: ament_flake8 del lanzamiento sin problemas; un caso
 focal del grafo opt-in pasa. El primer intento del grafo falló antes de
 evaluarlo por ROS_LOG_DIR ausente en raíz de sólo lectura; se corrigió sólo
 el entorno a su tmpfs y se conservan ambos recibos.
+
+
+## Cierre observado y auditoría inválida por orden DDS — 31/10/2026
+
+El nativo3643ab8 termina a12:56:59CET tras1188,588s reales con
+end_reason=sweep_complete y diario terminal/succeeded. No reaparecen ni el
+aborto105 ni la parada por pose ocupada. El parámetro efectivo es
+likelihood_field_prob;31pares AMCL/truth de sello idéntico al final dan
+error mediano3,61cm/máximo4,21cm. Esto respalda la corrección de localización
+en esta captura, sin certificar fiabilidad ni hardware.
+
+NO es verde: rc2,measurement_valid=false. Una pose original con sello
+285,020s llega cuando el reloj del auditor marca285,015s; su rechazo crea
+un hueco de40ms e invalida la auditoría. Cero cruces observados en53790poses,
+pero no se presenta como cumplimiento de cero cruces certificado. Figuras
+registradas, no validación aceptada: cobertura94,57%, primer90% a882,7s con
+eficiencia76,95%, final64,41%, revisitas32,75%. Antes del primer90% se
+recorren111,25m; presupuesto107m, ahorro pendiente aproximado4,25m.
+Hay16escapes, once concentrados junto al televisor. Sin OOM ni timeout,
+17fuentes intactas, pico1039290368bytes y procesos cerrados. Recibo resumido
+`src/oomwoo_sim_support/docs/evidence/amcl_product_native_delivery_20261031.json`
+con hash y ruta al recibo íntegro6,6MB conservado en respaldo, sin reescritura.
+
+## Entrega de poses al auditor según el reloj original — 31/10/2026
+
+El caso causal reproduce el rechazo5ms antes del reloj. Se conserva ahora
+la pose original en la entrada hasta que el reloj alcance su sello; se
+libera en la siguiente entrada o en los giros ya existentes del ejecutor.
+Cola máxima32 y adelanto máximo500ms; no se añade temporizador. No se
+reescribe ningún sello, no se omite su segmento y no se cambia el medidor.
+El auditor estricto `_audit_keepout_truth` queda AST-idéntico: frame, orden,
+edad0..500ms,radio0,18,cadencia0,2 y detección de cada cuerda. En cierre, una
+pendiente futura o ya caducada pasa al mismo rechazo e invalida el informe.
+El veredicto conserva su AST salvo las llamadas de vaciado de transporte.
+
+Pasan18casos focales: retención/entrega de la cuerda original incluso si
+cruza, pendiente sin reloj, muestra caducada, límite de cola, rechazos
+originales futuro/caducado, parada por primer cruce y sus nueve veredictos
+positivos/negativos. Rojo causal previo conservado; ament_flake8 de ambos
+ficheros sin problemas. Recibo:
+`src/oomwoo_sim_support/docs/evidence/clock_ingress_delivery_20261031.json`.
+
+Utilidad demostrada: cierre operativo y localización más precisa; transporte
+corregido con auditor original conservado. Hito general sigue pendiente:
+medición nativa válida90/80/cero/cierre, con4,25m de ahorro por demostrar.
+Siguiente incremento: contraste del Navfn real para la ruta del televisor,
+comparando sólo inflación ordinaria0,10/0,24 y manteniendo la capa NoGo
+original. Aceptación focal: eliminar intersecciones de la huella corporal
+contra el mueble con coste pequeño de rodeo; si se contradice, no adoptar el
+parámetro. Después nativo de las fuentes finales. Coste acotado primero al
+banco estático existente; beneficio esperado evitar hasta once recuperaciones
+repetidas. Decisión avanzar por cuello observado, sin optimización indefinida
+ni declaración de cumplimiento con una medida inválida.
