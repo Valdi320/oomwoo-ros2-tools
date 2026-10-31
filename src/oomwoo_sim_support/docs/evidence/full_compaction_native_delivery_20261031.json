@@ -380,14 +380,18 @@
   "remaining_distance": "No native efficiency improvement established;90%coverage not reached, first-target efficiency undefined. Static6.36m saving/zero ideal swath loss and30focalPASS remain narrower evidence.",
   "next_increment": {
     "use": "Correct incoming motion near virtual zones without weakening final guard; distinguish global path/steering from unknown earlier SWEEP crossing.",
-    "minimum": "Locate first actual normal-plan crossing with early fault/first-event record and coupled original guard-admitted pose/command/source-age evidence. Close further cold-start variants after two negative reproductions; retain all margins and acceptance.",
+    "minimum": "Distinguish AMCL correction content/timing from odometry and map registration around real bumper/escape with bounded original source messages. Keep actual abort and shutdown failures visible. Preserve virtual halo while considering physical inflation isolation; stock nested CostmapFilter candidate is rejected.",
     "acceptance": "Keep existing18cm audit disk,24cm output margin,mask and grade thresholds; obtain source-stamped discriminating evidence for each independent safety issue. A focal action success alone does not clear full90/80.",
     "decision": "Consolidate failed native, prioritize safety diagnosis over additional route optimization.",
     "benefit_cost": "One504.187s native exposed an integration failure that static cost/swath missed;0.893s compatible replay confirms the immediate geometric stop. Avoid a second blind8\u201316minute run.",
     "evidence_that_changes_decision": "A causal corrected path/steering case with valid independent Keepout and no regression, plus original first-SWEEP-crossing evidence.",
     "limitation": "Earlier harness stop/diagnostics is necessary reliability work, not a substitute for repairing actual incoming movement and establishing90/80.",
     "completed_reliability_increment": "first_crossing_abort_delivery_20261031.json: immediate existing motion_fault latch, completion-grace exit and peer5474149 bounded first crossing capture;25focalPASS/styleOK. No motion correction or new native acceptance.",
-    "cold_start_followup": "heading_cold_native_delivery_20261031.json: both real goals succeed/0crossings, including-.580817rad first forward carrot. Historical failure remains unlocated; no heading parameter adoption justified."
+    "cold_start_followup": "heading_cold_native_delivery_20261031.json: both real goals succeed/0crossings, including-.580817rad first forward carrot. Historical failure remains unlocated; no heading parameter adoption justified.",
+    "normal_prefix_followup": {
+      "receipt": "normal_prefix_diagnosis_delivery_20261031.json",
+      "outcome": "860 stops4.94% on actual Nav2 abort208,valid0crossings; unexpectedGazebo-15 yields rc3. Same-stamp12cm pose discrepancy and static start/inflation effects reproduced; no corrective change accepted."
+    }
   },
   "resource_policy": "Existing FIFO839 own parentPID/start/head/TOMADO verified before2CPU3GiB/noGPU; source/memory bounded and no hardware. Replay.25CPU512MiB under authorized coexistence with occupied FIFO850.",
   "evidence": {

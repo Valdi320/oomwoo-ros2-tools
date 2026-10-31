@@ -61,6 +61,21 @@ first actual normal-plan crossing with coupled pose/command timing.
 The static fixture published a zero carrot stamp; moving native records
 have their own observed nonzero stamps. Neither is synthesized.
 
+The later [normal-prefix failure and small-library diagnostics](../src/oomwoo_sim_support/docs/evidence/normal_prefix_diagnosis_delivery_20261031.json)
+separate two further issues. Normal production planning stopped at 4.94%
+on a Nav2 no-path abort before any Keepout crossing; Gazebo then exceeded
+its SIGINT deadline despite a positive stop ACK, so the wrapper correctly
+returned execution failure. Truth and Nav2 feedback at the same 56 s
+source stamp differ by 12 cm. Installed Navfn reproduces no-path from
+that estimated point and finds a path from the truth point in a static
+start-only contrast. A separate contrast proves that the second virtual
+inflation also expands unrelated physical obstacles; disabling it restores
+a path but removes the virtual halo, so it is not adopted. The stock
+nested-filter candidate fails on an invalid generated ROS service name.
+A real tf2 ramp test also shows that a fresh composed stamp can contain
+a delayed changing correction; original AMCL/TF messages are still needed
+before attributing the native discrepancy or changing localization.
+
 Masked full-room acceptance remains open: the [earlier peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged
 80% requirement. The default local costmap frame remains `odom`; the private

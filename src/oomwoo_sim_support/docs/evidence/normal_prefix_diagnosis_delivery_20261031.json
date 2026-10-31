@@ -1,0 +1,253 @@
+{
+  "recorded_utc": "2026-10-31T00:34:13.995981+00:00",
+  "scope": "Consolidate existing normal-prefix FIFO860 failure and new small installed-library counterfactual diagnostics. No production code/configuration change, physical hardware or new full-room run in this increment.",
+  "normal_prefix": {
+    "receipt": "ventana_full_native_20261031.json",
+    "fifo_ticket": 860,
+    "seconds": 81.632,
+    "rc": 3,
+    "normal_plan": "Original production planner bytes;9cells/318targets and original gapfill, not supplied route.",
+    "grade": {
+      "coverage": 0.0494,
+      "target_crossed": false,
+      "efficiency_at_target": null,
+      "end_reason": "motion_fault",
+      "measurement_valid": true,
+      "pass": false
+    },
+    "audit": {
+      "poses_before_mask": 0,
+      "poses": 2810,
+      "segments": 2809,
+      "footprint_crossings": 0,
+      "max_pose_gap_s": 0.02,
+      "errors": [],
+      "first_footprint_crossing": null,
+      "min_sampled_center_to_mask_bbox_m": 0.5804645126990469,
+      "motion_by_phase": {
+        "UNSEEN": {
+          "poses": 10,
+          "distance_m": 6.971437374218047e-10,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000328304688
+        },
+        "IDLE": {
+          "poses": 800,
+          "distance_m": 3.457186988578052e-09,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+        },
+        "SWEEP": {
+          "poses": 739,
+          "distance_m": 1.8015662361013145,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+        },
+        "PREPARE_NAV": {
+          "poses": 151,
+          "distance_m": 6.44301021767928e-05,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.6500000303443866
+        },
+        "TRANSIT": {
+          "poses": 950,
+          "distance_m": 2.1070342476522166,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 0.5804645126990469
+        },
+        "TRANSIT_CANCEL": {
+          "poses": 30,
+          "distance_m": 0.003936186046041565,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 1.9206128330689514
+        },
+        "ESCAPE": {
+          "poses": 130,
+          "distance_m": 0.28034277171762634,
+          "nonclear_segments": 0,
+          "min_sampled_center_to_mask_bbox_m": 1.9207924348314505
+        }
+      },
+      "footprint_radius_m": 0.18,
+      "source": "/ground_truth/pose",
+      "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+      "forbidden_cells": 220,
+      "forbidden_bbox_xyxy": [
+        0.6500000335276126,
+        -0.5499999627470968,
+        1.1500000409781932,
+        0.5500000536441805
+      ],
+      "mask_seen": true,
+      "valid": true
+    },
+    "journal": {
+      "job_id": "coverage_sweep",
+      "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+      "outcome": "aborted",
+      "revision": 9,
+      "schema": 1,
+      "state": "terminal",
+      "target_cell": 1526,
+      "token": "9404d2e112de4dfaa7b3057789e59eed-1",
+      "uuid": "71d59d9374e44b0b92946071acdc47a7"
+    },
+    "closure": "18auxiliaryexit0,scorer1 for motionfault,Gazebo-15 unexpected after positive native stopACK and5s SIGINT deadline. Preserve rc3. No timeout/OOM/memory-limit events.",
+    "cgroup": {
+      "/sys/fs/cgroup/pids.events": "max 0\n",
+      "/sys/fs/cgroup/pids.peak": "323\n",
+      "/sys/fs/cgroup/memory.peak": "1058373632\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+    },
+    "input_hashes_verified": true,
+    "raw_hash_verified": true,
+    "ownership_after": "FIFO terminal/own scopeinactive/named --rm containerabsent; do not restart."
+  },
+  "same_stamp_pose_discrepancy": {
+    "source_stamp_ns": 56000000000,
+    "frame": "map",
+    "truth_original": {
+      "frame": "map",
+      "position": [
+        -0.271995383488593,
+        -2.497323823926928
+      ],
+      "stamp_ns": 56000000000
+    },
+    "navigation_feedback_original": {
+      "uuid": "71d59d9374e44b0b92946071acdc47a7",
+      "frame": "map",
+      "stamp_ns": 56000000000,
+      "position": [
+        -0.22217017330367905,
+        -2.6064883256596816,
+        0.012500128723836565
+      ],
+      "orientation": [
+        4.064938860229954e-07,
+        3.059769796167623e-07,
+        0.9207896776750701,
+        0.3900594435298057
+      ],
+      "received_wall": 422855.900493447,
+      "received_sim": 56.010000000000005
+    },
+    "navigation_minus_truth_xy_m": [
+      0.049825210184913926,
+      -0.10916450173275338
+    ],
+    "distance_m": 0.11999766667952826,
+    "interpretation": "A12cm discrepancy between simulator truth output and Nav2 estimate at the same source time, not inferred from different-time samples. Does not isolate AMCL, odometry, map registration or timing as historical root cause."
+  },
+  "start_counterfactual": {
+    "receipt": "navfn_prefix_start_20261031.json",
+    "seconds": 20.231,
+    "estimated_start": {
+      "status": 6,
+      "error_code": 208
+    },
+    "truth_start": {
+      "status": 4,
+      "error_code": 0,
+      "path_length_m": 5.881489318385541
+    },
+    "fixed": "Same static original map, mask, effective parameters and goal1526; explicit action start changes. Costmap TF stays at estimated point.",
+    "utility": "The observed pose displacement is sufficient to change actual installed Navfn from no path to path in this controlled static scene. No replay of missing historical dynamic scan costs."
+  },
+  "inflation_scope_counterfactual": {
+    "receipt": "navfn_inflation_scope_20261031.json",
+    "seconds": 18.241,
+    "same_start_goal": "Estimated56s start and actual journal1526 destination.",
+    "outcomes": "Production second inflation\u2192208; disable only existing second inflation\u2192actual successful5.41744384m path.",
+    "controls": {
+      "production_overlay": {
+        "physical_control_cost": 69,
+        "keepout_cost": 100,
+        "keepout_halo_cost": 89
+      },
+      "inflation_disabled_diagnostic": {
+        "physical_control_cost": 0,
+        "keepout_cost": 100,
+        "keepout_halo_cost": 0
+      }
+    },
+    "utility": "The keepout inflation also expands unrelated physical obstacles. It changes wall/TV costs far outside virtual area and contributes to this no-path case.",
+    "limit": "Disabling it removes virtual halo89\u21920 too; not a safe proposed correction and never adopted."
+  },
+  "contained_group_candidate": {
+    "receipt": "navfn_contained_keepout_20261031.json",
+    "seconds": 18.838,
+    "outcome": "Rejected prototype before any path: actual installed CostmapFilter creates keepout_group.keepout_filter/toggle_filter, invalid ROS name.",
+    "closure": [
+      0,
+      0
+    ],
+    "decision": "No unchanged retry or source adoption. Stock container nesting is not viable for this filter as-is; no new C++ dependency/build installed. Unknown/rolling contracts remain unverified, not claims of a usable fix."
+  },
+  "postdated_transform_mechanism": {
+    "receipt": "tf_postdate_content_20261031.json",
+    "seconds": 8.984,
+    "configured_amcl_postdate_s": 5.0,
+    "synthetic_ramp_mps": 0.04,
+    "observed": {
+      "ramp_postdate_5.0": {
+        "composed_age_ns": 0,
+        "composed_x_m": 0.04,
+        "position_error_m": 0.19999999999999998
+      },
+      "ramp_postdate_0.2": {
+        "composed_age_ns": 0,
+        "composed_x_m": 0.23200000000000004,
+        "position_error_m": 0.007999999999999952
+      },
+      "constant_postdate_5.0": {
+        "composed_age_ns": 0,
+        "composed_x_m": 0.12,
+        "position_error_m": 0.0
+      },
+      "constant_postdate_0.2": {
+        "composed_age_ns": 0,
+        "composed_x_m": 0.12,
+        "position_error_m": 0.0
+      }
+    },
+    "utility": "Actual tf2 composition can have stamp age0 while its changing map correction is delayed; stable correction controls have no error. Fresh composed stamp alone does not certify recent correction content.",
+    "limit": "Synthetic mechanism, not attribution of native12cm. The normal-prefix trace lacks original map->odom and AMCL messages needed for that attribution. No tolerance/age threshold was changed."
+  },
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_costmap_2d/plugins/inflation_layer.cpp",
+      "supports": "Inflation seeds from every lethal master-grid cell, irrespective of its originating layer."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_costmap_2d/plugins/plugin_container_layer.cpp",
+      "supports": "Container applies child layers to its own grid and uses dotted child names."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_costmap_2d/plugins/costmap_filters/costmap_filter.cpp",
+      "supports": "Filter toggle service derives from layer name; native failure confirms dotted child name is invalid."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/ros-navigation/navigation2/1.3.13/nav2_amcl/src/amcl_node.cpp",
+      "supports": "AMCL stamps map->odom at laser source time plus transform_tolerance, including repeated unchanged transforms."
+    }
+  ],
+  "remaining_distance": "Neither native839 three SWEEP crossings nor native860 goal abort/shutdown have been corrected. No90/80 acceptance or native compaction saving; early first-crossing field remains null in860 because failure occurred before any crossing.",
+  "next_increment": {
+    "use": "Repair localization/physical costmap inconsistency without removing virtual protection or reconciling away real aborts.",
+    "acceptance": "Original audit/guard/unknown behavior and no false90/80 green; actual coupled source messages demonstrate corrected cause; own shutdown remains bounded and errors retained.",
+    "minimum": "Use existing normal-prefix fixture with bounded AMCL/odom/map->odom/scan source timing around bumper/escape to distinguish current correction from interpolation lag before changing AMCL. Keep broad physical-inflation side effect separate; stock nested-filter prototype is rejected. Prepare a short discriminating prefix through FIFO, not another blind full-room trial.",
+    "afterwards": "Validate a justified correction through real motion and independently valid Keepout, then reach original full90/80; separately resolve unexpected Gazebo shutdown.",
+    "decision": "Consolidate reproduced causal effects and rejected candidate; prioritize source-timing diagnosis over more cold heading variants or unsupported layer wrappers.",
+    "benefit_cost": "New small checks total66.294s at.25CPU512MiB/noGPU under explicit coexistence exception while owner game holds lock. They locate static planning failure and reject unsafe/unsupported fixes without another Gazebo run.",
+    "evidence_that_changes_decision": "Actual correction/source timeline explains12cm and a bounded corrected case clears the same abort with all safety contracts; or a supported isolation method preserves virtual and unknown/rolling behavior."
+  },
+  "evidence": {
+    "ventana_full_native_20261031.json": "cac6f2b9a7c47ed082402d8a717b148be7e56dc4010674c177fd32fd53ab796d",
+    "navfn_prefix_start_20261031.json": "92afe6cc4a187535c5db753818b9c2edc0c6ec2529fcdf6f8723d85af7af62f0",
+    "navfn_inflation_scope_20261031.json": "d8069717b1b6f9c24a3c5b29317f475fdc9758b693b56e49342a32d637e34ebf",
+    "navfn_contained_keepout_20261031.json": "5248e8a3891efbc506581d735e9e8d4a1be7b380b06c900cc8cf753bf43aa700",
+    "tf_postdate_content_20261031.json": "f2f0808051537783680bef0adc937451c777caf990776711a2660a2aff5aca13"
+  },
+  "hygiene": "Own local commits only, no push/PR/merge/remote messages/hardware/new persistent tools/timers/workers. Prototype invalid activation remains a preserved failed result. Existing source files unmodified."
+}

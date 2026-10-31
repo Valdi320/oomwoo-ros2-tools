@@ -1,0 +1,1231 @@
+{
+  "completed_utc": "2026-10-31T00:19:12.689585+00:00",
+  "rc": 0,
+  "seconds": 20.231,
+  "host_timeout": false,
+  "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 4 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (14314 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+  "args": [
+    "podman",
+    "run",
+    "--rm",
+    "--pull=never",
+    "--network=none",
+    "--cap-drop=ALL",
+    "--security-opt=no-new-privileges",
+    "--security-opt=label=disable",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,exec,size=192m,mode=1777",
+    "--memory=512m",
+    "--memory-swap=512m",
+    "--cpus=.25",
+    "--pids-limit=96",
+    "--name",
+    "oomwoo-navfn-prefix-start-20261031",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+    "-v",
+    "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+    "--entrypoint",
+    "/bin/bash",
+    "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+    "-lc",
+    "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash\nexport PYTHONDONTWRITEBYTECODE=1 ROS_HOME=/tmp/ros-home ROS_LOG_DIR=/tmp/roslogs ROS_DOMAIN_ID=87 ROS_LOCALHOST_ONLY=1 FASTDDS_BUILTIN_TRANSPORTS=UDPv4\nexport FASTRTPS_DEFAULT_PROFILES_FILE=/work/src/oomwoo_sim_support/config/nav2_lifecycle_replies.xml\nexport PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:/contrib/integration:${PYTHONPATH:-}\nexport OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1\npython3 - <<'CASE'\n\nimport asyncio,hashlib,inspect,json,math,time\nfrom pathlib import Path\nimport yaml,rclpy\nfrom launch import LaunchDescription,LaunchService\nfrom launch.actions import RegisterEventHandler\nfrom launch.event_handlers import OnProcessExit\nfrom launch_ros.actions import Node\nfrom rcl_interfaces.srv import GetParameters\nfrom rclpy.parameter import Parameter\nfrom rclpy.qos import QoSProfile,QoSReliabilityPolicy,QoSDurabilityPolicy\nfrom lifecycle_msgs.srv import ChangeState\nfrom nav_msgs.msg import OccupancyGrid\nfrom nav2_msgs.msg import CostmapFilterInfo\nfrom nav2_msgs.action import ComputePathToPose\nfrom geometry_msgs.msg import TransformStamped\nfrom tf2_msgs.msg import TFMessage\nfrom rosgraph_msgs.msg import Clock\nfrom generate_keepout_lab import generate\nfrom probe_real_nav2_keepout import Observer,cell\nfrom oomwoo_sim_support.keepout_config import build_keepout_overlay,_pgm\nfrom oomwoo_cleaning_jobs.map_admission import Raster\nfrom oomwoo_cleaning_jobs.swept_footprint import swept_disk_clear\n\nasync def main():\n    out=Path('/tmp/nav-path-contract');out.mkdir()\n    source=Path('/work/src/oomwoo_sim_support')\n    generate(out,test_room=source/'maps/test_room.yaml',nav_params=source/'config/nav2_params.yaml')\n    overlay,count=build_keepout_overlay(source/'config/nav2_params.yaml',source/'maps/test_room.yaml',out/'keepout_test_room.yaml',output_dir=out)\n    config=yaml.safe_load(overlay.read_text())\n    config['map_server']['ros__parameters'].update(yaml_filename=str(source/'maps/test_room.yaml'),use_sim_time=True)\n    config['planner_server']['ros__parameters']['use_sim_time']=True\n    config['global_costmap']['global_costmap']['ros__parameters']['use_sim_time']=True\n    effective=out/'effective.yaml';effective.write_text(yaml.safe_dump(config))\n    rclpy.init(args=['--ros-args','-r','/valdi/keepout_filter_mask:=/oomwoo/keepout_mask','-r','/valdi/keepout_costmap_filter_info:=/oomwoo/keepout_filter_info'])\n    node=Observer();node.set_parameters([Parameter('use_sim_time',value=True)])\n    q=QoSProfile(depth=1,reliability=QoSReliabilityPolicy.RELIABLE,durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)\n    masks=node.create_publisher(OccupancyGrid,'/oomwoo/keepout_mask',q)\n    infos=node.create_publisher(CostmapFilterInfo,'/oomwoo/keepout_filter_info',q)\n    tf=node.create_publisher(TFMessage,'/tf_static',q)\n    clocks=node.create_publisher(Clock,'/clock',10)\n    meta=yaml.safe_load((out/'keepout_test_room.yaml').read_text());w,h,pixels=_pgm(out/meta['image'])\n    mask=OccupancyGrid();mask.header.frame_id='map';mask.header.stamp.sec=1\n    mask.info.width=w;mask.info.height=h;mask.info.resolution=meta['resolution']\n    mask.info.origin.position.x,mask.info.origin.position.y=meta['origin'][:2]\n    mask.info.origin.orientation.w=1.;mask.data=[100 if pixels[row*w+col]==0 else 0 for row in reversed(range(h)) for col in range(w)]\n    assert list(mask.data).count(100)==count==220\n    masks.publish(mask)\n    info=CostmapFilterInfo();info.type=0;info.filter_mask_topic='/oomwoo/keepout_mask';info.base=0.;info.multiplier=1.;infos.publish(info)\n    start=(-0.22217017330367905, -2.6064883256596816)\n    goal=(4.725000094249845, -2.52499999217689)\n    transform=TransformStamped();transform.header.frame_id='map';transform.child_frame_id='base_link';transform.header.stamp.sec=1\n    transform.transform.translation.x,transform.transform.translation.y=start;transform.transform.rotation.w=1.\n    tf.publish(TFMessage(transforms=[transform]))\n    processes=[Node(package='nav2_map_server',executable='map_server',name='map_server',parameters=[str(effective)],output='screen'),Node(package='nav2_planner',executable='planner_server',name='planner_server',parameters=[str(effective)],output='screen')]\n    exits=[]\n    handlers=[RegisterEventHandler(OnProcessExit(target_action=p,on_exit=lambda event,context:exits.append(event.returncode) or [])) for p in processes]\n    launch=LaunchService();launch.include_launch_description(LaunchDescription(processes+handlers));task=asyncio.create_task(launch.run_async())\n    wall=time.monotonic();result={'ok':False,'scope':'Actual installed Navfn and production Keepout overlay; static original map/mask and declared synthetic map->base TF/clock, no scan/Gazebo/controller/motor. Start-only counterfactual: live costmap TF stays fixed at estimated pose; no historical scan/costmap retained. Result ok means diagnostic executed/closed, not both goals succeeded.','start_xy':list(start),'goal_xy':list(goal),'overlay_forbidden_cells':count,'synthetic_tf_yaw':0.,'effective_configuration':config['global_costmap']['global_costmap']['ros__parameters'],'cases':{}}\n    async def until(pred,seconds):\n        end=time.monotonic()+seconds\n        while time.monotonic()<end:\n            if task.done():raise RuntimeError('owned launch stopped before completing observation')\n            ns=2_000_000_000+int((time.monotonic()-wall)/.02)*20_000_000\n            clock=Clock();clock.clock.sec=ns//1_000_000_000;clock.clock.nanosec=ns%1_000_000_000;clocks.publish(clock)\n            rclpy.spin_once(node,timeout_sec=0.)\n            if pred():return\n            await asyncio.sleep(.01)\n        raise RuntimeError('observation stage timeout')\n    async def transition(name,ident):\n        client=node.create_client(ChangeState,'/'+name+'/change_state');await until(client.service_is_ready,15)\n        request=ChangeState.Request();request.transition.id=ident\n        f=client.call_async(request);await until(f.done,15);assert f.result().success,(name,ident)\n    async def params(name,names):\n        client=node.create_client(GetParameters,'/'+name+'/get_parameters');await until(client.service_is_ready,8)\n        req=GetParameters.Request();req.names=names;f=client.call_async(req);await until(f.done,8)\n        return {n:{'type':v.type,'double':v.double_value,'bool':v.bool_value,'string':v.string_value,'strings':list(v.string_array_value)} for n,v in zip(names,f.result().values)}\n    try:\n        for ident in (1,3):await transition('map_server',ident)\n        await until(lambda:node.base_map is not None,10)\n        for ident in (1,3):await transition('planner_server',ident)\n        await until(lambda:node.global_grid is not None and node.global_grid.data[cell(node.global_grid,.85,0.)]>=95 and node.planner.server_is_ready(),15)\n        result['effective_parameters']={'planner':await params('planner_server',['GridBased.plugin','GridBased.tolerance','GridBased.use_astar','GridBased.allow_unknown','use_sim_time']),'costmap':await params('global_costmap/global_costmap',['filters','robot_radius','keepout_inflation.inflation_radius','keepout_inflation.cost_scaling_factor','use_sim_time'])}\n        audit=Raster.from_ros(mask)\n        result['mask_geometry']={'width':w,'height':h,'resolution':audit.resolution,'origin_x':audit.origin_x,'origin_y':audit.origin_y,'data_sha256':hashlib.sha256(bytes(audit.data)).hexdigest()}\n        for key,a,z in [('estimated_start_same_stamp',start,goal),('truth_start_same_stamp',(-0.271995383488593, -2.497323823926928),goal)]:\n            req=ComputePathToPose.Goal();req.start=node.pose(*a);req.goal=node.pose(*z);req.use_start=True;req.planner_id='GridBased'\n            sent=node.planner.send_goal_async(req);await until(sent.done,12);handle=sent.result();assert handle.accepted\n            completed=handle.get_result_async();await until(completed.done,20);reply=completed.result();planned=reply.result\n            points=[(p.pose.position.x,p.pose.position.y) for p in planned.path.poses]\n            if reply.status!=4 or planned.error_code!=0 or len(points)<2:\n                result['cases'][key]={'status':reply.status,'error_code':planned.error_code,'error_msg':planned.error_msg,'points_xy_m':points}\n                continue\n            clear={str(radius):all(swept_disk_clear(audit,x,y,radius,0) for x,y in zip(points,points[1:])) for radius in (.18,.24)}\n            invalid=[i for i,(x,y) in enumerate(zip(points,points[1:])) if not swept_disk_clear(audit,x,y,.24,0)]\n            result['cases'][key]={'status':reply.status,'error_code':planned.error_code,'path_frame':planned.path.header.frame_id,'path_stamp_ns':planned.path.header.stamp.sec*1_000_000_000+planned.path.header.stamp.nanosec,'points_xy_m':points,'path_length_m':sum(math.dist(x,y) for x,y in zip(points,points[1:])),'swept_disk_clear':clear,'nonclear_24cm_segment_indices':invalid,'straight_link_24cm_clear':swept_disk_clear(audit,a,z,.24,0)}\n        assert len(result['cases'])==2\n        result['ok']=True\n    except Exception as exc:result['error']=repr(exc)\n    finally:\n        closed=launch.shutdown()\n        if inspect.isawaitable(closed):await closed\n        try:await asyncio.wait_for(task,timeout=15)\n        except Exception as exc:result['cleanup_error']=repr(exc);result['ok']=False\n        result['process_exit_codes']=exits\n        if sorted(exits)!=[0,0]:result['ok']=False\n        result['seconds']=round(time.monotonic()-wall,3)\n        result['cgroup']={str(p):p.read_text() for p in [Path('/sys/fs/cgroup/memory.peak'),Path('/sys/fs/cgroup/memory.events'),Path('/sys/fs/cgroup/pids.peak')] if p.exists()}\n        node.destroy_node();rclpy.shutdown()\n        print('NAV2_PATH_CONTRACT_RESULT '+json.dumps(result),flush=True)\n    return 0 if result['ok'] else 1\nraise SystemExit(asyncio.run(main()))\n\nCASE\n"
+  ],
+  "source_sha256": {
+    "src/oomwoo_sim_support/config/nav2_params.yaml": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45",
+    "src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "cf153418178b987648d09f3c5e5e744aad5f0b218aa56d55332497b8a498d4ff",
+    "src/oomwoo_sim_support/maps/test_room.yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+    "src/oomwoo_sim_support/maps/test_room.pgm": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+  },
+  "prefix_receipt_sha256": "cac6f2b9a7c47ed082402d8a717b148be7e56dc4010674c177fd32fd53ab796d",
+  "pair": {
+    "truth": {
+      "frame": "map",
+      "position": [
+        -0.271995383488593,
+        -2.497323823926928
+      ],
+      "stamp_ns": 56000000000
+    },
+    "navigation_feedback": {
+      "uuid": "71d59d9374e44b0b92946071acdc47a7",
+      "frame": "map",
+      "stamp_ns": 56000000000,
+      "position": [
+        -0.22217017330367905,
+        -2.6064883256596816,
+        0.012500128723836565
+      ],
+      "orientation": [
+        4.064938860229954e-07,
+        3.059769796167623e-07,
+        0.9207896776750701,
+        0.3900594435298057
+      ],
+      "received_wall": 422855.900493447,
+      "received_sim": 56.010000000000005
+    },
+    "target_cell": 1526,
+    "target_xy": [
+      4.725000094249845,
+      -2.52499999217689
+    ]
+  },
+  "scope": "Actual Navfn start-only counterfactual on static original map/costmap; estimated vs truth same-stamp56s to same goal. No Gazebo/plant/physical outputs; fixed costmap TF remains declared estimated point.",
+  "result": {
+    "ok": true,
+    "scope": "Actual installed Navfn and production Keepout overlay; static original map/mask and declared synthetic map->base TF/clock, no scan/Gazebo/controller/motor. Start-only counterfactual: live costmap TF stays fixed at estimated pose; no historical scan/costmap retained. Result ok means diagnostic executed/closed, not both goals succeeded.",
+    "start_xy": [
+      -0.22217017330367905,
+      -2.6064883256596816
+    ],
+    "goal_xy": [
+      4.725000094249845,
+      -2.52499999217689
+    ],
+    "overlay_forbidden_cells": 220,
+    "synthetic_tf_yaw": 0.0,
+    "effective_configuration": {
+      "update_frequency": 2.0,
+      "publish_frequency": 4.0,
+      "global_frame": "map",
+      "robot_base_frame": "base_link",
+      "transform_tolerance": 5.0,
+      "robot_radius": 0.1745,
+      "resolution": 0.05,
+      "track_unknown_space": true,
+      "plugins": [
+        "static_layer",
+        "obstacle_layer",
+        "voxel_layer",
+        "inflation_layer"
+      ],
+      "obstacle_layer": {
+        "plugin": "nav2_costmap_2d::ObstacleLayer",
+        "enabled": true,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "voxel_layer": {
+        "plugin": "nav2_costmap_2d::VoxelLayer",
+        "enabled": true,
+        "publish_voxel_map": true,
+        "origin_z": 0.0,
+        "z_resolution": 0.05,
+        "z_voxels": 16,
+        "max_obstacle_height": 2.0,
+        "mark_threshold": 0,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "static_layer": {
+        "plugin": "nav2_costmap_2d::StaticLayer",
+        "map_subscribe_transient_local": true,
+        "transform_tolerance": 5.0
+      },
+      "inflation_layer": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "inflation_radius": 0.1,
+        "cost_scaling_factor": 10.0
+      },
+      "always_send_full_costmap": true,
+      "filters": [
+        "keepout_filter",
+        "keepout_inflation"
+      ],
+      "keepout_filter": {
+        "plugin": "nav2_costmap_2d::KeepoutFilter",
+        "enabled": true,
+        "filter_info_topic": "/oomwoo/keepout_filter_info",
+        "override_lethal_cost": false,
+        "transform_tolerance": 0.3
+      },
+      "keepout_inflation": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "enabled": true,
+        "inflation_radius": 0.2345,
+        "cost_scaling_factor": 5.0
+      },
+      "use_sim_time": true
+    },
+    "cases": {
+      "estimated_start_same_stamp": {
+        "status": 6,
+        "error_code": 208,
+        "error_msg": "",
+        "points_xy_m": []
+      },
+      "truth_start_same_stamp": {
+        "status": 4,
+        "error_code": 0,
+        "path_frame": "map",
+        "path_stamp_ns": 6760000000,
+        "points_xy_m": [
+          [
+            -0.24999997988343248,
+            -2.499999991804361
+          ],
+          [
+            -0.27539537363343536,
+            -2.498810807597798
+          ],
+          [
+            -0.3003661915714475,
+            -2.4976045049370006
+          ],
+          [
+            -0.3252238083664154,
+            -2.494939652754957
+          ],
+          [
+            -0.34920528455384536,
+            -2.487876549927541
+          ],
+          [
+            -0.37318466265774797,
+            -2.480806151491495
+          ],
+          [
+            -0.39175603973502016,
+            -2.497542468421794
+          ],
+          [
+            -0.404751092266308,
+            -2.5188996235862318
+          ],
+          [
+            -0.4145594420218388,
+            -2.4959040082380772
+          ],
+          [
+            -0.4251052681372358,
+            -2.4732372197991195
+          ],
+          [
+            -0.4271703545327541,
+            -2.4483226686466137
+          ],
+          [
+            -0.43159320997585704,
+            -2.423717012609795
+          ],
+          [
+            -0.4427053279087745,
+            -2.401322307457362
+          ],
+          [
+            -0.45958402841663437,
+            -2.3828802486193217
+          ],
+          [
+            -0.43756263908092174,
+            -2.3710456746972453
+          ],
+          [
+            -0.41788690712879495,
+            -2.3556226626876393
+          ],
+          [
+            -0.4145068945662218,
+            -2.3308522594102064
+          ],
+          [
+            -0.4112069906474205,
+            -2.3060709842454044
+          ],
+          [
+            -0.4093003095582177,
+            -2.281143796908018
+          ],
+          [
+            -0.40735281120766453,
+            -2.2562197566959226
+          ],
+          [
+            -0.4067800344046959,
+            -2.231226336676275
+          ],
+          [
+            -0.3844052133620566,
+            -2.2200744505237706
+          ],
+          [
+            -0.37755315866400574,
+            -2.196031748444315
+          ],
+          [
+            -0.3676478202290512,
+            -2.173077856348125
+          ],
+          [
+            -0.3531088643239273,
+            -2.152740179043117
+          ],
+          [
+            -0.34396112477721497,
+            -2.1294739586036497
+          ],
+          [
+            -0.33279684085841277,
+            -2.1071052410767264
+          ],
+          [
+            -0.3187380599787546,
+            -2.0864327287142386
+          ],
+          [
+            -0.2948070331634143,
+            -2.0936649180004734
+          ],
+          [
+            -0.27512014322161926,
+            -2.10907362489512
+          ],
+          [
+            -0.2531190671491488,
+            -2.0972013331532677
+          ],
+          [
+            -0.23061368809064797,
+            -2.0863153314041396
+          ],
+          [
+            -0.20842216325435325,
+            -2.074802765619796
+          ],
+          [
+            -0.1948256283227452,
+            -2.0538234562251487
+          ],
+          [
+            -0.17714259888444284,
+            -2.0361511079393493
+          ],
+          [
+            -0.15597570174896314,
+            -2.0228484954364374
+          ],
+          [
+            -0.1311662455076914,
+            -2.0197671736742135
+          ],
+          [
+            -0.1063915983794872,
+            -2.0164185369971177
+          ],
+          [
+            -0.08139436366251696,
+            -2.0160423124736893
+          ],
+          [
+            -0.05639894092677489,
+            -2.0155648077363493
+          ],
+          [
+            -0.03139922665654504,
+            -2.0154558027603597
+          ],
+          [
+            -0.00639960775374826,
+            -2.015317043145255
+          ],
+          [
+            0.01860029725134771,
+            -2.0152672613451967
+          ],
+          [
+            0.04360029762387674,
+            -2.0152075613321
+          ],
+          [
+            0.06860029799640577,
+            -2.0151758993443236
+          ],
+          [
+            0.0936002983689348,
+            -2.015139564352327
+          ],
+          [
+            0.11860029874146383,
+            -2.015116103963794
+          ],
+          [
+            0.14360029911399286,
+            -2.015089687184836
+          ],
+          [
+            0.1686002994865219,
+            -2.015071185902822
+          ],
+          [
+            0.19360029985905092,
+            -2.0150505865372805
+          ],
+          [
+            0.21860030023157995,
+            -2.01503561385029
+          ],
+          [
+            0.24360030060410898,
+            -2.015019019916937
+          ],
+          [
+            0.268600300976638,
+            -2.015006717518072
+          ],
+          [
+            0.29360030134916704,
+            -2.0149930799751443
+          ],
+          [
+            0.31860030172169607,
+            -2.0149827802923737
+          ],
+          [
+            0.343600111359359,
+            -2.0149715269352724
+          ],
+          [
+            0.368600111731888,
+            -2.0149628484988638
+          ],
+          [
+            0.39360011210441703,
+            -2.0149534071229906
+          ],
+          [
+            0.41860011247694606,
+            -2.014946063830645
+          ],
+          [
+            0.4436001128494751,
+            -2.0149380529662677
+          ],
+          [
+            0.4686001132220041,
+            -2.0149317587156856
+          ],
+          [
+            0.49360011359453315,
+            -2.014924892260505
+          ],
+          [
+            0.5186001139670622,
+            -2.0149194563168207
+          ],
+          [
+            0.5436001143395912,
+            -2.014913734270837
+          ],
+          [
+            0.5686001147121202,
+            -2.014909347368916
+          ],
+          [
+            0.5936001150846493,
+            -2.014905818773893
+          ],
+          [
+            0.6186001154571783,
+            -2.014908870531751
+          ],
+          [
+            0.6436001158297073,
+            -2.0149373853942363
+          ],
+          [
+            0.6685997347325041,
+            -2.0150857771200803
+          ],
+          [
+            0.6935892446873964,
+            -2.0158097113044517
+          ],
+          [
+            0.7185667383457228,
+            -2.0147496069185378
+          ],
+          [
+            0.7435320249726174,
+            -2.0134313428913257
+          ],
+          [
+            0.7685161943512582,
+            -2.0125408018013955
+          ],
+          [
+            0.7934873937590026,
+            -2.0113433683118727
+          ],
+          [
+            0.8184873941315316,
+            -2.0113411748609122
+          ],
+          [
+            0.8434873945040606,
+            -2.011338981409952
+          ],
+          [
+            0.8684873948765897,
+            -2.0113370740612906
+          ],
+          [
+            0.8934873952491187,
+            -2.0113350713451963
+          ],
+          [
+            0.9184873956216477,
+            -2.0113334500988342
+          ],
+          [
+            0.9434873959941767,
+            -2.011331638117606
+          ],
+          [
+            0.9684873963667058,
+            -2.011330016871244
+          ],
+          [
+            0.9934873967392348,
+            -2.011328300257449
+          ],
+          [
+            1.0184873971117638,
+            -2.0113262021739216
+          ],
+          [
+            1.0434873974842929,
+            -2.0113227689463313
+          ],
+          [
+            1.068487397856822,
+            -2.0113154256539856
+          ],
+          [
+            1.093487398229351,
+            -2.011295875330208
+          ],
+          [
+            1.11848739860188,
+            -2.0112412297910636
+          ],
+          [
+            1.1434868267698106,
+            -2.0110831105870473
+          ],
+          [
+            1.168482821710151,
+            -2.0106289708708074
+          ],
+          [
+            1.1934509693600375,
+            -2.009368690242897
+          ],
+          [
+            1.2182127418847783,
+            -2.012812122148456
+          ],
+          [
+            1.2421001857832095,
+            -2.020186790379685
+          ],
+          [
+            1.2669981430023625,
+            -2.022443279213358
+          ],
+          [
+            1.2918787433486982,
+            -2.0248835410905413
+          ],
+          [
+            1.3168159919502727,
+            -2.026654132852765
+          ],
+          [
+            1.341749998059123,
+            -2.028468498266764
+          ],
+          [
+            1.366708418230837,
+            -2.029910072384925
+          ],
+          [
+            1.3916668384025512,
+            -2.031353553851747
+          ],
+          [
+            1.4166380378102956,
+            -2.03255318079223
+          ],
+          [
+            1.4416098094226384,
+            -2.033740123864116
+          ],
+          [
+            1.466589210429626,
+            -2.0347547379844597
+          ],
+          [
+            1.4915693743760783,
+            -2.035751899864553
+          ],
+          [
+            1.5165541159593174,
+            -2.0366212693843435
+          ],
+          [
+            1.541539620482021,
+            -2.0374728051941515
+          ],
+          [
+            1.5665283674974488,
+            -2.0382266847525043
+          ],
+          [
+            1.5915174959826088,
+            -2.0389641611123706
+          ],
+          [
+            1.61650853181643,
+            -2.0396256296280866
+          ],
+          [
+            1.6415001398548497,
+            -2.0402730791311425
+          ],
+          [
+            1.6664932737721982,
+            -2.040860923988535
+          ],
+          [
+            1.691486789159279,
+            -2.0414378969585583
+          ],
+          [
+            1.7164810674858244,
+            -2.0419685213561136
+          ],
+          [
+            1.741475727282102,
+            -2.0424918024613232
+          ],
+          [
+            1.7664707685481118,
+            -2.042979892983733
+          ],
+          [
+            1.7914661912838539,
+            -2.043464931748285
+          ],
+          [
+            1.8164619954893282,
+            -2.0439246981430754
+          ],
+          [
+            1.8414577996948025,
+            -2.0443865626213933
+          ],
+          [
+            1.8664536039002768,
+            -2.044832977575555
+          ],
+          [
+            1.8914494081057511,
+            -2.045287403394094
+          ],
+          [
+            1.9164455937809577,
+            -2.045736488636382
+          ],
+          [
+            1.9414410165166998,
+            -2.0462013095051246
+          ],
+          [
+            1.966436820722174,
+            -2.046671852419851
+          ],
+          [
+            1.991431861988184,
+            -2.0471674769694728
+          ],
+          [
+            2.0164265217844615,
+            -2.0476816981685415
+          ],
+          [
+            2.0414204186412745,
+            -2.0482332080339374
+          ],
+          [
+            2.066413552558623,
+            -2.048818668705503
+          ],
+          [
+            2.091405542066775,
+            -2.0494571536698514
+          ],
+          [
+            2.116396005695998,
+            -2.050150284173344
+          ],
+          [
+            2.141383799037095,
+            -2.050926193608734
+          ],
+          [
+            2.166368540620334,
+            -2.051794609454194
+          ],
+          [
+            2.1913490860365186,
+            -2.0527844280419414
+          ],
+          [
+            2.216323527936987,
+            -2.0539140552865573
+          ],
+          [
+            2.241289577503346,
+            -2.055219349342873
+          ],
+          [
+            2.2662438015080055,
+            -2.0567301602174366
+          ],
+          [
+            2.2911816223141783,
+            -2.0584936947896137
+          ],
+          [
+            2.316096173466684,
+            -2.060555443324975
+          ],
+          [
+            2.340978681161681,
+            -2.0629792066362382
+          ],
+          [
+            2.3658154124888084,
+            -2.0658324094985785
+          ],
+          [
+            2.3905869124917216,
+            -2.06920240848068
+          ],
+          [
+            2.41526762269836,
+            -2.0731855246899356
+          ],
+          [
+            2.439819014665767,
+            -2.077899823008475
+          ],
+          [
+            2.4641892085103563,
+            -2.0834762429218925
+          ],
+          [
+            2.4883057249830016,
+            -2.0900644159326616
+          ],
+          [
+            2.51207128930198,
+            -2.097823033449397
+          ],
+          [
+            2.535722412701284,
+            -2.105923924683391
+          ],
+          [
+            2.559365525236211,
+            -2.114047894836186
+          ],
+          [
+            2.5830013898462254,
+            -2.1221931319265535
+          ],
+          [
+            2.6066311509405238,
+            -2.1303562027269036
+          ],
+          [
+            2.6302551899888384,
+            -2.138536344297772
+          ],
+          [
+            2.653874269930634,
+            -2.146730028044135
+          ],
+          [
+            2.677652041281044,
+            -2.1544507846899448
+          ],
+          [
+            2.7016667053351795,
+            -2.161401067844049
+          ],
+          [
+            2.7258751560132963,
+            -2.1676420080310406
+          ],
+          [
+            2.7502434425092246,
+            -2.173226343441402
+          ],
+          [
+            2.77474028430492,
+            -2.1782154907020255
+          ],
+          [
+            2.799341648807251,
+            -2.182662188003394
+          ],
+          [
+            2.824027699590141,
+            -2.1866130700202744
+          ],
+          [
+            2.848780507576174,
+            -2.1901199212688196
+          ],
+          [
+            2.873587102794454,
+            -2.19322231923375
+          ],
+          [
+            2.8984364226227455,
+            -2.195965277343471
+          ],
+          [
+            2.9233223635453327,
+            -2.1983505122117775
+          ],
+          [
+            2.948225470605871,
+            -2.200547682502086
+          ],
+          [
+            2.973125144438819,
+            -2.2027844302771156
+          ],
+          [
+            2.9980217665139093,
+            -2.205057131574409
+          ],
+          [
+            3.0229153368311414,
+            -2.2073606365525817
+          ],
+          [
+            3.047806236860248,
+            -2.209692847128106
+          ],
+          [
+            3.072695229540693,
+            -2.2120486134595962
+          ],
+          [
+            3.0975815519330125,
+            -2.214426886505289
+          ],
+          [
+            3.1224667299161353,
+            -2.2168227071586655
+          ],
+          [
+            3.1473500005505968,
+            -2.219235980052292
+          ],
+          [
+            3.1722321267758615,
+            -2.2216617460796497
+          ],
+          [
+            3.1971127271221973,
+            -2.224100577445337
+          ],
+          [
+            3.2219925645290686,
+            -2.2265478011451334
+          ],
+          [
+            3.2468716389964754,
+            -2.229004656955669
+          ],
+          [
+            3.2717499505244176,
+            -2.2314665672401572
+          ],
+          [
+            3.2966278805826277,
+            -2.2339350578775266
+          ],
+          [
+            3.3215054291711055,
+            -2.2364057419658563
+          ],
+          [
+            3.346382596289851,
+            -2.238880717588674
+          ],
+          [
+            3.3712597634085966,
+            -2.2413557885789244
+          ],
+          [
+            3.396136930527342,
+            -2.2438329576527023
+          ],
+          [
+            3.4210140976460877,
+            -2.246308505480118
+          ],
+          [
+            3.445891264764833,
+            -2.2487845301446994
+          ],
+          [
+            3.4707680504138465,
+            -2.251261746902194
+          ],
+          [
+            3.4956444545931276,
+            -2.2537437320313414
+          ],
+          [
+            3.520521240242141,
+            -2.2562225223514814
+          ],
+          [
+            3.5453987888306187,
+            -2.2586974502905823
+          ],
+          [
+            3.570277100358561,
+            -2.2611607910865663
+          ],
+          [
+            3.5951565562957,
+            -2.263613069260315
+          ],
+          [
+            3.620037538111768,
+            -2.2660467984683335
+          ],
+          [
+            3.6449204272764972,
+            -2.268463409222117
+          ],
+          [
+            3.669805986729352,
+            -2.2708558920153363
+          ],
+          [
+            3.694693072061136,
+            -2.273226249564085
+          ],
+          [
+            3.719583209150778,
+            -2.2755679968829154
+          ],
+          [
+            3.7444756350588135,
+            -2.2778834704739372
+          ],
+          [
+            3.769371494194439,
+            -2.280166614505151
+          ],
+          [
+            3.7942696421484583,
+            -2.282420385366982
+          ],
+          [
+            3.8191708418603354,
+            -2.284639061013446
+          ],
+          [
+            3.8440750933300705,
+            -2.2868258839372677
+          ],
+          [
+            3.8689823965576635,
+            -2.288975656613345
+          ],
+          [
+            3.8938927515431145,
+            -2.2910917169018346
+          ],
+          [
+            3.9188061582864235,
+            -2.2931691533799343
+          ],
+          [
+            3.9437226167875905,
+            -2.2952115900101004
+          ],
+          [
+            3.9686425085163477,
+            -2.2972145922066955
+          ],
+          [
+            3.9935646890634984,
+            -2.299181783932176
+          ],
+          [
+            4.018477714337076,
+            -2.301265085507409
+          ],
+          [
+            4.04336823289645,
+            -2.3036025412917516
+          ],
+          [
+            4.068230141225905,
+            -2.3062291988168537
+          ],
+          [
+            4.093053902582136,
+            -2.309192074227215
+          ],
+          [
+            4.11782883581264,
+            -2.312538565137067
+          ],
+          [
+            4.142540063597858,
+            -2.316327894722341
+          ],
+          [
+            4.167168512451179,
+            -2.320622671702842
+          ],
+          [
+            4.191688623900541,
+            -2.325496901206626
+          ],
+          [
+            4.216068354488437,
+            -2.3310301196728664
+          ],
+          [
+            4.240266505483783,
+            -2.337311686386342
+          ],
+          [
+            4.264229671124065,
+            -2.3444363965755164
+          ],
+          [
+            4.287982646941879,
+            -2.3522334948514922
+          ],
+          [
+            4.311713878984955,
+            -2.360097588749194
+          ],
+          [
+            4.33542451166249,
+            -2.368021811813441
+          ],
+          [
+            4.359118359671806,
+            -2.3759967226683605
+          ],
+          [
+            4.382796567422099,
+            -2.3840189357700785
+          ],
+          [
+            4.4064614237317645,
+            -2.392078723640423
+          ],
+          [
+            4.430119795055981,
+            -2.4001584909879936
+          ],
+          [
+            4.454023832887765,
+            -2.407479467354409
+          ],
+          [
+            4.478131575556569,
+            -2.4140990162506553
+          ],
+          [
+            4.502409835195687,
+            -2.4200634862492008
+          ],
+          [
+            4.526826949817343,
+            -2.425430145493599
+          ],
+          [
+            4.551359649767869,
+            -2.430242052379877
+          ],
+          [
+            4.575985046863332,
+            -2.4345530418239987
+          ],
+          [
+            4.600687119374976,
+            -2.4384009270131726
+          ],
+          [
+            4.62545022704378,
+            -2.4418344407056933
+          ],
+          [
+            4.650263307247508,
+            -2.444885292573054
+          ],
+          [
+            4.67511606030339,
+            -2.4475966840624315
+          ],
+          [
+            4.700000093877316,
+            -2.449999991059303
+          ],
+          [
+            4.750000094622374,
+            -2.499999991804361
+          ],
+          [
+            4.725000094249845,
+            -2.52499999217689
+          ]
+        ],
+        "path_length_m": 5.881489318385541,
+        "swept_disk_clear": {
+          "0.18": true,
+          "0.24": true
+        },
+        "nonclear_24cm_segment_indices": [],
+        "straight_link_24cm_clear": true
+      }
+    },
+    "effective_parameters": {
+      "planner": {
+        "GridBased.plugin": {
+          "type": 4,
+          "double": 0.0,
+          "bool": false,
+          "string": "nav2_navfn_planner::NavfnPlanner",
+          "strings": []
+        },
+        "GridBased.tolerance": {
+          "type": 3,
+          "double": 0.5,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "GridBased.use_astar": {
+          "type": 1,
+          "double": 0.0,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "GridBased.allow_unknown": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        },
+        "use_sim_time": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        }
+      },
+      "costmap": {
+        "filters": {
+          "type": 9,
+          "double": 0.0,
+          "bool": false,
+          "string": "",
+          "strings": [
+            "keepout_filter",
+            "keepout_inflation"
+          ]
+        },
+        "robot_radius": {
+          "type": 3,
+          "double": 0.1745,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "keepout_inflation.inflation_radius": {
+          "type": 3,
+          "double": 0.2345,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "keepout_inflation.cost_scaling_factor": {
+          "type": 3,
+          "double": 5.0,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "use_sim_time": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        }
+      }
+    },
+    "mask_geometry": {
+      "width": 140,
+      "height": 140,
+      "resolution": 0.05,
+      "origin_x": -1.6,
+      "origin_y": -3.05,
+      "data_sha256": "a3c39af194847754d44ba23104649915a651426f450e452f1d5afe4b9279c1d1"
+    },
+    "process_exit_codes": [
+      0,
+      0
+    ],
+    "seconds": 5.38,
+    "cgroup": {
+      "/sys/fs/cgroup/memory.peak": "116178944\n",
+      "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "/sys/fs/cgroup/pids.peak": "53\n"
+    }
+  },
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/navfn_prefix_start_20261031.log",
+  "raw_sha256": "eb8c50f2675f776279303af07dea192e4cb30a81045d12a1c3a5cdec3c07c4ab"
+}
