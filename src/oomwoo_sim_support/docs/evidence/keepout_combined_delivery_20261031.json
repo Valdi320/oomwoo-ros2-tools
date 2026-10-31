@@ -1,5 +1,5 @@
 {
-  "utc": "2026-10-31T01:31:45.363320+00:00",
+  "utc": "2026-10-31T01:48:02.502445+00:00",
   "status": "COMBINED_STATIC_AND_CONTROLLED_ROLLING_ROS_VERIFIED; PLANT_MOTION_AND_FULL90_80_PENDING",
   "scope": "Integrate two independently authored closed local changes into own delivery branch. Literal KeepoutFilter retained; source-mask unknown union and isolated inflation; no hardware or new simulator run.",
   "source_commits": {
@@ -563,10 +563,10 @@
   ],
   "receipt_return": {
     "utility_demonstrated": "One combined real ROS configuration restores focused Navfn planning and preserves explicit lethal blocking of source unknown inside/outside NoGo, with binary attestation and unchanged source files. Controlled actual local-costmap rolling also retains forbidden/normalized-unknown world placement and clears out-of-window costs across7manual TF windows. An offline independent oracle now verifies exact100 for all4886projected forbidden-cell-centre observations, including borders; negative copies detect one tampered cell.",
-    "distance_to_useful_milestone": "Combined static and controlled rolling component is verified. Actual plant motion, AMCL source diagnosis and full90/80 acceptance remain unproved.",
-    "next_increment": "Inspect live861 localization capture and explicitly prepared replacement for retired862; the retired source produced no native run. Replacement must use combined closed builder a194215c and unchanged original acceptance. Do not recreate old862 or duplicate the replacement.",
-    "benefit_cost": "Integration reuses stock plugins and existing maskserver; native combined check16.886s .25CPU512MiB/noGPU,pico169275392bytes. Avoid speculative timing/heading tuning or new workers. Controlled rolling used26.098s .25CPU512MiB/noGPU,pico110362624bytes,one process0,noOOM. No production source change and no extra tuning variant.",
-    "decision": "Consolidate controlled rolling evidence; wait for live861/862 rather than repeat static greens or enqueue duplicate native simulations.",
+    "distance_to_useful_milestone": "Static/controlled rolling verified. Exact combined full-motion fixture is now prepared and source-pinned, unqueued. Actual plant/localization and full90/80 acceptance remain unproved.",
+    "next_increment": "Existing launcher31 can reuse the closed-source prepared fixture after checking no replacement already exists; one full native job only. Preserve live861 and retired862. Read861 sources when terminal before ungrounded AMCL changes.",
+    "benefit_cost": "Integration reuses stock plugins and existing maskserver; native combined check16.886s .25CPU512MiB/noGPU,pico169275392bytes. Avoid speculative timing/heading tuning or new workers. Controlled rolling used26.098s .25CPU512MiB/noGPU,pico110362624bytes,one process0,noOOM. No production source change and no extra tuning variant. Complementary preparation copies12.7MB under CPU25percent/memory4GiB host bound, preserving15existing runtime hashes and replacing only2product modules plus2matching tests. No simulator/test invocation or new controller/queue.",
+    "decision": "Consolidate reproducible preparation and hand it to existing launcher ownership; do not enqueue a second job from this thread or repeat closed static checks.",
     "evidence_that_changes_decision": "Combined-motion or dynamic-unknown counterexample requires correction; only actual original full-room acceptance justifies overall completion."
   },
   "strict_local_wire_review": {
@@ -617,5 +617,93 @@
     "wall_seconds": 9.096028417989146,
     "scope": "Stricter exact100 oracle applied offline to original serialized ROS mask and7settled local-costmap observations of combined source. No node, process launch, action, scan or motor replay.",
     "source_integrity_verified": true
+  },
+  "native_candidate_preparation": {
+    "status": "PREPARED_ONLY; NOT_QUEUED; launcher31 coordination required",
+    "prepared_artifact": "combined_keepout_review_native_prepared_20261031.json",
+    "host_prepared_path": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/combined_keepout_review_native_prepared_20261031.json",
+    "prepared_artifact_sha256": "b521ab1cdb715f1b22f85571fb4a13578a0fa1e092e5cc04e6aaa38a80aa87c4",
+    "freeze": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-combined-review-c3b0bf05d5",
+    "source_commit": "c3b0bf05d5ab208d7f1ca8a7d52a76831affb4f5",
+    "inputs_sha256": {
+      "planner": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98",
+      "scorer": "c6a68411eb69f5ee5aead1554911de1f70d48b7d12c156aba7eb67711b919fe2",
+      "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+      "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+      "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+      "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+      "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+      "relay": "cf39838e3cf381e2b6b0bb8d52904dceaee9aa18ee03997e4891862c72ba898b",
+      "nav2_config": "605a39d71ceb40b6e393012b9ab12274d08f68d98a5511e9cfe2f70647339c45",
+      "planner_production": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98",
+      "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+      "sim_launch": "1d6d4ef34508571301db9fbca7f7b7d5c2cb328c92ff27919285de6ca6cc637c",
+      "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+      "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+      "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+      "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+      "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09",
+      "keepout_config_tests": "327c06b4982e9f2fd20d94d079abd5aeb0b4d54397aa32955881f0f0ebd584f0",
+      "keepout_launch_tests": "21429a790449607369a520becc7431aa0b75d1b21fba0ce789aa4024ca0ee2c1"
+    },
+    "only_changed_files_from_retired862": [
+      "ros/src/oomwoo_sim_support/launch/sim_bringup.launch.py",
+      "ros/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py",
+      "ros/src/oomwoo_sim_support/test/test_keepout_launch_graph.py",
+      "ros/src/oomwoo_sim_support/test/test_keepout_config.py"
+    ],
+    "unchanged_previous_runtime_inputs": 15,
+    "source_sets": {
+      "runtime_baseline": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/native-isolated-keepout-874c57d7c3",
+      "runtime_baseline_prepared": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/isolated_keepout_native_prepared_20261031.json",
+      "changed_product_modules": {
+        "src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py": "c3b0bf05d5ab208d7f1ca8a7d52a76831affb4f5",
+        "src/oomwoo_sim_support/launch/sim_bringup.launch.py": "c3b0bf05d5ab208d7f1ca8a7d52a76831affb4f5"
+      },
+      "changed_tests": {
+        "src/oomwoo_sim_support/test/test_keepout_config.py": "c3b0bf05d5ab208d7f1ca8a7d52a76831affb4f5",
+        "src/oomwoo_sim_support/test/test_keepout_launch_graph.py": "c3b0bf05d5ab208d7f1ca8a7d52a76831affb4f5"
+      },
+      "all_other_inputs_unchanged": {
+        "planner": true,
+        "scorer": true,
+        "meter": true,
+        "wrapper": true,
+        "driver": true,
+        "journal": true,
+        "witness": true,
+        "relay": true,
+        "nav2_config": true,
+        "planner_production": true,
+        "coverage_launch": true,
+        "lifecycle_response_qos": true,
+        "world": true,
+        "map_yaml": true,
+        "map_image": true
+      },
+      "collector": "Existing private c6a68411 from861, unchanged; current delivered production scorer remains7f60bca, no claim of whole-tree c3 runtime identity."
+    },
+    "parameters": {
+      "rotate_to_heading_min_angle": 0.6,
+      "nav_lookahead": 0.5,
+      "nav_linear_speed": 0.14,
+      "spawn": "original launch defaults",
+      "plan": "normal production plus gapfill",
+      "max_sim_time_s": 3600,
+      "amcl_transform_tolerance": 5.0,
+      "local_global_frame": "odom"
+    },
+    "limits": {
+      "cpu": 2,
+      "memory_gib": 3,
+      "max_sim_s": 3600,
+      "max_wall_s": 1800,
+      "host_stop_s": 1900,
+      "fifo_duration_s": 2100
+    },
+    "runtime_invocations": 0,
+    "queued": false,
+    "launch_owner": "existing launcher31; do not duplicate its replacement job or861",
+    "meaning": "Preparation closes reproducibility only; it supplies no new execution/motion/cleaning evidence."
   }
 }
