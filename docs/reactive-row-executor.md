@@ -76,6 +76,15 @@ A real tf2 ramp test also shows that a fresh composed stamp can contain
 a delayed changing correction; original AMCL/TF messages are still needed
 before attributing the native discrepancy or changing localization.
 
+The [localization-source capture preparation](../src/oomwoo_sim_support/docs/evidence/localization_capture_preparation_20261031.json)
+adds only bounded passive observations to a frozen normal-prefix scorer.
+AMCL, odometry, TF, scan bytes and truth retain original source and receipt
+times. A focused check validates real ROS message types, exact scan wire
+round trip and bounded history; its first object-equality oracle failure
+is preserved and corrected for float32 quantization. FIFO 861 is queued
+behind the owner game in this recorded snapshot. No native capture or
+localization correction is claimed by this preparation.
+
 Masked full-room acceptance remains open: the [earlier peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged
 80% requirement. The default local costmap frame remains `odom`; the private
