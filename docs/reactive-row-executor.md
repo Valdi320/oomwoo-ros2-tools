@@ -1569,3 +1569,39 @@ las dos correcciones respaldadas: giro final no retenido y selector circular.
 La copia congelada conservará máscara, radios, medidor,90/80,STOP y límites.
 La utilidad demostrada sigue siendo focal; el ahorro de2,75m y el cierre
 nativo siguen pendientes. La decisión cambiará con el resultado real.
+
+
+## Carrera de confirmación del tránsito — 31/10/2026
+
+El primer nativo de439e9e3 termina en160,785s reales, cobertura10,59%,
+medición válida, cero cruces/6400poses, sin OOM ni timeout. El parámetro
+real FollowPath.stateful=false queda confirmado por el cliente existente.
+Nav2 completa sus cuatro objetivos; el último UUID6bf8c21d… termina
+succeeded y el diario queda terminal. El fallo es posterior: release_nav
+expira porque el relé quedó STOP por health contradicts active owner. No
+es el anterior aborto105 ni demuestra que los dos cambios no sirvan.
+
+Un caso focal con _motion_health real y GoalJournal temporal reproduce
+accepted→terminal entre la lectura de idle y la comprobación de actividad:
+la primera ve ocupado y la segunda ya ve sin activo. Se corrige sólo el
+orden: actividad antes de idle. En la transición monotónica, la lectura
+posterior puede reconocer terminal; output sigue exigiendo UUID activo y
+el relevo requiere su evento terminal exacto y el resultado duradero. No se
+cambia almacenamiento, umbral, ventana, permisos, cero ni STOP. Rojo causal
+y seis casos focales posteriores verdes (incluidos sucedido/cancelado,
+eventos viejos, salud inválida y cancelación por contacto) conservados.
+
+Commit del relé: cc70b2a3aa931261283fffb735324dd431418eea en oomwoo-integracion-limpieza, rama
+revision/relevo-terminal-20261031, árbol limpio. Recibo combinado:
+`src/oomwoo_sim_support/docs/evidence/terminal_health_race_delivery_20261031.json`.
+La congelación siguiente aplicará ese mismo movimiento de lectura al relé
+privado ya instrumentado, conservando todas sus observaciones anteriores,
+y verificará que sólo ese método cambia. El resto de hashes quedará igual
+al nativo anterior. No se relanza el oráculo sin esta evidencia nueva.
+
+Utilidad: reproducción y corrección focal de un bloqueo que impedía medir
+el objetivo mayor. Distancia:90/80/cero cruces/cierre aún sin demostrar.
+Siguiente: nativo combinado exacto; coste máximo30min previsto por receta,
+beneficio esperado habilitar la medición real, sin garantizar el80%.
+Decisión avanzar por causa nueva discriminada; volver a diagnóstico si el
+resultado contradice la corrección.

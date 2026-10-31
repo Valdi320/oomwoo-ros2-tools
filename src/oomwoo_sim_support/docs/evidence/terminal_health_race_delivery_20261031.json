@@ -1,0 +1,191 @@
+{
+  "utc": "2026-10-31T11:18:44.362285+00:00",
+  "native_raw": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/circle_stateful_full_native_20261031.json",
+  "native_sha256": "38fa57620f34453056706b20e20710bf305021df518bbff2fe61d82dfcac7204",
+  "native_source_commit": "439e9e365f8a9819756544ba6bd0a105a2f10afd",
+  "report": {
+    "coverage": 0.1059,
+    "coverage_target": 0.9,
+    "target_crossed": false,
+    "efficiency_at_target": null,
+    "efficiency_final": 1.0,
+    "revisit_ratio": 0.1025,
+    "efficiency_target": 0.8,
+    "time_to_target_s": null,
+    "end_reason": "motion_fault",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": false
+  },
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 6400,
+    "segments": 6399,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "first_footprint_crossing": null,
+    "min_sampled_center_to_mask_bbox_m": 0.2179169417487809,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 10,
+        "distance_m": 6.971437374218047e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000328304688
+      },
+      "IDLE": {
+        "poses": 600,
+        "distance_m": 3.457186988578052e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.3560471631052464
+      },
+      "SWEEP": {
+        "poses": 2429,
+        "distance_m": 5.964007867886538,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2179169417487809
+      },
+      "PREPARE_NAV": {
+        "poses": 232,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.378477737046619
+      },
+      "TRANSIT": {
+        "poses": 3129,
+        "distance_m": 3.8452020591143037,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.3207461068301611
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "mask_seen": true,
+    "valid": true
+  },
+  "effective_controller_parameters": {
+    "received_ros_ns": 11060000000,
+    "received_monotonic_s": 462354.843778996,
+    "values": [
+      {
+        "type": 3,
+        "double_value": 0.6,
+        "bool_value": false
+      },
+      {
+        "type": 3,
+        "double_value": 0.5,
+        "bool_value": false
+      },
+      {
+        "type": 3,
+        "double_value": 0.14,
+        "bool_value": false
+      },
+      {
+        "type": 1,
+        "double_value": 0.0,
+        "bool_value": true
+      },
+      {
+        "type": 1,
+        "double_value": 0.0,
+        "bool_value": false
+      }
+    ]
+  },
+  "journal_terminal": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "succeeded",
+    "revision": 12,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 2582,
+    "token": "22541972562142bbb2389576c6bd7a0f-1",
+    "uuid": "6bf8c21d1c5d4de4858b201200e65946"
+  },
+  "diagnosis": "Actual Nav2 SUCCEEDED; fault is release_nav handoff timeout after health contradicts active owner. No nav abort105, bumper contact, forbidden crossing, OOM or simulator instability. Race accepted→terminal between idle and active reads reproduced through original health method and actual disposable GoalJournal.",
+  "correction": {
+    "repo": "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza",
+    "commit": "cc70b2a3aa931261283fffb735324dd431418eea",
+    "file": "src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+    "change": "Read active evidence before idle so monotonic accepted→terminal is seen by later idle check. No storage, timeout, ownership, freshness, STOP or terminal permission policy changed.",
+    "before": {
+      "utc": "2026-10-31T11:16:35.121361+00:00",
+      "guard": "OCUPADA: la maquina la tiene «el propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo» desde hace 9 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8274 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+      "rc": 1,
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-terminal-race-before-20261031",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=96",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/work:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+        "-lc",
+        "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src python3 -m pytest -q /work/tests/test_sequenced_motion_ingress_20261029.py::TestRelayDDSMetadataIngress::test_result_fsync_during_health_read_keeps_terminal_zero_without_false_revocation -p no:cacheprovider"
+      ],
+      "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_ TestRelayDDSMetadataIngress.test_result_fsync_during_health_read_keeps_terminal_zero_without_false_revocation _\n\nself = <test_sequenced_motion_ingress_20261029.TestRelayDDSMetadataIngress testMethod=test_result_fsync_during_health_read_keeps_terminal_zero_without_false_revocation>\n\n    def test_result_fsync_during_health_read_keeps_terminal_zero_without_false_revocation(self):\n        for outcome in (\"succeeded\", \"canceled\"):\n            with self.subTest(outcome=outcome), TemporaryDirectory() as scratch:\n                relay, mono = self.initial_escape(scratch)\n                journal = relay._goal_witness.journal\n                uuid, token = \"a\" * 32, \"b\" * 32 + \"-1\"\n                journal.begin(uuid_hex=uuid, token=token, job_id=\"coverage_sweep\",\n                              map_digest=\"c\" * 64, target_cell=0)\n                journal.accepted(token=token, uuid_hex=uuid)\n                relay._goal_witness.observe(((uuid, 2),))\n                relay._nav_status = ((uuid, 2),)\n                relay._last_status = 0.\n                relay._motion_nav_uuid = uuid\n                relay._nav_feedback = (uuid, mono[0], 1_940_000_000)\n                relay._sweep_state = \"TRANSIT\"\n                relay.mux = ThreeWayVelocityMux()\n                for index in range(8):\n                    relay.mux.observe_odom(now=1. + index * .12,\n                                           linear_mps=0., angular_rps=0.)\n                relay.mux.observe_health(now=1.85, proof=good_health())\n                relay._motion_token = relay.mux.claim_transit(\n                    now=1.9, nav_goal_uuid=uuid)\n                relay.mux.observe_health(now=1.92, proof=good_health(\n                    nav2_idle=False, nav2_active_goal=uuid))\n                original = relay._feedback_live\n                written = []\n                def result_between_health_observations(candidate):\n                    if not written:\n                        journal.terminal(token=token, uuid_hex=uuid, outcome=outcome)\n                        written.append(True)\n                    return original(candidate)\n                relay._feedback_live = result_between_health_observations\n                proof = relay._motion_health()\n                self.assertTrue(written)\n>               self.assertTrue(proof.nav2_idle)\nE               AssertionError: False is not true\n\n/work/tests/test_sequenced_motion_ingress_20261029.py:565: AssertionError\n=========================== short test summary info ============================\nFAILED ../work/tests/test_sequenced_motion_ingress_20261029.py::TestRelayDDSMetadataIngress::test_result_fsync_during_health_read_keeps_terminal_zero_without_false_revocation\n1 failed in 0.59s\n",
+      "stderr": ""
+    },
+    "after": {
+      "utc": "2026-10-31T11:17:40.255684+00:00",
+      "guard": "OCUPADA: la maquina la tiene «el propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo» desde hace 0 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8274 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+      "rc": 0,
+      "args": [
+        "podman",
+        "run",
+        "--rm",
+        "--name",
+        "oomwoo-terminal-race-after-20261031",
+        "--pull=never",
+        "--network=none",
+        "--cap-drop=ALL",
+        "--security-opt=no-new-privileges",
+        "--security-opt=label=disable",
+        "--read-only",
+        "--tmpfs",
+        "/tmp:rw,exec,size=128m,mode=1777",
+        "--memory=512m",
+        "--memory-swap=512m",
+        "--cpus=.25",
+        "--pids-limit=96",
+        "-v",
+        "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/work:ro",
+        "--entrypoint",
+        "/bin/bash",
+        "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+        "-lc",
+        "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/work/src python3 -m pytest -q /work/tests/test_sequenced_motion_ingress_20261029.py -k 'result_fsync_during_health_read or terminal_callback_before_result_fsync or old_terminal_event or fast_active_then_cancel or managed_contact_cancellation or transit_cancel_phase' -p no:cacheprovider"
+      ],
+      "stdout": "......                                                                   [100%]\n6 passed, 50 deselected in 2.10s\n",
+      "stderr": "",
+      "source_sha256": "ad9093ec0bf088c60c6644fa280f9826a91d3cb06fd2dbe9c6a89bcdbc2ed159"
+    }
+  },
+  "remaining": "Native validation ofcombined correction, >=90coverage/>=80efficiency/zero crossings/sweep_complete. Existing two ROS changes remain focal; no native benefit claimed."
+}
