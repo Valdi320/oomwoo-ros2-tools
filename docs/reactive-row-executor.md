@@ -1433,7 +1433,15 @@ Removing the outer filter is not an equivalent general fix: with
 MaxWithoutUnknownOverwrite an unknown master cell inside NoGo can stay -1.
 Keep the retained filter and normalized mask together. This static-map
 contract does not cover dynamic map updates or unknown cells arising only
-in the local costmap. Actual motion with this combined source, normalized
-rolling behavior and the original full-room 90/80 acceptance remain open.
-Consolidate this component and inspect the already queued native captures
-before scheduling another run or changing AMCL parameters.
+in the local costmap. A subsequent controlled rolling check uses the same combined source in an
+actual controller/local costmap: seven supplied TF window positions retain
+the original NoGo area and the separate unknown cell, including departure
+and return. No interior holes or costs outside the expected mask support
+are observed; both fully distant windows are clear. The effective frame is
+`odom`, resolution 0.02 m, rolling enabled, and the literal outer filter is
+active. The process exits 0 without memory-limit events. The linked receipt
+contains the exact fixture and captured costmaps. This verifies placement
+under supplied transforms, with no plant, scan, action goal or motor.
+Actual plant motion, AMCL behavior and original full-room 90/80 acceptance
+remain open. Consolidate this component and inspect the already queued
+native captures before scheduling another run or changing AMCL parameters.

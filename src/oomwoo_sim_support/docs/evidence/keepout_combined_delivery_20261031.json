@@ -1,6 +1,6 @@
 {
-  "utc": "2026-10-31T01:20:30.677504+00:00",
-  "status": "COMBINED_STATIC_ROS_VERIFIED; MOVEMENT_AND_FULL90_80_PENDING",
+  "utc": "2026-10-31T01:24:33.698030+00:00",
+  "status": "COMBINED_STATIC_AND_CONTROLLED_ROLLING_ROS_VERIFIED; PLANT_MOTION_AND_FULL90_80_PENDING",
   "scope": "Integrate two independently authored closed local changes into own delivery branch. Literal KeepoutFilter retained; source-mask unknown union and isolated inflation; no hardware or new simulator run.",
   "source_commits": {
     "isolated_inflation": {
@@ -249,12 +249,308 @@
     "integracion_mascara_style_20261031.json": "78b8a35831a7baeef4e61442b927ec5a5c912b9de4f5449c195719af1208770e",
     "integracion_mascara_style_final_20261031.json": "7cd577dd9781bd3c80e73b94337e1a0d86bcfc17e14e73a234ff57a5f344e834",
     "integracion_mascara_native_20261031.json": "261fd9647b4f2781b3b88e543ef6755d3e773ad410183f13e03e97680647d710",
-    "integracion_mascara_style_identity_20261031.json": "4530319dbbe46e94cda1f28c3d793515ed86a482acb7257567151d842958636e"
+    "integracion_mascara_style_identity_20261031.json": "4530319dbbe46e94cda1f28c3d793515ed86a482acb7257567151d842958636e",
+    "mascara_combinada_rolling_prepared_20261031.json": "4bdde89e4b656948cde0d8b90522607fd3833108e6c75df2121fcdb3b3f308b9",
+    "mascara_combinada_rolling_20261031.json": "aa1abf91dbf68b5741b43ee04e0ea7a9606bf3cdb778e23e9dc30582ecec4243"
   },
   "interpretation": {
     "unknown": "Static source unknown becomes binary blocked100 in served mask and post costmap; original source remains-1. It does not preserve unknown label-1 in post costmap.",
     "native_prefix": "This controlled global plan succeeds from860localized point; it is not historical scan/costmap replay or an AMCL repair.",
-    "local_rolling": "Prior ecf isolated known-map rolling check exists; combined normalized-mask rolling with actual motion not proved here.",
+    "local_rolling": {
+      "scope": "Combined d44050a protected mask and literal KeepoutFilter in installed controller/local rolling costmap; manually supplied map->odom and moving odom->base TF/clock. No Gazebo, scan, plant, hardware, action goal or motor.",
+      "source_commit": "d44050afcf4adb23586a766895da13bd15cad429",
+      "source_sha256": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09",
+      "mask_cells": 221,
+      "map_to_odom": [
+        0.4,
+        -0.3,
+        0.2
+      ],
+      "effective_parameters": {
+        "global_frame": {
+          "type": 4,
+          "double": 0.0,
+          "bool": false,
+          "string": "odom",
+          "strings": []
+        },
+        "rolling_window": {
+          "type": 1,
+          "double": 0.0,
+          "bool": true,
+          "string": "",
+          "strings": []
+        },
+        "resolution": {
+          "type": 3,
+          "double": 0.02,
+          "bool": false,
+          "string": "",
+          "strings": []
+        },
+        "filters": {
+          "type": 9,
+          "double": 0.0,
+          "bool": false,
+          "string": "",
+          "strings": [
+            "keepout_filter"
+          ]
+        },
+        "plugins": {
+          "type": 9,
+          "double": 0.0,
+          "bool": false,
+          "string": "",
+          "strings": [
+            "obstacle_layer",
+            "voxel_layer",
+            "inflation_layer",
+            "keepout_inflation"
+          ]
+        },
+        "keepout_inflation.plugin": {
+          "type": 4,
+          "double": 0.0,
+          "bool": false,
+          "string": "nav2_costmap_2d::PluginContainerLayer",
+          "strings": []
+        },
+        "keepout_inflation.inflation.inflation_radius": {
+          "type": 3,
+          "double": 0.2745,
+          "bool": false,
+          "string": "",
+          "strings": []
+        }
+      },
+      "snapshots": [
+        {
+          "robot_odom_xy": [
+            -0.5,
+            0.0
+          ],
+          "origin_xy": [
+            -1.9799999997764826,
+            -1.4799999997764826
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 4780000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 1222,
+          "interior_holes": 0,
+          "positive_cells": 3910,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 0,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 2,
+              "holes": 0
+            }
+          }
+        },
+        {
+          "robot_odom_xy": [
+            1.0,
+            0.0
+          ],
+          "origin_xy": [
+            -0.4999999997764826,
+            -1.4799999997764826
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 6580000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 1222,
+          "interior_holes": 0,
+          "positive_cells": 4136,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 0,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 2,
+              "holes": 0
+            }
+          }
+        },
+        {
+          "robot_odom_xy": [
+            3.0,
+            0.0
+          ],
+          "origin_xy": [
+            1.5000000002235174,
+            -1.4799999997764826
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 8400000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 0,
+          "interior_holes": 0,
+          "positive_cells": 0,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 0,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 0,
+              "holes": 0
+            }
+          }
+        },
+        {
+          "robot_odom_xy": [
+            2.0,
+            1.8
+          ],
+          "origin_xy": [
+            0.5200000002235174,
+            0.30000000022351747
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 10180000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 332,
+          "interior_holes": 0,
+          "positive_cells": 1758,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 2,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 0,
+              "holes": 0
+            }
+          }
+        },
+        {
+          "robot_odom_xy": [
+            4.0,
+            1.8
+          ],
+          "origin_xy": [
+            2.500000000223517,
+            0.30000000022351747
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 11980000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 0,
+          "interior_holes": 0,
+          "positive_cells": 0,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 0,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 0,
+              "holes": 0
+            }
+          }
+        },
+        {
+          "robot_odom_xy": [
+            2.0,
+            1.8
+          ],
+          "origin_xy": [
+            0.5200000002235174,
+            0.30000000022351747
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 13780000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 332,
+          "interior_holes": 0,
+          "positive_cells": 1758,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 2,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 0,
+              "holes": 0
+            }
+          }
+        },
+        {
+          "robot_odom_xy": [
+            -0.5,
+            0.0
+          ],
+          "origin_xy": [
+            -1.9799999997764826,
+            -1.4799999997764826
+          ],
+          "resolution": 0.019999999552965164,
+          "width": 150,
+          "height": 150,
+          "stamp_ns": 15600000000,
+          "distinct_settled_messages": 3,
+          "mask_interior_cells_in_window": 1222,
+          "interior_holes": 0,
+          "positive_cells": 3910,
+          "far_positive_cells": 0,
+          "allowed_support_m": 0.345210679172326,
+          "far_examples": [],
+          "source_unknown_cells": {
+            "14072": {
+              "interior": 0,
+              "holes": 0
+            },
+            "8589": {
+              "interior": 2,
+              "holes": 0
+            }
+          }
+        }
+      ],
+      "process_exit_codes": [
+        0
+      ],
+      "wall_seconds": 26.098,
+      "memory_peak_bytes": 110362624,
+      "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "limitations": "Manual TF/clock and published derived static binary mask in one actual controller/local costmap. Does not prove Gazebo plant/AMCL or dynamic map updates, nor unknown cells originating independently of source map."
+    },
     "physical_costs": "Existing ordinary inflation0.10 and all other costmap parameters retained; no assertion of physical contact safety or changed AMCLaccuracy.",
     "queued862": "Immutable separate candidate da64c00f removes outer filter. Its full known-map movement test can inform performance but does not prove unknown-inside blocking for this delivery. Do not mutate/restart it."
   },
@@ -265,11 +561,11 @@
     "Existing861 queued localization source capture stays immutable and has not yet produced a terminal receipt."
   ],
   "receipt_return": {
-    "utility_demonstrated": "One combined real ROS configuration restores focused Navfn planning and preserves explicit lethal blocking of source unknown inside/outside NoGo, with binary attestation and unchanged source files.",
-    "distance_to_useful_milestone": "Combined static component is reviewable and verified. Actual motion/rolling-normalized and full90/80 acceptance remain unproved.",
+    "utility_demonstrated": "One combined real ROS configuration restores focused Navfn planning and preserves explicit lethal blocking of source unknown inside/outside NoGo, with binary attestation and unchanged source files. Controlled actual local-costmap rolling also retains forbidden/normalized-unknown world placement and clears out-of-window costs across7manual TF windows.",
+    "distance_to_useful_milestone": "Combined static and controlled rolling component is verified. Actual plant motion, AMCL source diagnosis and full90/80 acceptance remain unproved.",
     "next_increment": "Use already queued861source capture and862movement evidence; replay observed localization transforms before choosing another native change/run. Do not duplicate those jobs.",
-    "benefit_cost": "Integration reuses stock plugins and existing maskserver; native combined check16.886s .25CPU512MiB/noGPU,pico169275392bytes. Avoid speculative timing/heading tuning or new workers.",
-    "decision": "Consolidate local commit; advance on native evidence, not additional static variants.",
+    "benefit_cost": "Integration reuses stock plugins and existing maskserver; native combined check16.886s .25CPU512MiB/noGPU,pico169275392bytes. Avoid speculative timing/heading tuning or new workers. Controlled rolling used26.098s .25CPU512MiB/noGPU,pico110362624bytes,one process0,noOOM. No production source change and no extra tuning variant.",
+    "decision": "Consolidate controlled rolling evidence; wait for live861/862 rather than repeat static greens or enqueue duplicate native simulations.",
     "evidence_that_changes_decision": "Combined-motion or dynamic-unknown counterexample requires correction; only actual original full-room acceptance justifies overall completion."
   }
 }
