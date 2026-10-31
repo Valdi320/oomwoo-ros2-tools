@@ -1,5 +1,5 @@
 {
-  "utc": "2026-10-31T01:24:33.698030+00:00",
+  "utc": "2026-10-31T01:31:45.363320+00:00",
   "status": "COMBINED_STATIC_AND_CONTROLLED_ROLLING_ROS_VERIFIED; PLANT_MOTION_AND_FULL90_80_PENDING",
   "scope": "Integrate two independently authored closed local changes into own delivery branch. Literal KeepoutFilter retained; source-mask unknown union and isolated inflation; no hardware or new simulator run.",
   "source_commits": {
@@ -251,7 +251,8 @@
     "integracion_mascara_native_20261031.json": "261fd9647b4f2781b3b88e543ef6755d3e773ad410183f13e03e97680647d710",
     "integracion_mascara_style_identity_20261031.json": "4530319dbbe46e94cda1f28c3d793515ed86a482acb7257567151d842958636e",
     "mascara_combinada_rolling_prepared_20261031.json": "4bdde89e4b656948cde0d8b90522607fd3833108e6c75df2121fcdb3b3f308b9",
-    "mascara_combinada_rolling_20261031.json": "aa1abf91dbf68b5741b43ee04e0ea7a9606bf3cdb778e23e9dc30582ecec4243"
+    "mascara_combinada_rolling_20261031.json": "aa1abf91dbf68b5741b43ee04e0ea7a9606bf3cdb778e23e9dc30582ecec4243",
+    "strict_wire_20261031.json": "265f7e3877bad60f035a99d1df2ab27a62210c1dfbf413a3882d606ae2adae08"
   },
   "interpretation": {
     "unknown": "Static source unknown becomes binary blocked100 in served mask and post costmap; original source remains-1. It does not preserve unknown label-1 in post costmap.",
@@ -552,7 +553,7 @@
       "limitations": "Manual TF/clock and published derived static binary mask in one actual controller/local costmap. Does not prove Gazebo plant/AMCL or dynamic map updates, nor unknown cells originating independently of source map."
     },
     "physical_costs": "Existing ordinary inflation0.10 and all other costmap parameters retained; no assertion of physical contact safety or changed AMCLaccuracy.",
-    "queued862": "Immutable separate candidate da64c00f removes outer filter. Its full known-map movement test can inform performance but does not prove unknown-inside blocking for this delivery. Do not mutate/restart it."
+    "queued862": "Explicitly cancelled before admission at2026-10-31T01:26:04Z to replace old da64c00f with exact combined source. PID4119078 absent,scope inactive/dead,container absent,no native started/result. Older live862 notes are historical; await explicit replacement."
   },
   "limits": [
     "No motor, NavigateToPose, actual motion, physical S12 or Gazebo in these new checks.",
@@ -561,11 +562,60 @@
     "Existing861 queued localization source capture stays immutable and has not yet produced a terminal receipt."
   ],
   "receipt_return": {
-    "utility_demonstrated": "One combined real ROS configuration restores focused Navfn planning and preserves explicit lethal blocking of source unknown inside/outside NoGo, with binary attestation and unchanged source files. Controlled actual local-costmap rolling also retains forbidden/normalized-unknown world placement and clears out-of-window costs across7manual TF windows.",
+    "utility_demonstrated": "One combined real ROS configuration restores focused Navfn planning and preserves explicit lethal blocking of source unknown inside/outside NoGo, with binary attestation and unchanged source files. Controlled actual local-costmap rolling also retains forbidden/normalized-unknown world placement and clears out-of-window costs across7manual TF windows. An offline independent oracle now verifies exact100 for all4886projected forbidden-cell-centre observations, including borders; negative copies detect one tampered cell.",
     "distance_to_useful_milestone": "Combined static and controlled rolling component is verified. Actual plant motion, AMCL source diagnosis and full90/80 acceptance remain unproved.",
-    "next_increment": "Use already queued861source capture and862movement evidence; replay observed localization transforms before choosing another native change/run. Do not duplicate those jobs.",
+    "next_increment": "Inspect live861 localization capture and explicitly prepared replacement for retired862; the retired source produced no native run. Replacement must use combined closed builder a194215c and unchanged original acceptance. Do not recreate old862 or duplicate the replacement.",
     "benefit_cost": "Integration reuses stock plugins and existing maskserver; native combined check16.886s .25CPU512MiB/noGPU,pico169275392bytes. Avoid speculative timing/heading tuning or new workers. Controlled rolling used26.098s .25CPU512MiB/noGPU,pico110362624bytes,one process0,noOOM. No production source change and no extra tuning variant.",
     "decision": "Consolidate controlled rolling evidence; wait for live861/862 rather than repeat static greens or enqueue duplicate native simulations.",
     "evidence_that_changes_decision": "Combined-motion or dynamic-unknown counterexample requires correction; only actual original full-room acceptance justifies overall completion."
+  },
+  "strict_local_wire_review": {
+    "author": "companion support; reviewed/adopted without rerunning the oracle",
+    "source_receipt_sha256": "aa1abf91dbf68b5741b43ee04e0ea7a9606bf3cdb778e23e9dc30582ecec4243",
+    "builder_sha256": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09",
+    "observed_mask_centres": 4886,
+    "required_cost": 100,
+    "not100_count": 0,
+    "unknown_centres_total": {
+      "14072": 14,
+      "8589": 21
+    },
+    "mask_wire_roundtrip_equal": true,
+    "all_grid_wire_roundtrips_equal": true,
+    "negative_controls": [
+      {
+        "modified_copy_index": 8232,
+        "expected_new_failures": 1,
+        "actual_new_failures": 1,
+        "original_cost_unchanged": true
+      },
+      {
+        "modified_copy_index": 8158,
+        "expected_new_failures": 1,
+        "actual_new_failures": 1,
+        "original_cost_unchanged": true
+      },
+      {
+        "modified_copy_index": 0,
+        "expected_new_failures": 1,
+        "actual_new_failures": 1,
+        "original_cost_unchanged": true
+      },
+      {
+        "modified_copy_index": 0,
+        "expected_new_failures": 1,
+        "actual_new_failures": 1,
+        "original_cost_unchanged": true
+      },
+      {
+        "modified_copy_index": 8232,
+        "expected_new_failures": 1,
+        "actual_new_failures": 1,
+        "original_cost_unchanged": true
+      }
+    ],
+    "wall_seconds": 9.096028417989146,
+    "scope": "Stricter exact100 oracle applied offline to original serialized ROS mask and7settled local-costmap observations of combined source. No node, process launch, action, scan or motor replay.",
+    "source_integrity_verified": true
   }
 }

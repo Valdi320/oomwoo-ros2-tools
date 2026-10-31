@@ -1440,8 +1440,12 @@ and return. No interior holes or costs outside the expected mask support
 are observed; both fully distant windows are clear. The effective frame is
 `odom`, resolution 0.02 m, rolling enabled, and the literal outer filter is
 active. The process exits 0 without memory-limit events. The linked receipt
-contains the exact fixture and captured costmaps. This verifies placement
-under supplied transforms, with no plant, scan, action goal or motor.
+contains the exact fixture and captured costmaps. A stricter offline review
+of those unchanged ROS bytes confirms exact cost 100 at all 4,886 projected
+forbidden-cell-centre observations, including boundaries and both source
+unknown cells. Five copied-grid negative controls each detect one altered
+cell while preserving the original bytes. This verifies placement under
+supplied transforms, with no plant, scan, action goal or motor.
 Actual plant motion, AMCL behavior and original full-room 90/80 acceptance
 remain open. Consolidate this component and inspect the already queued
 native captures before scheduling another run or changing AMCL parameters.
