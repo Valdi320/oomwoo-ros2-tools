@@ -1605,3 +1605,76 @@ Siguiente: nativo combinado exacto; coste máximo30min previsto por receta,
 beneficio esperado habilitar la medición real, sin garantizar el80%.
 Decisión avanzar por causa nueva discriminada; volver a diagnóstico si el
 resultado contradice la corrección.
+
+
+## Desviación de localización tras el relevo corregido — 31/10/2026
+
+El nativo de34a49a6/cc70b2a finaliza a las12:22:50CET, tras181,207s,
+con cobertura18,56%, medición válida y cero cruces/7409poses. Los cuatro
+primeros tránsitos ya cierran y ceden el control: supera el punto observado
+de la carrera corregida, sin demostrar todavía fiabilidad general. La
+siguiente parada sí es de seguridad de pose: edad10ms, pero celda ocupada100.
+Estimación usada(1,2981;-2,5370), posición física simultánea(1,5459;-2,3984).
+El soporte del televisor ocupa x[-0,1;1,3],y[-2,725;-2,275]. Nav2 se cancela
+por ese STOP; no es el aborto105. Sin OOM ni timeout;17fuentes intactas.
+
+En24pares originales AMCL/truth con sello idéntico, error mediano23,48cm,
+máximo27,77cm. El TF usado por el relé se reproduce a partir de las muestras:
+la postdatación5s añade retraso a la corrección, pero reducirla por sí sola
+no elimina los aproximadamente21cm de error que ya contiene AMCL. La
+seguridad de celda ocupada se conserva. En tres escaneos originales, con
+estática real del sensor, entre98,06% y99,17% de impactos quedan a5cm del
+mapa usando truth; en la estimación sólo62,50%–74,72%. Esto discrimina
+el error de estimación frente a un desacuerdo grueso del mapa con el láser.
+
+Se descarta adoptar sigma_hit=0,05 por esa intuición: el AMCL1.3.13 real,
+con73escaneos serializados y odometría originales133,2–147,6s, misma media
+y covarianza AMCL inicial y resto de parámetros, da error mediano19,04cm
+con0,2 y27,21cm con0,05. Truth sólo puntúa. No reproduce el estado exacto
+de partículas ni prueba navegación completa. Además el banco emitió las
+medidas pero no cerró por shutdown no esperado; parada de su contenedor
+propio terminó137. Se conserva como intento fallido, no verde. El contraste
+siguiente corrige ese transporte y discrimina likelihood_field frente al
+producto probabilístico con sigma0,2 y todos los rayos, según el código
+exacto deNav2; no una búsqueda libre de parámetros.
+
+Recibo: `src/oomwoo_sim_support/docs/evidence/native_localization_diagnosis_20261031.json`.
+Utilidad: relevo ya observado funcionando y bloqueo de localización acotado
+por sensores originales. Distancia:80% y cierre completo siguen abiertos.
+Siguiente incremento: contraste focal del modelo antes de otra habitación;
+coste acotado a sensores ya capturados, beneficio esperado discriminar una
+corrección de localización. Decisión diagnosticar; no relajar seguridad ni
+aplicar el ajuste rechazado. Un contraste real favorable y su verificación
+nativa cambiarían esa decisión.
+
+
+## Modelo probabilístico del láser en simulación — 31/10/2026
+
+El contraste nuevo termina rc0 y cierra los tres procesos. Con las mismas
+73lecturas, odometría, media/covarianza AMCL inicial y sigma_hit0,2, cambiar
+sólo likelihood_field→likelihood_field_prob reduce el error mediano de
+19,04 a5,97cm; máximo25,85→6,99cm y final17,15→5,71cm,24salidas por caso.
+Parámetros efectivos releídos. Truth sólo evalúa, no inicializa ni conduce.
+Con360rayos/max_beams120 ambas implementaciones usan paso3; beamskip=false.
+El código exacto1.3.13 combina sumas de cubos en el primero y producto en
+espacio logarítmico en el segundo. La consistencia conjunta penaliza los
+rayos que contradicen mobiliario aunque muchos coincidan con paredes.
+Fuentes: https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_amcl/src/sensors/laser/likelihood_field_model.cpp
+ y https://github.com/ros-navigation/navigation2/blob/1.3.13/nav2_amcl/src/sensors/laser/likelihood_field_model_prob.cpp.
+
+Se adopta únicamente laser_model_type=likelihood_field_prob en el AMCL del
+lanzamiento de simulación. Configuración general/hardware, sigma, odometría,
+postdatación TF5s, máscaras, medidor y seguridad se conservan. Recibo completo:
+`src/oomwoo_sim_support/docs/evidence/amcl_model_replay_20261031.json`.
+El banco reconstruye una distribución desde la media/covarianza original;
+no reproduce las mismas partículas históricas ni acredita el barrido.
+Utilidad focal: una corrección de localización discriminada con el binario.
+Mínimo pendiente: medirla en nativo completo y cumplir90/80/cero/cierre.
+Decisión avanzar con una copia congelada que sólo cambie este lanzamiento
+respecto al último nativo. Coste esperado una corrida, beneficio habilitar la
+medición del hito; fiabilidad y otras escenas quedan después del hito útil.
+
+Validación de entrega: ament_flake8 del lanzamiento sin problemas; un caso
+focal del grafo opt-in pasa. El primer intento del grafo falló antes de
+evaluarlo por ROS_LOG_DIR ausente en raíz de sólo lectura; se corrigió sólo
+el entorno a su tmpfs y se conservan ambos recibos.
