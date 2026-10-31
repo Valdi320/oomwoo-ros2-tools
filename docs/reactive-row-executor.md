@@ -1840,3 +1840,91 @@ procesos. Beneficio esperado evitar recuperaciones por esquinas, con coste
 pequeño de ruta y una corrida de validación; no garantía de80%. Decisión
 avanzar con este contraste. Si se cumple el hito, consolidar sin barrer más
 parámetros; fiabilidad entre escenas/semillas y hardware quedan después.
+
+
+## Umbral90/80 alcanzado; cierre aún pendiente — 31/10/2026
+
+El perfil normal0,25 supera el hito de movimiento: primer90% a792,8s con
+80,21% de eficiencia y106,72m (presupuesto107m; margen aproximado28cm).
+Cobertura final95,22%, eficiencia final69,27%, revisitas29,53%,
+end_reason=sweep_complete,pass=true,measurement_valid=true. Auditoría válida
+con46655poses/46654segmentos, cero cruces, máximo20ms entre poses y mínimo
+0,26226m a máscara. Dos poses originales adelantadas hasta10ms se retienen
+y auditan cuando el reloj llega: no se pierde ninguna cuerda. El valor
+efectivo lookahead0,25 queda confirmado; las17fuentes son idénticas al ensayo
+anterior y conservan sus hashes. No hay aborto Nav2, escape ni salto/OOM.
+
+NO se marca el goal completo: rc3 por segunda salida Gazebo(-15) trasACK de
+stop:true y escalada de Launch a los5s. Se detiene la línea de corridas
+completas repetidas; el siguiente oráculo es de cierre. Recibo íntegro,
+incluidos argumentos/logs/sensores y sus hashes, conservado sin reescritura:
+`src/oomwoo_sim_support/docs/evidence/default_lookahead_full_native_20261031.json`.
+
+Hipótesis nueva de cierre: el ejecutor inicia Stop por RPC y después Launch
+mandaSIGINT. ServerPrivate de gz-sim8 confirma que el ACK lanza un stopThread
+asíncrono, mientras OnSignal vuelve a llamar Stop; SensorsPrivate detiene y
+une su hilo de renderizado en ese camino. Esto respalda un posible doble
+cierre concurrente, no acredita aún atribución única del bloqueo. Se elimina
+sólo el RPC previo y su import no usado, conservando la partición privada,
+la petición Shutdown de Launch, su plazo5s y TODOS los fallos de hijos.
+No hay espera ampliada ni excepción nueva paraSIGTERM. El AST incrustado
+restante es idéntico tras quitar únicamente ese Try/import. Fuentes:
+https://github.com/gazebosim/gz-sim/blob/gz-sim8/src/ServerPrivate.cc
+ y https://github.com/gazebosim/gz-sim/blob/gz-sim8/src/systems/sensors/Sensors.cc.
+
+Pasan16casos focales existentes de cierre real de hijos y conservación de
+resultados/crashes, incluido -15 como fallo. Se ejecuta primero el mismo
+banco nativo con límite de pared60s: debe terminar wall_timeout/rc1 por
+ser un prefijo deliberado, conservando procesos cerrados sin fallo añadido.
+No es otra prueba90/80 ni se computará como cumplimiento del goal. Sólo
+con evidencia nueva favorable se volverá al largo con fuentes finales.
+
+Utilidad demostrada: movimiento95,22/80,21/cero/barrido bajo el oráculo
+original; margen pequeño, sin afirmar fiabilidad entre semillas o hardware.
+Mínimo pendiente: salida correcta en una ejecución nativa de la entrega final,
+recibo y commit. Próximo incremento sólo de cierre, beneficio quitar dos
+paradas superpuestas y coste un prefijo, antes de otro largo. Decisión
+consolidar el movimiento; no seguir variando sus parámetros. Si se confirma
+el hito completo, parar ampliaciones de menor retorno, con punto dulce
+provisional limitado a esta escena/perfil.
+
+
+## Diagnóstico de cierre y fusión de sus responsables — 31/10/2026
+
+Quitar sólo el RPC NO resuelve: prefijo60s, rc3, Gazebo necesitaSIGTERM.
+Ese cambio se descartó y se restituyó903148 antes del siguiente diagnóstico.
+Ampliar sólo el plazo tampoco: el diagnóstico privado20s permanece bloqueado
+y sale -15 a20,031877s. Ese plazo era diagnóstico, nunca se incorpora a la
+entrega ni se usa para declarar verde. Se conservan ambos rojos y sus fuentes.
+
+La CLI real8.15.0 cambia su nombre de proceso y, con-s, ejecuta runServer
+dentro del proceso Ruby/Fiddle; no hay un servidor hijo que cerrar por otra
+PID. La lectura del API local de Launch confirma que Shutdown mantiene sus
+escaladas existentes aun cuando no reenvía una señal ya emitida. Se conserva
+ahora la parada nativa de Gazebo trasACK positivo y se dirigeSIGINT sólo a
+los otros procesos propiedad de este Launch. La petición Shutdown permanece,
+con plazo original5s y clasificación de errores idéntica. SinACK se conserva
+el cierre estándar anterior de todos los hijos. La partición Gazebo sigue
+siendo privada. No se añade temporizador ni se aceptaSIGTERM como éxito.
+
+Pasan17casos focales existentes, con un caso nuevo del hijo que viviría20s y
+debe cerrar por señal. El prefijo nativo de la corrección confirmaACK positivo,
+contexto noninteractive=false, salida Gazebo0 a1,013542s y todos los otros
+hijos0; sin escalada ni fallo de proceso, sin OOM. Wrapperrc1 corresponde al
+wall_timeout60s deliberado, no a un fallo adicional de cierre. Auditoría válida
+2642poses, cero cruces. Es una comprobación corta; no sustituye al largo final.
+Fuentes exactas revisadas: Gazebo taggz-sim8_8.15.0 y API de Launch instalado.
+
+Recibo combinado: `src/oomwoo_sim_support/docs/evidence/coordinated_shutdown_delivery_20261031.json`.
+No se afirma una pila C++ concreta sin traza nativa del bloqueo. El contraste
+sí respalda separar la señal de ROS del RPC que ya detiene Gazebo, y conservar
+el mismo vigilante de salida para todos los hijos. El único cambio necesario
+pendiente de validar en largo es este cierre; no se vuelve a tocar movimiento,
+criterios90/80/cero, máscaras, radios, plan o perfil normal0,25 ya medido.
+
+Utilidad: 95,22/80,21/cero/barrido ya medido y un cierre focal correcto sin
+relajar controles. Mínimo pendiente: una corrida completa de las fuentes finales
+con retorno0 y todos los hijos cerrados, recibo y commit. Siguiente incremento:
+validación larga exacta con sólo wrapper cambiado; coste previsto18min, beneficio
+cerrar el hito. Decisión avanzar tras evidencia nueva y consolidar si pasa; sin
+más ajustes de rendimiento ni repetición ciega de los dos fallos de cierre.

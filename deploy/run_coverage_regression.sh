@@ -99,6 +99,7 @@ def scored(event, context):
     # The CLI bounds discovery/request time; this callback has a final bound too.
     # An accepted request does not prove server exit: always request the
     # existing Launch shutdown, retaining the scored result and child failures.
+    native_stopped = False
     try:
         stopped = subprocess.run([
             'gz', 'service', '-s', '/server_control',
@@ -107,8 +108,24 @@ def scored(event, context):
             capture_output=True, text=True, timeout=4)
         print('GZ_NATIVE_STOP', stopped.returncode, stopped.stdout.strip(),
               stopped.stderr.strip(), flush=True)
+        native_stopped = stopped.returncode == 0 and stopped.stdout.strip() == 'data: true'
     except (OSError, subprocess.TimeoutExpired) as exc:
         print('GZ_NATIVE_STOP unavailable:', exc, flush=True)
+    if native_stopped:
+        from signal import SIGINT
+        from launch.events.process import SignalProcess
+
+        # The native RPC already starts Gazebo's stop thread. Keep Launch's
+        # existing escalation timers for EVERY child, but do not send that
+        # server a second stop through SIGINT. Other owned processes still
+        # receive their framework signal; every nonzero failure stays visible.
+        return [
+            EmitEvent(event=Shutdown(reason='coverage scorer finished', due_to_sigint=True)),
+            EmitEvent(event=SignalProcess(
+                signal_number=SIGINT,
+                process_matcher=lambda action: not (action.process_details or {}).get(
+                    'name', '').startswith('gazebo-'))),
+        ]
     return [EmitEvent(event=Shutdown(reason='coverage scorer finished'))]
 
 

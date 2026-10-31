@@ -1,0 +1,536 @@
+{
+  "scope": "Post-scorer shutdown ownership only. Gazebo native RPC after verified ACK, SIGINT for other owned Launch children, existing five-second escalation for all; failure exit policy unchanged. No motion/metric/lease/mask/deadline relaxation. Original noninteractive=False LaunchContext checked in native.",
+  "native_runtime_version": "Gazebo8.15.0",
+  "upstream_sources": [
+    "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/ServerPrivate.cc",
+    "https://github.com/gazebosim/gz-sim/blob/gz-sim8_8.15.0/src/systems/sensors/Sensors.cc"
+  ],
+  "cases": {
+    "single_shutdown_prefix": {
+      "receipt": "/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/single_shutdown_prefix_20261031.json",
+      "sha256": "69f7fb68b71b34938d97cc9b09127cb04db450af6125e7f1cdb92a91bcffc0a2",
+      "rc": 3,
+      "seconds": 98.747,
+      "host_timeout": false,
+      "report": {
+        "coverage": 0.0458,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 1.0,
+        "revisit_ratio": 0.1224,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "wall_timeout",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false
+      },
+      "audit": {
+        "poses_before_mask": 0,
+        "poses": 2581,
+        "segments": 2580,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02,
+        "errors": [],
+        "first_footprint_crossing": null,
+        "min_sampled_center_to_mask_bbox_m": 0.2571038251468114,
+        "motion_by_phase": {
+          "IDLE": {
+            "poses": 514,
+            "distance_m": 3.0037579472466757e-09,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+          },
+          "SWEEP": {
+            "poses": 1140,
+            "distance_m": 2.5722888824821677,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.2571038251468114
+          },
+          "PREPARE_NAV": {
+            "poses": 137,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.4652157262398971
+          },
+          "TRANSIT": {
+            "poses": 790,
+            "distance_m": 1.6070325714142104,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.4652157262398971
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "source_hashes": {
+        "planner": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+        "scorer": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+        "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+        "wrapper": "4404fabc79fa43fe636ab703c61a30fd5b9b71276c9ca4d43b3714b22fc2bdff",
+        "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+        "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+        "witness": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c",
+        "relay": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6",
+        "nav2_config": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90",
+        "planner_production": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+        "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+        "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+        "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+        "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+        "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+        "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+        "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+      },
+      "input_unchanged": {
+        "planner": true,
+        "scorer": true,
+        "meter": true,
+        "wrapper": true,
+        "driver": true,
+        "journal": true,
+        "witness": true,
+        "relay": true,
+        "nav2_config": true,
+        "planner_production": true,
+        "coverage_launch": true,
+        "sim_launch": true,
+        "lifecycle_response_qos": true,
+        "world": true,
+        "map_yaml": true,
+        "map_image": true,
+        "keepout_builder": true
+      },
+      "shutdown_lines": [
+        "[ERROR] [gazebo-3]: process[gazebo-3] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'",
+        "COVERAGE_PROCESS_FAILURE gazebo-3 -15"
+      ],
+      "child_exits": [
+        "[INFO] [create-10]: process has finished cleanly [pid 717]",
+        "[INFO] [initialpose_pub-16]: process has finished cleanly [pid 892]",
+        "[ERROR] [coverage_regression_runner-12]: process has died [pid 719, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_3g7877rk'].",
+        "[INFO] [lifecycle_manager-20]: process has finished cleanly [pid 990]",
+        "[INFO] [parameter_bridge-9]: process has finished cleanly [pid 716]",
+        "[INFO] [lifecycle_manager-15]: process has finished cleanly [pid 891]",
+        "[INFO] [map_server-13]: process has finished cleanly [pid 889]",
+        "[INFO] [costmap_filter_info_server-6]: process has finished cleanly [pid 712]",
+        "[INFO] [lifecycle_manager-7]: process has finished cleanly [pid 714]",
+        "[INFO] [robot_state_publisher-8]: process has finished cleanly [pid 715]",
+        "[INFO] [amcl-14]: process has finished cleanly [pid 890]",
+        "[INFO] [map_server-5]: process has finished cleanly [pid 711]",
+        "[INFO] [bt_navigator-19]: process has finished cleanly [pid 989]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 708]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 710]",
+        "[INFO] [coverage_planner-11]: process has finished cleanly [pid 718]",
+        "[INFO] [planner_server-18]: process has finished cleanly [pid 988]",
+        "[INFO] [controller_server-17]: process has finished cleanly [pid 987]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 707]",
+        "[ERROR] [gazebo-3]: process has died [pid 709, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --force-version 8']."
+      ],
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "323\n",
+        "/sys/fs/cgroup/memory.peak": "1418141696\n",
+        "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      }
+    },
+    "shutdown_duration": {
+      "receipt": "/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/shutdown_duration_20261031.json",
+      "sha256": "577f9b8c91a253d672e5f4cf749bf43fca14a290d0c1ee245454b88b328879a8",
+      "rc": 3,
+      "seconds": 114.243,
+      "host_timeout": false,
+      "report": {
+        "coverage": 0.045,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 1.0,
+        "revisit_ratio": 0.1257,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "wall_timeout",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false
+      },
+      "audit": {
+        "poses_before_mask": 0,
+        "poses": 2562,
+        "segments": 2561,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02,
+        "errors": [],
+        "first_footprint_crossing": null,
+        "min_sampled_center_to_mask_bbox_m": 0.2591970162384543,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 11,
+            "distance_m": 7.640454854056702e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000327635671
+          },
+          "IDLE": {
+            "poses": 538,
+            "distance_m": 3.3902852405941864e-09,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+          },
+          "SWEEP": {
+            "poses": 1133,
+            "distance_m": 2.4576216048596375,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.2591970162384543
+          },
+          "PREPARE_NAV": {
+            "poses": 100,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.46045378383724017
+          },
+          "TRANSIT": {
+            "poses": 780,
+            "distance_m": 1.6040042991811814,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.46045378383724017
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "source_hashes": {
+        "planner": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+        "scorer": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+        "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+        "wrapper": "1fd2d8607528db37a0558e22bf35fed263f28b846d3c344aea980c58b9cde667",
+        "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+        "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+        "witness": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c",
+        "relay": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6",
+        "nav2_config": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90",
+        "planner_production": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+        "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+        "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+        "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+        "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+        "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+        "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+        "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+      },
+      "input_unchanged": {
+        "planner": true,
+        "scorer": true,
+        "meter": true,
+        "wrapper": true,
+        "driver": true,
+        "journal": true,
+        "witness": true,
+        "relay": true,
+        "nav2_config": true,
+        "planner_production": true,
+        "coverage_launch": true,
+        "sim_launch": true,
+        "lifecycle_response_qos": true,
+        "world": true,
+        "map_yaml": true,
+        "map_image": true,
+        "keepout_builder": true
+      },
+      "shutdown_lines": [
+        "[ERROR] [gazebo-3]: process[gazebo-3] failed to terminate '20' seconds after receiving 'SIGINT', escalating to 'SIGTERM'",
+        "GZ_CLOSE_DURATION 20.031877 -15",
+        "COVERAGE_PROCESS_FAILURE gazebo-3 -15"
+      ],
+      "child_exits": [
+        "[INFO] [create-10]: process has finished cleanly [pid 717]",
+        "[INFO] [initialpose_pub-16]: process has finished cleanly [pid 868]",
+        "[ERROR] [coverage_regression_runner-12]: process has died [pid 719, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_y008nutl'].",
+        "[INFO] [parameter_bridge-9]: process has finished cleanly [pid 716]",
+        "[INFO] [robot_state_publisher-8]: process has finished cleanly [pid 715]",
+        "[INFO] [lifecycle_manager-15]: process has finished cleanly [pid 867]",
+        "[INFO] [costmap_filter_info_server-6]: process has finished cleanly [pid 712]",
+        "[INFO] [lifecycle_manager-7]: process has finished cleanly [pid 714]",
+        "[INFO] [map_server-5]: process has finished cleanly [pid 711]",
+        "[INFO] [lifecycle_manager-20]: process has finished cleanly [pid 990]",
+        "[INFO] [map_server-13]: process has finished cleanly [pid 865]",
+        "[INFO] [amcl-14]: process has finished cleanly [pid 866]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 710]",
+        "[INFO] [bt_navigator-19]: process has finished cleanly [pid 989]",
+        "[INFO] [coverage_planner-11]: process has finished cleanly [pid 718]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 708]",
+        "[INFO] [controller_server-17]: process has finished cleanly [pid 987]",
+        "[INFO] [planner_server-18]: process has finished cleanly [pid 988]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 707]",
+        "[ERROR] [gazebo-3]: process has died [pid 709, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 1 /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/worlds/test_room.world --force-version 8']."
+      ],
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "326\n",
+        "/sys/fs/cgroup/memory.peak": "1067085824\n",
+        "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      }
+    },
+    "coordinated_shutdown_prefix": {
+      "receipt": "/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/coordinated_shutdown_prefix_20261031.json",
+      "sha256": "7ea1ab4eb1a30147a81fbf2edc0b6c0b7d3b621fa2ada00ec434df4c27133a45",
+      "rc": 1,
+      "seconds": 92.26,
+      "host_timeout": false,
+      "report": {
+        "coverage": 0.0415,
+        "coverage_target": 0.9,
+        "target_crossed": false,
+        "efficiency_at_target": null,
+        "efficiency_final": 1.0,
+        "revisit_ratio": 0.1342,
+        "efficiency_target": 0.8,
+        "time_to_target_s": null,
+        "end_reason": "wall_timeout",
+        "sim_unstable": false,
+        "measurement_valid": true,
+        "pass": false
+      },
+      "audit": {
+        "poses_before_mask": 0,
+        "poses": 2642,
+        "segments": 2641,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02,
+        "errors": [],
+        "first_footprint_crossing": null,
+        "min_sampled_center_to_mask_bbox_m": 0.2594949813315793,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 71,
+            "distance_m": 3.4812370779898755e-09,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000300463755
+          },
+          "IDLE": {
+            "poses": 618,
+            "distance_m": 6.730936480099809e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.6500000298588342
+          },
+          "SWEEP": {
+            "poses": 1093,
+            "distance_m": 2.384479704518447,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.2594949813315793
+          },
+          "PREPARE_NAV": {
+            "poses": 100,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.48090302891405246
+          },
+          "TRANSIT": {
+            "poses": 760,
+            "distance_m": 1.57701679741771,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.48090302891405246
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "source_hashes": {
+        "planner": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+        "scorer": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+        "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+        "wrapper": "6f851976b96bce229dbee0a2fc0fe55d4dfb642c9650838d15162be5d334290d",
+        "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+        "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+        "witness": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c",
+        "relay": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6",
+        "nav2_config": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90",
+        "planner_production": "4be37aef1bf865c91399dd421175c5f11566e6d3967201b02f98f790812c79a8",
+        "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+        "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+        "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+        "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+        "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+        "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+        "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+      },
+      "input_unchanged": {
+        "planner": true,
+        "scorer": true,
+        "meter": true,
+        "wrapper": true,
+        "driver": true,
+        "journal": true,
+        "witness": true,
+        "relay": true,
+        "nav2_config": true,
+        "planner_production": true,
+        "coverage_launch": true,
+        "sim_launch": true,
+        "lifecycle_response_qos": true,
+        "world": true,
+        "map_yaml": true,
+        "map_image": true,
+        "keepout_builder": true
+      },
+      "shutdown_lines": [
+        "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix.",
+        "GZ_STOP_OWNERSHIP True False",
+        "GZ_CLOSE_DURATION 1.013542 0"
+      ],
+      "child_exits": [
+        "[INFO] [create-10]: process has finished cleanly [pid 717]",
+        "[INFO] [initialpose_pub-16]: process has finished cleanly [pid 870]",
+        "[ERROR] [coverage_regression_runner-12]: process has died [pid 719, exit code 1, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_regression_runner --ros-args --params-file /tmp/launch_params_y1wx30ol'].",
+        "[INFO] [map_server-5]: process has finished cleanly [pid 711]",
+        "[INFO] [robot_state_publisher-8]: process has finished cleanly [pid 715]",
+        "[INFO] [lifecycle_manager-7]: process has finished cleanly [pid 714]",
+        "[INFO] [parameter_bridge-9]: process has finished cleanly [pid 716]",
+        "[INFO] [lifecycle_manager-20]: process has finished cleanly [pid 990]",
+        "[INFO] [costmap_filter_info_server-6]: process has finished cleanly [pid 713]",
+        "[INFO] [amcl-14]: process has finished cleanly [pid 868]",
+        "[INFO] [map_server-13]: process has finished cleanly [pid 867]",
+        "[INFO] [lifecycle_manager-15]: process has finished cleanly [pid 869]",
+        "[INFO] [ground_truth-4]: process has finished cleanly [pid 710]",
+        "[INFO] [python3-1]: process has finished cleanly [pid 707]",
+        "[INFO] [gazebo-3]: process has finished cleanly [pid 709]",
+        "[INFO] [dock_drive-2]: process has finished cleanly [pid 708]",
+        "[INFO] [bt_navigator-19]: process has finished cleanly [pid 989]",
+        "[INFO] [planner_server-18]: process has finished cleanly [pid 988]",
+        "[INFO] [coverage_planner-11]: process has finished cleanly [pid 718]",
+        "[INFO] [controller_server-17]: process has finished cleanly [pid 987]"
+      ],
+      "cgroup": {
+        "/sys/fs/cgroup/pids.events": "max 0\n",
+        "/sys/fs/cgroup/pids.peak": "323\n",
+        "/sys/fs/cgroup/memory.peak": "1174032384\n",
+        "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+      }
+    }
+  },
+  "unit_contract": {
+    "rc": 0,
+    "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 6 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8519 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "args": [
+      "podman",
+      "run",
+      "-i",
+      "--rm",
+      "--name",
+      "oomwoo-coordinated-shutdown-contract-20261031",
+      "--pull=never",
+      "--network=none",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges",
+      "--security-opt=label=disable",
+      "--read-only",
+      "--tmpfs",
+      "/tmp:rw,exec,size=128m,mode=1777",
+      "--memory=512m",
+      "--memory-swap=512m",
+      "--cpus=.25",
+      "--pids-limit=96",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-acoplamiento:/work:ro",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/terminal_order_full_native_20261031.json:/record.json:ro",
+      "-v",
+      "/var/home/Valdi/Documents/Codex/2026-10-30/oomwoo-integracion-limpieza:/contrib:ro",
+      "--entrypoint",
+      "/bin/bash",
+      "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+      "-lc",
+      "source /opt/ros/jazzy/setup.bash && source /ros_ws/install/setup.bash && ROS_LOG_DIR=/tmp/roslogs ROS_HOME=/tmp/ros-home PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=/work/src/oomwoo_sim_support:/contrib/src:$PYTHONPATH python3 -"
+    ],
+    "fixture_python": "import pytest\nraise SystemExit(pytest.main(['-q','-p','no:cacheprovider','/work/src/oomwoo_sim_support/test/test_coverage_runner_bounds.py','-k','native_stop_ack or framework_stop_interrupt or wrapper_retains_owned_process_failures']))\n",
+    "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/coordinated_shutdown_contract_20261031.log",
+    "raw_sha256": "056e5de1857b574cdbc58184ad2372f11af61428c11adf72e81ca3baac8a6abc",
+    "log": ".................                                                        [100%]\n17 passed, 51 deselected in 5.29s\n"
+  },
+  "local_framework_source_read": {
+    "rc": 0,
+    "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 2 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8478 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "args": [
+      "podman",
+      "run",
+      "--rm",
+      "--pull=never",
+      "--network=none",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges",
+      "--read-only",
+      "--memory=256m",
+      "--memory-swap=256m",
+      "--cpus=.25",
+      "--pids-limit=32",
+      "--entrypoint",
+      "/bin/bash",
+      "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+      "-lc",
+      "source /opt/ros/jazzy/setup.bash && python3 -c 'import inspect\nfrom launch.actions.execute_local import ExecuteLocal\nfrom launch.events.process import SignalProcess\nfrom launch.events import Shutdown\nfor n,fn in ExecuteLocal.__dict__.items():\n if ('\"'\"'on_shutdown'\"'\"' in n or '\"'\"'shutdown_process'\"'\"' in n or n=='\"'\"'process_details'\"'\"') and (callable(fn) or isinstance(fn,property)):print(n,inspect.getsource(fn.fget if isinstance(fn,property) else fn))\nprint(inspect.getsource(SignalProcess));print(inspect.getsource(Shutdown))'"
+    ],
+    "stdout": "process_details     @property\n    def process_details(self):\n        \"\"\"Getter for the process details, e.g. name, pid, cmd, etc., or None if not started.\"\"\"\n        return self.__process_event_args\n\n_shutdown_process     def _shutdown_process(self, context, *, send_sigint):\n        if self.__shutdown_future is None or self.__shutdown_future.done():\n            # Execution not started or already done, nothing to do.\n            return None\n\n        if self.__completed_future is None:\n            # Execution not started so nothing to do, but self.__shutdown_future should prevent\n            # execution from starting in the future.\n            self.__shutdown_future.set_result(None)\n            return None\n        if self.__completed_future.done():\n            # If already done, then nothing to do.\n            self.__shutdown_future.set_result(None)\n            return None\n\n        # Defer shut down if the process is scheduled to be started\n        if (self.process_details is None or self._subprocess_transport is None):\n            # Do not set shutdown result, as event is postponed\n            context.register_event_handler(\n                OnProcessStart(\n                    on_start=lambda event, context:\n                    self._shutdown_process(context, send_sigint=send_sigint)))\n            return None\n\n        self.__shutdown_future.set_result(None)\n\n        # Otherwise process is still running, start the shutdown procedures.\n        context.extend_locals({'process_name': self.process_details['name']})\n        actions_to_return = self.__get_shutdown_timer_actions()\n        if send_sigint:\n            actions_to_return.append(self.__get_sigint_event())\n        return actions_to_return\n\n_ExecuteLocal__on_shutdown_process_event     def __on_shutdown_process_event(\n        self,\n        context: LaunchContext\n    ) -> Optional[LaunchDescription]:\n        typed_event = cast(ShutdownProcess, context.locals.event)\n        if not typed_event.process_matcher(self):\n            # this event whas not intended for this process\n            return None\n        return self._shutdown_process(context, send_sigint=True)\n\n_ExecuteLocal__on_shutdown     def __on_shutdown(self, event: Event, context: LaunchContext) -> Optional[SomeEntitiesType]:\n        due_to_sigint = cast(Shutdown, event).due_to_sigint\n        return self._shutdown_process(\n            context,\n            send_sigint=not due_to_sigint or context.noninteractive,\n        )\n\nclass SignalProcess(ProcessTargetedEvent):\n    \"\"\"Event emitted when a signal should be sent to a process.\"\"\"\n\n    name = 'launch.events.process.SignalProcess'\n\n    def __init__(\n        self, *,\n        signal_number: Union[Text, signal_module.Signals],\n        process_matcher: Callable[['ExecuteLocal'], bool]\n    ) -> None:\n        \"\"\"\n        Create a SignalProcess event.\n\n        Takes an optional process matcher, which can be used to match the\n        signal to a process.\n\n        Since Windows does not support SIGKILL, the string 'SIGKILL' can be\n        given instead of `signal.SIGKILL`.\n        Handlers of this event can then check for the 'SIGKILL' string and do\n        the appropriate thing on Windows instead of sending a signal.\n\n        :signal_number: either the string 'SIGKILL' or a signal.Signals\n        \"\"\"\n        super().__init__(process_matcher=process_matcher)\n        ensure_argument_type(\n            signal_number, (str, signal_module.Signals), 'signal_number', 'SignalProcess')\n        self.__signal = signal_number\n\n    @property\n    def signal(self) -> Union[Text, signal_module.Signals]:\n        \"\"\"Getter for signal, it will be 'SIGKILL' or match something from the signal module.\"\"\"\n        return self.__signal\n\n    @property\n    def signal_name(self) -> Text:\n        \"\"\"\n        Getter for signal_name.\n\n        It will be something like (e.g.) 'SIGINT'.\n        \"\"\"\n        return self.__signal if isinstance(self.__signal, str) else self.__signal.name\n\nclass Shutdown(Event):\n    \"\"\"Event that is emitted on shutdown of a launched system.\"\"\"\n\n    name = 'launch.events.Shutdown'\n\n    def __init__(self, *, reason: Text = 'reason not given', due_to_sigint: bool = False) -> None:\n        \"\"\"Create a Shutdown event.\"\"\"\n        self.__reason = reason\n        self.__due_to_sigint = due_to_sigint\n\n    @property\n    def reason(self):\n        \"\"\"Getter for reason.\"\"\"\n        return self.__reason\n\n    @property\n    def due_to_sigint(self):\n        \"\"\"Getter for due_to_sigint.\"\"\"\n        return self.__due_to_sigint\n\n",
+    "stderr": ""
+  },
+  "ruby_entrypoint_source_read": {
+    "rc": 0,
+    "guard": "OCUPADA: la maquina la tiene \u00abel propietario esta jugando (AppID 3321460): su partida manda sobre cualquier trabajo\u00bb desde hace 8 min (pid 4763). Espera a que suelte, o haz algo que no compita.\nDISPONIBILIDAD_GPU: LIBRE AHORA (8512 MiB); usa igualmente el turno para impedir que la IA se recargue a mitad del trabajo. USA: python3 ~/.local/bin/vanster-turno-de-gpu.py con --para \"MOTIVO CONCRETO\" --gb 8 -- COMANDO Y ARGUMENTOS\n",
+    "args": [
+      "podman",
+      "run",
+      "--rm",
+      "--pull=never",
+      "--network=none",
+      "--cap-drop=ALL",
+      "--security-opt=no-new-privileges",
+      "--read-only",
+      "--memory=256m",
+      "--memory-swap=256m",
+      "--cpus=.25",
+      "--pids-limit=32",
+      "--entrypoint",
+      "python3",
+      "65bec2e9c5122c286ef4f34e9e99e94f90e3583d8a9f960cc3422c624e61452f",
+      "-c",
+      "from pathlib import Path;p=Path('/opt/ros/jazzy/opt/gz_tools_vendor/bin/gz');s=p.read_text();print(s[:23000])"
+    ],
+    "stdout": "#!/usr/bin/env ruby\n# frozen_string_literal: true\n\n# Copyright (C) 2019 Open Source Robotics Foundation\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n\nrequire 'optparse'\nrequire 'yaml'\n\n# Module to wrap included shared library module\nmodule SharedLibInterface\n  # We use 'dl' for Ruby <= 1.9.x and 'fiddle' for Ruby >= 2.0.x\n  if RUBY_VERSION.split('.')[0] < '2'\n    require 'dl'\n    require 'dl/import'\n    include DL\n  else\n    require 'fiddle'\n    require 'fiddle/import'\n    include Fiddle\n  end\nend\n\n# List of required keys in each YAML file.\n#  - format: Format of the YAML file. This version has to be supported by this\n#            script.\n#  - library_version: Expected library version to work with the conf file.\n#  - library: Name of the shared library that will handle the commands.\n#  - commands: List of top level commands supported by the library, as well as\n#              a brief description.\nrequired_tags =\n  {\n    '1.0.0' => %w[format library_name library_version library_path commands]\n  }\n\ncommands = {}\nyaml_found = false\n\nconf_dirs = '/opt/ros/jazzy/opt/gz_tools_vendor/share/gz/'\nconf_dirs = ENV['GZ_CONFIG_PATH'] if ENV.key?('GZ_CONFIG_PATH')\n\nconf_dirs = conf_dirs.split(':')\n\n# Deprecated\nconf_dirs.append(ENV['IGN_CONFIG_PATH']) if ENV.key?('IGN_CONFIG_PATH')\n\nconf_dirs.each do |conf_directory|\n  next if Dir.glob(\"#{conf_directory}/*.yaml\").empty?\n\n  yaml_found = true\n\n  # Iterate over the list of configuration files.\n  Dir.glob(\"#{conf_directory}/*.yaml\") do |conf_file|\n    next if conf_file == [',', '..'].any?\n\n    # Read the configuration file.\n    yml = YAML.load_file(conf_file)\n\n    # Sanity check: Verify that the content of the file is YAML.\n    unless yml && yml.is_a?(Hash)\n      puts \"Configuration warning: File [#{conf_file}] does not contain a \"\\\n           'valid YAML format. Ignoring this configuration file.'\n      next\n    end\n\n    # Sanity check: Verify that the the configuration file format is supported.\n    unless yml.key?('format') && required_tags.key?(yml['format'])\n      puts \"Configuration error: File [#{conf_file}] uses format \"\\\n           \"#{yml[format]} but this version is not supported.\"\n      exit(-1)\n    end\n\n    # Sanity check: Verify that the format of the conf file is correct.\n    required_tags[yml['format']].each do |tag|\n      # Verify that the YAML file contains the needed keys.\n      unless yml.key?(tag)\n        puts \"Configuration error: File [#{conf_file}] has a missing key. \"\\\n             \"Make sure that the file contains '#{tag}'.\"\n        exit(-1)\n      end\n\n      # Verify that the value for this key is not empty.\n      next if yml[tag]\n\n      puts \"Configuration error: File [#{conf_file}] does not contain any \"\\\n           \"value for the key '#{tag}'.\"\n      exit(-1)\n    end\n\n    yml['commands'].each do |cmd|\n      cmd.each do |key, value|\n        # Sanity check: Verify that we have a non-empty key and value.\n        unless key && value\n          puts \"Configuration error: File [#{conf_file}] contains an empty \"\\\n               \"value in the 'commands' section.\"\n          exit(-1)\n        end\n\n        # Sanity check: A 'help' command is not allowed.\n        if key.eql? 'help'\n          puts \"Configuration error: File [#{conf_file}] contains a command \"\\\n               \"named 'help' but this is a reserved name.\"\n          exit(-1)\n        end\n\n        # Sanity check: Verify that a command has not been used before by other\n        # library.\n        if commands.key?(key) &&\n           commands[key].values[0]['library_name'] != yml['library_name']\n          puts \"Configuration error: File [#{conf_file}] contains a command \"\\\n               'already registered by '\\\n               \"#{commands[key].values[0]['library_name']}.\"\n          exit(-1)\n        end\n\n        # Create a hash where the command is the key and the value contains all\n        # the additional information (in a hash).\n        if !commands.key?(key)\n          commands[key] =\n            { yml['library_version'] =>\n              {\n                'library_name' => yml['library_name'],\n                'library_path' => yml['library_path'],\n                'description' => value\n              } }\n        else\n          new_value = {}\n          new_value[yml['library_version']] =\n            {\n              'library_name' => yml['library_name'],\n              'library_path' => yml['library_path'],\n              'description' => value\n            }\n          commands[key].update(new_value)\n        end\n      end\n    end\n  end\nend\n\n# Check that we have at least one configuration file with gz commands.\nunless yaml_found\n  puts \"I cannot find any available 'gz' command:\\n\"\\\n       \"\\t* Did you install any Gazebo library?\\n\"\\\n       \"\\t* Did you set the GZ_CONFIG_PATH environment variable?\\n\"\\\n       \"\\t    E.g.: export GZ_CONFIG_PATH=$HOME/local/share/gz\\n\"\n  exit(-1)\nend\n\n# Use an auxiliary hash to sort the commands ordered by version. Newest\n# versions go first.\nsorted_commands = {}\ncommands.each do |cmd, versions|\n  sorted_commands[cmd] = versions.sort_by do |k, _v|\n    # Prereleases include the \"~\" symbol. However Gem::Version doesn't support\n    # it, so we remove it.\n    k = k.tr('~', '')\n    Gem::Version.new(k)\n  end.reverse\nend\n\n# Commands is a hash where the key is the command and the value is a list.\ncommands = sorted_commands\n\n# Debug: show the list of available commands.\n# puts commands\n\n# Read the command line arguments.\nusage = 'The \\'gz\\' command provides a command line interface to the Gazebo'\\\n        \" Tools.\\n\\n\"\\\n        \"  gz <command> [options]\\n\\n\"\\\n        \"List of available commands:\\n\\n\"\\\n        \"  help:          Print this help text.\\n\"\n\n# Used to align the commands and the description.\npadding_width = 15\ncommands.keys.sort.each do |cmd|\n  versions = commands[cmd]\n  # Calculate the padding to add between the command and the description.\n  padding_to_apply = padding_width - cmd.size - 1\n  padding = ''\n  padding_to_apply.times do\n    padding += ' '\n  end\n\n  usage += \"  #{cmd}:#{padding}#{versions.first[1]['description']}\\n\"\nend\n\nusage += \"\\nOptions:\\n\\n\"\\\n         \"  --force-version <VERSION>  Use a specific library version.\\n\"\\\n         \"  --versions                 Show the available versions.\\n\"\\\n         '  --commands                 Show the available commands.'\n\nusage += \"\\nUse 'gz help <command>' to print help for a command.\\n\"\n\nOptionParser.new do |opts|\n  opts.banner = usage\nend.parse\n\n# The user wants to show the available commands.\nif ARGV.include?('--commands')\n  commands.each_key do |cmd|\n    puts cmd\n  end\n\n  exit(0)\nend\n\n# Check that there is at least one command and there is a plugin that knows\n# how to handle it.\nif ARGV.empty? || (ARGV[0] != 'help' && !commands.key?(ARGV[0]))\n  puts usage\n  exit(-1)\nend\n\n# The 'help' command is managed here.\nif ARGV[0].eql? 'help'\n\n  # Sanity check: Verify that there is a known command after help.\n  unless ARGV.size == 2 && commands.key?(ARGV[1])\n    puts usage\n    exit(0)\n  end\n\n  # Remove the help command and append --help.\n  ARGV.delete_at(0)\n  ARGV.append('--help')\nend\n\nversion_index = 0\n\n# The user wants to use a specific version of the command.\nif ARGV.include?('--force-version')\n  i = ARGV.index('--force-version')\n\n  # Sanity check: Verify that there is an argument after --force-version\n  unless ARGV.size >= i + 2\n    puts usage\n    exit(-1)\n  end\n  required_version = ARGV.at(i + 1)\n\n  # Sanity check: The version value shouldn't start with '-' or '--'.\n  if required_version.start_with?('-', '--')\n    puts usage\n    exit(-1)\n  end\n\n  # Sanity check: Verify if we have the command for the specified version.\n  found = false\n  required_arr = required_version.split('.')\n  commands[ARGV[0]].each_with_index do |version, index|\n    version_arr = version.first.split('.')\n    next unless required_arr.zip(version_arr).map \\\n      { |required, current| required == current }.all?\n\n    found = true\n    version_index = index\n    break\n  end\n\n  unless found\n    puts 'Version error: I cannot find this command in '\\\n         \"version [#{required_version}].\"\n    exit(-1)\n  end\n\n  ARGV.delete_at(i)\n  ARGV.delete_at(i)\nend\n\n# The user wants to show the available versions.\nif ARGV.include?('--versions')\n  commands[ARGV[0]].each do |version|\n    puts version.first\n  end\n\n  exit(0)\nend\n\nif defined? RubyInstaller\n  # RubyInstaller does not search for dlls in PATH\n  # https://github.com/oneclick/rubyinstaller2/wiki/For-gem-developers#-dll-loading\n  ENV['RUBY_DLL_PATH'] = ENV['PATH']\n  RubyInstaller::Runtime.enable_dll_search_paths\nend\n\n# Start Backward before loading plugins\nbegin\n  backward_lib = File.expand_path('../lib/libgz-tools2-backward.so.2.0.4', __dir__)\n  SharedLibInterface::Importer.dlload backward_lib\nrescue SharedLibInterface::DLError\n  warn \"Library error: #{backward_lib} not found. Improved backtrace\"\\\n       ' generation will be disabled'\nend\n\n# Read the plugin that handles the command.\ncmd_rb_library = commands[ARGV[0]].at(version_index)[1]['library_path']\n# Pass the request to the specific ruby library.\nrequire cmd_rb_library\ncmd = Cmd.new\n\n# Set the process title to something nice.\nProcess.setproctitle(\"gz #{ARGV.join(' ')}\")\n\ncmd.execute(ARGV)\n\n",
+    "stderr": ""
+  },
+  "canonical_wrapper_sha256": "c91153e3e9e0fdc590779624a15e014dc0f3c8acea958b73095d414ab2664bdf",
+  "limits": [
+    "Short60s prefix proves bounded teardown compatibility, not full-room90/80 of final wrapper.",
+    "No claim of unique C++ deadlock mechanism without a native stack trace. Controlled single-protocol results and local8.15/API sources support this correction.",
+    "Native ACK failure retains old whole-stack Launch shutdown fallback. SIGTERM/crashes remain execution failures."
+  ]
+}

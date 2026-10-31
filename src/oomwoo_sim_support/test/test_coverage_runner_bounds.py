@@ -296,6 +296,7 @@ def test_ground_truth_audit_reports_insufficient_sample_cadence():
 @pytest.mark.parametrize('score_code,child_code,child_delay,expected', [
     (0, 139, 0.4, 3),
     (0, 0, 0.4, 0),
+    (0, 0, 20.0, 0),  # a long-lived child must receive the owned shutdown signal
     (1, 0, 0.4, 1),
     (2, 0, 0.4, 2),
     (0, 139, 0.01, 3),
