@@ -34,7 +34,7 @@
     "candidate": "Existing FollowPath.rotate_to_heading_min_angle.6 vs.35 in private simulation parameters only; same start/goal, world, mask, speeds, lookahead, footprint and relay guard.",
     "acceptance": "Short causal Gazebo pair through existing FIFO; actual path/carrot/commands/pose source or receipt provenance, valid independent Keepout and real goal/STOP lifecycle. Preserve scorer failure for incomplete full90/80. No source adoption if path/clearance does not improve.",
     "minimum": "Prepare identical source freezes with one existing parameter difference and bounded passive topic capture in existing runner; test recorded-point cold-start scenario explicitly, not exact historical replay. Inspect baseline before running candidate.",
-    "decision": "Consolidate cheap discriminating evidence, advance to one controlled physical-simulation contrast; hold production parameter change and full-room repetition.",
+    "decision": "Controlled movement follow-up completed as two negative reproductions. Defer candidate and close cold-start line; next actual normal-plan failure requires original coupled evidence.",
     "benefit_cost": "Two actual-binary checks took13.432+14.723s at.25CPU512MiB/noGPU; peaks229257216/104591360B, no memory events. They distinguish configured planner clearance from RPP branch behavior before a heavier run.",
     "evidence_that_changes_decision": "Baseline fails to reproduce arc: reassess moving pose/path data rather than claim fix. Candidate improves clearance and completes same motion: consider configuration correction, then separate original SWEEP first-crossing and full90/80."
   },
@@ -43,5 +43,10 @@
     "nav2_path_contract_20261031.json": "14ef4383e1d38f44e117f48e32af85a1fedc94ac7a4c0aea54e9258c4bd1b1f7",
     "rpp_heading_contract_20261031.json": "864cedebe529ada0d747d1ff2a3f86f18bc1dce6142cf133dfea37f5024adb25"
   },
-  "hygiene": "Only receipt/docs delivered here; original YAML and planner hashes unchanged. No remote write, hardware, new persistent tool/timer/gate or suite."
+  "hygiene": "Only receipt/docs delivered here; original YAML and planner hashes unchanged. No remote write, hardware, new persistent tool/timer/gate or suite.",
+  "native_followup": {
+    "receipt": "heading_cold_native_delivery_20261031.json",
+    "outcome": "Two cold native goals succeed/valid0crossings; predictededge forward command occurs but no guard failure. Does not establish.35 fix.",
+    "decision": "Defer.35 change and further cold variants; diagnose first real crossing under normal-plan history."
+  }
 }

@@ -52,9 +52,14 @@ ROS wire geometry. With this path and a fixed declared TF, actual RPP
 changes from forward-turn motion to rotation in place when its existing
 heading threshold changes from 0.6 to 0.35 rad. These are static-scene
 checks without historical laser costs or a moving plant. The threshold
-remains unchanged in production; a short controlled Gazebo contrast is
-needed before claiming corrected tracking. The published carrot has a
-zero source stamp, which must not be treated as freshness evidence.
+remains unchanged in production. Two subsequent [cold-start Gazebo cases](../src/oomwoo_sim_support/docs/evidence/heading_cold_native_delivery_20261031.json)
+completed their actual Nav2 goals with valid audit and zero crossings,
+including a first forward command near the 0.6 rad alignment threshold.
+They did not reproduce the historical guard, so the 0.35 rad change is
+deferred and further cold variants have lower return than locating the
+first actual normal-plan crossing with coupled pose/command timing.
+The static fixture published a zero carrot stamp; moving native records
+have their own observed nonzero stamps. Neither is synthesized.
 
 Masked full-room acceptance remains open: the [earlier peer map-frame trial](../src/oomwoo_sim_support/docs/evidence/nav_frame_peer_review_20261030.json)
 reported 96% coverage and 77.34% first-target efficiency, below the unchanged

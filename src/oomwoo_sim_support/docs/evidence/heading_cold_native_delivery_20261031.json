@@ -1,0 +1,447 @@
+{
+  "recorded_utc": "2026-10-31T00:12:30.582326+00:00",
+  "scope": "Two controlled cold-start single-goal Gazebo cases using configured private map-frame integration; not an exact historical replay, full normal-plan trial or physical robot.",
+  "outcome": "No reproduction of the native839 motion fault. Both actual goals succeeded with valid independent audit and zero crossings. Do not infer a fix or historical cause from alignment alone.",
+  "cases": {
+    "recorded_start": {
+      "receipt": "heading_before_native_20261031.json",
+      "fifo_ticket": 858,
+      "seconds": 42.138,
+      "source_sha256": {
+        "planner": "32f0aa15f3282b7681988d33878fdcccb1d4f32e71834cff649aaf8c4dfe1a86",
+        "scorer": "b7b1ec3cf016b40cda7d73d80718758c0690f7ae001d4207dea7c34fdfffbf92",
+        "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+        "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+        "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+        "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+        "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+        "relay": "cf39838e3cf381e2b6b0bb8d52904dceaee9aa18ee03997e4891862c72ba898b",
+        "nav2_config": "c16b7f77f36a2e0c284aa7758594b1bce491db3b97e65b17f0dfa3659f6d2696",
+        "planner_production": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98",
+        "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+        "sim_launch": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+        "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+        "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+        "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+      },
+      "journal": {
+        "job_id": "coverage_sweep",
+        "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+        "outcome": "succeeded",
+        "revision": 3,
+        "schema": 1,
+        "state": "terminal",
+        "target_cell": 10700,
+        "token": "7af52354c8a147dca295e56f26b4e5cf-1",
+        "uuid": "6c23f5f918754400abd12ca19df6a212"
+      },
+      "original_states": [
+        {
+          "wall": 422469.744925939,
+          "sim": 10.0,
+          "states": [
+            [
+              "6c23f5f918754400abd12ca19df6a212",
+              2
+            ]
+          ]
+        },
+        {
+          "wall": 422475.594202,
+          "sim": 15.795000000000002,
+          "states": [
+            [
+              "6c23f5f918754400abd12ca19df6a212",
+              4
+            ]
+          ]
+        }
+      ],
+      "grade": {
+        "coverage": 0.0109,
+        "efficiency_at_target": null,
+        "target_crossed": false,
+        "end_reason": "sweep_complete",
+        "measurement_valid": true,
+        "pass": false
+      },
+      "keepout": {
+        "poses_before_mask": 0,
+        "poses": 1000,
+        "segments": 999,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02,
+        "errors": [],
+        "first_footprint_crossing": null,
+        "min_sampled_center_to_mask_bbox_m": 0.29283389740156773,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 10,
+            "distance_m": 6.990083698686584e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.39026197876553437
+          },
+          "IDLE": {
+            "poses": 610,
+            "distance_m": 3.4664230629202707e-09,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.29438626789220673
+          },
+          "SWEEP": {
+            "poses": 20,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.29438626789220673
+          },
+          "PREPARE_NAV": {
+            "poses": 50,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.39026197627285963
+          },
+          "TRANSIT": {
+            "poses": 310,
+            "distance_m": 0.6056255886457362,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.29283389740156773
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "tracking_counts": {
+        "path": 1,
+        "local_path": 8,
+        "carrot": 29,
+        "rotation": 29,
+        "nav_cmd": 30,
+        "truth": 182,
+        "errors": 0
+      },
+      "first_forward_command": {
+        "received_monotonic_s": 422471.165807979,
+        "received_ros_ns": 11420000000,
+        "header_stamp_ns": null,
+        "frame": null,
+        "dds_source_timestamp": 1793405065607078642,
+        "dds_received_timestamp": 1793405065607095022,
+        "dds_publication_sequence_number": 8,
+        "dds_reception_sequence_number": null,
+        "vw": [
+          0.14,
+          -0.2649939687266207
+        ]
+      },
+      "paired_carrot_by_receipt": {
+        "received_monotonic_s": 422471.165695659,
+        "received_ros_ns": 11420000000,
+        "header_stamp_ns": 11420000000,
+        "frame": "base_link",
+        "dds_source_timestamp": 1793405065607024382,
+        "dds_received_timestamp": 1793405065607037702,
+        "dds_publication_sequence_number": 8,
+        "dds_reception_sequence_number": null,
+        "xy": [
+          0.44047656942215774,
+          -0.2366017577916256
+        ]
+      },
+      "carrot_angle_rad": -0.49292366136829535,
+      "effective_parameters": {
+        "received_ros_ns": 10080000000,
+        "received_monotonic_s": 422469.822639647,
+        "values": [
+          {
+            "type": 3,
+            "double_value": 0.6,
+            "bool_value": false
+          },
+          {
+            "type": 3,
+            "double_value": 0.5,
+            "bool_value": false
+          },
+          {
+            "type": 3,
+            "double_value": 0.14,
+            "bool_value": false
+          },
+          {
+            "type": 1,
+            "double_value": 0.0,
+            "bool_value": true
+          },
+          {
+            "type": 1,
+            "double_value": 0.0,
+            "bool_value": true
+          }
+        ]
+      },
+      "closure": {
+        "auxiliary_exit0_count": 18,
+        "expected_gazebo_interrupt": true,
+        "scorer_exit1_expected_partial_grade": true,
+        "cgroup": {
+          "/sys/fs/cgroup/pids.events": "max 0\n",
+          "/sys/fs/cgroup/pids.peak": "323\n",
+          "/sys/fs/cgroup/memory.peak": "1577832448\n",
+          "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+        }
+      }
+    },
+    "heading_edge": {
+      "receipt": "heading_edge_native_20261031.json",
+      "fifo_ticket": 859,
+      "seconds": 40.936,
+      "source_sha256": {
+        "planner": "32f0aa15f3282b7681988d33878fdcccb1d4f32e71834cff649aaf8c4dfe1a86",
+        "scorer": "b7b1ec3cf016b40cda7d73d80718758c0690f7ae001d4207dea7c34fdfffbf92",
+        "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+        "wrapper": "903148b304036286afac39468d6399c4ab0b5ff145245ccab9bb1f524ac6edac",
+        "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+        "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+        "witness": "b235fd60587318a4db427bcdc9fd8d6e786fd65825567940060b2187cd9bc721",
+        "relay": "cf39838e3cf381e2b6b0bb8d52904dceaee9aa18ee03997e4891862c72ba898b",
+        "nav2_config": "c16b7f77f36a2e0c284aa7758594b1bce491db3b97e65b17f0dfa3659f6d2696",
+        "planner_production": "4ee5ddbfaa846f09a90659388dff0568dd30de30cbb91b5ed061a3b2c9aa3c98",
+        "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+        "sim_launch": "1752340f3d19db3591a31d58461f1914487f23a60515be40fada0cf193e5ebc8",
+        "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+        "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+        "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+        "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+      },
+      "journal": {
+        "job_id": "coverage_sweep",
+        "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+        "outcome": "succeeded",
+        "revision": 3,
+        "schema": 1,
+        "state": "terminal",
+        "target_cell": 10700,
+        "token": "ffb16c7c88a34c1db7448d94cde45ed9-1",
+        "uuid": "511a0735968c40f38b237761f4868838"
+      },
+      "original_states": [
+        {
+          "wall": 422748.583660672,
+          "sim": 10.600000000000001,
+          "states": [
+            [
+              "511a0735968c40f38b237761f4868838",
+              2
+            ]
+          ]
+        },
+        {
+          "wall": 422753.034236714,
+          "sim": 15.045000000000002,
+          "states": [
+            [
+              "511a0735968c40f38b237761f4868838",
+              4
+            ]
+          ]
+        }
+      ],
+      "grade": {
+        "coverage": 0.0116,
+        "efficiency_at_target": null,
+        "target_crossed": false,
+        "end_reason": "sweep_complete",
+        "measurement_valid": true,
+        "pass": false
+      },
+      "keepout": {
+        "poses_before_mask": 0,
+        "poses": 970,
+        "segments": 969,
+        "footprint_crossings": 0,
+        "max_pose_gap_s": 0.02,
+        "errors": [],
+        "first_footprint_crossing": null,
+        "min_sampled_center_to_mask_bbox_m": 0.27906467035112853,
+        "motion_by_phase": {
+          "UNSEEN": {
+            "poses": 10,
+            "distance_m": 6.494974502958035e-10,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.3959317469968686
+          },
+          "IDLE": {
+            "poses": 640,
+            "distance_m": 3.2206135632784305e-09,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.28359532438922236
+          },
+          "SWEEP": {
+            "poses": 19,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.28359532438922236
+          },
+          "PREPARE_NAV": {
+            "poses": 51,
+            "distance_m": 0.0,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.3959317460315679
+          },
+          "TRANSIT": {
+            "poses": 250,
+            "distance_m": 0.6063093157804402,
+            "nonclear_segments": 0,
+            "min_sampled_center_to_mask_bbox_m": 0.27906467035112853
+          }
+        },
+        "footprint_radius_m": 0.18,
+        "source": "/ground_truth/pose",
+        "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+        "forbidden_cells": 220,
+        "forbidden_bbox_xyxy": [
+          0.6500000335276126,
+          -0.5499999627470968,
+          1.1500000409781932,
+          0.5500000536441805
+        ],
+        "mask_seen": true,
+        "valid": true
+      },
+      "tracking_counts": {
+        "path": 1,
+        "local_path": 8,
+        "carrot": 22,
+        "rotation": 22,
+        "nav_cmd": 23,
+        "truth": 178,
+        "errors": 0
+      },
+      "first_forward_command": {
+        "received_monotonic_s": 422748.606324981,
+        "received_ros_ns": 10620000000,
+        "header_stamp_ns": null,
+        "frame": null,
+        "dds_source_timestamp": 1793405343047047866,
+        "dds_received_timestamp": 1793405343047071296,
+        "dds_publication_sequence_number": 1,
+        "dds_reception_sequence_number": null,
+        "vw": [
+          0.1275725855838449,
+          -0.2800000000000001
+        ]
+      },
+      "paired_carrot_by_receipt": {
+        "received_monotonic_s": 422748.605966693,
+        "received_ros_ns": 10620000000,
+        "header_stamp_ns": 10620000000,
+        "frame": "base_link",
+        "dds_source_timestamp": 1793405343046978037,
+        "dds_received_timestamp": 1793405343047010626,
+        "dds_publication_sequence_number": 1,
+        "dds_reception_sequence_number": null,
+        "xy": [
+          0.41800728948753035,
+          -0.27435361476621367
+        ]
+      },
+      "carrot_angle_rad": -0.5808171025479254,
+      "effective_parameters": {
+        "received_ros_ns": 10640000000,
+        "received_monotonic_s": 422748.621858363,
+        "values": [
+          {
+            "type": 3,
+            "double_value": 0.6,
+            "bool_value": false
+          },
+          {
+            "type": 3,
+            "double_value": 0.5,
+            "bool_value": false
+          },
+          {
+            "type": 3,
+            "double_value": 0.14,
+            "bool_value": false
+          },
+          {
+            "type": 1,
+            "double_value": 0.0,
+            "bool_value": true
+          },
+          {
+            "type": 1,
+            "double_value": 0.0,
+            "bool_value": true
+          }
+        ]
+      },
+      "closure": {
+        "auxiliary_exit0_count": 18,
+        "expected_gazebo_interrupt": true,
+        "scorer_exit1_expected_partial_grade": true,
+        "cgroup": {
+          "/sys/fs/cgroup/pids.events": "max 0\n",
+          "/sys/fs/cgroup/pids.peak": "323\n",
+          "/sys/fs/cgroup/memory.peak": "1433792512\n",
+          "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+        }
+      }
+    }
+  },
+  "same16_source_input_hashes": true,
+  "actual_paths_equal_static_navfn_probe": true,
+  "unchanged_acceptance": "90%coverage/80%first-target efficiency,18cm audit disk,24cm relay margin and all existing validity/STOP contracts remain. Grader correctly returns1 for these supplied one-goal cases; neither is a full PASS.",
+  "fixture_review": {
+    "production_planner_changed_methods": [
+      "_plan_waypoints",
+      "_gapfill_waypoints"
+    ],
+    "supplied_route": "One10700 destination, no gapfill, only in disposable freezes.",
+    "scorer_changed_methods": [
+      "__init__",
+      "_on_pose",
+      "_focal_tracking"
+    ],
+    "observer_removed_source_byte_identical_to_delivered686f124": true,
+    "observer_scope": "Passive bounded original path/localpath/carrot/rotation/Nav commands/truth; actual parameter query once through same scorer. No new production node/timer/subscription/tool.",
+    "relay": "Exact peerb99e562 metadata-only addition on byte-identical native839 relay07734. No native rejected_projection field captured because no rejection occurred."
+  },
+  "demonstrated_utility": [
+    "Installed Gazebo/controller integration produces the same33pose static Navfn path in both cold starts; collected original stamps and DDS sequence/timestamps and actual RPP readback without observer errors.",
+    "Heading-edge prediction was met: first command atcarrot-.580817rad was forward/turn. It still completed, so that branch behavior alone does not reproduce the historical guard.",
+    "Avoids applying an unproved.35 heading change or funding repeated blind cold starts."
+  ],
+  "remaining_distance": "Native839 separately has3SWEEP crossing chords and later Nav guard; neither original event cause has been repaired. Cold starts cannot recreate prior laser/localization/timing history. Full90/80 and compaction native benefit remain unproved.",
+  "next_increment": {
+    "use": "Identify cause of the original full normal-plan safety failure with coupled original source/observation times rather than tune a parameter unsupported by a causal movement contrast.",
+    "minimum": "Consolidate these two cold-start negatives; prepare a bounded normal-plan prefix that stops at first actual forbidden chord using delivered early fault. Retain exact first crossing and the guard-admitted pose/command/timing around it to distinguish planned path, estimation error and delayed evidence. Use existing FIFO for Gazebo.",
+    "acceptance": "Original unweakened audit/guard/grade; normal plan/path plus original stamp/XY/phase/mask; source-stamped admitted TF and command, with source age and observation times. Explain missing synchronization rather than infer localization error from distant samples. No further unchanged full-room acceptance attempt.",
+    "decision": "Close cold-start alignment line after two discriminating negative reproductions; defer.35 production change. Advance first-SWEEP-crossing diagnosis under actual normal-plan history.",
+    "benefit_cost": "42.138+40.936s native,2CPU3GiB/noGPU under verifiedFIFO858/859; peaks1.578/1.434GB with no memory/pids limit events or timeouts. Further cold variants have lower expected return than locating an actual observed failure.",
+    "evidence_that_changes_decision": "A coupled original normal-plan event proves which pose/command/path violated clearance and distinguishes localization/latency/tracking; a corrected case then removes that failure with all original contracts."
+  },
+  "limits": [
+    "Minimum reported distances are sampled center-to-forbidden-BBox distances, not a continuous or physical clearance certificate.",
+    "Original full native global path/laser state absent; no historical global-path cause proven.",
+    "Successful partial goals do not prove error branches or newly retained blocked_projection metadata natively.",
+    "Static fixture carrot had headerstamp0; these moving native records contain their own nonzero stamps, retained as observed rather than synthesized."
+  ],
+  "evidence": {
+    "heading_before_native_20261031.json": "c558a5e4c7280992f626853cec6b1c7459829c5e29e2350c7e6ce178d0ee45b8",
+    "heading_edge_native_20261031.json": "7b1a0e00338953d271cc12bb66c9670cdaadedb1d1d5b0341f5ab0474eca0323",
+    "nav2_path_heading_delivery_20261031.json": "6b828c423da9326ca9b1452fd49608b20294d3eac49c141775cd51273b3116ea"
+  },
+  "hygiene": "Both native sessions90473/40694 terminal; owned scopes inactive and named --rm containers absent. No third-party process stopped, hardware/remote write, production YAML change, new worker or persistent tool."
+}
