@@ -1969,3 +1969,50 @@ el largo anterior80,33% se conserva íntegro junto a él como
 `delivery_full_native_20261031.json`, sin presentar plateau como barrido terminado.
 Decisión: una integración final con este único cambio adicional respaldado
 por evidencia; consolidar si cumple todos los requisitos simultáneamente.
+
+
+## Hito90/80/cero/barrido/cierre demostrado — 31/10/2026 15:24 CET
+
+La integración final de ROSa4d0bc666554270523794ae0ee7498bf5fbc3bfe y
+jobs9feaf3fcc660c7ac22ca074a09be420f6f37cd2e terminó14:24:25UTC
+(15:24:25CET): rc0, bank0, pass=true, measurement_valid=true,
+end_reason=sweep_complete. Primer90% a789,7s con **80,47% de eficiencia**,
+106,38m sobre presupuesto107m. Cobertura final **95,38%**; eficiencia final
+66,26% y revisitas32,14% se conservan expresamente: el80,47% es la métrica
+al primer90%, no una eficiencia final ni un porcentaje de avance del proyecto.
+
+Auditoría válida:48996poses y48995segmentos originales, máximo20ms entre
+poses, cero cruces del disco/cuerdas, máscara220celdas y radio0,18m
+sin cambio; distancia mínima centro/caja0,26242m. Una pose adelantada5ms
+fue retenida y auditada con su sello original; no se pierde una cuerda.
+Todos los20hijos del Launch arrancan y cierran limpiamente, incluido Gazebo;
+sinSIGTERM/escalada, fallo de lease, aborto Nav2 observado ni OOM. Diario
+terminal/succeeded. Contenedor retirado, scopeinactive/dead y FIFOvacía.
+Memoria pico1441918976bytes; duración real1146,312s. Autorización de Crimson
+registrada, sinGPU, bajo los límites de recursos anteriores.
+
+Los cuatro huecos se completan en una sola pasada y el planificador publica
+coverage complete antes de terminar el medidor. El retorno desde Nav2 conserva
+únicamente el destino reactivo de gap-fill aún no acreditado; no altera el
+barrido principal. Lookahead efectivo0,25, velocidadNav0,14, statefulRPPfalse
+confirmados por respuesta real de parámetros. Las17entradas congeladas
+conservan suhash, mapa/launch/config instalados coinciden; sólo el método
+_on_result difiere del largo80,33%/plateau precedente. Wrapper de cierre
+d32835b idéntico, criterios y plazos originales sin relajación.
+
+Evidencia íntegra sin reescritura:
+`src/oomwoo_sim_support/docs/evidence/gapfill_final_full_native_20261031.json`.
+Recibo compacto con cada requisito, hashes, cierres y límites:
+`src/oomwoo_sim_support/docs/evidence/native_90_80_delivery_20261031.json`.
+Los rojos y diagnósticos descartados siguen en los recibos anteriores; no se
+combinan el movimiento de una corrida con el cierre de otra para declarar éxito.
+
+Utilidad demostrada: fuentes entregadas cumplen el hito completo en esta
+escena/perfil y terminan sin procesos propios pendientes. Distancia a este
+hito: ninguna. Decisión **consolidar**; el siguiente incremento es guardar
+evidencia y commits locales, sin más ajuste de parámetros ni repetición de
+verdes. El punto dulce es provisional fuera de esta escena: margen0,47puntos
+(aproximadamente62cm de recorrido), sin acreditar fiabilidad entre semillas,
+otras escenas ni hardware. Esas ampliaciones pertenecen al objetivo mayor,
+no se declaran completadas. Un fallo real nuevo o un requisito concreto de
+esos ámbitos cambiaría la decisión y justificaría su comprobación mínima.

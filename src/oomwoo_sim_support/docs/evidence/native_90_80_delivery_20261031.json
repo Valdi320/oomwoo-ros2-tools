@@ -1,0 +1,390 @@
+{
+  "recorded_utc": "2026-10-31T14:27:08.325799+00:00",
+  "completed_utc": "2026-10-31T14:24:25.267259+00:00",
+  "completed_cet": "2026-10-31 15:24:25 CET (UTC+1)",
+  "scope": "One configured native test_room simulation, complete sweep and strict existing90/80/zero safety/closure criteria; not a whole-project progress percentage.",
+  "native_full_receipt": "src/oomwoo_sim_support/docs/evidence/gapfill_final_full_native_20261031.json",
+  "native_full_sha256": "113be0ae856c72fba2c24e2cd45c911092be3596beb59679c636ddce07f26103",
+  "raw_log": "/var/home/Valdi/Documents/Codex/2026-10-30/respaldo-oomwoo-acoplamiento/gapfill_final_full_native_20261031.log",
+  "raw_log_sha256": "28190fb923f2a9ea9b3deaf4f9ec59d4851b34404f467d17b00115a348ee1cc6",
+  "ROS_runtime_commit": "a4d0bc666554270523794ae0ee7498bf5fbc3bfe",
+  "jobs_runtime_commit": "9feaf3fcc660c7ac22ca074a09be420f6f37cd2e",
+  "result": {
+    "coverage": 0.9538,
+    "coverage_target": 0.9,
+    "target_crossed": true,
+    "efficiency_at_target": 0.8047,
+    "efficiency_final": 0.6626,
+    "revisit_ratio": 0.3214,
+    "efficiency_target": 0.8,
+    "time_to_target_s": 789.7,
+    "end_reason": "sweep_complete",
+    "sim_unstable": false,
+    "measurement_valid": true,
+    "pass": true
+  },
+  "acceptance_audit": {
+    "native_and_bank_exit_zero": true,
+    "full_sweep_completed": true,
+    "coverage_at_least90": true,
+    "first90_efficiency_at_least80": true,
+    "measurement_valid": true,
+    "keepout_valid_and_zero": true,
+    "original_keepout_mask_and_radius": true,
+    "all_original_truth_chords_audited": true,
+    "all20_owned_children_closed_cleanly": true,
+    "no_exit_failure_or_signal_escalation": true,
+    "no_observed_nav2_abort": true,
+    "no_motion_fault_or_revocation": true,
+    "journal_terminal_succeeded": true,
+    "no_host_timeout": true,
+    "no_oom": true,
+    "all17_frozen_inputs_unchanged": true,
+    "installed_launch_map_config_matches": true,
+    "effective_original_default_lookahead025": true,
+    "effective_rpp_stateful_false": true,
+    "canonical_planner_matches_run": true,
+    "canonical_wrapper_matches_run": true
+  },
+  "keepout": {
+    "poses_before_mask": 0,
+    "poses": 48996,
+    "segments": 48995,
+    "footprint_crossings": 0,
+    "max_pose_gap_s": 0.02,
+    "errors": [],
+    "first_footprint_crossing": null,
+    "min_sampled_center_to_mask_bbox_m": 0.26242349334230547,
+    "motion_by_phase": {
+      "UNSEEN": {
+        "poses": 9,
+        "distance_m": 6.295332622839101e-10,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.6500000328980793
+      },
+      "IDLE": {
+        "poses": 1528,
+        "distance_m": 3.5247974637159463e-09,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.38997997170886434
+      },
+      "SWEEP": {
+        "poses": 19487,
+        "distance_m": 64.37956742228151,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.26242349334230547
+      },
+      "PREPARE_NAV": {
+        "poses": 1276,
+        "distance_m": 0.0,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.2926582557966837
+      },
+      "TRANSIT": {
+        "poses": 26696,
+        "distance_m": 64.80815012265178,
+        "nonclear_segments": 0,
+        "min_sampled_center_to_mask_bbox_m": 0.29263967469081087
+      }
+    },
+    "footprint_radius_m": 0.18,
+    "source": "/ground_truth/pose",
+    "scope": "sampled ground-truth disk and chords after mask arrival; no physical claim",
+    "forbidden_cells": 220,
+    "forbidden_bbox_xyxy": [
+      0.6500000335276126,
+      -0.5499999627470968,
+      1.1500000409781932,
+      0.5500000536441805
+    ],
+    "deferred_future_poses": 1,
+    "max_deferred_lead_ns": 5000000,
+    "mask_seen": true,
+    "valid": true
+  },
+  "journal": {
+    "job_id": "coverage_sweep",
+    "map_digest": "0cded216ad3cebffd06404ccc54fc4e94cf2317a40ee87692a766eca3290f62c",
+    "outcome": "succeeded",
+    "revision": 72,
+    "schema": 1,
+    "state": "terminal",
+    "target_cell": 9366,
+    "token": "931f47a82b8e48859e8c1713443883c0-1",
+    "uuid": "9c63bbc72eab47eca59226ac27fe7bb5"
+  },
+  "processes": {
+    "started": [
+      "amcl-14",
+      "bt_navigator-19",
+      "controller_server-17",
+      "costmap_filter_info_server-6",
+      "coverage_planner-11",
+      "coverage_regression_runner-12",
+      "create-10",
+      "dock_drive-2",
+      "gazebo-3",
+      "ground_truth-4",
+      "initialpose_pub-16",
+      "lifecycle_manager-15",
+      "lifecycle_manager-20",
+      "lifecycle_manager-7",
+      "map_server-13",
+      "map_server-5",
+      "parameter_bridge-9",
+      "planner_server-18",
+      "python3-1",
+      "robot_state_publisher-8"
+    ],
+    "closed_cleanly": [
+      "amcl-14",
+      "bt_navigator-19",
+      "controller_server-17",
+      "costmap_filter_info_server-6",
+      "coverage_planner-11",
+      "coverage_regression_runner-12",
+      "create-10",
+      "dock_drive-2",
+      "gazebo-3",
+      "ground_truth-4",
+      "initialpose_pub-16",
+      "lifecycle_manager-15",
+      "lifecycle_manager-20",
+      "lifecycle_manager-7",
+      "map_server-13",
+      "map_server-5",
+      "parameter_bridge-9",
+      "planner_server-18",
+      "python3-1",
+      "robot_state_publisher-8"
+    ],
+    "container_after_run": "absent from podman ps --filter name=oomwoo-",
+    "host_scope_after_run": "inactive/dead",
+    "FIFO_pending_after_run": 0
+  },
+  "resources": {
+    "/sys/fs/cgroup/pids.events": "max 0\n",
+    "/sys/fs/cgroup/pids.peak": "326\n",
+    "/sys/fs/cgroup/memory.peak": "1441918976\n",
+    "/sys/fs/cgroup/memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n"
+  },
+  "input_sha256": {
+    "planner": "b9e261c43c517fbddbf92bc2d9a5adc72f373942145a56b90751b0b041c1aa2f",
+    "scorer": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+    "meter": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+    "wrapper": "c91153e3e9e0fdc590779624a15e014dc0f3c8acea958b73095d414ab2664bdf",
+    "driver": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577",
+    "journal": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c",
+    "witness": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c",
+    "relay": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6",
+    "nav2_config": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90",
+    "planner_production": "b9e261c43c517fbddbf92bc2d9a5adc72f373942145a56b90751b0b041c1aa2f",
+    "coverage_launch": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86",
+    "sim_launch": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f",
+    "lifecycle_response_qos": "93df65514f0b51ebf2f87f2aac80e671a4669298262525bcad81011fddfb6b86",
+    "world": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8",
+    "map_yaml": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83",
+    "map_image": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f",
+    "keepout_builder": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09"
+  },
+  "provenance": {
+    "planner": "/work/src/oomwoo_coverage/oomwoo_coverage/coverage_planner_node.py",
+    "scorer": "/work/src/oomwoo_sim_support/oomwoo_sim_support/coverage_regression_runner.py",
+    "keepout_config": "/work/src/oomwoo_sim_support/oomwoo_sim_support/keepout_config.py",
+    "files": {
+      "launch/coverage_regression.launch.py": {
+        "match": true,
+        "sha256": "109548b23542f5435de1c9106b3c23798cdae4fe40bfc9de7cdd02125765fd86"
+      },
+      "launch/sim_bringup.launch.py": {
+        "match": true,
+        "sha256": "a85a08c47ccd487d59f8dd0215494cbb057c5ec38e1bbc6918439c2b08a2433f"
+      },
+      "worlds/test_room.world": {
+        "match": true,
+        "sha256": "a995ce534f0475e2c732219907ddec58ca322c3e09c82ef73bb228ab0aa484f8"
+      },
+      "config/nav2_params.yaml": {
+        "match": true,
+        "sha256": "ceefe2be73d59724fba39e0bfe0ad9daa47b947695cec018336077e750b55f90"
+      },
+      "maps/test_room.yaml": {
+        "match": true,
+        "sha256": "457ae7d1ac690c0a9ade859600894266066f1961f130f57d219a72468a699c83"
+      },
+      "maps/test_room.pgm": {
+        "match": true,
+        "sha256": "11925257753e178e8df2144ad48ac189f3270ae3b0e91b643d6bf0e453d0d58f"
+      }
+    },
+    "keepout_builder_sha256": "a194215caba51ce40fc21c22d55ea593007b1e909689ab64100fac99465c1c09",
+    "reviewed_inputs": {
+      "oomwoo_dock.dock_drive_node": {
+        "path": "/work/src/oomwoo_dock/oomwoo_dock/dock_drive_node.py",
+        "sha256": "d66312a4df4c889d62e6519863df32e85b69432a3c0a270a72a7bc5ade61b577"
+      },
+      "oomwoo_cleaning_jobs.goal_journal": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/goal_journal.py",
+        "sha256": "237519e9a86b750115198d7f289ecedc4d5e9804ba10e2c3f70dfff04b2f059c"
+      },
+      "oomwoo_cleaning_jobs.nav_lease_witness": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/nav_lease_witness.py",
+        "sha256": "0dfdfbb4930e1cb5d1e03593cce12cb96a1c4c4e2b279b4e18ec4891db99732c"
+      },
+      "oomwoo_cleaning_jobs.ros_dock_velocity_relay": {
+        "path": "/contrib/src/oomwoo_cleaning_jobs/ros_dock_velocity_relay.py",
+        "sha256": "3adc82cbef0eb4a073bbc0cb2302fa1886b2ebbfd44098b0a8a40694cce63fa6"
+      }
+    },
+    "planner_sha256": "b9e261c43c517fbddbf92bc2d9a5adc72f373942145a56b90751b0b041c1aa2f",
+    "scorer_sha256": "7a03e09d228a4f1c43c68d691f47b708a73bcc8207714e6dbe0428c3ccbce570",
+    "meter_sha256": "3fc721286a86d6ca08620258759df35c24afabf1e8751315c26a7152d7cdcba5",
+    "wrapper_sha256": "c91153e3e9e0fdc590779624a15e014dc0f3c8acea958b73095d414ab2664bdf",
+    "local_costmap_global_frame": "odom",
+    "costmap_cadence_parameters": {
+      "update_frequency": 2.0,
+      "publish_frequency": 4.0,
+      "global_frame": "map",
+      "robot_base_frame": "base_link",
+      "transform_tolerance": 5.0,
+      "robot_radius": 0.1745,
+      "resolution": 0.05,
+      "track_unknown_space": true,
+      "plugins": [
+        "static_layer",
+        "obstacle_layer",
+        "voxel_layer",
+        "inflation_layer"
+      ],
+      "obstacle_layer": {
+        "plugin": "nav2_costmap_2d::ObstacleLayer",
+        "enabled": true,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "voxel_layer": {
+        "plugin": "nav2_costmap_2d::VoxelLayer",
+        "enabled": true,
+        "publish_voxel_map": true,
+        "origin_z": 0.0,
+        "z_resolution": 0.05,
+        "z_voxels": 16,
+        "max_obstacle_height": 2.0,
+        "mark_threshold": 0,
+        "observation_sources": "scan",
+        "scan": {
+          "topic": "/scan",
+          "max_obstacle_height": 2.0,
+          "clearing": true,
+          "marking": true,
+          "data_type": "LaserScan",
+          "raytrace_max_range": 3.0,
+          "raytrace_min_range": 0.0,
+          "obstacle_max_range": 2.5,
+          "obstacle_min_range": 0.0
+        }
+      },
+      "static_layer": {
+        "plugin": "nav2_costmap_2d::StaticLayer",
+        "map_subscribe_transient_local": true,
+        "transform_tolerance": 5.0
+      },
+      "inflation_layer": {
+        "plugin": "nav2_costmap_2d::InflationLayer",
+        "inflation_radius": 0.24,
+        "cost_scaling_factor": 10.0
+      },
+      "always_send_full_costmap": true
+    }
+  },
+  "prepared_parameters": {
+    "rotate_to_heading_min_angle": 0.6,
+    "nav_lookahead": 0.25,
+    "nav_linear_speed": 0.14,
+    "spawn": "original launch defaults",
+    "plan": "normal production plus gapfill",
+    "max_sim_time_s": 3600,
+    "amcl_transform_tolerance": 5.0,
+    "local_global_frame": "odom",
+    "FollowPath.stateful": false,
+    "amcl.laser_model_type": "likelihood_field_prob",
+    "global_costmap.inflation_layer.inflation_radius": 0.24
+  },
+  "actual_controller_parameters": {
+    "names": [
+      "FollowPath.rotate_to_heading_min_angle",
+      "FollowPath.lookahead_dist",
+      "FollowPath.desired_linear_vel",
+      "FollowPath.use_rotate_to_heading",
+      "FollowPath.stateful"
+    ],
+    "response": [
+      {
+        "type": 3,
+        "double_value": 0.6,
+        "bool_value": false
+      },
+      {
+        "type": 3,
+        "double_value": 0.25,
+        "bool_value": false
+      },
+      {
+        "type": 3,
+        "double_value": 0.14,
+        "bool_value": false
+      },
+      {
+        "type": 1,
+        "double_value": 0.0,
+        "bool_value": true
+      },
+      {
+        "type": 1,
+        "double_value": 0.0,
+        "bool_value": false
+      }
+    ]
+  },
+  "evidence_lines": [
+    "[coverage_planner-11] [INFO] [1793456511.207497801] [coverage_planner]: gap-fill pass 1: 4 uncovered spots, coverage 94.9%",
+    "[coverage_planner-11] [INFO] [1793456659.026911992] [coverage_planner]: coverage complete: 95.4% covered",
+    "[coverage_regression_runner-12] [INFO] [1793456662.253919189] [coverage_meter]: COVERAGE_SUMMARY coverage=0.9538 eff_at_target=0.8047 eff_final=0.6626 reason=sweep_complete pass=True",
+    "GZ_NATIVE_STOP 0 data: true Couldn't find a preferred IP via the getifaddrs() call; I'm assuming that your IP address is 127.0.0.1.  This should work for local processes, but will almost certainly not work if you have remote processes.Report to the disc-zmq development team to seek a fix."
+  ],
+  "first90_meter": "[coverage_regression_runner-12] [INFO] [1793456444.813855496] [coverage_meter]: COVERAGE_REPORT coverage=0.9003 efficiency=0.8047 revisit_ratio=0.2201 path_m=106.38 ideal_m=85.60 reachable_cells=13696 sim_t=789.7 target_hit=True t_target=789.73 pose_jumps=0 sim_unstable=False",
+  "focal_receipts": [
+    "gapfill_terminal_delivery_20261031.json",
+    "coordinated_shutdown_delivery_20261031.json",
+    "rpp_corner_20261031.json",
+    "pending_acceptance_native_delivery_20261031.json",
+    "clock_ingress_delivery_20261031.json",
+    "furniture_route_20261031.json",
+    "amcl_model_replay_20261031.json",
+    "covered_disk_delivery_20261031.json",
+    "rpp_stateful_contrast_20261031.json"
+  ],
+  "utility_and_return": {
+    "demonstrated": "Final sources achieve90/80/zero plus actual sweep_complete and all20processes clean, original first90metric/strict auditor unchanged; four gap-fill targets completed in one pass.",
+    "remaining_to_this_milestone": "none",
+    "next_increment": "consolidate local evidence and commits; no more parameter sweeps or repeated greens for this milestone",
+    "decision": "consolidate",
+    "limits": [
+      "One configured scene/profile, not reliability across seeds/scenes or hardware certification.",
+      "80.47% is efficiency at first90%, not final efficiency66.26% and not whole-project completion.",
+      "Native plant remains nondeterministic; margin is0.47percentage points, approximately0.62m below107m first90budget.",
+      "Broader hardware and multi-scene reliability remain outside this goal; their benefit/cost has not been measured."
+    ],
+    "evidence_that_would_change_decision": "A new actual failure or an explicitly scoped requirement for other scenes/hardware would justify its smallest discriminating check; no additional check is needed to prove this configured milestone."
+  }
+}
