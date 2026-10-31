@@ -179,20 +179,10 @@ local_costmap:
       plugins: ["obstacle_layer", "voxel_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        # DELIBERATELY SUB-INSCRIBED and contact-tolerant. inflation_radius
-        # 0.10 is BELOW the 0.1745 inscribed radius, so there is no proper soft
-        # cost gradient (that would need inflation_radius >= inscribed) — the
-        # planner routes the robot's centre to within 0.10 m of obstacles, i.e.
-        # the body edge grazes/slightly overlaps the inflated obstacle. For a
-        # bumper-equipped vacuum that contact is acceptable and is exactly the
-        # "touch things" intent. It is unconventional for Nav2, chosen ONLY
-        # because it measured best here: 0.02 leaves the controller unable to
-        # find trajectories (it stalls/wedges); >= 0.175 (at/above inscribed,
-        # the textbook value) seals the ~0.4 m under-furniture leg gaps shut;
-        # 0.10 threads them. cost_scaling is moot below inscribed. Trade-off:
-        # more physical contact/wedging, which the wedge-recovery path handles
-        # imperfectly (see PROVENANCE living_room). Raise to >= 0.175 for a
-        # conventional, contact-averse config at the cost of the tight gaps.
+        # Retain the local contact-tolerant profile for close cleaning.
+        # This is below the 0.1745 m body radius, without a full soft gradient;
+        # the global planner separately gives transits body-clear routes.
+        # Physical use still requires the documented bumper/recovery policy.
         inflation_radius: 0.10
         cost_scaling_factor: 10.0
       obstacle_layer:
@@ -283,21 +273,12 @@ global_costmap:
         transform_tolerance: 5.0
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        # DELIBERATELY SUB-INSCRIBED and contact-tolerant. inflation_radius
-        # 0.10 is BELOW the 0.1745 inscribed radius, so there is no proper soft
-        # cost gradient (that would need inflation_radius >= inscribed) — the
-        # planner routes the robot's centre to within 0.10 m of obstacles, i.e.
-        # the body edge grazes/slightly overlaps the inflated obstacle. For a
-        # bumper-equipped vacuum that contact is acceptable and is exactly the
-        # "touch things" intent. It is unconventional for Nav2, chosen ONLY
-        # because it measured best here: 0.02 leaves the controller unable to
-        # find trajectories (it stalls/wedges); >= 0.175 (at/above inscribed,
-        # the textbook value) seals the ~0.4 m under-furniture leg gaps shut;
-        # 0.10 threads them. cost_scaling is moot below inscribed. Trade-off:
-        # more physical contact/wedging, which the wedge-recovery path handles
-        # imperfectly (see PROVENANCE living_room). Raise to >= 0.175 for a
-        # conventional, contact-averse config at the cost of the tight gaps.
-        inflation_radius: 0.10
+        # Transits must clear the whole body, not only its centre. The old
+        # sub-inscribed 0.10 m admitted a TV-stand route intersecting the body
+        # and caused repeated contact escapes. With 0.24 m, native Navfn
+        # clears that route for 0.22 m of extra path; local close-contact
+        # sensing and the separate NoGo inflation retain their own profiles.
+        inflation_radius: 0.24
         cost_scaling_factor: 10.0
       always_send_full_costmap: true
 

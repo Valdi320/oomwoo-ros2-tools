@@ -1731,3 +1731,29 @@ parámetro. Después nativo de las fuentes finales. Coste acotado primero al
 banco estático existente; beneficio esperado evitar hasta once recuperaciones
 repetidas. Decisión avanzar por cuello observado, sin optimización indefinida
 ni declaración de cumplimiento con una medida inválida.
+
+
+## Tránsitos con espacio para el cuerpo — 31/10/2026
+
+El Navfn1.3.13 instalado reproduce el problema estático: de(1,56;-2,44)
+a(-0,67;-2,12), extremos redondeados de la captura, la ruta con inflación
+global ordinaria0,10 cruza el mapa de mobiliario con la huella0,1745 en48
+segmentos. Cambiando sólo ese radio a0,24, las intersecciones son cero;
+longitud2,3484→2,5709m, coste adicional22,25cm. La ruta control que rodea
+NoGo permanece idéntica2,9304m y ambas configuraciones conservan su auditoría
+original de máscara a0,24m. Parámetros efectivos releídos, las tres salidas
+rc0, pico215597056bytes, sin OOM. Banco estático, sin RPP/planta/motores:
+no demuestra aún que evite contactos al ejecutar.
+
+Se adopta sólo inflación global ordinaria0,24. El cuerpo0,1745, inflación
+local0,10, capa aislada/máscara NoGo, medidor, plan, velocidades, umbrales y
+STOP se conservan. El nuevo radio sí genera el espacio corporal que faltaba
+en tránsitos, con coste pequeño en el caso causal. Recibo completo:
+`src/oomwoo_sim_support/docs/evidence/furniture_route_20261031.json`.
+Utilidad focal: ruta corporalmente libre por22cm extra frente a los intentos
+repetidos observados. Mínimo pendiente: validar conjuntamente en movimiento
+este cambio y la entrega ordenada al auditor; medir90/80/cero/cierre de las
+fuentes finales. Beneficio esperado ahorrar más de4,25m al evitar recuperaciones,
+no garantizado; coste una corrida completa. Decisión avanzar con una nueva
+congelación y dejar después las ampliaciones de menor retorno. El resultado
+real cambiará la decisión; no ampliar el radio ni otros parámetros a ciegas.
