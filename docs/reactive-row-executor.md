@@ -1449,3 +1449,56 @@ supplied transforms, with no plant, scan, action goal or motor.
 Actual plant motion, AMCL behavior and original full-room 90/80 acceptance
 remain open. Consolidate this component and inspect the already queued
 native captures before scheduling another run or changing AMCL parameters.
+
+
+## Comprobación nativa autorizada con Crimson abierto — 31/10/2026
+
+El propietario ordenó ejecutar las comprobaciones aunque Crimson siguiera
+abierto. La CLI existente retiró sólo los pendientes 861/863, con sus identidades
+verificadas, todavía sin hijos. Ambos procesos salieron antes de la ejecución.
+Se reutilizaron los argumentos y fuentes congeladas, secuencialmente, sin GPU:
+contenedor de 2 CPU/3 GiB, scope de 4 GiB + 512 MiB de swap. Se cancelaron las dos solicitudes mediante la CLI existente. No se modificó
+la implementación del cerrojo, la cola, el vigilante ni el código de producto. Los
+recibos identifican la excepción como ejecución directa autorizada y conservan
+el número del ticket retirado; no afirman una admisión FIFO.
+
+- Prefijo de localización: 119,620 s reales; límite previsto de 80 s simulados;
+  coverage0,0854, end_reason=max_time, measurement_valid=true, rc1. Es un
+  diagnóstico corto, no un cumplimiento90/80. Cero cruces en 4.262 poses,
+  sin saltos de pose, sin OOM ni timeout del host. Las 16 fuentes siguen intactas.
+- Candidato común c3b0bf0: 1.018,072 s reales, final a las 11:39:29 CET
+  (10:39:29 UTC). Cobertura 94,06%; primer 90% a 818,7 s con eficiencia 77,99%
+  (requisito 80%; faltan 2,01 puntos). Eficiencia final 71,07%; revisitas 25,08%.
+  measurement_valid=true, sim_unstable=false, pass=false, rc1.
+- Parada real: Nav2 no progresa y aborta código 105 en un tránsito desde
+  aproximadamente (-0,76; 1,37) hacia (0,53; 1,18). El diario queda terminal/aborted
+  y el relé atiende STOP. El informe termina motion_fault; esto NO es un cruce
+  de zona prohibida. La auditoría válida contiene 45.897 poses/45.896 segmentos,
+  cero cruces, distancia mínima del centro 0,19508 m y radio auditado 0,18 m.
+- Evidencia focal del aborto: al final rotation=true; órdenes lineales 0 y
+  giros que alternan de signo, recibidos y transmitidos por el relé. Pose
+  reciente de 5 ms; postfiltro de 440 ms. No demuestra por sí solo la causa del giro.
+  En 9 pares AMCL/truth con sello idéntico entre 904 y 914 s, error mediano 0,08437 m,
+  máximo 0,09117 m; no atribuir causalidad sólo a esa diferencia.
+- Memoria máxima del contenedor completo 990.490.624 bytes, oom=0/oom_kill=0;
+  las 17 fuentes congeladas conservan sus hashes. Sin timeout host. Parada
+  Gazebo ACK positivo; wrapper conserva rc1 de objetivo incumplido, sin
+  fallo adicional de procesos. Contenedores de ambos ensayos ausentes y
+  scopes inactivos al finalizar; no queda una ejecución duplicada en cola.
+
+Recibos completos: `src/oomwoo_sim_support/docs/evidence/localization_prefix_native_20261031.json`
+y `src/oomwoo_sim_support/docs/evidence/common_full_native_20261031.json`.
+Incluyen procedencia, argumentos, hashes, logs y trazas originales acotadas.
+Copias previas/autorización en respaldo-oomwoo-acoplamiento/autorizacion_crimson_20261031.
+
+Utilidad demostrada: se ha sustituido la espera por una medición nativa válida
+con movimiento; este candidato supera cobertura y conserva cero cruces en esta
+corrida, pero NO cumple el hito conjunto ni completa el barrido. Distancia:
+resolver el aborto 105 y recuperar 2,01 puntos de eficiencia al primer 90%, después
+verificar el cierre. Próximo incremento de mayor retorno: discriminar con la
+traza final y un caso focal la alternancia de giro de Nav2 antes de otra corrida
+completa. Beneficio esperado: corregir un bloqueo observado y evitar repeticiones
+de 17 min; coste aún no medido. Decisión: consolidar la evidencia, sin repetir este
+ensayo ni ampliar bancos o variantes. La cambiaría una hipótesis falsable
+respaldada por lectura del contrato/controlador o un contraste focal. Esta única
+corrida no certifica fiabilidad ni hardware; objetivo general sigue pendiente.
